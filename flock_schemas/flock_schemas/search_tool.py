@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from base import FlockBaseModel, Labels, BaseModelConfig
+from flock_schemas.base import FlockBaseModel, Labels, BaseModelConfig
 
 
 class LLM(Labels):
@@ -15,20 +15,3 @@ class SearchToolSpec(BaseModelConfig):
 class SearchTool(FlockBaseModel):
     kind: str = Field("SearchTool", const=True)
     spec: SearchToolSpec
-
-
-# kind: SearchTool
-# metadata:
-#   name: my-google-search
-#   description: api for interacting with google search
-#   labels:
-#     app: my_app
-# spec:
-#   llm:
-#     name: my-llm
-#     labels:
-#       app: my_app
-#   search:
-#     name: serpapi
-#     labels:
-#       app: my_app

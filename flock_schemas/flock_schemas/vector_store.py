@@ -1,5 +1,5 @@
 from pydantic import Field
-from base import FlockBaseModel, Labels, BaseModelConfig
+from flock_schemas.base import FlockBaseModel, Labels, BaseModelConfig
 
 class Embedding(Labels):
     name: str = Field(..., description="Name of the embedding")
@@ -16,20 +16,3 @@ class VectorStoreSpec(BaseModelConfig):
 class VectorStore(FlockBaseModel):
     kind: str = Field("VectorStore", const=True)
     spec: VectorStoreSpec
-
-# kind: VectorStore
-# metadata:
-#   name: documentation_vectorstore
-#   description: documentation vector store
-#   source: git://github.com/langchain/docs.git
-#   labels:
-#     app: my_app
-# spec:
-#   store:
-#     vendor: chroma
-#     type: local
-#     path:  /home/flock/store/
-#   embedding:
-#     name: my-openai-embedding
-#     labels:
-#       app: my_app

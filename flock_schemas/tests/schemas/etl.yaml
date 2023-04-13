@@ -1,0 +1,28 @@
+apiVersion: "flock/v1"
+kind: etl
+metadata:
+  name: my-etl
+  description: extraction, transformation, and loading pipeline component
+  labels:
+    app: my_app
+spec:
+  type:
+  embedding:
+    kind: embedding
+    name: my-openai-embedding
+  splitter:
+    kind: splitter
+    name: my-splitter
+  source:
+    kind: git
+    name: my-openai-embedding
+    path: /path/to/source
+  store:
+    kind: store
+    name: my-store
+  schedule:
+    kind: cron
+    name: my-cron
+    spec:
+      schedule: "*/5 * * * *"
+      timezone: "UTC"

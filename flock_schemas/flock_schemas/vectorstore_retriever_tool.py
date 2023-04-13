@@ -1,5 +1,5 @@
 from pydantic import Field
-from base import FlockBaseModel, Labels, BaseModelConfig
+from flock_schemas.base import FlockBaseModel, Labels, BaseModelConfig
 
 
 class Store(Labels):

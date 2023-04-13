@@ -1,14 +1,14 @@
 from typing import List
 
 import yaml
-from agent import Agent
-from embedding import Embedding
-from vector_store import VectorStore
-from llm import LLM
+from flock_schemas.agent import Agent
+from flock_schemas.embedding import Embedding
+from flock_schemas.vector_store import VectorStore
+from flock_schemas.llm import LLM
 from pydantic import ValidationError
-from vectorstore_retriever_tool import VectorStoreRetrieverTool
+from flock_schemas.vectorstore_retriever_tool import VectorStoreRetrieverTool
 
-from search_tool import SearchTool
+from flock_schemas.search_tool import SearchTool
 
 
 def validate_crds(crds: List[dict]):

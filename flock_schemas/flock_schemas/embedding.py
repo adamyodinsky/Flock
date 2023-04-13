@@ -1,6 +1,6 @@
 from typing import Optional
 from pydantic import Field
-from base import FlockBaseModel, BaseModelConfig
+from flock_schemas.base import FlockBaseModel, BaseModelConfig
 
 class EmbeddingSpec(BaseModelConfig):
     vendor: str = Field(..., description="Vendor of the LLM")
@@ -12,18 +12,3 @@ class EmbeddingSpec(BaseModelConfig):
 class Embedding(FlockBaseModel):
     kind: str = Field("Embedding", const=True, description="The kind of the object")
     spec: EmbeddingSpec
-
-
-# apiVersion: flock/v1
-# kind: Embedding
-# metadata:
-#   name: my-openai-embedding
-#   description: openai embedding
-#   labels:
-#     app: my_app
-# spec:
-#   vendor: openai
-#   model: text-embedding-ada-002
-#   token_limit: 1000
-#   embedding_ctx_length: 4096
-#   chunk_size: 1000

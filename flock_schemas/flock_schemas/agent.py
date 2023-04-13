@@ -1,6 +1,6 @@
 from pydantic import Field
 from typing import List
-from base import FlockBaseModel, BaseModelConfig, Labels
+from flock_schemas.base import FlockBaseModel, BaseModelConfig, Labels
 
 class Tool(Labels):
     kind: str

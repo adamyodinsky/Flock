@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Literal, Optional
-from pydantic import BaseModel, Field, Extra
-
+from pydantic import BaseModel, Field, Extra, validator
+from uuid import UUID, uuid4
 
 class BaseModelConfig(BaseModel):
     class Config:
@@ -23,5 +23,6 @@ class FlockBaseModel(BaseModelConfig):
     metadata: MetaData
     created_at: Optional[datetime] = Field(default=None, description="Creation timestamp"
     )
+    # id: UUID = Field(default_factory=uuid4, description="UUID for the object")
     updated_at: Optional[datetime] = Field(default=None, description="Last update timestamp")
     

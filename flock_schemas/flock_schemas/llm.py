@@ -1,5 +1,5 @@
 from pydantic import Field
-from base import FlockBaseModel, BaseModelConfig
+from flock_schemas.base import FlockBaseModel, BaseModelConfig
 
 class LLMSpec(BaseModelConfig):
     vendor: str = Field(..., description="Vendor of the LLM")
