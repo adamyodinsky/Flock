@@ -1,0 +1,20 @@
+---
+
+apiVersion: flock/v1
+kind: VectorStoreRetrieverTool
+metadata:
+  name: langchain-docs
+  description: retrieve docs from langchain docs vector store
+  labels:
+    app: my_app
+spec:
+  llm:
+    name: openai
+    labels:
+      app: my_app
+  chain_type: stuff
+  store:
+    name: documentation_vectorstore
+    labels:
+      app: my_app
+    
