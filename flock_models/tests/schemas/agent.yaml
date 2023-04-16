@@ -1,0 +1,22 @@
+---
+
+apiVersion: flock/v1
+kind: Agent
+metadata:
+  name: my-qa-agent
+  description: a Q&A agent for internal projects
+  labels:
+    app: my_app
+spec:
+  llm:
+    name: openai
+    labels:
+      app: my_app
+  tools:
+    - kind: VectorStoreRetrieverTool
+      name: langchain-docs
+    - kind: SearchTool
+      name: my-google-search
+      labels:
+        location:  us-west-1
+          
