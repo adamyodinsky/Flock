@@ -1,49 +1,53 @@
 from typing import List
 
 import yaml
-from flock_schemas.agent import Agent
-from flock_schemas.embedding import Embedding
-from flock_schemas.vector_store import VectorStore
-from flock_schemas.llm import LLM
 from pydantic import ValidationError
-from flock_schemas.vectorstore_retriever_tool import VectorStoreRetrieverTool
+from flock_models.schemes.agent import AgentSchema
+from flock_models.schemes.embedding import EmbeddingSchema
+from flock_models.schemes.vector_store import VectorStoreSchema
+from flock_models.schemes.llm import LLMSchema
+from flock_models.schemes.vectorstore_retriever_tool import (
+    VectorStoreRetrieverToolSchema,
+)
+from flock_models.schemes.splitter import SplitterSchema
 
-from flock_schemas.search_tool import SearchTool
+from flock_models.schemes.search_tool import SearchToolSchema
 
 
 def validate_crds(crds: List[dict]):
     for crd in crds:
-        kind = crd['kind']
+        kind = crd["kind"]
         try:
-            if kind == 'Agent':
-                Agent(**crd)
-            elif crd['kind'] == 'VectorStoreRetrieverTool':
-                VectorStoreRetrieverTool(**crd)
-            elif crd['kind'] == 'LLM':
-                LLM(**crd)
-            elif crd['kind'] == 'SearchTool':
-                SearchTool(**crd)
-            elif crd['kind'] == 'VectorStore':
-                VectorStore(**crd)
-            elif crd['kind'] == 'Embedding':
-                Embedding(**crd)
+            if kind == "Agent":
+                AgentSchema(**crd)
+            elif crd["kind"] == "VectorStoreRetrieverTool":
+                VectorStoreRetrieverToolSchema(**crd)
+            elif crd["kind"] == "LLM":
+                LLMSchema(**crd)
+            elif crd["kind"] == "SearchTool":
+                SearchToolSchema(**crd)
+            elif crd["kind"] == "VectorStore":
+                VectorStoreSchema(**crd)
+            elif crd["kind"] == "Embedding":
+                EmbeddingSchema(**crd)
+            elif crd["kind"] == "Splitter":
+                SplitterSchema(**crd)
             else:
                 raise ValueError(f"Unknown kind {crd['kind']}")
         except ValidationError as e:
             print(f"Error validating {kind}:")
             print(e.json())
         print(f"Validating {kind} - OK")
-        
 
 
 files = [
-    'agent.yaml',
-    'vectorstore_retriever_tool.yaml',
-    'llm.yaml',
-    'search_tool.yaml',
+    "agent.yaml",
+    "vectorstore_retriever_tool.yaml",
+    "llm.yaml",
+    "search_tool.yaml",
     "vector_store.yaml",
     "embedding.yaml",
-
+    "splitter.yaml",
 ]
 
 for file in files:

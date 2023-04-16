@@ -4,23 +4,15 @@ from typing import Any
 from flock_models.schemes.embedding import EmbeddingSchema
 from flock_models.entities.base import Entity
 from langchain.embeddings.base import Embeddings
-from langchain.embeddings.openai import OpenAIEmbeddings
+from flock_store.secrets.base import SecretStore
 
 
 class EmbeddingEntity(Entity):
-    def __init__(self, manifest: dict[str, Any]):
+    """Base class for embedding entities."""
+
+    def __init__(self, manifest: dict[str, Any], embedding: Embeddings):
         super().__init__(manifest, EmbeddingSchema)
-        self.resource: Embeddings = None
+        self.resource = embedding(**self.manifest.spec.options.dict())
 
-
-class OpenAIEmbeddingEntity(EmbeddingEntity):
-    def __init__(self, manifest: dict[str, Any]):
-        super().__init__(manifest)
-        self.resource = OpenAIEmbeddings(
-            api_key=self.manifest.api_key,
-            model=self.manifest.model,
-            cache_dir=self.manifest.cache_dir,
-        )
-
-    def get_api_key(secret_name: str):
-        return SecretStore.get_secret(secret_name)
+    def set_api_token(self, key, secret_name: str, secret_store: SecretStore):
+        self.resource[key] = secret_store.get(secret_name)

@@ -3,9 +3,13 @@ import abc
 import os
 from flock_models.entities.base import Entity
 
+
 class EntityStore(metaclass=abc.ABCMeta):
     """Abstract base class for entity stores."""
-    def __init__(self, app_name: str = "flock", key_prefix: str = "", is_fs: bool = True) -> None:
+
+    def __init__(
+        self, app_name: str = "flock", key_prefix: str = "", is_fs: bool = True
+    ) -> None:
         """Initialize the entity store."""
         self.app_name = app_name
 
@@ -17,10 +21,9 @@ class EntityStore(metaclass=abc.ABCMeta):
         self.manifest_prefix = f"{self.key_prefix}/manifest"
         self.data_prefix = f"{self.key_prefix}/data"
 
-
     def init_fs(self, key_prefix: str = ""):
         if key_prefix is None:
-            home_dir = os.path.expanduser('~')
+            home_dir = os.path.expanduser("~")
             key_prefix = f"{home_dir}/.{self.app_name}"
         if not os.path.exists(key_prefix):
             os.makedirs(key_prefix)
@@ -32,7 +35,6 @@ class EntityStore(metaclass=abc.ABCMeta):
             self.key_prefix = f"/{self.app_name}"
         else:
             self.key_prefix = key_prefix
-        
 
     @abc.abstractmethod
     def put(self, key, obj: Entity, manifest) -> None:

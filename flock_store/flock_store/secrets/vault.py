@@ -7,7 +7,7 @@ class VaultSecretStore(SecretStore):
     def __init__(self, vault_addr: str, vault_token: str, app_name: str = "flock"):
         super().__init__(app_name)
         self.client = hvac.Client(url=vault_addr, token=vault_token)
-        
+
         if not self.client.is_authenticated():
             raise ValueError("Invalid Vault token")
 

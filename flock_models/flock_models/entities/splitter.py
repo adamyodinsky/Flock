@@ -1,22 +1,19 @@
+from langchain.text_splitter import TextSplitter
+
 """Interface for LLM models."""
 
 from typing import Any
 from flock_models.schemes.llm import LLMSchema
 from flock_models.entities.base import Entity
-from langchain.chat_models import ChatOpenAI
-from langchain.schema import BaseLanguageModel
-from flock_store.secrets.base import SecretStore
+from langchain.text_splitter import TextSplitter
 
 
-class LLMEntity(Entity):
+class SplitterEntity(Entity):
     """Base class for embedding entities."""
 
-    def __init__(self, manifest: dict[str, Any], BaseLanguageModel):
+    def __init__(self, manifest: dict[str, Any], splitter: TextSplitter):
         super().__init__(manifest, LLMSchema)
-        self.resource = BaseLanguageModel(**self.manifest.spec.options.dict())
-
-    def set_api_token(self, key, secret_name: str, secret_store: SecretStore):
-        self.resource[key] = secret_store.get(secret_name)
+        self.resource = splitter(**self.manifest.spec.options.dict())
 
 
 # ---

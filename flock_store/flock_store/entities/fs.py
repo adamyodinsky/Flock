@@ -5,6 +5,7 @@ import json
 from flock_store.entities.base import EntityStore
 from flock_models.entities.base import Entity
 
+
 class EntityStoreFS(EntityStore):
     """Entity store class. This class is used to save and load entities to and from the file system."""
 
@@ -28,16 +29,15 @@ class EntityStoreFS(EntityStore):
         with open(manifest_key, "r") as f:
             manifest = json.load(f)
         return obj, manifest
-    
+
     def get_manifest(self, key) -> dict:
         with open(f"{self.manifest_prefix}/{key}", "r") as f:
             manifest = json.load(f)
         return manifest
-    
+
     def put_manifest(self, key, manifest) -> None:
         with open(f"{self.manifest_prefix}/{key}", "w") as f:
             json.dump(manifest, f)
-
 
     def put_data(self, key, obj) -> None:
         serialized_obj = pickle.dumps(obj)
@@ -49,4 +49,3 @@ class EntityStoreFS(EntityStore):
             serialized_obj = f.read()
         obj: Entity = pickle.loads(serialized_obj)
         return obj
-

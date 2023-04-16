@@ -9,7 +9,7 @@ readme = "README.md"
 python = "^3.9"
 pydantic = "^1.10.7"
 pyyaml = "^6.0"
-flock-entity-store = {path = "../flock_entity_store"}
+flock-store = {path = "../flock_store"}
 langchain = "^0.0.141"
 
 

@@ -9,6 +9,7 @@ metadata:
     app: my_app
 spec:
   vendor: openai
-  model: text-embedding-ada-002
-  embedding_ctx_length: 4096
-  chunk_size: 1000
+  options:
+    model: text-embedding-ada-002
+    embedding_ctx_length: 4096
+    chunk_size: 1000
