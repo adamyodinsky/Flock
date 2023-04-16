@@ -1,29 +1,40 @@
 """Resource for vectorstore."""
 
 from typing import Any
-from flock_models.schemes.llm import LLMSchema
 from flock_models.resources.base import Tool
 from langchain.chains.qa_with_sources.base import BaseQAWithSourcesChain
 from flock_store.resources.base import ResourceStore
-
+from flock_models.schemes.vectorstore_retriever_tool import VectorStoreRetrieverToolSchema
+from langchain.schema import BaseLanguageModel
+from flock_models.resources.vectorstore import VectorStoreResource
 
 
 class VectorStoreQATool(Tool):
     """Base class for vectorstore qa tools."""
 
     def __init__(self, manifest: dict[str, Any], retriever: BaseQAWithSourcesChain, resource_store: ResourceStore):
-        super().__init__(manifest, LLMSchema)
+        super().__init__(manifest, VectorStoreRetrieverToolSchema)
+        self.manifest = VectorStoreRetrieverToolSchema(**manifest)
+
+        llm_key = f"{self.manifest.kind}/{self.manifest.spec.llm.name}"
+        vectorestore_key = f"{self.manifest.kind}/{self.manifest.spec.store.name}"
+
+        vectorestore: VectorStoreResource = resource_store.get_data(vectorestore_key)
+        llm_resource: BaseLanguageModel = resource_store.get_data(llm_key)
+
         self.resource = retriever.from_chain_type(
             **self.manifest.spec.options.dict(),
-            llm=resource_store.get_data(self.manifest.spec.llm.name),
+            llm =llm_resource.resource,
+            retriever=vectorestore.resource.as_retriever(),
             )
-    
-    
-# original_source_base="https://github.com/hwchase17/langchain/tree/master",
-# base_path=base_path,
-# archive_path=archive_path,
-# splitter=python_splitter,
-# vectorstore=git_vectorstore,
+
+
+
+# llm=llm,
+# chain_type="stuff",
+# retriever=git_vectorstore.as_retriever(),
+# reduce_k_below_max_tokens=True,
+
 
 # apiVersion: flock/v1
 # kind: VectorStoreRetrieverTool
@@ -33,8 +44,8 @@ class VectorStoreQATool(Tool):
 #   labels:
 #     app: my_app
 # spec:
-#   options:
-#       chain_type: stuff
+# options:
+#   chain_type: stuff
 #   llm:
 #     name: openai
 #     labels:

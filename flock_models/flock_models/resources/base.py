@@ -9,7 +9,7 @@ class Resource:
     """Base class for all resources."""
 
     def __init__(self, manifest: dict[str, Any], schema: FlockBaseSchema):
-        self.manifest = schema(**manifest)
+        self.manifest: FlockBaseSchema = schema(**manifest)
 
     def put(self, resource_store: ResourceStore):
         key = f"{self.manifest.kind}/{self.manifest.metadata.name}"

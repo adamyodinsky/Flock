@@ -10,8 +10,9 @@ from flock_store.secrets.base import SecretStore
 class LLMResource(Resource):
     """Base class for embedding resources."""
 
-    def __init__(self, manifest: dict[str, Any], llm: BaseLanguageModel):
+    def __init__(self, manifest: LLMSchema, llm: BaseLanguageModel):
         super().__init__(manifest, LLMSchema)
+        self.manifest = LLMSchema(**manifest)
         self.resource = llm(**self.manifest.spec.options.dict())
 
     def set_api_token(self, key, secret_name: str, secret_store: SecretStore):

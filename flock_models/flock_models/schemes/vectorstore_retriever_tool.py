@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import Field
 from flock_models.schemes.base import FlockBaseSchema, Labels, BaseModelConfig
 
@@ -6,14 +7,14 @@ class Store(Labels):
     name: str = Field(..., description="Name of the store")
 
 
-class LlmSpec(Labels):
+class LLM(Labels):
     name: str = Field(..., description="Name of the Language Model")
 
 
 class VectorStoreRetrieverToolSpec(BaseModelConfig):
-    llm: LlmSpec
+    llm: LLM
     store: Store
-    chain_type: str = Field(..., description="The type of chain to be used")
+    options: Optional[dict] = Field(description="Options for the tool")
 
 
 class VectorStoreRetrieverToolSchema(FlockBaseSchema):

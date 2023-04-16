@@ -1,7 +1,7 @@
 """Interface for LLM models."""
 
 from typing import Any
-from flock_models.schemes.llm import LLMSchema
+from flock_models.schemes.splitter import SplitterSchema
 from flock_models.resources.base import Resource
 from langchain.text_splitter import TextSplitter
 
@@ -10,8 +10,9 @@ class SplitterResource(Resource):
     """Base class for embedding resources."""
 
     def __init__(self, manifest: dict[str, Any], splitter: TextSplitter):
-        super().__init__(manifest, LLMSchema)
-        self.resource = splitter(**self.manifest.spec.options.dict())
+        super().__init__(manifest, SplitterSchema)
+        self.manifest = SplitterSchema(**manifest)
+        self.resource: TextSplitter = splitter(**self.manifest.spec.options.dict())
 
 
 # ---
