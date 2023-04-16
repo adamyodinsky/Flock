@@ -4,7 +4,7 @@ import yaml
 from pydantic import ValidationError
 from flock_models.schemes.agent import AgentSchema
 from flock_models.schemes.embedding import EmbeddingSchema
-from flock_models.schemes.vector_store import VectorStoreSchema
+from flock_models.schemes.vectorstore import VectorStoreSchema
 from flock_models.schemes.llm import LLMSchema
 from flock_models.schemes.vectorstore_retriever_tool import (
     VectorStoreRetrieverToolSchema,
