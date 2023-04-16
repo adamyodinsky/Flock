@@ -10,6 +10,8 @@ packages = [{include = "flock_controller"}]
 python = "^3.9"
 flock-schemas = {path = "../flock_schemas"}
 langchain = "^0.0.139"
+flock-entity-store = {path = "../flock_entity_store"}
+pydantic = "^1.10.7"
 
 
 [tool.poetry.group.dev.dependencies]
