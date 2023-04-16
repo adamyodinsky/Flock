@@ -8,6 +8,8 @@ packages = [{include = "flock_store"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+flock-models = {path = "../flock_models"}
+etcd3 = "^0.12.0"
 
 
 [build-system]
