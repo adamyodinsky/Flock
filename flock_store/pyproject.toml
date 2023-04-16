@@ -10,6 +10,7 @@ packages = [{include = "flock_store"}]
 python = "^3.9"
 flock-models = {path = "../flock_models"}
 etcd3 = "^0.12.0"
+hvac = "^1.1.0"
 
 
 [build-system]

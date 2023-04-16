@@ -1,4 +1,4 @@
-"""Entity store class. This class is used to save and load entities to and from etcd.""" ""
+"""Entity store class. This class is used to save and load resources to and from etcd.""" ""
 
 import etcd3
 import pickle
@@ -8,7 +8,7 @@ from flock_models.resources.base import Resource
 
 
 class EtcdStore(ResourceStore):
-    """Entity store class. This class is used to save and load entities to and from the file system."""
+    """Entity store class. This class is used to save and load resources to and from the file system."""
 
     def __init__(
         self,

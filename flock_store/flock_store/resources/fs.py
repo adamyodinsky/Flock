@@ -1,4 +1,4 @@
-"""Entity store class. This class is used to save and load entities to and from the file system."""
+"""Entity store class. This class is used to save and load resources to and from the file system."""
 
 import pickle
 import json
@@ -7,7 +7,7 @@ from flock_models.resources.base import Resource
 
 
 class EntityStoreFS(EntityStore):
-    """Entity store class. This class is used to save and load entities to and from the file system."""
+    """Entity store class. This class is used to save and load resources to and from the file system."""
 
     def put(self, key, obj: Resource, manifest) -> None:
         data_key = f"{self.data_prefix}/{key}"

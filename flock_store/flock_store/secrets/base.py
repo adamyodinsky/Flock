@@ -1,4 +1,5 @@
-"""Entity store base class. This class is used to save and load entities."""
+"""Secrets store base class. This class is used to save and load secrets."""
+
 import abc
 from typing import Any
 

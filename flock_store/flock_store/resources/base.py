@@ -5,12 +5,12 @@ from flock_models.resources.base import Resource
 
 
 class ResourceStore(metaclass=abc.ABCMeta):
-    """Abstract base class for entity stores."""
+    """Abstract base class for resource stores."""
 
     def __init__(
         self, app_name: str = "flock", key_prefix: str = "", is_fs: bool = True
     ) -> None:
-        """Initialize the entity store."""
+        """Initialize the resource store."""
         self.app_name = app_name
 
         if is_fs:

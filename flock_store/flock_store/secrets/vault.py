@@ -1,3 +1,5 @@
+"""Vault secret store implementation."""
+
 import hvac
 from typing import Any
 from flock_store.secrets.base import SecretStore
