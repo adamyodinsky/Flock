@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "flock-controller"
+version = "0.1.0"
+description = ""
+authors = ["Adam Yodinsky <27074934+adamyodinsky@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "flock_controller"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+flock-schemas = {path = "../flock_schemas"}
+langchain = "^0.0.139"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
