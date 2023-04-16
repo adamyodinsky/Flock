@@ -1,4 +1,4 @@
-"""Base class for all entities."""
+"""Base class for all resources."""
 
 from typing import Any
 from flock_store.resources.base import ResourceStore

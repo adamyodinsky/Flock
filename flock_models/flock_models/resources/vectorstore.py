@@ -1,13 +1,13 @@
-"""Entity for vectorstore entities."""
+"""Resource for vectorstore."""
 
 from typing import Any
 from flock_models.schemes.llm import LLMSchema
-from flock_models.resources.base import Entity
+from flock_models.resources.base import Resource
 from langchain.vectorstores.base import VectorStore
 
 
-class VectorStoreEntity(Entity):
-    """Base class for embedding entities."""
+class VectorStoreResource(Resource):
+    """Base class for vectorestore."""
 
     def __init__(self, manifest: dict[str, Any], vectorstore: VectorStore):
         super().__init__(manifest, LLMSchema)

@@ -1,4 +1,4 @@
-"""Entity for vectorstore entities."""
+"""Resource for vectorstore."""
 
 from typing import Any
 from flock_models.schemes.llm import LLMSchema
@@ -19,8 +19,6 @@ class VectorStoreQATool(Tool):
             )
     
     
-
-
 # original_source_base="https://github.com/hwchase17/langchain/tree/master",
 # base_path=base_path,
 # archive_path=archive_path,
