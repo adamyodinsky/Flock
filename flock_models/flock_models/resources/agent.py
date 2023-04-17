@@ -8,16 +8,16 @@ from flock_models.resources.llm import LLMResource
 from langchain.agents import initialize_agent, Tool as LCToolWarper
 from flock_models.schemes.base import Kind
 
-class SelfAskSearchAgent(Agent):
+
+class AgentResource(Agent):
     """Class for self ask search agent."""
 
     def __init__(
-            self,
-            manifest: dict[str, Any],
-            resource_store: ResourceStore,
-            agent_type: AgentType,
-            ):
-        
+        self,
+        manifest: dict[str, Any],
+        resource_store: ResourceStore,
+        agent_type: AgentType,
+    ):
         self.agent_type = agent_type
         self.manifest = AgentSchema(**manifest)
         llm_key = f"{Kind.llm.value}/{self.manifest.spec.llm.name}"
@@ -29,7 +29,7 @@ class SelfAskSearchAgent(Agent):
             tool = ToolSchema(**tool)
             tool_key = f"{tool.kind}/{tool.name}"
             tool_resource: ToolResource = resource_store.get_resource(tool_key)
-            
+
             wrapped_tool = LCToolWarper(
                 name=tool_resource.get_name(),
                 description=tool_resource.get_description(),
@@ -39,11 +39,9 @@ class SelfAskSearchAgent(Agent):
             tools.append(wrapped_tool)
 
         self.resource = initialize_agent(
-            tools=tools,
-            llm=llm_resource.resource,
-            agent=agent_type,
-            verbose=True
+            tools=tools, llm=llm_resource.resource, agent=agent_type, verbose=True
         )
+
 
 # Tool(
 #       name="langchain_git",
@@ -87,4 +85,3 @@ class SelfAskSearchAgent(Agent):
 #       name: my-google-search
 #       labels:
 #         location:  us-west-1
-          

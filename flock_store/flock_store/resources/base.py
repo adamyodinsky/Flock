@@ -6,9 +6,7 @@ import os
 class ResourceStore(metaclass=abc.ABCMeta):
     """Abstract base class for resource stores."""
 
-    def __init__(
-        self, key_prefix: str
-    ) -> None:
+    def __init__(self, key_prefix: str) -> None:
         """Initialize the resource store."""
 
         # self.manifest_prefix = f"{self.key_prefix}/manifest"
@@ -17,9 +15,9 @@ class ResourceStore(metaclass=abc.ABCMeta):
         self.resource_prefix = f"{self.key_prefix}/resource"
 
     @abc.abstractmethod
-    def put_resource(self, key, obj) -> None:
+    def put(self, key, obj) -> None:
         pass
 
     @abc.abstractmethod
-    def get_resource(self, key):
+    def get(self, key):
         pass

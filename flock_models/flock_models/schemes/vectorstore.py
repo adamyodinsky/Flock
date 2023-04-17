@@ -1,22 +1,35 @@
 from typing import Optional
 from pydantic import Field
-from flock_models.schemes.base import FlockBaseSchema, Labels, BaseModelConfig, Kind
+from flock_models.schemes.base import (
+    FlockBaseSchema,
+    Labels,
+    BaseModelConfig,
+    Kind,
+    Dependency,
+)
+
+from enum import Enum
+
+class VectorStoreVendor(Enum):
+    """Enum for all kinds of resources."""
+    Chroma = "Chroma"
+
+class Embedding(Dependency):
+    kind: str = Field(Kind.embedding.value, const=True)
 
 
-class Embedding(Labels):
-    name: str = Field(..., description="Name of the embedding")
+class Dependencies(Labels):
+    Embedding
 
 
-class Store(BaseModelConfig):
+class VectorStoreSpec(BaseModelConfig):
     vendor: str = Field(
         ..., description="The vendor of the vector store, e.g. chroma, pinecone, etc."
     )
     options: Optional[dict] = Field(description="Options for the vector store")
-
-class VectorStoreSpec(BaseModelConfig):
-    store: Store
-    embedding: Embedding
-
+    dependencies: Dependencies = Field(
+        ..., description="Dependencies for the vector store"
+    )
 
 class VectorStoreSchema(FlockBaseSchema):
     kind: str = Field(Kind.vectorstore.value, const=True)

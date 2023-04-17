@@ -4,6 +4,8 @@ from typing import Any
 from flock_models.schemes.splitter import SplitterSchema
 from flock_models.resources.base import Resource
 from langchain.text_splitter import TextSplitter
+from langchain.text_splitter import (CharacterTextSplitter,
+                                     PythonCodeTextSplitter)
 
 
 class SplitterResource(Resource):
@@ -12,6 +14,7 @@ class SplitterResource(Resource):
     def __init__(self, manifest: dict[str, Any], splitter: TextSplitter):
         self.manifest = SplitterSchema(**manifest)
         self.resource: TextSplitter = splitter(**self.manifest.spec.options.dict())
+
 
 # ---
 # apiVersion: flock/v1

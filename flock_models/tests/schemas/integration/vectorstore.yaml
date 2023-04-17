@@ -8,10 +8,11 @@ metadata:
   annotations:
     source: github.com/floc/flock.html
 spec:
-  store:
-    vendor: chroma
-    options:
-      persist_directory: './documentation_vectorstore'
-      collection_name: 'documentation'
-  embedding:
-    name: my-openai-embedding
+  vendor: Chroma
+  options:
+    persist_directory: './.documentation_vectorstore'
+    collection_name: 'documentation'
+  dependencies:
+    - kind: Embedding
+      name: my-openai-embedding
+      namespace: default

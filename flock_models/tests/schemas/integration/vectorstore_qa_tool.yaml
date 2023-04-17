@@ -11,9 +11,12 @@ spec:
   options:
     chain_type: stuff
     reduce_k_below_max_tokens: true
-  llm:
-    name: my-openai-llm
-  store:
-    name: documentation_vectorstore
-    
+  dependencies:
+    - kind: LLM
+      name: my-openai-llm
+      namespace: default
+    - kind: VectorStore
+      name: documentation_vectorstore
+      namespace: default
+      
     

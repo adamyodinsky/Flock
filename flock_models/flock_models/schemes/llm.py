@@ -1,10 +1,15 @@
 from typing import Optional
 from pydantic import Field
 from flock_models.schemes.base import FlockBaseSchema, BaseModelConfig, Kind
+from enum import Enum
+
+class LLMVendor(Enum):
+    """Enum for all kinds of resources."""
+    openai = "openai"
 
 
 class LLMSpec(BaseModelConfig):
-    vendor: str = Field(..., description="Vendor of the LLM")
+    vendor: LLMVendor = Field(..., description="Vendor of the LLM")
     options: Optional[dict] = Field(description="Options for the LLM")
 
 

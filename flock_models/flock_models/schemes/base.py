@@ -2,11 +2,13 @@ from datetime import datetime
 from typing import Literal, Optional
 from pydantic import BaseModel, Field, Extra
 from enum import Enum
+
 # from uuid import UUID, uuid4
 
 
 class Kind(Enum):
     """Enum for all kinds of resources."""
+
     embedding = "Embedding"
     vectorstore = "VectorStore"
     vectorstore_qa_tool = "VectorStoreQATool"
@@ -35,6 +37,14 @@ class Labels(BaseModelConfig):
     )
 
 
+class Dependency(Labels):
+    name: str = Field(..., description="Name of the dependency")
+    kind: Kind = Field(..., description="Kind of the dependency")
+    namespace: Optional[str] = Field(
+        "default", description="The namespace of the object", max_length=63
+    )
+
+
 class MetaData(Labels, Annotations):
     name: str = Field(..., description="Name of the object", max_length=63)
     description: str = Field(..., description="Description", max_length=255)
@@ -42,9 +52,14 @@ class MetaData(Labels, Annotations):
     Labels
 
 
-class FlockBaseSchema(BaseModelConfig):
+class Namespace(BaseModelConfig):
+    namespace: Optional[str] = Field(
+        "default", description="The namespace of the object", max_length=63
+    )
+
+
+class FlockBaseSchema(Namespace):
     apiVersion: Literal["flock/v1"] = Field(..., description="API version")
-    namespace: Optional[str] = Field("default", description="The namespace of the object", max_length=63)
     metadata: MetaData
     created_at: Optional[datetime] = Field(
         default=None, description="Creation timestamp"

@@ -8,11 +8,9 @@ metadata:
   labels:
     app: my_app
 spec:
-  llm:
-    name: my-llm
-    labels:
-      app: my_app
-  search:
-    name: serpapi
-    labels:
-      app: my_app
+  vendor: google-serper
+  dependencies:
+    - kind: LLM
+      name: my-llm
+      namespace: default
+      

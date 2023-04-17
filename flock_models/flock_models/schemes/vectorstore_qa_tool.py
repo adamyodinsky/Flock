@@ -1,20 +1,38 @@
 from typing import Optional
 from pydantic import Field
-from flock_models.schemes.base import FlockBaseSchema, Labels, BaseModelConfig, Kind
+from flock_models.schemes.base import (
+    FlockBaseSchema,
+    Labels,
+    BaseModelConfig,
+    Kind,
+    Dependency,
+)
+from enum import Enum
+
+class VectorStoreQAToolVendor(Enum):
+    """Enum for all kinds of resources."""
+    RetrievalQAWithSourcesChain = "RetrievalQAWithSourcesChain"
 
 
-class Store(Labels):
-    name: str = Field(..., description="Name of the store")
+class Store(Dependency):
+    kind: str = Field(Kind.vectorstore.value, const=True)
 
 
-class LLM(Labels):
-    name: str = Field(..., description="Name of the Language Model")
+class LLM(Dependency):
+    kind: str = Field(Kind.llm.value, const=True)
+
+
+class Dependencies(Labels):
+    Store
+    LLM
 
 
 class VectorStoreQAToolSpec(BaseModelConfig):
-    llm: LLM
-    store: Store
+    vendor: VectorStoreQAToolVendor = Field(
+        ..., description="The class of the tool, e.g. RetrievalQAWithSourcesChain, etc."
+    )
     options: Optional[dict] = Field(description="Options for the tool")
+    dependencies: Dependencies = Field(..., description="Dependencies for the tool")
 
 
 class VectorStoreQAToolSchema(FlockBaseSchema):

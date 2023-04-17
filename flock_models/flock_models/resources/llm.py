@@ -9,9 +9,9 @@ from flock_store.secrets.base import SecretStore
 class LLMResource(Resource):
     """Class for LLM resources."""
 
-    def __init__(self, manifest: LLMSchema, llm: BaseLanguageModel):
+    def __init__(self, manifest: LLMSchema, llm_cls: BaseLanguageModel):
         self.manifest: LLMSchema = LLMSchema(**manifest)
-        self.resource: BaseLanguageModel = llm(**self.manifest.spec.options.dict())
+        self.resource: BaseLanguageModel = llm_cls(**self.manifest.spec.options)
 
     def set_api_token(self, key, secret_name: str, secret_store: SecretStore):
         self.resource[key] = secret_store.get(secret_name)

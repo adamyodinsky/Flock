@@ -1,15 +1,20 @@
 """Base class for all resources."""
 
-class Resource():
+
+from typing import Any
+
+
+class Resource:
     """Base class for all resources."""
-
-    def save_to_store(self, store):
-        """Save resource to store."""
-        
-
-    def load_from_store(self, store):
-        """Load resource from store."""    
-    
+    def __init__(
+        self,
+        options: dict[str, Any],
+        dependencies: dict[str, Any],
+        vendor: str
+    ):
+        self.options = options
+        self.dependencies = dependencies
+        self.vendor = vendor
 
 class ToolResource(Resource):
     """Base class for all tools."""
@@ -25,6 +30,7 @@ class ToolResource(Resource):
     def get_description(self) -> str:
         """Get description of tool."""
         pass
+
 
 class Agent(Resource):
     """Base class for all agents."""
