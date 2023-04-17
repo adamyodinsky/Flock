@@ -1,6 +1,5 @@
 """Interface for LLM models."""
 
-from typing import Any
 from flock_models.schemes.llm import LLMSchema
 from flock_models.resources.base import Resource
 from langchain.schema import BaseLanguageModel
@@ -8,12 +7,11 @@ from flock_store.secrets.base import SecretStore
 
 
 class LLMResource(Resource):
-    """Base class for embedding resources."""
+    """Class for LLM resources."""
 
     def __init__(self, manifest: LLMSchema, llm: BaseLanguageModel):
-        super().__init__(manifest, LLMSchema)
-        self.manifest = LLMSchema(**manifest)
-        self.resource = llm(**self.manifest.spec.options.dict())
+        self.manifest: LLMSchema = LLMSchema(**manifest)
+        self.resource: BaseLanguageModel = llm(**self.manifest.spec.options.dict())
 
     def set_api_token(self, key, secret_name: str, secret_store: SecretStore):
         self.resource[key] = secret_store.get(secret_name)

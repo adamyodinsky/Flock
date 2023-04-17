@@ -11,12 +11,12 @@ class LLM(Labels):
     name: str = Field(..., description="Name of the Language Model")
 
 
-class VectorStoreRetrieverToolSpec(BaseModelConfig):
+class VectorStoreQAToolSpec(BaseModelConfig):
     llm: LLM
     store: Store
     options: Optional[dict] = Field(description="Options for the tool")
 
 
-class VectorStoreRetrieverToolSchema(FlockBaseSchema):
+class VectorStoreQAToolSchema(FlockBaseSchema):
     kind: str = Field("VectorStoreRetrieverTool", const=True)
-    spec: VectorStoreRetrieverToolSpec
+    spec: VectorStoreQAToolSpec

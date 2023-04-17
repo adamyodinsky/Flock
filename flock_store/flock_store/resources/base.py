@@ -1,7 +1,6 @@
 """Resources store base class. This class is used to save and load entities."""
 import abc
 import os
-from flock_models.resources.base import Resource
 
 
 class ResourceStore(metaclass=abc.ABCMeta):
@@ -20,6 +19,7 @@ class ResourceStore(metaclass=abc.ABCMeta):
 
         self.manifest_prefix = f"{self.key_prefix}/manifest"
         self.data_prefix = f"{self.key_prefix}/data"
+        self.resource_prefix = f"{self.key_prefix}/resource"
 
     def init_fs(self, key_prefix: str = ""):
         if key_prefix is None:
@@ -37,14 +37,6 @@ class ResourceStore(metaclass=abc.ABCMeta):
             self.key_prefix = key_prefix
 
     @abc.abstractmethod
-    def put(self, key, obj: Resource, manifest) -> None:
-        pass
-
-    @abc.abstractmethod
-    def get(self, key) -> tuple:
-        pass
-
-    @abc.abstractmethod
     def put_manifest(self, key, manifest) -> None:
         pass
 
@@ -53,9 +45,9 @@ class ResourceStore(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def put_data(self, key, obj: Resource) -> None:
+    def put_data(self, key, obj: object) -> None:
         pass
 
     @abc.abstractmethod
-    def get_data(self, key) -> Resource:
+    def get_data(self, key) -> object:
         pass

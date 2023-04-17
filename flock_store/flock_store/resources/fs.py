@@ -2,50 +2,45 @@
 
 import pickle
 import json
-from flock_store.resources.base import EntityStore
-from flock_models.resources.base import Resource
+from flock_store.resources.base import ResourceStore
 
 
-class EntityStoreFS(EntityStore):
+class EntityStoreFS(ResourceStore):
     """Entity store class. This class is used to save and load resources to and from the file system."""
 
-    def put(self, key, obj: Resource, manifest) -> None:
-        data_key = f"{self.data_prefix}/{key}"
-        manifest_key = f"{self.manifest_prefix}/{key}"
-        serialized_obj = pickle.dumps(obj)
-
-        with open(data_key, "wb") as f:
-            f.write(serialized_obj)
-        with open(manifest_key, "w") as f:
-            json.dump(manifest, f)
-
-    def get(self, key) -> tuple:
-        data_key = f"{self.data_prefix}/{key}"
-        manifest_key = f"{self.manifest_prefix}/{key}"
-
-        with open(data_key, "rb") as f:
-            serialized_obj = f.read()
-        obj = pickle.loads(serialized_obj)
-        with open(manifest_key, "r") as f:
-            manifest = json.load(f)
-        return obj, manifest
-
     def get_manifest(self, key) -> dict:
-        with open(f"{self.manifest_prefix}/{key}", "r") as f:
+        key = f"{self.manifest_prefix}/{key}"
+        with open(key, "r") as f:
             manifest = json.load(f)
         return manifest
 
     def put_manifest(self, key, manifest) -> None:
-        with open(f"{self.manifest_prefix}/{key}", "w") as f:
+        key = f"{self.manifest_prefix}/{key}"
+        with open(key, "w") as f:
             json.dump(manifest, f)
 
     def put_data(self, key, obj) -> None:
         serialized_obj = pickle.dumps(obj)
-        with open(f"{self.data_prefix}/{key}", "wb") as f:
+        key = f"{self.data_prefix}/{key}"
+        with open(key, "wb") as f:
             f.write(serialized_obj)
 
-    def put_data(self, key) -> Resource:
-        with open(f"{self.data_prefix}/{key}", "rb") as f:
+    def put_data(self, key) -> object:
+        key = f"{self.data_prefix}/{key}"
+        with open(key, "rb") as f:
             serialized_obj = f.read()
-        obj: Resource = pickle.loads(serialized_obj)
+        obj: object = pickle.loads(serialized_obj)
+        return obj
+
+    def put_resource(self, key, obj) -> None:
+        serialized_obj = pickle.dumps(obj)
+        key = f"{self.resource_prefix}/{key}"
+        with open(key, "wb") as f:
+            f.write(serialized_obj)
+
+    def get_resource(self, key) -> object:
+        key = f"{self.resource_prefix}/{key}"
+        with open(key, "rb") as f:
+            serialized_obj = f.read()
+        obj: object = pickle.loads(serialized_obj)
         return obj

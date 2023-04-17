@@ -7,10 +7,9 @@ from langchain.text_splitter import TextSplitter
 
 
 class SplitterResource(Resource):
-    """Base class for embedding resources."""
+    """Class for Splitter resources."""
 
     def __init__(self, manifest: dict[str, Any], splitter: TextSplitter):
-        super().__init__(manifest, SplitterSchema)
         self.manifest = SplitterSchema(**manifest)
         self.resource: TextSplitter = splitter(**self.manifest.spec.options.dict())
 

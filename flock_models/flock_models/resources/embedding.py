@@ -8,10 +8,9 @@ from flock_store.secrets.base import SecretStore
 
 
 class EmbeddingResource(Resource):
-    """Base class for embedding resources."""
+    """class for embedding resources."""
 
     def __init__(self, manifest: dict[str, Any], embedding: Embeddings):
-        super().__init__(manifest, EmbeddingSchema)
         self.manifest = EmbeddingSchema(**manifest)
         self.resource: Embeddings = embedding(**self.manifest.spec.options.dict())
 

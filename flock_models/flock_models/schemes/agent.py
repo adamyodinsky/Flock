@@ -1,6 +1,7 @@
 from pydantic import Field
 from typing import List
 from flock_models.schemes.base import FlockBaseSchema, BaseModelConfig, Labels
+from langchain.agents.agent_types import AgentType
 
 
 class Tool(Labels):
@@ -14,6 +15,7 @@ class AgentLLM(Labels):
 
 class AgentSpec(BaseModelConfig):
     llm: AgentLLM
+    agent_type: AgentType
     tools: List[Tool]
 
 

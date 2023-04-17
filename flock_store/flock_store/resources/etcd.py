@@ -4,7 +4,6 @@ import etcd3
 import pickle
 import json
 from flock_store.resources.base import ResourceStore
-from flock_models.resources.base import Resource
 
 
 class EtcdStore(ResourceStore):
@@ -21,39 +20,34 @@ class EtcdStore(ResourceStore):
 
         self.etcd_client = etcd3.client(host=host, port=port)
 
-    def put(self, key, obj: Resource, manifest) -> None:
-        data_key = f"{self.data_prefix}/{key}"
-        manifest_key = f"{self.manifest_prefix}/{key}"
-
-        serialized_obj = pickle.dumps(obj)
-        self.etcd_client.put(data_key, serialized_obj)
-        self.etcd_client.put(manifest_key, json.dumps(manifest))
-
-    def get(self, key) -> tuple:
-        data_key = f"{self.data_prefix}/{key}"
-        manifest_key = f"{self.manifest_prefix}/{key}"
-
-        serialized_obj, _ = self.etcd_client.get(data_key)
-        manifest_str, _ = self.etcd_client.get(manifest_key)
-
-        obj: Resource = pickle.loads(serialized_obj)
-        manifest: dict = json.loads(manifest_str)
-        return obj, manifest
-
     def put_manifest(self, key, manifest) -> None:
-        self.etcd_client.put(f"{self.manifest_prefix}/{key}", json.dumps(manifest))
+        key = f"{self.manifest_prefix}/{key}"
+        self.etcd_client.put(key, json.dumps(manifest))
 
     def get_manifest(self, key) -> dict:
-        manifest_str, _ = self.etcd_client.get(f"{self.manifest_prefix}/{key}")
+        key = f"{self.manifest_prefix}/{key}"
+        manifest_str, _ = self.etcd_client.get(key)
         manifest: dict = json.loads(manifest_str)
         return manifest
 
-    def put_data(self, key, obj: Resource) -> None:
-        serialized_obj = pickle.dumps(obj)
+    def put_data(self, key, obj: object) -> None:
         key = f"{self.data_prefix}/{key}"
+        serialized_obj = pickle.dumps(obj)
         self.etcd_client.put(key, serialized_obj)
 
-    def get_data(self, key) -> Resource:
+    def get_data(self, key) -> object:
+        key = f"{self.data_prefix}/{key}"
         serialized_obj, _ = self.etcd_client.get(key)
-        obj: Resource = pickle.loads(serialized_obj)
+        obj: object = pickle.loads(serialized_obj)
+        return obj
+
+    def put_resource(self, key, obj: object) -> None:
+        key = f"{self.resource_prefix}/{key}"
+        serialized_obj = pickle.dumps(obj)
+        self.etcd_client.put(key, serialized_obj)
+
+    def get_resource(self, key) -> object:
+        key = f"{self.resource_prefix}/{key}"
+        serialized_obj, _ = self.etcd_client.get(key)
+        obj: object = pickle.loads(serialized_obj)
         return obj
