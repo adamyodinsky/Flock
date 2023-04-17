@@ -1,18 +1,21 @@
 from ast import List
+from enum import Enum
 from typing import Optional
+
 from pydantic import Field
+
 from flock_models.schemes.base import (
-    FlockBaseSchema,
-    Labels,
     BaseModelConfig,
-    Kind,
     Dependency,
+    FlockBaseSchema,
+    Kind,
+    Labels,
 )
 
-from enum import Enum
 
 class SearchToolVendor(Enum):
     """Enum for search_tool vendors."""
+
     google_serper = "google-serper"
     serpapi = "serpapi"
 
@@ -23,7 +26,8 @@ class LLM(Dependency):
 
 class SearchToolSpec(BaseModelConfig):
     vendor: SearchToolVendor = Field(
-        ..., description="The name of the search tool, e.g. serpapi, google-serper, etc."
+        ...,
+        description="The name of the search tool, e.g. serpapi, google-serper, etc.",
     )
     options: Optional[dict] = Field(description="Tool options")
     dependencies: tuple[LLM] = Field(..., description="Tool dependencies")

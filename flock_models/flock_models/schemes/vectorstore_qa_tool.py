@@ -1,13 +1,15 @@
-from typing import Optional
-from pydantic import Field
-from flock_models.schemes.base import (
-    FlockBaseSchema,
-    Labels,
-    BaseModelConfig,
-    Kind,
-    Dependency,
-)
 from enum import Enum
+from typing import Optional
+
+from pydantic import Field
+
+from flock_models.schemes.base import (
+    BaseModelConfig,
+    Dependency,
+    FlockBaseSchema,
+    Kind,
+    Labels,
+)
 
 
 class VectorStoreQAToolVendor(Enum):
@@ -22,7 +24,6 @@ class Store(Dependency):
 
 class LLM(Dependency):
     kind: str = Field(Kind.llm.value, const=True)
-
 
 
 class VectorStoreQAToolSpec(BaseModelConfig):

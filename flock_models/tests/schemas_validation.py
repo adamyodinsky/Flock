@@ -2,16 +2,14 @@ from typing import List
 
 import yaml
 from pydantic import ValidationError
+
 from flock_models.schemes.agent import AgentSchema
 from flock_models.schemes.embedding import EmbeddingSchema
-from flock_models.schemes.vectorstore import VectorStoreSchema
 from flock_models.schemes.llm import LLMSchema
-from flock_models.schemes.vectorstore_qa_tool import (
-    VectorStoreQAToolSchema,
-)
-from flock_models.schemes.splitter import SplitterSchema
-
 from flock_models.schemes.search_tool import SearchToolSchema
+from flock_models.schemes.splitter import SplitterSchema
+from flock_models.schemes.vectorstore import VectorStoreSchema
+from flock_models.schemes.vectorstore_qa_tool import VectorStoreQAToolSchema
 
 
 def validate_crds(crds: List[dict]):

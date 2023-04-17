@@ -1,11 +1,13 @@
 """Resource for vectorstore."""
 
 from typing import Any
-from flock_models.resources.base import Resource
-from langchain.vectorstores.base import VectorStoreLC
+
 from langchain.embeddings.base import Embeddings as EmbeddingsLC
-from flock_models.schemes.base import FlockBaseSchema, Kind
+from langchain.vectorstores.base import VectorStoreLC
 from langchain.vectorstores.chroma import Chroma as ChromaLC
+
+from flock_models.resources.base import Resource
+from flock_models.schemes.base import FlockBaseSchema, Kind
 
 
 class VectorStoreResource(Resource):

@@ -1,18 +1,19 @@
 import yaml
+from flock_store.resources.fs import ResourceStoreFS
+from langchain.chains import RetrievalQAWithSourcesChain
+from langchain.chat_models.openai import ChatOpenAI
+from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.vectorstores import Chroma
+
 from flock_models.resources import (
-    embedding,
-    vectorstore,
-    splitter,
-    llm,
     agent,
+    embedding,
+    llm,
+    splitter,
+    vectorstore,
     vectorstore_qa_tool,
 )
-from flock_store.resources.fs import ResourceStoreFS
-from langchain.vectorstores import Chroma
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.chat_models.openai import ChatOpenAI
 from flock_models.schemes.base import Kind
-from langchain.chains import RetrievalQAWithSourcesChain
 
 path_to_schemas = "tests/schemas/integration"
 

@@ -1,7 +1,8 @@
 from datetime import datetime
-from typing import Literal, Optional
-from pydantic import BaseModel, Field, Extra
 from enum import Enum
+from typing import Literal, Optional
+
+from pydantic import BaseModel, Extra, Field
 
 # from uuid import UUID, uuid4
 

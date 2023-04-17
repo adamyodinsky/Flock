@@ -1,10 +1,11 @@
 """Interface for embedding models."""
 
-from flock_models.resources.base import Resource
 from langchain.embeddings.base import Embeddings as EmbeddingsLC
 from langchain.embeddings.openai import OpenAIEmbeddings as OpenAIEmbeddingsLC
 
+from flock_models.resources.base import Resource
 from flock_models.schemes.embedding import EmbeddingSchema
+
 
 class EmbeddingResource(Resource):
     """class for embedding resources."""

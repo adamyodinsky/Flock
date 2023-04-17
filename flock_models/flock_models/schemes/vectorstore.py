@@ -1,18 +1,20 @@
-from typing import Optional
-from pydantic import Field
-from flock_models.schemes.base import (
-    FlockBaseSchema,
-    Labels,
-    BaseModelConfig,
-    Kind,
-    Dependency,
-)
-
 from enum import Enum
+from typing import Optional
+
+from pydantic import Field
+
+from flock_models.schemes.base import (
+    BaseModelConfig,
+    Dependency,
+    FlockBaseSchema,
+    Kind,
+    Labels,
+)
 
 
 class VectorStoreVendor(Enum):
     """Enum for vectorstore vendors."""
+
     Chroma = "Chroma"
 
 
@@ -25,9 +27,7 @@ class VectorStoreSpec(BaseModelConfig):
         ..., description="The vendor of the vector store, e.g. Chroma, Pinecone, etc."
     )
     options: Optional[dict] = Field(description="Vectorstore options")
-    dependencies: tuple[Embedding] = Field(
-        ..., description="Vectorstore dependencies"
-    )
+    dependencies: tuple[Embedding] = Field(..., description="Vectorstore dependencies")
 
 
 class VectorStoreSchema(FlockBaseSchema):

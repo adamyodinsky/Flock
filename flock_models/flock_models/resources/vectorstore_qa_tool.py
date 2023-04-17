@@ -1,12 +1,14 @@
 """Resource for vectorstore."""
 
 from typing import Any
-from flock_models.resources.base import ToolResource
-from langchain.chains.qa_with_sources.base import BaseQAWithSourcesChain
-from langchain.chains import RetrievalQAWithSourcesChain
-from langchain.vectorstores.base import VectorStore as VectorStoreLC
+
 from langchain.agents import Tool as ToolWarperLC
+from langchain.chains import RetrievalQAWithSourcesChain
+from langchain.chains.qa_with_sources.base import BaseQAWithSourcesChain
 from langchain.schema import BaseLanguageModel as LCBaseLanguageModel
+from langchain.vectorstores.base import VectorStore as VectorStoreLC
+
+from flock_models.resources.base import ToolResource
 from flock_models.schemes.base import FlockBaseSchema, Kind
 
 
@@ -15,11 +17,7 @@ class VectorStoreQAToolResource(ToolResource):
 
     VENDORS = {"RetrievalQAWithSourcesChain": RetrievalQAWithSourcesChain}
 
-    def __init__(
-        self,
-        manifest: FlockBaseSchema,
-        dependencies: dict[str, Any]
-    ):
+    def __init__(self, manifest: FlockBaseSchema, dependencies: dict[str, Any]):
         super().__init__(manifest, dependencies)
         vendor_cls: BaseQAWithSourcesChain = self.VENDORS[self.vendor]
         llm: LCBaseLanguageModel = self.dependencies[Kind.llm.value]
@@ -30,7 +28,7 @@ class VectorStoreQAToolResource(ToolResource):
             llm=llm,
             retriever=vectorestore.as_retriever(),
         )
-        
+
         self.resource = ToolWarperLC(
             name=self.name,
             description=self.description,

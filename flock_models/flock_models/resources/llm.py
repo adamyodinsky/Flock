@@ -1,9 +1,9 @@
 """Interface for LLM models."""
 
-from flock_models.resources.base import Resource
-from langchain.schema import BaseLanguageModel
 from langchain.chat_models import ChatOpenAI
+from langchain.schema import BaseLanguageModel
 
+from flock_models.resources.base import Resource
 from flock_models.schemes.base import FlockBaseSchema
 
 

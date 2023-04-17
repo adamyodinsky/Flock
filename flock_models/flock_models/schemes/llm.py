@@ -1,7 +1,9 @@
-from typing import Optional
-from pydantic import Field
-from flock_models.schemes.base import FlockBaseSchema, BaseModelConfig, Kind
 from enum import Enum
+from typing import Optional
+
+from pydantic import Field
+
+from flock_models.schemes.base import BaseModelConfig, FlockBaseSchema, Kind
 
 
 class LLMVendor(Enum):
