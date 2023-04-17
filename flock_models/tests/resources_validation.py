@@ -26,6 +26,7 @@ def main():
     # set a local resource store
     resource_store = ResourceStoreFS('.resource_store')
     secret_store = None
+    
     with open(f"{path_to_schemas}/{files['embedding']}") as manifest_file:
         embedding_resource = embedding.EmbeddingResource(
             manifest = yaml.load(manifest_file, Loader=yaml.FullLoader),
