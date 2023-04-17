@@ -1,23 +1,22 @@
 """Interface for embedding models."""
 
-from typing import Any
-
 from flock_models.resources.base import Resource
-from langchain.embeddings.base import Embeddings
-from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.embeddings.base import Embeddings as EmbeddingsLC
+from langchain.embeddings.openai import OpenAIEmbeddings as OpenAIEmbeddingsLC
+
+from flock_models.schemes.embedding import EmbeddingSchema
 
 class EmbeddingResource(Resource):
     """class for embedding resources."""
 
     VENDORS = {
-        "OpenAIEmbeddings": OpenAIEmbeddings,
+        "OpenAIEmbeddings": OpenAIEmbeddingsLC,
     }
 
     def __init__(
         self,
-        vendor: str,
-        options: dict[str, Any],
-        dependencies: dict[str, Any] = None,
+        manifest: EmbeddingSchema,
     ):
-        embedding_cls = self.VENDORS[vendor]
-        self.resource: Embeddings = embedding_cls(**options)
+        super().__init__(manifest)
+        embedding_cls = self.VENDORS[self.vendor]
+        self.resource: EmbeddingsLC = embedding_cls(**self.options)

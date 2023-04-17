@@ -9,6 +9,7 @@ metadata:
     app: my_app
 namespace: default
 spec:
+  vendor:
   dependencies:
     - kind: LLM
       name: my-openai-llm

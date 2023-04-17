@@ -1,9 +1,10 @@
 """Interface for LLM models."""
 
-from typing import Any
 from flock_models.resources.base import Resource
 from langchain.schema import BaseLanguageModel
 from langchain.chat_models import ChatOpenAI
+
+from flock_models.schemes.base import FlockBaseSchema
 
 
 class LLMResource(Resource):
@@ -15,9 +16,8 @@ class LLMResource(Resource):
 
     def __init__(
         self,
-        vendor: str,
-        options: dict[str, Any],
-        dependencies: dict[str, Any] = None,
+        manifest: FlockBaseSchema,
     ):
-        llm_cls: BaseLanguageModel = self.VENDORS[vendor]
-        self.resource = llm_cls(**options)
+        super().__init__(manifest)
+        llm_cls: BaseLanguageModel = self.VENDORS[self.vendor]
+        self.resource = llm_cls(**self.options)

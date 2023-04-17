@@ -4,7 +4,7 @@ from typing import Any
 from flock_models.resources.base import Resource
 from langchain.vectorstores.base import VectorStoreLC
 from langchain.embeddings.base import Embeddings as EmbeddingsLC
-from flock_models.schemes.base import Kind
+from flock_models.schemes.base import FlockBaseSchema, Kind
 from langchain.vectorstores.chroma import Chroma as ChromaLC
 
 
@@ -15,14 +15,14 @@ class VectorStoreResource(Resource):
 
     def __init__(
         self,
-        vendor: str,
-        options: dict[str, Any],
+        manifest: FlockBaseSchema,
         dependencies: dict[str, Any],
     ):
-        vendor_cls: VectorStoreLC = self.VENDORS[vendor]
+        super().__init__(manifest, dependencies)
+        vendor_cls: VectorStoreLC = self.VENDORS[self.vendor]
         embedding_function: EmbeddingsLC = dependencies[Kind.embedding.value]
 
-        self.resource: vendor_cls(
-            **options,
+        self.resource = vendor_cls(
+            **self.options,
             embedding_function=embedding_function.resource,
         )

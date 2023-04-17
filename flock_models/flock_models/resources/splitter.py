@@ -5,6 +5,8 @@ from flock_models.resources.base import Resource
 from langchain.text_splitter import TextSplitter
 from langchain.text_splitter import CharacterTextSplitter, PythonCodeTextSplitter
 
+from flock_models.schemes.base import FlockBaseSchema
+
 
 class SplitterResource(Resource):
     """Class for Splitter resources."""
@@ -16,9 +18,8 @@ class SplitterResource(Resource):
 
     def __init__(
         self,
-        vendor: str,
-        options: dict[str, Any],
-        dependencies: dict[str, Any] = None,
+        manifest: FlockBaseSchema,
     ):
-        splitter_cls: TextSplitter = self.VENDORS[vendor]
-        self.resource = splitter_cls(**options)
+        super().__init__(manifest)
+        splitter_cls: TextSplitter = self.VENDORS[self.vendor]
+        self.resource = splitter_cls(**self.options)
