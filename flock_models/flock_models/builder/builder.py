@@ -48,7 +48,7 @@ class Builder:
     def build(self, manifest: FlockBaseSchema) -> Resource:
         """Build resource from manifest. recursively build dependencies."""
 
-        dependencies: Resource = {}
+        dependencies: dict[str, Resource] = {}
 
         for dependency in manifest.spec.dependencies:
             dependency = DependencySchema(**dependency)
@@ -62,7 +62,7 @@ class Builder:
 
             dependency_resource = self.build(dependency_manifest)
             dependencies[dependency.kind] = dependency_resource.resource
-        # create resource
+
         resource: Resource = self.resources[manifest.kind]
         resource = Resource(manifest.spec.options, dependencies)
         return resource

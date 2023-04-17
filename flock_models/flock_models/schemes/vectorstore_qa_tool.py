@@ -9,8 +9,10 @@ from flock_models.schemes.base import (
 )
 from enum import Enum
 
+
 class VectorStoreQAToolVendor(Enum):
-    """Enum for all kinds of resources."""
+    """Enum for vectorstore_qa_tool vendors."""
+
     RetrievalQAWithSourcesChain = "RetrievalQAWithSourcesChain"
 
 
@@ -22,17 +24,13 @@ class LLM(Dependency):
     kind: str = Field(Kind.llm.value, const=True)
 
 
-class Dependencies(Labels):
-    Store
-    LLM
-
 
 class VectorStoreQAToolSpec(BaseModelConfig):
     vendor: VectorStoreQAToolVendor = Field(
         ..., description="The class of the tool, e.g. RetrievalQAWithSourcesChain, etc."
     )
     options: Optional[dict] = Field(description="Options for the tool")
-    dependencies: Dependencies = Field(..., description="Dependencies for the tool")
+    dependencies: tuple[Store, LLM] = Field(..., description="Tool dependencies")
 
 
 class VectorStoreQAToolSchema(FlockBaseSchema):

@@ -6,15 +6,18 @@ from typing import Any
 
 class Resource:
     """Base class for all resources."""
+
     def __init__(
         self,
+        vendor: str,
         options: dict[str, Any],
         dependencies: dict[str, Any],
-        vendor: str
     ):
+        self.vendor = vendor
         self.options = options
         self.dependencies = dependencies
-        self.vendor = vendor
+        self.resource = None
+
 
 class ToolResource(Resource):
     """Base class for all tools."""

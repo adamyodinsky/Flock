@@ -14,33 +14,36 @@ class AgentResource(Agent):
 
     def __init__(
         self,
-        manifest: dict[str, Any],
-        resource_store: ResourceStore,
+        vendor: str,
         agent_type: AgentType,
+        tools: list[ToolSchema],
+        options: dict[str, Any],
+        dependencies: dict[str, Any],
     ):
-        self.agent_type = agent_type
-        self.manifest = AgentSchema(**manifest)
-        llm_key = f"{Kind.llm.value}/{self.manifest.spec.llm.name}"
-        llm_resource: LLMResource = resource_store.get_data(llm_key)
+        
+        # self.agent_type = agent_type
+        # self.manifest = AgentSchema(**manifest)
+        # llm_key = f"{Kind.llm.value}/{self.manifest.spec.llm.name}"
+        # llm_resource: LLMResource = resource_store.get_data(llm_key)
 
-        tools = []
+        # tools = []
 
-        for tool in self.manifest.spec.tools:
-            tool = ToolSchema(**tool)
-            tool_key = f"{tool.kind}/{tool.name}"
-            tool_resource: ToolResource = resource_store.get_resource(tool_key)
+        # for tool in self.manifest.spec.tools:
+        #     tool = ToolSchema(**tool)
+        #     tool_key = f"{tool.kind}/{tool.name}"
+        #     tool_resource: ToolResource = resource_store.get_resource(tool_key)
 
-            wrapped_tool = LCToolWarper(
-                name=tool_resource.get_name(),
-                description=tool_resource.get_description(),
-                func=tool_resource.get_func(),
-            )
+        #     wrapped_tool = LCToolWarper(
+        #         name=tool_resource.get_name(),
+        #         description=tool_resource.get_description(),
+        #         func=tool_resource.get_func(),
+        #     )
 
-            tools.append(wrapped_tool)
+        #     tools.append(wrapped_tool)
 
-        self.resource = initialize_agent(
-            tools=tools, llm=llm_resource.resource, agent=agent_type, verbose=True
-        )
+        # self.resource = initialize_agent(
+        #     tools=tools, llm=llm_resource.resource, agent=agent_type, verbose=True
+        # )
 
 
 # Tool(

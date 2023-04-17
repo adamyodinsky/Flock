@@ -16,4 +16,5 @@ spec:
   tools:
     - kind: VectorStoreQATool
       name: langchain-docs
+      namespace: default
           
