@@ -1,0 +1,13 @@
+---
+apiVersion: flock/v1
+kind: Splitter
+metadata:
+  name: my-splitter
+  description: text-splitter
+  labels:
+    app: my_app
+spec:
+  type: python_splitter
+  options:
+    chunk_size: 30
+    chunk_overlap: 0

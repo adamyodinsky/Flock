@@ -1,0 +1,15 @@
+---
+
+apiVersion: flock/v1
+kind: Embedding
+metadata:
+  name: my-openai-embedding
+  description: openai embedding
+  labels:
+    app: my_app
+spec:
+  vendor: openai
+  options:
+    model: text-embedding-ada-002
+    embedding_ctx_length: 4096
+    chunk_size: 1000

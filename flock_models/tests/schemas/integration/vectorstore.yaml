@@ -1,0 +1,21 @@
+---
+
+apiVersion: flock/v1
+kind: VectorStore
+metadata:
+  name: documentation_vectorstore
+  description: documentation vector store
+  annotations:
+    source: github.com://flockml/flockml
+  labels:
+    app: my_app
+spec:
+  store:
+    vendor: chroma
+    options:
+      path: /home/flock/store/
+      type: local
+  embedding:
+    name: my-openai-embedding
+    labels:
+      app: my_app
