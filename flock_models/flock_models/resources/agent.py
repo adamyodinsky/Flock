@@ -1,12 +1,12 @@
 """Resource for vectorstore."""
 
 from typing import Any
-from flock_models.resources.base import Agent, Resource
+from flock_models.resources.base import Agent, Resource, ToolResource
 from flock_store.resources.base import ResourceStore
-from flock_models.schemes.agent import AgentSchema, AgentType
+from flock_models.schemes.agent import AgentSchema, AgentType, Tool as ToolSchema
 from flock_models.schemes.base import FlockBaseSchema
 from flock_models.resources.llm import LLMResource
-from langchain.agents import initialize_agent, Tool as ToolWarper
+from langchain.agents import initialize_agent, Tool as LCToolWarper
 
 class SelfAskSearchAgent(Agent):
     """Class for self ask search agent."""
@@ -18,30 +18,31 @@ class SelfAskSearchAgent(Agent):
             agent_type: AgentType,
             ):
         
+        self.agent_type = agent_type
         self.manifest = AgentSchema(**manifest)
         llm_key = f"{self.manifest.kind}/{self.manifest.spec.llm.name}"
         llm_resource: LLMResource = resource_store.get_data(llm_key)
 
         tools = []
-        for tool in self.manifest.spec.tools:
 
-            tool_key = f"{self.manifest.kind}/{self.manifest.metadata.name}"
-            tool_obj: object = resource_store.get_data(tool_key)
-            tool_manifest: FlockBaseSchema = resource_store.get_manifest(tool_key)
+        for tool in self.manifest.spec.tools:
+            tool = ToolSchema(**tool)
+            tool_key = f"{tool.kind}/{tool.name}"
+            tool_resource: ToolResource = resource_store.get_resource(tool_key)
             
-            wrapped_tool = ToolWarper(
-                name=tool_manifest.metadata.name,
-                description=tool_manifest.metadata.description,
-                func=tool.func,
+            wrapped_tool = LCToolWarper(
+                name=tool_resource.get_name(),
+                description=tool_resource.get_description(),
+                func=tool_resource.get_func(),
             )
 
-            tool_key = f"{self.manifest.kind}/{tool.name}"
-            tool_resource: Resource = resource_store.get_data(tool_key)
-            tools.append(tool_resource.resource)
+            tools.append(wrapped_tool)
 
         self.resource = initialize_agent(
             tools=tools,
             llm=llm_resource.resource,
+            agent=agent_type,
+            verbose=True
         )
 
 # Tool(

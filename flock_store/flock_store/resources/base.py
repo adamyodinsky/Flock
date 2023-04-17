@@ -51,3 +51,11 @@ class ResourceStore(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def get_data(self, key) -> object:
         pass
+
+    @abc.abstractmethod
+    def put_resource(self, key, obj) -> None:
+        pass
+
+    @abc.abstractmethod
+    def get_resource(self, key):
+        pass

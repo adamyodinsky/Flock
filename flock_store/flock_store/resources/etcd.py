@@ -35,11 +35,11 @@ class EtcdStore(ResourceStore):
         serialized_obj = pickle.dumps(obj)
         self.etcd_client.put(key, serialized_obj)
 
-    def get_data(self, key) -> object:
-        key = f"{self.data_prefix}/{key}"
-        serialized_obj, _ = self.etcd_client.get(key)
-        obj: object = pickle.loads(serialized_obj)
-        return obj
+    # def get_data(self, key) -> object:
+    #     key = f"{self.data_prefix}/{key}"
+    #     serialized_obj, _ = self.etcd_client.get(key)
+    #     obj: object = pickle.loads(serialized_obj)
+    #     return obj
 
     def put_resource(self, key, obj: object) -> None:
         key = f"{self.resource_prefix}/{key}"

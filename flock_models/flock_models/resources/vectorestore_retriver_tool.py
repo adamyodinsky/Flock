@@ -1,7 +1,7 @@
 """Resource for vectorstore."""
 
 from typing import Any
-from flock_models.resources.base import Tool
+from flock_models.resources.base import ToolResource
 from flock_models.resources.vectorstore import VectorStoreResource
 from flock_models.resources.llm import LLMResource
 from langchain.chains.qa_with_sources.base import BaseQAWithSourcesChain
@@ -11,7 +11,7 @@ from langchain.vectorstores.base import VectorStore
 from langchain.schema import BaseLanguageModel
 
 
-class VectorStoreQATool(Tool):
+class VectorStoreQATool(ToolResource):
     """Class for vectorstore qa tool."""
 
     def __init__(self,
@@ -32,7 +32,17 @@ class VectorStoreQATool(Tool):
             retriever=vectorestore_resource.resource.as_retriever(),
             )
 
-
+    def get_name(self) -> str:
+        """Get name of tool."""
+        return self.manifest.metadata.name
+    
+    def get_description(self) -> str:
+        """Get description of tool."""
+        return self.manifest.metadata.description
+    
+    def get_func(self):
+        """Get function of tool."""
+        return self.resource
 
 # llm=llm,
 # chain_type="stuff",
