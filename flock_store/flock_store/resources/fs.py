@@ -1,8 +1,8 @@
 """Entity store class. This class is used to save and load resources to and from the file system."""
 
 import pickle
-import json
 from flock_store.resources.base import ResourceStore
+import os
 
 
 class ResourceStoreFS(ResourceStore):
@@ -14,7 +14,7 @@ class ResourceStoreFS(ResourceStore):
 
         if not os.path.exists(os.path.dirname(key)):
             os.makedirs(os.path.dirname(key))
-            
+
         with open(file=key, mode="wb") as f:
             f.write(serialized_obj)
 

@@ -41,11 +41,13 @@ def main():
         )
 
     with open(f"{path_to_schemas}/{files['vectorstore']}") as manifest_file:
-        vectorestore_qa_tool.VectorStoreResource(
+        vectorstore.VectorStoreResource(
             manifest = yaml.load(manifest_file, Loader=yaml.FullLoader),
-            vectorstore = OpenAIEmbeddings,
+            vectorstore = Chroma,
             resource_store=resource_store,
             )
+        
+    
     print("OK")
 
 main()

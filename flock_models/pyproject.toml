@@ -11,6 +11,7 @@ pydantic = "^1.10.7"
 pyyaml = "^6.0"
 flock-store = {path = "../flock_store", develop = true}
 langchain = "^0.0.141"
+chromadb = "^0.3.21"
 
 
 [tool.poetry.group.dev.dependencies]

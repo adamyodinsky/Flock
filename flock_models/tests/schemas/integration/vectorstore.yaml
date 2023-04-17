@@ -11,7 +11,7 @@ spec:
   store:
     vendor: chroma
     options:
-      path: /home/flock/store/
-      type: local
+      persist_directory: './documentation_vectorstore'
+      collection_name: 'documentation'
   embedding:
     name: my-openai-embedding

@@ -22,7 +22,7 @@ class VectorStoreResource(Resource):
         embedding_function: EmbeddingResource = resource_store.get_resource(embedding_key)
 
         self.resource: VectorStore = vectorstore(
-            **self.manifest.spec.store.options.dict(),
+            **self.manifest.spec.store.options,
             embedding_function=embedding_function.resource,
             )
 
