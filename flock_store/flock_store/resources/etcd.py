@@ -1,8 +1,10 @@
 """Entity store class. This class is used to save and load resources to and from etcd.""" ""
 
-import etcd3
-import pickle
 import json
+import pickle
+
+import etcd3
+
 from flock_store.resources.base import ResourceStore
 
 

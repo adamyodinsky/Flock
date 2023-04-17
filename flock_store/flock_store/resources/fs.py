@@ -1,8 +1,10 @@
 """Entity store class. This class is used to save and load resources to and from the file system."""
 
-import dill as pickle
-from flock_store.resources.base import ResourceStore
 import os
+
+import dill as pickle
+
+from flock_store.resources.base import ResourceStore
 
 
 class ResourceStoreFS(ResourceStore):
