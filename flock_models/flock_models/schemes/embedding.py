@@ -1,6 +1,6 @@
 from typing import Optional
 from pydantic import Field
-from flock_models.schemes.base import FlockBaseSchema, BaseModelConfig
+from flock_models.schemes.base import FlockBaseSchema, BaseModelConfig, Kind
 
 
 class EmbeddingSpec(BaseModelConfig):
@@ -9,5 +9,5 @@ class EmbeddingSpec(BaseModelConfig):
 
 
 class EmbeddingSchema(FlockBaseSchema):
-    kind: str = Field("Embedding", const=True, description="The kind of the object")
+    kind: str = Field(Kind.embedding.value, const=True, description="The kind of the object")
     spec: EmbeddingSpec

@@ -6,8 +6,8 @@ from flock_models.schemes.agent import AgentSchema
 from flock_models.schemes.embedding import EmbeddingSchema
 from flock_models.schemes.vectorstore import VectorStoreSchema
 from flock_models.schemes.llm import LLMSchema
-from flock_models.schemes.vectorstore_retriever_tool import (
-    VectorStoreRetrieverToolSchema,
+from flock_models.schemes.vectorstore_qa_tool import (
+    VectorStoreQAToolSchema,
 )
 from flock_models.schemes.splitter import SplitterSchema
 
@@ -20,8 +20,8 @@ def validate_crds(crds: List[dict]):
         try:
             if kind == "Agent":
                 AgentSchema(**crd)
-            elif crd["kind"] == "VectorStoreRetrieverTool":
-                VectorStoreRetrieverToolSchema(**crd)
+            elif crd["kind"] == "VectorStoreQATool":
+                VectorStoreQAToolSchema(**crd)
             elif crd["kind"] == "LLM":
                 LLMSchema(**crd)
             elif crd["kind"] == "SearchTool":
@@ -41,16 +41,16 @@ def validate_crds(crds: List[dict]):
 
 
 files = [
-    "agent.yaml",
-    "vectorstore_retriever_tool.yaml",
-    "llm.yaml",
+    "vectorstore.yaml",
+    "vectorstore_qa_tool.yaml",
     "search_tool.yaml",
-    "vector_store.yaml",
-    "embedding.yaml",
     "splitter.yaml",
+    "embedding.yaml",
+    "llm.yaml",
+    "agent.yaml",
 ]
 
 for file in files:
-    with open(f"tests/schemas/{file}") as f:
+    with open(f"tests/schemas/unit/{file}") as f:
         crds = list(yaml.load_all(f, Loader=yaml.FullLoader))
         validate_crds(crds)

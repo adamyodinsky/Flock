@@ -6,9 +6,7 @@ metadata:
   name: documentation_vectorstore
   description: documentation vector store
   annotations:
-    source: github.com://flockml/flockml
-  labels:
-    app: my_app
+    source: github.com/floc/flock.html
 spec:
   store:
     vendor: chroma
@@ -17,5 +15,3 @@ spec:
       type: local
   embedding:
     name: my-openai-embedding
-    labels:
-      app: my_app

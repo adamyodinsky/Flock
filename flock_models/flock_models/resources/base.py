@@ -1,8 +1,5 @@
 """Base class for all resources."""
 
-import abc
-
-
 class Resource():
     """Base class for all resources."""
 

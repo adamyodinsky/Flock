@@ -8,12 +8,13 @@ metadata:
   labels:
     app: my_app
 spec:
+  agent_type: zero-shot-react-description
   llm:
     name: openai
     labels:
       app: my_app
   tools:
-    - kind: VectorStoreRetrieverTool
+    - kind: VectorStoreQATool
       name: langchain-docs
     - kind: SearchTool
       name: my-google-search

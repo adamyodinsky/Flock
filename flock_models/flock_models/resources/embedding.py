@@ -12,7 +12,7 @@ class EmbeddingResource(Resource):
 
     def __init__(self, manifest: dict[str, Any], embedding: Embeddings):
         self.manifest = EmbeddingSchema(**manifest)
-        self.resource: Embeddings = embedding(**self.manifest.spec.options.dict())
+        self.resource: Embeddings = embedding(**self.manifest.spec.options)
 
     def set_api_token(self, key, secret_name: str, secret_store: SecretStore):
         self.resource[key] = secret_store.get(secret_name)

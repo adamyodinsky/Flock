@@ -1,11 +1,11 @@
 from pydantic import Field
 from typing import List
-from flock_models.schemes.base import FlockBaseSchema, BaseModelConfig, Labels
+from flock_models.schemes.base import FlockBaseSchema, BaseModelConfig, Labels, Kind
 from langchain.agents.agent_types import AgentType
 
 
 class Tool(Labels):
-    kind: str
+    kind: Kind
     name: str
 
 
@@ -20,5 +20,5 @@ class AgentSpec(BaseModelConfig):
 
 
 class AgentSchema(FlockBaseSchema):
-    kind: str = Field("Agent", const=True)
+    kind: str = Field(Kind.agent.value, const=True)
     spec: AgentSpec

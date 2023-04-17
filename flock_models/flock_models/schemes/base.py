@@ -1,8 +1,19 @@
 from datetime import datetime
 from typing import Literal, Optional
 from pydantic import BaseModel, Field, Extra
-
+from enum import Enum
 # from uuid import UUID, uuid4
+
+
+class Kind(Enum):
+    """Enum for all kinds of resources."""
+    embedding = "Embedding"
+    vectorstore = "VectorStore"
+    vectorstore_qa_tool = "VectorStoreQATool"
+    llm = "LLM"
+    search_tool = "SearchTool"
+    splitter = "Splitter"
+    agent = "Agent"
 
 
 class BaseModelConfig(BaseModel):

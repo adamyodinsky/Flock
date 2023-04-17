@@ -1,6 +1,6 @@
 from typing import Optional
 from pydantic import Field
-from flock_models.schemes.base import FlockBaseSchema, Labels, BaseModelConfig
+from flock_models.schemes.base import FlockBaseSchema, Labels, BaseModelConfig, Kind
 
 
 class Store(Labels):
@@ -18,5 +18,5 @@ class VectorStoreQAToolSpec(BaseModelConfig):
 
 
 class VectorStoreQAToolSchema(FlockBaseSchema):
-    kind: str = Field("VectorStoreRetrieverTool", const=True)
+    kind: str = Field(Kind.vectorstore_qa_tool.value, const=True)
     spec: VectorStoreQAToolSpec

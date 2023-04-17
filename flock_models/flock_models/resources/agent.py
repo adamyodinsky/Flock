@@ -4,9 +4,9 @@ from typing import Any
 from flock_models.resources.base import Agent, Resource, ToolResource
 from flock_store.resources.base import ResourceStore
 from flock_models.schemes.agent import AgentSchema, AgentType, Tool as ToolSchema
-from flock_models.schemes.base import FlockBaseSchema
 from flock_models.resources.llm import LLMResource
 from langchain.agents import initialize_agent, Tool as LCToolWarper
+from flock_models.schemes.base import Kind
 
 class SelfAskSearchAgent(Agent):
     """Class for self ask search agent."""
@@ -20,7 +20,7 @@ class SelfAskSearchAgent(Agent):
         
         self.agent_type = agent_type
         self.manifest = AgentSchema(**manifest)
-        llm_key = f"{self.manifest.kind}/{self.manifest.spec.llm.name}"
+        llm_key = f"{Kind.llm.value}/{self.manifest.spec.llm.name}"
         llm_resource: LLMResource = resource_store.get_data(llm_key)
 
         tools = []
@@ -80,7 +80,7 @@ class SelfAskSearchAgent(Agent):
 #     labels:
 #       app: my_app
 #   tools:
-#     - kind: VectorStoreRetrieverTool
+#     - kind: VectorStoreQATool
 #       name: langchain-docs
 #       description: LangChain documentation
 #     - kind: SearchTool

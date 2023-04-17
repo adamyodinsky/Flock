@@ -1,5 +1,5 @@
 from pydantic import Field
-from flock_models.schemes.base import FlockBaseSchema, Labels, BaseModelConfig
+from flock_models.schemes.base import FlockBaseSchema, Labels, BaseModelConfig, Kind
 
 
 class LLM(Labels):
@@ -16,5 +16,5 @@ class SearchToolSpec(BaseModelConfig):
 
 
 class SearchToolSchema(FlockBaseSchema):
-    kind: str = Field("SearchTool", const=True)
+    kind: str = Field(Kind.search_tool.value, const=True)
     spec: SearchToolSpec

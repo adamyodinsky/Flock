@@ -7,7 +7,7 @@ metadata:
   labels:
     app: my_app
 spec:
-  type: python_splitter
+  type: text
   options:
     chunk_size: 30
     chunk_overlap: 0

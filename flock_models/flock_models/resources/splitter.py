@@ -13,19 +13,16 @@ class SplitterResource(Resource):
         self.manifest = SplitterSchema(**manifest)
         self.resource: TextSplitter = splitter(**self.manifest.spec.options.dict())
 
-
 # ---
 # apiVersion: flock/v1
-# kind: LLM
-# # uuid: b70bb61d-6710-48bd-85b0-f32c91f1eed1
+# kind: Splitter
 # metadata:
-#   name: my-openai-llm
-#   description: openai language model
+#   name: my-splitter
+#   description: text-splitter
 #   labels:
 #     app: my_app
 # spec:
-#   vendor: openai
+#   type: python_splitter
 #   options:
-#       model: gpt3.5-turbo
-#       token_limit: 1000
-#       temperature: 0.5
+#     chunk_size: 30
+#     chunk_overlap: 0

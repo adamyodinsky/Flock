@@ -1,7 +1,7 @@
 apiVersion: "flock/v1"
 kind: etl
 metadata:
-  name: my-etl
+  name: my_etl
   description: extraction, transformation, and loading pipeline component
   labels:
     app: my_app
@@ -13,10 +13,13 @@ spec:
   splitter:
     kind: splitter
     name: my-splitter
-  source:
-    kind: git
-    name: my-openai-embedding
-    path: /path/to/source
+  scraper:
+    kind: scraper
+    name: my-scraper
+    options:
+      source:
+        kind: web
+        path: /path/to/source
   store:
     kind: store
     name: my-store

@@ -1,6 +1,6 @@
 from typing import Optional
 from pydantic import Field
-from flock_models.schemes.base import FlockBaseSchema, BaseModelConfig
+from flock_models.schemes.base import FlockBaseSchema, BaseModelConfig, Kind
 
 
 class LLMSpec(BaseModelConfig):
@@ -9,5 +9,5 @@ class LLMSpec(BaseModelConfig):
 
 
 class LLMSchema(FlockBaseSchema):
-    kind: str = Field("LLM", const=True, description="The kind of the object")
+    kind: str = Field(Kind.llm.value, const=True, description="The kind of the object")
     spec: LLMSpec

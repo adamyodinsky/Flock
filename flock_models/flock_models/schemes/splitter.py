@@ -1,6 +1,6 @@
 from typing import Optional
 from pydantic import Field
-from flock_models.schemes.base import FlockBaseSchema, BaseModelConfig
+from flock_models.schemes.base import FlockBaseSchema, BaseModelConfig, Kind
 
 
 class SplitterSpec(BaseModelConfig):
@@ -9,5 +9,5 @@ class SplitterSpec(BaseModelConfig):
 
 
 class SplitterSchema(FlockBaseSchema):
-    kind: str = Field("Splitter", const=True, description="The kind of the object")
+    kind: str = Field(Kind.splitter.value, const=True, description="The kind of the object")
     spec: SplitterSpec

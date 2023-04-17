@@ -6,9 +6,8 @@ from flock_models.resources.vectorstore import VectorStoreResource
 from flock_models.resources.llm import LLMResource
 from langchain.chains.qa_with_sources.base import BaseQAWithSourcesChain
 from flock_store.resources.base import ResourceStore
-from flock_models.schemes.vectorstore_retriever_tool import VectorStoreQAToolSchema
-from langchain.vectorstores.base import VectorStore
-from langchain.schema import BaseLanguageModel
+from flock_models.schemes.vectorstore_qa_tool import VectorStoreQAToolSchema
+from flock_models.schemes.base import Kind
 
 
 class VectorStoreQATool(ToolResource):
@@ -20,10 +19,10 @@ class VectorStoreQATool(ToolResource):
             resource_store: ResourceStore):
         self.manifest = VectorStoreQAToolSchema(**manifest)
 
-        llm_key = f"{self.manifest.kind}/{self.manifest.spec.llm.name}"
-        vectorestore_key = f"{self.manifest.kind}/{self.manifest.spec.store.name}"
+        llm_key = f"{Kind.llm.value}/{self.manifest.spec.llm.name}"
+        vectorestore_key = f"{Kind.vectorstore.value}/{self.manifest.spec.store.name}"
 
-        vectorestore_resource: VectorStoreResource = resource_store.get_data(vectorestore_key)
+        vectorestore_resource: VectorStoreResource = resource_store.get_resource(vectorestore_key)
         llm_resource: LLMResource = resource_store.get_data(llm_key)
 
         self.resource = retriever.from_chain_type(

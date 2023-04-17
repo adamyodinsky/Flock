@@ -2,10 +2,11 @@
 
 from typing import Any
 from flock_models.resources.base import Resource
+from flock_models.resources.embedding import EmbeddingResource
 from langchain.vectorstores.base import VectorStore
 from flock_models.schemes.vectorstore import VectorStoreSchema
 from flock_store.resources.base import ResourceStore
-from langchain.embeddings.base import Embeddings
+from flock_models.schemes.base import Kind
 
 class VectorStoreResource(Resource):
     """Class for vectorstore resources."""
@@ -17,12 +18,12 @@ class VectorStoreResource(Resource):
             resource_store: ResourceStore,
                 ):
         self.manifest = VectorStoreSchema(**manifest)
-        resource_key = f"{self.manifest.kind}/{self.manifest.spec.embedding.name}"
-        embedding_function: Embeddings = resource_store.get_data(resource_key)
+        embedding_key = f"{Kind.embedding.value}/{self.manifest.spec.embedding.name}"
+        embedding_function: EmbeddingResource = resource_store.get_resource(embedding_key)
 
         self.resource: VectorStore = vectorstore(
             **self.manifest.spec.store.options.dict(),
-            embedding_function=embedding_function,
+            embedding_function=embedding_function.resource,
             )
 
 

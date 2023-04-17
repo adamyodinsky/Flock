@@ -12,11 +12,8 @@ spec:
     chain_type: stuff
     reduce_k_below_max_tokens: true
   llm:
-    name: openai
-    labels:
-      app: my_app
+    name: my-openai-llm
   store:
     name: documentation_vectorstore
-    labels:
-      app: my_app
+    
     

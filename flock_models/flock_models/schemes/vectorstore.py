@@ -1,6 +1,6 @@
 from typing import Optional
 from pydantic import Field
-from flock_models.schemes.base import FlockBaseSchema, Labels, BaseModelConfig
+from flock_models.schemes.base import FlockBaseSchema, Labels, BaseModelConfig, Kind
 
 
 class Embedding(Labels):
@@ -19,5 +19,5 @@ class VectorStoreSpec(BaseModelConfig):
 
 
 class VectorStoreSchema(FlockBaseSchema):
-    kind: str = Field("VectorStore", const=True)
+    kind: str = Field(Kind.vectorstore.value, const=True)
     spec: VectorStoreSpec
