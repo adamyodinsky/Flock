@@ -2,7 +2,6 @@ from typing import List
 
 import yaml
 from pydantic import ValidationError
-from flock_models import schemes
 from flock_models.schemes import Schemas
 
 SCHEMA_FILES = [
