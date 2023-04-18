@@ -1,0 +1,20 @@
+---
+apiVersion: flock/v1
+kind: WebScraper
+# uuid: b70bb61d-6710-48bd-85b0-f32c91f1eed1
+metadata:
+  name: my-web-scraper
+  description: Web Scarper that can crawl websites and scrape web pages
+  labels:
+    app: my_app
+spec:
+  vendor: Scrapy
+  options:
+    FEED_FORMAT
+    FEED_URI
+    FEED_EXPORT_BATCH_ITEM_COUNT
+  name
+  allowed_domains
+  start_urls
+  custom_settings
+  deny_extensions
