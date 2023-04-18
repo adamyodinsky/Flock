@@ -2,7 +2,7 @@
 
 from flock_store.resources import ResourceStore
 from flock_store.secrets import SecretStore
-from flock_models.resources import Agent, Resource
+from flock_models.resources import Agent, Resource, Resources
 from flock_models import schemes
 
 
@@ -34,27 +34,30 @@ class ResourceBuilder:
     def build_resource(self, manifest: schemes.FlockBaseSchema) -> Resource:
         """Build resource from manifest. recursively build dependencies."""
 
-        dependencies: dict[str, Resource] = {}
-        self.__build_recursive(manifest.spec.dependencies, dependencies)
+        dependencies_bucket: dict[str, Resource] = {}
+        dependencies_list = getattr(manifest.spec, 'dependencies', [])
+        self.__build_recursive(dependencies_list, dependencies_bucket)
 
-        resource: Resource = self.RESOURCES[manifest.kind]
-        resource = Resource(manifest, dependencies)
+        resource: Resource = Resources[manifest.kind]
+        resource = Resource(manifest, dependencies_bucket)
         return resource
 
     def build_agent(self, manifest: schemes.AgentSchema) -> Agent:
         """Build agent from manifest."""
 
-        dependencies: dict[str, Resource] = {}
-        self.__build_recursive(manifest.spec.dependencies, dependencies)
+        dependencies_bucket: dict[str, Resource] = {}
+        dependencies_list = getattr(manifest.spec, 'dependencies', [])
+        self.__build_recursive(dependencies_list, dependencies_bucket)
 
-        tools: dict[str, Resource] = {}
-        self.__build_recursive(manifest.spec.dependencies, tools)
+        tools_list: dict[str, Resource] = {}
+        tools_bucket = getattr(manifest.spec, 'tools', [])
+        self.__build_recursive(tools_list, tools_bucket)
 
         agent_resource = schemes.AgentResource(
             vendor=manifest.spec.vendor,
             options=manifest.spec.options,
-            dependencies=dependencies,
-            tools=tools,
+            dependencies=dependencies_bucket,
+            tools=tools_bucket,
         )
 
         return agent_resource

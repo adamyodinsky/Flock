@@ -1,7 +1,8 @@
+import re
+
+from parsel import Selector
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
-from parsel import Selector
-import re
 
 
 class FlockSpider(CrawlSpider):

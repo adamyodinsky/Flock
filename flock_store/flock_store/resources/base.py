@@ -1,18 +1,11 @@
 """Resources store base class. This class is used to save and load entities."""
 import abc
-import os
+import yaml
+import json
 
 
 class ResourceStore(metaclass=abc.ABCMeta):
     """Abstract base class for resource stores."""
-
-    def __init__(self, key_prefix: str) -> None:
-        """Initialize the resource store."""
-
-        # self.manifest_prefix = f"{self.key_prefix}/manifest"
-        # self.data_prefix = f"{self.key_prefix}/data"
-        self.key_prefix = key_prefix
-        self.resource_prefix = f"{self.key_prefix}/resource"
 
     @abc.abstractmethod
     def put(self, key, obj) -> None:
@@ -21,3 +14,8 @@ class ResourceStore(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def get(self, key):
         pass
+
+    def yaml_to_json(self, file_path: str) -> str:
+        with open(file_path, 'r') as file:
+            data = yaml.safe_load(file)
+            return json.dumps(data)

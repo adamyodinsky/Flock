@@ -1,32 +1,30 @@
-"""Entity store class. This class is used to save and load resources to and from etcd.""" ""
+"""Etcd resource store class. This class is used to save and load resources to and from etcd.""" ""
 
-import json
-import pickle
-
-import etcd3
+import etcd
+from pydantic import BaseModel
 
 from flock_store.resources.base import ResourceStore
 
 
 class EtcdResourceStore(ResourceStore):
-    """Entity store class. This class is used to save and load resources to and from the file system."""
+    """Etcd resource store class. This class is used to save and load resources to and from etcd.""" ""
 
     def __init__(
         self,
-        key_prefix: str,
-        host: str = "localhost",
-        port: int = 2379,
+        host: str = "127.0.0.1",
+        port: int = 4003,
+        protocol: str = "http",
+        version_prefix: str = "/v2",
     ):
-        super().__init__(key_prefix)
-        self.etcd_client = etcd3.client(host=host, port=port)
+        self.client = etcd.client(host=host, port=port, protocol=protocol, version_prefix=version_prefix)
 
-    def put(self, key, obj: object) -> None:
-        key = f"{self.resource_prefix}/{key}"
-        serialized_obj = pickle.dumps(obj)
-        self.etcd_client.put(key, serialized_obj)
+    def get(self, key, schema: BaseModel) -> BaseModel:
+        json_instance = self.client.get(key)
+        if json_instance is not None:
+            return schema.parse_raw(json_instance)
+        return None
+    
+    def put(self, key, instance: BaseModel, ttl=None):
+        json_instance = instance.json()
+        self.client.set(key, json_instance, ttl=ttl)
 
-    def get(self, key) -> object:
-        key = f"{self.resource_prefix}/{key}"
-        serialized_obj, _ = self.etcd_client.get(key)
-        obj: object = pickle.loads(serialized_obj)
-        return obj

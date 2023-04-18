@@ -1,9 +1,10 @@
 import json
 import os
+
+from scraper import FlockSpider
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
-from scraper import FlockSpider
 
 def load_config(json_string=None, file_path='config.json'):
     if json_string:

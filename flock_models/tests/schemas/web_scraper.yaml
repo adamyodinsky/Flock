@@ -1,4 +1,5 @@
 ---
+
 apiVersion: flock/v1
 kind: WebScraper
 # uuid: b70bb61d-6710-48bd-85b0-f32c91f1eed1
@@ -10,11 +11,11 @@ metadata:
 spec:
   vendor: Scrapy
   options:
-    FEED_FORMAT
-    FEED_URI
-    FEED_EXPORT_BATCH_ITEM_COUNT
-  name
-  allowed_domains
-  start_urls
-  custom_settings
-  deny_extensions
+    spider_name: my_spider
+    start_urls: ["https://www.example.com"]
+    allowed_domains: ["example.com"]
+    deny_extensions: [".pdf", ".docx"]
+    custom_settings: 
+      FEED_FORMAT: 'json'
+      FEED_URI: '../outputs/%(name)s/%(batch_id)s.json'
+      FEED_EXPORT_BATCH_ITEM_COUNT: 100

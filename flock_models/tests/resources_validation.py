@@ -3,20 +3,19 @@ from flock_store.resources import ResourceStoreFS
 from flock_models.builder import ResourceBuilder
 from flock_models.schemes import Kind
 from flock_models import resources
-
+from flock_models import schemes
 
 path_to_schemas = "tests/schemas"
 
-
 def main():
     files = {
-        "agent": "agent.yaml",
-        "vectorstore_qa_tool": "vectorstore_qa_tool.yaml",
-        "llm": "llm.yaml",
-        "search_tool": "search_tool.yaml",
-        "vectorstore": "vectorstore.yaml",
-        "embedding": "embedding.yaml",
-        "splitter": "splitter.yaml",
+        "Agent": "agent.yaml",
+        "VectorStoreQATool": "vectorstore_qa_tool.yaml",
+        "LLM": "llm.yaml",
+        "SearchTool": "search_tool.yaml",
+        "VectorStore": "vectorstore.yaml",
+        "Embedding": "embedding.yaml",
+        "Splitter": "splitter.yaml",
     }
 
     # Setup
@@ -28,25 +27,30 @@ def main():
     ### Tests ###
 
     ### Embedding ###
+    
+    path = f"{path_to_schemas}/{files[Kind.embedding]}"
+    schema = schemes.EmbeddingSchema
 
-    with open(f"{path_to_schemas}/{files['embedding']}") as manifest_file:
+    # test load from file
+    manifest: schema = resource_store.load_yaml(path, schema)
 
-        manifest: ResourceBuilder.SCHEMAS[Kind.embedding] = yaml.load(manifest_file, Loader=yaml.FullLoader)
-        embedding_resource_key = (
-            f"{Kind.embedding.value}/{embedding_resource.manifest.metadata.name}"
-        )
-        resource_store.put_resource(key=embedding_resource_key, obj=embedding_resource)
+    # test save and load
+    key = (
+        f"{Kind.embedding.value}/{manifest.metadata.name}"
+    )
+    resource_store.put_model(key=key, val=manifest)
+    manifest: schema = resource_store.get_model(key=key, schema=schema)
 
-        embedding_resource = resource_builder.build_resource(
-            manifest=yaml.load(manifest_file, Loader=yaml.FullLoader)
-        )
+    resource = resource_builder.build_resource(
+        manifest=manifest
+    )
+    print(f"{manifest.kind} - OK")
 
     # with open(f"{path_to_schemas}/{files['llm']}") as manifest_file:
     # with open(f"{path_to_schemas}/{files['vectorstore']}") as manifest_file:
     # with open(f"{path_to_schemas}/{files['vectorstore_qa_tool']}") as manifest_file:
     # with open(f"{path_to_schemas}/{files['agent']}") as manifest_file:
     
-    print("OK")
 
 
 main()
