@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
-from flock_models.schemes.base import BaseModelConfig, FlockBaseSchema, Kind
+from flock_models.schemes.base import Options, FlockBaseSchema, Kind
 
 
 class EmbeddingVendor(str, Enum):
@@ -12,8 +12,8 @@ class EmbeddingVendor(str, Enum):
     OpenAIEmbeddings = "OpenAIEmbeddings"
 
 
-class EmbeddingSpec(BaseModelConfig):
-    vendor: str = Field(..., description="Embedding vendor")
+class EmbeddingSpec(Options):
+    vendor: EmbeddingVendor = Field(..., description="Embedding vendor")
     options: Optional[dict] = Field(description="Embedding options")
 
 

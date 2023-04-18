@@ -26,5 +26,5 @@ class SplitterResource(Resource):
         dependencies: dict[str, Any] = None,
     ):
         super().__init__(manifest)
-        splitter_cls: TextSplitter = self.VENDORS[self.vendor]
-        self.resource = splitter_cls(**self.options)
+        self.vendor_cls: TextSplitter = self.VENDORS[self.vendor]
+        self.resource = self.vendor_cls(**self.options)

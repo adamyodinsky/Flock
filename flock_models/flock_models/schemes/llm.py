@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
-from flock_models.schemes.base import BaseModelConfig, FlockBaseSchema, Kind
+from flock_models.schemes.base import Options, FlockBaseSchema, Kind
 
 
 class LLMVendor(str, Enum):
@@ -12,9 +12,8 @@ class LLMVendor(str, Enum):
     ChatOpenAI = "ChatOpenAI"
 
 
-class LLMSpec(BaseModelConfig):
+class LLMSpec(Options):
     vendor: LLMVendor = Field(..., description="LLM vendor")
-    options: Optional[dict] = Field(description="LLM options")
 
 
 class LLMSchema(FlockBaseSchema):

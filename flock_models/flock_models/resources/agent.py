@@ -20,9 +20,8 @@ class AgentResource(Agent):
         tools: list[ToolWarperLC],
     ):
         super().__init__(manifest, dependencies, tools)
-
         self.resource = initialize_agent(
-            tools=tools,
+            tools=self.tools,
             llm=self.dependencies[Kind.LLM],
             agent=self.vendor,
             **self.options,

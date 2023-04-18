@@ -8,7 +8,7 @@ from flock_models.schemes.base import (
     Dependency,
     FlockBaseSchema,
     Kind,
-    Labels,
+    Options
 )
 
 
@@ -22,11 +22,10 @@ class Embedding(Dependency):
     kind: str = Field(Kind.Embedding.value, const=True)
 
 
-class VectorStoreSpec(BaseModelConfig):
+class VectorStoreSpec(Options):
     vendor: str = Field(
         ..., description="The vendor of the vector store, e.g. Chroma, Pinecone, etc."
     )
-    options: Optional[dict] = Field(description="Vectorstore options")
     dependencies: tuple[Embedding] = Field(..., description="Vectorstore dependencies")
 
 

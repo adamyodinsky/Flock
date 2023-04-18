@@ -9,6 +9,7 @@ from flock_models.schemes.base import (
     Dependency,
     FlockBaseSchema,
     Kind,
+    Options
 )
 
 
@@ -16,19 +17,21 @@ class SearchToolVendor(str, Enum):
     """Enum for search_tool vendors."""
 
     google_serper = "google-serper"
+    google_search = "google-search"
     serpapi = "serpapi"
-
+    google_search_results_json = "google-search-results-json"
+    searx_search_results_json = "searx-search-results-json"
+    
 
 class LLM(Dependency):
     kind: str = Field(Kind.LLM, const=True)
 
 
-class SearchToolSpec(BaseModelConfig):
+class SearchToolSpec(Options):
     vendor: SearchToolVendor = Field(
         ...,
         description="The name of the search tool, e.g. serpapi, google-serper, etc.",
     )
-    options: Optional[dict] = Field(description="Tool options")
     dependencies: tuple[LLM] = Field(..., description="Tool dependencies")
 
 

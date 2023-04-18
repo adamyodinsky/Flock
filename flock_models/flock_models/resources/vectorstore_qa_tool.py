@@ -23,14 +23,14 @@ class VectorStoreQAToolResource(ToolResource):
             dependencies: dict[str, Any],
             ):
         super().__init__(manifest, dependencies)
-        vendor_cls: BaseQAWithSourcesChain = self.VENDORS[self.vendor]
-        llm: LCBaseLanguageModel = self.dependencies[Kind.LLM]
-        vectorestore: VectorStoreLC = self.dependencies[Kind.VectorStore]
+        self.vendor_cls: BaseQAWithSourcesChain = self.VENDORS[self.vendor]
+        self.llm: LCBaseLanguageModel = self.dependencies[Kind.LLM]
+        self.vectorestore: VectorStoreLC = self.dependencies[Kind.VectorStore]
 
-        self.tool_function = vendor_cls.from_chain_type(
+        self.tool_function = self.vendor_cls.from_chain_type(
             **self.options,
-            llm=llm,
-            retriever=vectorestore.as_retriever(),
+            llm=self.llm,
+            retriever=self.vectorestore.as_retriever(),
         )
 
         self.resource = ToolWarperLC(

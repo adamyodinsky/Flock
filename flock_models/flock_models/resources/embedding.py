@@ -21,5 +21,5 @@ class EmbeddingResource(Resource):
         dependencies: dict[str, Any] = None,
     ):
         super().__init__(manifest)
-        embedding_cls = self.VENDORS[self.vendor]
-        self.resource: EmbeddingsLC = embedding_cls(**self.options)
+        self.vendor_cls = self.VENDORS[self.vendor]
+        self.resource: EmbeddingsLC = self.vendor_cls(**self.options)

@@ -4,11 +4,11 @@ apiVersion: flock/v1
 kind: SearchTool
 metadata:
   name: my-google-search
-  description: api for interacting with google search
+  description: a tool for interacting with google search
   labels:
     app: my_app
 spec:
-  vendor: google-serper
+  vendor: serpapi
   dependencies:
     - kind: LLM
       name: my-openai-llm

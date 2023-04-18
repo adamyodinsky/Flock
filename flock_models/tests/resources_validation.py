@@ -11,7 +11,7 @@ resources_files = {
         "LLM": "llm.yaml",
         "VectorStore": "vectorstore.yaml",
         "VectorStoreQATool": "vectorstore_qa_tool.yaml",
-        # "SearchTool": "search_tool.yaml",
+        "SearchTool": "search_tool.yaml",
     }
 
 # Setup
@@ -73,7 +73,6 @@ def main():
     try:
         agent.resource.run('What is langchain?')
     except Exception as e:
-        
         print("\nError:", str(e))
 
 main()

@@ -49,4 +49,4 @@ class Agent(Resource):
         tools: list[ToolWarperLC] = [],
     ):
         super().__init__(manifest, dependencies)
-        self.tools: tools
+        self.tools = tools

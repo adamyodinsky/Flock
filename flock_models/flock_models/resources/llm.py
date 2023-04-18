@@ -21,5 +21,5 @@ class LLMResource(Resource):
         dependencies: dict[str, Any] = None,
     ):
         super().__init__(manifest)
-        llm_cls: BaseLanguageModel = self.VENDORS[self.vendor]
-        self.resource = llm_cls(**self.options)
+        self.vendor_cls: BaseLanguageModel = self.VENDORS[self.vendor]
+        self.resource = self.vendor_cls(**self.options)

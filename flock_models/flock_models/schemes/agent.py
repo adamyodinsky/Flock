@@ -3,7 +3,7 @@ from typing import List, Optional
 from langchain.agents.agent_types import AgentType
 from pydantic import Field
 
-from flock_models.schemes.base import BaseModelConfig, Dependency, FlockBaseSchema, Kind
+from flock_models.schemes.base import Options, Dependency, FlockBaseSchema, Kind
 
 
 class LLM(Dependency):
@@ -13,9 +13,8 @@ class Tool(Dependency):
     description: Optional[str] = Field(description="Tool description")
     
 
-class AgentSpec(BaseModelConfig):
+class AgentSpec(Options):
     vendor: AgentType = Field(..., description="Agent type")
-    options: Optional[dict] = Field(description="LLM options")
     tools: List[Tool] = Field(..., description="Agent tools")
     dependencies: tuple[LLM] = Field(..., description="Agent dependencies")
 

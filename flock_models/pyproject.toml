@@ -13,6 +13,7 @@ flock-store = {path = "../flock_store", develop = true}
 langchain = "^0.0.141"
 chromadb = "^0.3.21"
 tiktoken = "^0.3.3"
+google-search-results = "^2.4.2"
 
 
 [tool.poetry.group.dev.dependencies]

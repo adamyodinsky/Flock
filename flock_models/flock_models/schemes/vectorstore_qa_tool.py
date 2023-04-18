@@ -4,11 +4,10 @@ from typing import Optional
 from pydantic import Field
 
 from flock_models.schemes.base import (
-    BaseModelConfig,
     Dependency,
     FlockBaseSchema,
     Kind,
-    Labels,
+    Options
 )
 
 
@@ -26,11 +25,11 @@ class LLM(Dependency):
     kind: str = Field(Kind.LLM, const=True)
 
 
-class VectorStoreQAToolSpec(BaseModelConfig):
+class VectorStoreQAToolSpec(Options):
     vendor: VectorStoreQAToolVendor = Field(
         ..., description="The class of the tool, e.g. RetrievalQAWithSourcesChain, etc."
     )
-    options: Optional[dict] = Field(description="Options for the tool")
+    options: Optional[dict] = Field({}, description="Options for the tool")
     dependencies: tuple[Store, LLM] = Field(..., description="Tool dependencies")
 
 

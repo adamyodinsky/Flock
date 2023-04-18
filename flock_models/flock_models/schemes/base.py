@@ -59,6 +59,17 @@ class Namespace(BaseModelConfig):
     )
 
 
+class Options(BaseModelConfig):
+    options: Optional[dict] = Field({}, description="Resource options")
+
+# class Spec(Options):
+#     vendor: str = Field(
+#         ...,
+#         description="Resource vendor name",
+#     )
+#     dependencies: Optional[tuple] = Field(..., description="Resource dependencies")
+
+
 class FlockBaseSchema(Namespace):
     apiVersion: Literal["flock/v1"] = Field(..., description="API version")
     metadata: MetaData
@@ -69,3 +80,4 @@ class FlockBaseSchema(Namespace):
     updated_at: Optional[datetime] = Field(
         default=None, description="Last update timestamp"
     )
+    # spec: Spec
