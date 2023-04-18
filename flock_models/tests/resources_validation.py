@@ -1,17 +1,10 @@
 import yaml
 from flock_store.resources import ResourceStoreFS
 from flock_models.builder import ResourceBuilder
+from flock_models.schemes import Kind
+from flock_models import resources
 
 
-from flock_models.resources import (
-    agent,
-    embedding,
-    llm,
-    splitter,
-    vectorstore,
-    vectorstore_qa_tool,
-)
-from flock_models.schemes.base import Kind
 
 path_to_schemas = "tests/schemas"
 
