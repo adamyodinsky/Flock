@@ -11,6 +11,6 @@ spec:
   vendor: google-serper
   dependencies:
     - kind: LLM
-      name: my-llm
+      name: my-openai-llm
       namespace: default
       

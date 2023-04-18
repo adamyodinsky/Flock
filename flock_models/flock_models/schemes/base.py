@@ -10,13 +10,13 @@ from pydantic import BaseModel, Extra, Field
 class Kind(str, Enum):
     """Enum for all kinds of resources."""
 
-    embedding = "Embedding"
-    vectorstore = "VectorStore"
-    vectorstore_qa_tool = "VectorStoreQATool"
-    llm = "LLM"
-    search_tool = "SearchTool"
-    splitter = "Splitter"
-    agent = "Agent"
+    Embedding = "Embedding"
+    VectorStore = "VectorStore"
+    VectorStoreQATool = "VectorStoreQATool"
+    LLM = "LLM"
+    SearchTool = "SearchTool"
+    Splitter = "Splitter"
+    Agent = "Agent"
 
 
 class BaseModelConfig(BaseModel):

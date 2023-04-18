@@ -14,29 +14,28 @@ class ResourceBuilder:
         self.secret_store = secret_store
 
     def __build_recursive(
-        self, dependencies_manifest: schemes.FlockBaseSchema, dependencies: dict[str, Resource]
+        self, dependencies_section, dependencies: dict[str, Resource]
     ) -> Resource:
         """Build resource from manifest. recursively build dependencies."""
 
-        for dependency in dependencies_manifest:
-            dependency = schemes.DependencySchema(**dependency)
+        for dependency in dependencies_section:
             dependency_key = (
                 f"{dependency.namespace}/{dependency.kind}/{dependency.name}"
             )
 
-            dependency_manifest: schemes.FlockBaseSchema = self.resource_store.get(
-                dependency_key
+            dependency_manifest: schemes.FlockBaseSchema = self.resource_store.get_model(
+                dependency_key, schemes.Schemas[dependency.kind]
             )
 
-            dependency_resource = self.build(dependency_manifest)
+            dependency_resource = self.build_resource(dependency_manifest)
             dependencies[dependency.kind] = dependency_resource.resource
 
     def build_resource(self, manifest: schemes.FlockBaseSchema) -> Resource:
         """Build resource from manifest. recursively build dependencies."""
 
         dependencies_bucket: dict[str, Resource] = {}
-        dependencies_list = getattr(manifest.spec, 'dependencies', [])
-        self.__build_recursive(dependencies_list, dependencies_bucket)
+        dependencies_section = getattr(manifest.spec, 'dependencies', [])
+        self.__build_recursive(dependencies_section, dependencies_bucket)
 
         resource: Resource = Resources[manifest.kind]
         resource = Resource(manifest, dependencies_bucket)

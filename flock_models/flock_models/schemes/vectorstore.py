@@ -19,7 +19,7 @@ class VectorStoreVendor(Enum):
 
 
 class Embedding(Dependency):
-    kind: str = Field(Kind.embedding.value, const=True)
+    kind: str = Field(Kind.Embedding.value, const=True)
 
 
 class VectorStoreSpec(BaseModelConfig):
@@ -31,5 +31,5 @@ class VectorStoreSpec(BaseModelConfig):
 
 
 class VectorStoreSchema(FlockBaseSchema):
-    kind: str = Field(Kind.vectorstore, const=True)
+    kind: str = Field(Kind.VectorStore, const=True)
     spec: VectorStoreSpec

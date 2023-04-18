@@ -2,6 +2,7 @@
 import abc
 import yaml
 import json
+from pydantic import BaseModel
 
 
 class ResourceStore(metaclass=abc.ABCMeta):
@@ -11,9 +12,21 @@ class ResourceStore(metaclass=abc.ABCMeta):
     def put(self, key, obj) -> None:
         pass
 
+
     @abc.abstractmethod
     def get(self, key):
         pass
+
+    
+    @abc.abstractmethod
+    def get_model(self, key, schema: BaseModel) -> BaseModel:
+        pass
+
+
+    @abc.abstractmethod
+    def put_model(self, key, val: BaseModel, ttl=None):
+        pass
+
 
     def yaml_to_json(self, file_path: str) -> str:
         with open(file_path, 'r') as file:

@@ -6,51 +6,46 @@ from flock_models import resources
 from flock_models import schemes
 
 path_to_schemas = "tests/schemas"
-
-def main():
-    files = {
-        "Agent": "agent.yaml",
-        "VectorStoreQATool": "vectorstore_qa_tool.yaml",
-        "LLM": "llm.yaml",
-        "SearchTool": "search_tool.yaml",
-        "VectorStore": "vectorstore.yaml",
-        "Embedding": "embedding.yaml",
+resources_files = {
         "Splitter": "splitter.yaml",
+        "Embedding": "embedding.yaml",
+        "LLM": "llm.yaml",
+        "VectorStore": "vectorstore.yaml",
+        "VectorStoreQATool": "vectorstore_qa_tool.yaml",
+        "SearchTool": "search_tool.yaml",
     }
+agent_file = {"Agent": "agent.yaml"}
 
-    # Setup
-    secret_store = None
-    resource_store = ResourceStoreFS(".resource_store")
-    resource_builder = ResourceBuilder(resource_store=resource_store, secret_store=secret_store)
-                                       
+# Setup
+secret_store = None
+resource_store = ResourceStoreFS(".resource_store")
+resource_builder = ResourceBuilder(resource_store=resource_store, secret_store=secret_store)
 
-    ### Tests ###
 
-    ### Embedding ###
-    
-    path = f"{path_to_schemas}/{files[Kind.embedding]}"
-    schema = schemes.EmbeddingSchema
+def building_resources_loop(files):
+        for kind, file in files.items():
+            assert kind in Kind.__members__, f"{kind} is not a valid member of Kind enum"
 
-    # test load from file
-    manifest: schema = resource_store.load_yaml(path, schema)
+            path = f"{path_to_schemas}/{file}"
+            schema = schemes.Schemas[kind]
 
-    # test save and load
-    key = (
-        f"{Kind.embedding.value}/{manifest.metadata.name}"
-    )
-    resource_store.put_model(key=key, val=manifest)
-    manifest: schema = resource_store.get_model(key=key, schema=schema)
+            # test loading from yaml file
+            manifest: schema = resource_store.load_yaml(path, schema)
+            assert manifest.kind == kind, f"kind is not {kind} as expected in the manifest"
 
-    resource = resource_builder.build_resource(
-        manifest=manifest
-    )
-    print(f"{manifest.kind} - OK")
+            # test save and load from resource store
+            key = (f"default/{manifest.kind}/{manifest.metadata.name}")
+            resource_store.put_model(key=key, val=manifest)
+            manifest: schema = resource_store.get_model(key=key, schema=schema)
 
-    # with open(f"{path_to_schemas}/{files['llm']}") as manifest_file:
-    # with open(f"{path_to_schemas}/{files['vectorstore']}") as manifest_file:
-    # with open(f"{path_to_schemas}/{files['vectorstore_qa_tool']}") as manifest_file:
-    # with open(f"{path_to_schemas}/{files['agent']}") as manifest_file:
-    
+            resource_builder.build_resource(
+                manifest=manifest
+            )
+            print(f"{manifest.kind} - OK")
 
+def main():                            
+    ########### TEST ###########
+    # building_resources_loop(resources_files)
+    building_resources_loop(agent_file)
 
 main()

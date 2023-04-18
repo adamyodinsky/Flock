@@ -20,7 +20,7 @@ class SearchToolVendor(Enum):
 
 
 class LLM(Dependency):
-    kind: str = Field(Kind.llm, const=True)
+    kind: str = Field(Kind.LLM, const=True)
 
 
 class SearchToolSpec(BaseModelConfig):
@@ -33,5 +33,5 @@ class SearchToolSpec(BaseModelConfig):
 
 
 class SearchToolSchema(FlockBaseSchema):
-    kind: str = Field(Kind.search_tool, const=True)
+    kind: str = Field(Kind.SearchTool, const=True)
     spec: SearchToolSpec

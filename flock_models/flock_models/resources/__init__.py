@@ -8,10 +8,11 @@ from flock_models.resources.base import Agent, Resource
 from flock_models.schemes.base import Kind as __Kind
 
 Resources = {
-    __Kind.embedding: EmbeddingResource,
-    __Kind.llm: LLMResource,
-    __Kind.splitter: SplitterResource,
-    __Kind.vectorstore: VectorStoreResource,
-    __Kind.vectorstore_qa_tool: VectorStoreQAToolResource,
-    __Kind.agent: AgentResource,
+    __Kind.Embedding: EmbeddingResource,
+    __Kind.LLM: LLMResource,
+    __Kind.SearchTool: SplitterResource,
+    __Kind.VectorStore: VectorStoreResource,
+    __Kind.VectorStoreQATool: VectorStoreQAToolResource,
+    __Kind.Agent: AgentResource,
+    __Kind.Splitter: SplitterResource
 }

@@ -19,6 +19,6 @@ class EmbeddingSpec(BaseModelConfig):
 
 class EmbeddingSchema(FlockBaseSchema):
     kind: str = Field(
-        Kind.embedding, const=True, description="The kind of the object"
+        Kind.Embedding, const=True, description="The kind of the object"
     )
     spec: EmbeddingSpec

@@ -19,11 +19,11 @@ class VectorStoreQAToolVendor(Enum):
 
 
 class Store(Dependency):
-    kind: str = Field(Kind.vectorstore.value, const=True)
+    kind: str = Field(Kind.VectorStore, const=True)
 
 
 class LLM(Dependency):
-    kind: str = Field(Kind.llm.value, const=True)
+    kind: str = Field(Kind.LLM, const=True)
 
 
 class VectorStoreQAToolSpec(BaseModelConfig):
@@ -35,5 +35,5 @@ class VectorStoreQAToolSpec(BaseModelConfig):
 
 
 class VectorStoreQAToolSchema(FlockBaseSchema):
-    kind: str = Field(Kind.vectorstore_qa_tool, const=True)
+    kind: str = Field(Kind.VectorStoreQATool, const=True)
     spec: VectorStoreQAToolSpec
