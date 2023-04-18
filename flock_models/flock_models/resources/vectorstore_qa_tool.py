@@ -20,8 +20,8 @@ class VectorStoreQAToolResource(ToolResource):
     def __init__(self, manifest: FlockBaseSchema, dependencies: dict[str, Any]):
         super().__init__(manifest, dependencies)
         vendor_cls: BaseQAWithSourcesChain = self.VENDORS[self.vendor]
-        llm: LCBaseLanguageModel = self.dependencies[Kind.llm.value]
-        vectorestore: VectorStoreLC = self.dependencies[Kind.vectorstore.value]
+        llm: LCBaseLanguageModel = self.dependencies[Kind.llm]
+        vectorestore: VectorStoreLC = self.dependencies[Kind.vectorstore]
 
         self.tool_function = vendor_cls.from_chain_type(
             **self.options,

@@ -9,7 +9,6 @@ from flock_models.schemes.base import (
     Dependency,
     FlockBaseSchema,
     Kind,
-    Labels,
 )
 
 
@@ -21,7 +20,7 @@ class SearchToolVendor(Enum):
 
 
 class LLM(Dependency):
-    kind: str = Field(Kind.llm.value, const=True)
+    kind: str = Field(Kind.llm, const=True)
 
 
 class SearchToolSpec(BaseModelConfig):
@@ -34,5 +33,5 @@ class SearchToolSpec(BaseModelConfig):
 
 
 class SearchToolSchema(FlockBaseSchema):
-    kind: str = Field(Kind.search_tool.value, const=True)
+    kind: str = Field(Kind.search_tool, const=True)
     spec: SearchToolSpec

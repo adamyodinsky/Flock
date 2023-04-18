@@ -25,7 +25,7 @@ class AgentResource(Agent):
 
         self.resource = initialize_agent(
             tools=tools,
-            llm=self.dependencies[Kind.llm.value],
-            agent=self.VENDORS[self.vendor].value,
+            llm=self.dependencies[Kind.llm],
+            agent=self.VENDORS[self.vendor],
             **self.options,
         )

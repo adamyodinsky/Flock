@@ -2,14 +2,8 @@ from typing import List
 
 import yaml
 from pydantic import ValidationError
-
-from flock_models.schemes.agent import AgentSchema
-from flock_models.schemes.embedding import EmbeddingSchema
-from flock_models.schemes.llm import LLMSchema
-from flock_models.schemes.search_tool import SearchToolSchema
-from flock_models.schemes.splitter import SplitterSchema
-from flock_models.schemes.vectorstore import VectorStoreSchema
-from flock_models.schemes.vectorstore_qa_tool import VectorStoreQAToolSchema
+from flock_models import schemes
+from flock_models.schemes import Schemas
 
 SCHEMA_FILES = [
     "vectorstore.yaml",
@@ -25,27 +19,12 @@ def validate_crds(crds: List[dict]):
     for crd in crds:
         kind = crd["kind"]
         try:
-            if kind == "Agent":
-                AgentSchema(**crd)
-            elif crd["kind"] == "VectorStoreQATool":
-                VectorStoreQAToolSchema(**crd)
-            elif crd["kind"] == "LLM":
-                LLMSchema(**crd)
-            elif crd["kind"] == "SearchTool":
-                SearchToolSchema(**crd)
-            elif crd["kind"] == "VectorStore":
-                VectorStoreSchema(**crd)
-            elif crd["kind"] == "Embedding":
-                EmbeddingSchema(**crd)
-            elif crd["kind"] == "Splitter":
-                SplitterSchema(**crd)
-            else:
-                raise ValueError(f"Unknown kind {crd['kind']}")
+            scheme = Schemas[kind]
+            scheme(**crd)
         except ValidationError as e:
             print(f"Error validating {kind}:")
             print(e.json())
         print(f"Validating {kind} - OK")
-
 
 # Validate all schemas
 for file in SCHEMA_FILES:

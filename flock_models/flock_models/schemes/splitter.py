@@ -22,6 +22,6 @@ class SplitterSpec(BaseModelConfig):
 
 class SplitterSchema(FlockBaseSchema):
     kind: str = Field(
-        Kind.splitter.value, const=True, description="The kind of the object"
+        Kind.splitter, const=True, description="The kind of the object"
     )
     spec: SplitterSpec

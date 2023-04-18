@@ -7,7 +7,7 @@ from flock_models.schemes.base import BaseModelConfig, Dependency, FlockBaseSche
 
 
 class LLM(Dependency):
-    kind: str = Field(Kind.llm.value, const=True)
+    kind: str = Field(Kind.llm, const=True)
 
 
 class AgentSpec(BaseModelConfig):
@@ -18,5 +18,5 @@ class AgentSpec(BaseModelConfig):
 
 
 class AgentSchema(FlockBaseSchema):
-    kind: str = Field(Kind.agent.value, const=True)
+    kind: str = Field(Kind.agent, const=True)
     spec: AgentSpec

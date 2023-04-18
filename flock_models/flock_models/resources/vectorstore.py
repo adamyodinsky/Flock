@@ -3,7 +3,7 @@
 from typing import Any
 
 from langchain.embeddings.base import Embeddings as EmbeddingsLC
-from langchain.vectorstores.base import VectorStoreLC
+from langchain.vectorstores.base import VectorStore as VectorStoreLC
 from langchain.vectorstores.chroma import Chroma as ChromaLC
 
 from flock_models.resources.base import Resource
@@ -22,7 +22,7 @@ class VectorStoreResource(Resource):
     ):
         super().__init__(manifest, dependencies)
         vendor_cls: VectorStoreLC = self.VENDORS[self.vendor]
-        embedding_function: EmbeddingsLC = dependencies[Kind.embedding.value]
+        embedding_function: EmbeddingsLC = dependencies[Kind.embedding]
 
         self.resource = vendor_cls(
             **self.options,

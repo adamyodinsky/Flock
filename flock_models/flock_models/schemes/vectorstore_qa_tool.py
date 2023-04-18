@@ -35,5 +35,5 @@ class VectorStoreQAToolSpec(BaseModelConfig):
 
 
 class VectorStoreQAToolSchema(FlockBaseSchema):
-    kind: str = Field(Kind.vectorstore_qa_tool.value, const=True)
+    kind: str = Field(Kind.vectorstore_qa_tool, const=True)
     spec: VectorStoreQAToolSpec

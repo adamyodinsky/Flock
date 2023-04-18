@@ -31,5 +31,5 @@ class VectorStoreSpec(BaseModelConfig):
 
 
 class VectorStoreSchema(FlockBaseSchema):
-    kind: str = Field(Kind.vectorstore.value, const=True)
+    kind: str = Field(Kind.vectorstore, const=True)
     spec: VectorStoreSpec

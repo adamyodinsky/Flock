@@ -18,5 +18,5 @@ class LLMSpec(BaseModelConfig):
 
 
 class LLMSchema(FlockBaseSchema):
-    kind: str = Field(Kind.llm.value, const=True, description="The kind of the object")
+    kind: str = Field(Kind.llm, const=True, description="The kind of the object")
     spec: LLMSpec

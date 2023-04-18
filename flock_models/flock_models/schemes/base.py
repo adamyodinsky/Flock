@@ -7,7 +7,7 @@ from pydantic import BaseModel, Extra, Field
 # from uuid import UUID, uuid4
 
 
-class Kind(Enum):
+class Kind(str, Enum):
     """Enum for all kinds of resources."""
 
     embedding = "Embedding"
