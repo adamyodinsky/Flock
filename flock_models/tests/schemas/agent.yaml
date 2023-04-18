@@ -10,6 +10,8 @@ metadata:
 namespace: default
 spec:
   vendor: zero-shot-react-description
+  options:
+    verbose: true
   dependencies:
     - kind: LLM
       name: my-openai-llm
