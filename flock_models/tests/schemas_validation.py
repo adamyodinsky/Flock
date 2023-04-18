@@ -11,6 +11,15 @@ from flock_models.schemes.splitter import SplitterSchema
 from flock_models.schemes.vectorstore import VectorStoreSchema
 from flock_models.schemes.vectorstore_qa_tool import VectorStoreQAToolSchema
 
+SCHEMA_FILES = [
+    "vectorstore.yaml",
+    "vectorstore_qa_tool.yaml",
+    "search_tool.yaml",
+    "splitter.yaml",
+    "embedding.yaml",
+    "llm.yaml",
+    "agent.yaml",
+]
 
 def validate_crds(crds: List[dict]):
     for crd in crds:
@@ -38,17 +47,8 @@ def validate_crds(crds: List[dict]):
         print(f"Validating {kind} - OK")
 
 
-files = [
-    "vectorstore.yaml",
-    "vectorstore_qa_tool.yaml",
-    "search_tool.yaml",
-    "splitter.yaml",
-    "embedding.yaml",
-    "llm.yaml",
-    "agent.yaml",
-]
-
-for file in files:
-    with open(f"tests/schemas/unit/{file}") as f:
+# Validate all schemas
+for file in SCHEMA_FILES:
+    with open(f"tests/schemas/{file}") as f:
         crds = list(yaml.load_all(f, Loader=yaml.FullLoader))
         validate_crds(crds)

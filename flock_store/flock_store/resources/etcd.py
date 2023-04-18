@@ -8,7 +8,7 @@ import etcd3
 from flock_store.resources.base import ResourceStore
 
 
-class EtcdStore(ResourceStore):
+class EtcdResourceStore(ResourceStore):
     """Entity store class. This class is used to save and load resources to and from the file system."""
 
     def __init__(

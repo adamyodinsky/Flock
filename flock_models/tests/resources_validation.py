@@ -1,9 +1,7 @@
 import yaml
-from flock_store.resources.fs import ResourceStoreFS
-from langchain.chains import RetrievalQAWithSourcesChain
-from langchain.chat_models.openai import ChatOpenAI
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.vectorstores import Chroma
+from flock_store.resources import ResourceStoreFS
+from flock_models.builder.resource_builder import ResourceBuilder
+
 
 from flock_models.resources import (
     agent,
@@ -15,7 +13,7 @@ from flock_models.resources import (
 )
 from flock_models.schemes.base import Kind
 
-path_to_schemas = "tests/schemas/integration"
+path_to_schemas = "tests/schemas"
 
 
 def main():
@@ -29,21 +27,29 @@ def main():
         "splitter": "splitter.yaml",
     }
 
-    # set a local resource store
-    resource_store = ResourceStoreFS(".resource_store")
+    # Setup
     secret_store = None
+    resource_store = ResourceStoreFS(".resource_store")
+    resource_builder = ResourceBuilder(resource_store=resource_store, secret_store=secret_store)
+                                       
+
+    # Test building resources
+
+    ### Embedding ###
 
     with open(f"{path_to_schemas}/{files['embedding']}") as manifest_file:
-        embedding_resource = embedding.EmbeddingResource(
-            manifest=yaml.load(manifest_file, Loader=yaml.FullLoader),
-            embedding=OpenAIEmbeddings,
-        )
 
+        manifest: ResourceBuilder.SCHEMAS[Kind.embedding] = yaml.load(manifest_file, Loader=yaml.FullLoader)
         embedding_resource_key = (
             f"{Kind.embedding.value}/{embedding_resource.manifest.metadata.name}"
         )
-
         resource_store.put_resource(key=embedding_resource_key, obj=embedding_resource)
+
+        embedding_resource = resource_builder.build_resource(
+            manifest=yaml.load(manifest_file, Loader=yaml.FullLoader)
+        )
+
+
 
     with open(f"{path_to_schemas}/{files['llm']}") as manifest_file:
         llm_resource = llm.LLMResource(
