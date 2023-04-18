@@ -66,8 +66,8 @@ def test_building_agent(kind, file):
 
 def main():                          
     ########### TEST ###########
-    # for kind, file in resources_files.items():
-    #     test_building_resources(kind, file)
+    for kind, file in resources_files.items():
+        test_building_resources(kind, file)
 
     agent: resources.AgentResource = test_building_agent("Agent", "agent.yaml")
     try:
