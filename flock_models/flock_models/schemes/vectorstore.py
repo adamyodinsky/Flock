@@ -12,7 +12,7 @@ from flock_models.schemes.base import (
 )
 
 
-class VectorStoreVendor(Enum):
+class VectorStoreVendor(str, Enum):
     """Enum for vectorstore vendors."""
 
     Chroma = "Chroma"

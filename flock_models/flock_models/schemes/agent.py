@@ -9,11 +9,14 @@ from flock_models.schemes.base import BaseModelConfig, Dependency, FlockBaseSche
 class LLM(Dependency):
     kind: str = Field(Kind.LLM, const=True)
 
+class Tool(Dependency):
+    description: Optional[str] = Field(description="Tool description")
+    
 
 class AgentSpec(BaseModelConfig):
     vendor: AgentType = Field(..., description="Agent type")
     options: Optional[dict] = Field(description="LLM options")
-    tools: List[Dependency] = Field(..., description="Agent tools")
+    tools: List[Tool] = Field(..., description="Agent tools")
     dependencies: tuple[LLM] = Field(..., description="Agent dependencies")
 
 

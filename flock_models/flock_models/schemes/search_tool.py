@@ -12,7 +12,7 @@ from flock_models.schemes.base import (
 )
 
 
-class SearchToolVendor(Enum):
+class SearchToolVendor(str, Enum):
     """Enum for search_tool vendors."""
 
     google_serper = "google-serper"

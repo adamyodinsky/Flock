@@ -2,7 +2,7 @@
 
 from flock_store.resources import ResourceStore
 from flock_store.secrets import SecretStore
-from flock_models.resources import Agent, Resource, Resources
+from flock_models.resources import Resource, Resources, AgentResource, ToolResource
 from flock_models import schemes
 
 
@@ -37,24 +37,23 @@ class ResourceBuilder:
         dependencies_section = getattr(manifest.spec, 'dependencies', [])
         self.__build_recursive(dependencies_section, dependencies_bucket)
 
-        resource: Resource = Resources[manifest.kind]
-        resource = Resource(manifest, dependencies_bucket)
+        resource = Resources[manifest.kind](manifest, dependencies_bucket)
         return resource
 
-    def build_agent(self, manifest: schemes.AgentSchema) -> Agent:
+    def build_agent(self, manifest: schemes.AgentSchema) -> AgentResource:
         """Build agent from manifest."""
 
         dependencies_bucket: dict[str, Resource] = {}
         dependencies_list = getattr(manifest.spec, 'dependencies', [])
         self.__build_recursive(dependencies_list, dependencies_bucket)
 
-        tools_list: dict[str, Resource] = {}
-        tools_bucket = getattr(manifest.spec, 'tools', [])
+        tools_bucket = {}
+        tools_list: dict[str, ToolResource] = getattr(manifest.spec, 'tools', [])
         self.__build_recursive(tools_list, tools_bucket)
-
-        agent_resource = schemes.AgentResource(
-            vendor=manifest.spec.vendor,
-            options=manifest.spec.options,
+        
+        tools_bucket = list(tools_bucket.values())
+        agent_resource = AgentResource(
+            manifest=manifest,
             dependencies=dependencies_bucket,
             tools=tools_bucket,
         )

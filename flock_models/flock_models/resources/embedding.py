@@ -1,5 +1,6 @@
 """Interface for embedding models."""
 
+from typing import Any
 from langchain.embeddings.base import Embeddings as EmbeddingsLC
 from langchain.embeddings.openai import OpenAIEmbeddings as OpenAIEmbeddingsLC
 
@@ -17,6 +18,7 @@ class EmbeddingResource(Resource):
     def __init__(
         self,
         manifest: EmbeddingSchema,
+        dependencies: dict[str, Any] = None,
     ):
         super().__init__(manifest)
         embedding_cls = self.VENDORS[self.vendor]

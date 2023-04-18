@@ -4,7 +4,7 @@ from flock_models.resources.splitter import SplitterResource
 from flock_models.resources.vectorstore import VectorStoreResource
 from flock_models.resources.vectorstore_qa_tool import VectorStoreQAToolResource
 from flock_models.resources.agent import AgentResource
-from flock_models.resources.base import Agent, Resource
+from flock_models.resources.base import Agent, Resource, ToolResource
 from flock_models.schemes.base import Kind as __Kind
 
 Resources = {

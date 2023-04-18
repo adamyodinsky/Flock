@@ -6,7 +6,7 @@ metadata:
   name: my-openai-embedding
   description: OpenAI embedding
 spec:
-  vendor: openai
+  vendor: OpenAIEmbeddings
   options:
     embedding_ctx_length: 4096
     chunk_size: 1000

@@ -13,8 +13,6 @@ from flock_models.schemes.base import Kind
 class AgentResource(Agent):
     """Class for self ask search agent."""
 
-    VENDORS = AgentType
-
     def __init__(
         self,
         manifest: AgentSchema,
@@ -25,7 +23,7 @@ class AgentResource(Agent):
 
         self.resource = initialize_agent(
             tools=tools,
-            llm=self.dependencies[Kind.llm],
-            agent=self.VENDORS[self.vendor],
+            llm=self.dependencies[Kind.LLM],
+            agent=self.vendor,
             **self.options,
         )

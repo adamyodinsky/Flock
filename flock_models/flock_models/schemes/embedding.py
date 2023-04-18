@@ -6,7 +6,7 @@ from pydantic import Field
 from flock_models.schemes.base import BaseModelConfig, FlockBaseSchema, Kind
 
 
-class EmbeddingVendor(Enum):
+class EmbeddingVendor(str, Enum):
     """Enum for embedding vendors."""
 
     OpenAIEmbeddings = "OpenAIEmbeddings"

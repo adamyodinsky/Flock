@@ -23,6 +23,7 @@ class SplitterResource(Resource):
     def __init__(
         self,
         manifest: FlockBaseSchema,
+        dependencies: dict[str, Any] = None,
     ):
         super().__init__(manifest)
         splitter_cls: TextSplitter = self.VENDORS[self.vendor]

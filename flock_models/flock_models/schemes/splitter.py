@@ -6,7 +6,7 @@ from pydantic import Field
 from flock_models.schemes.base import BaseModelConfig, FlockBaseSchema, Kind
 
 
-class SplitterVendor(Enum):
+class SplitterVendor(str, Enum):
     """Enum for splitter vendors."""
 
     CharacterTextSplitter = "CharacterTextSplitter"

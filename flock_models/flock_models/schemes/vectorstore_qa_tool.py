@@ -12,7 +12,7 @@ from flock_models.schemes.base import (
 )
 
 
-class VectorStoreQAToolVendor(Enum):
+class VectorStoreQAToolVendor(str, Enum):
     """Enum for vectorstore_qa_tool vendors."""
 
     RetrievalQAWithSourcesChain = "RetrievalQAWithSourcesChain"
