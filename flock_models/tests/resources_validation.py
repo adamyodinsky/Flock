@@ -5,7 +5,6 @@ from flock_models.schemes import Kind
 from flock_models import resources
 
 
-
 path_to_schemas = "tests/schemas"
 
 
