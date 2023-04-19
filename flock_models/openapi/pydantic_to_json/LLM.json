@@ -1,0 +1,125 @@
+{
+  "title": "LLMSchema",
+  "type": "object",
+  "properties": {
+    "namespace": {
+      "title": "Namespace",
+      "description": "The namespace of the object",
+      "default": "default",
+      "maxLength": 63,
+      "type": "string"
+    },
+    "apiVersion": {
+      "title": "Apiversion",
+      "description": "API version",
+      "enum": [
+        "flock/v1"
+      ],
+      "type": "string"
+    },
+    "metadata": {
+      "$ref": "#/definitions/MetaData"
+    },
+    "created_at": {
+      "title": "Created At",
+      "description": "Creation timestamp",
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "title": "Updated At",
+      "description": "Last update timestamp",
+      "type": "string",
+      "format": "date-time"
+    },
+    "kind": {
+      "title": "Kind",
+      "description": "The kind of the object",
+      "default": "LLM",
+      "const": "LLM",
+      "type": "string"
+    },
+    "spec": {
+      "$ref": "#/definitions/LLMSpec"
+    }
+  },
+  "required": [
+    "apiVersion",
+    "metadata",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "MetaData": {
+      "title": "MetaData",
+      "type": "object",
+      "properties": {
+        "annotations": {
+          "title": "Annotations",
+          "description": "Annotations are useful for storing additional information",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the object",
+          "maxLength": 63,
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "description": "Description",
+          "maxLength": 255,
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "description"
+      ],
+      "additionalProperties": false
+    },
+    "LLMVendor": {
+      "title": "LLMVendor",
+      "description": "Enum for llm vendors.",
+      "enum": [
+        "ChatOpenAI"
+      ],
+      "type": "string"
+    },
+    "LLMSpec": {
+      "title": "LLMSpec",
+      "type": "object",
+      "properties": {
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object"
+        },
+        "vendor": {
+          "description": "LLM vendor",
+          "allOf": [
+            {
+              "$ref": "#/definitions/LLMVendor"
+            }
+          ]
+        }
+      },
+      "required": [
+        "vendor"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
