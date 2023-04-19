@@ -9,7 +9,7 @@ from langchain.text_splitter import (
 )
 
 from flock_models.resources.base import Resource
-from flock_models.schemes.base import BaseFlockSchema
+from flock_schemas.base import BaseFlockSchema
 
 
 class SplitterResource(Resource):

@@ -5,7 +5,7 @@ from typing import Any
 
 from langchain.agents import Tool as ToolWarperLC
 
-from flock_models.schemes.base import BaseFlockSchema
+from flock_schemas.base import BaseFlockSchema
 
 
 class Resource:

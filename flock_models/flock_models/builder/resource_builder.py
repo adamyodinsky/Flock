@@ -3,7 +3,7 @@
 from flock_store.resources import ResourceStore
 from flock_store.secrets import SecretStore
 from flock_models.resources import Resource, Resources, AgentResource, ToolResource
-from flock_models import schemes
+import flock_schemas as schemas
 
 
 class ResourceBuilder:
@@ -23,14 +23,14 @@ class ResourceBuilder:
                 f"{dependency.namespace}/{dependency.kind}/{dependency.name}"
             )
 
-            dependency_manifest: schemes.BaseFlockSchema = self.resource_store.get_model(
-                dependency_key, schemes.Schemas[dependency.kind]
+            dependency_manifest: schemas.BaseFlockSchema = self.resource_store.get_model(
+                dependency_key, schemas.Schemas[dependency.kind]
             )
 
             dependency_resource = self.build_resource(dependency_manifest)
             dependencies[dependency.kind] = dependency_resource.resource
 
-    def build_resource(self, manifest: schemes.BaseFlockSchema) -> Resource:
+    def build_resource(self, manifest: schemas.BaseFlockSchema) -> Resource:
         """Build resource from manifest. recursively build dependencies."""
 
         dependencies_bucket: dict[str, Resource] = {}
@@ -40,7 +40,7 @@ class ResourceBuilder:
         resource = Resources[manifest.kind](manifest, dependencies_bucket)
         return resource
 
-    def build_agent(self, manifest: schemes.AgentSchema) -> AgentResource:
+    def build_agent(self, manifest: schemas.AgentSchema) -> AgentResource:
         """Build agent from manifest."""
 
         dependencies_bucket: dict[str, Resource] = {}

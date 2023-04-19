@@ -6,7 +6,7 @@ from flock_models.resources.vectorstore import VectorStoreResource
 from flock_models.resources.vectorstore_qa_tool import VectorStoreQAToolResource
 from flock_models.resources.agent import AgentResource
 from flock_models.resources.base import Agent, Resource, ToolResource
-from flock_models.schemes.base import Kind as __Kind
+from flock_schemas.base import Kind as __Kind
 
 Resources = {
     __Kind.Embedding: EmbeddingResource,

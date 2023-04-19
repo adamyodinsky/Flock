@@ -8,7 +8,7 @@ from langchain.schema import BaseLanguageModel as LCBaseLanguageModel
 from langchain.agents import load_tools as load_toolsLC
 
 from flock_models.resources.base import ToolResource
-from flock_models.schemes.base import BaseFlockSchema, Kind
+from flock_schemas.base import BaseFlockSchema, Kind
 
 
 class SearchToolResource(ToolResource):

@@ -7,7 +7,7 @@ from langchain.vectorstores.base import VectorStore as VectorStoreLC
 from langchain.vectorstores.chroma import Chroma as ChromaLC
 
 from flock_models.resources.base import Resource
-from flock_models.schemes.base import BaseFlockSchema, Kind
+from flock_schemas.base import BaseFlockSchema, Kind
 
 
 class VectorStoreResource(Resource):

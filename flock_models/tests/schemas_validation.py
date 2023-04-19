@@ -2,7 +2,8 @@ from typing import List
 
 import yaml
 from pydantic import ValidationError
-from flock_models.schemes import Schemas
+# from flock_schemas import Schemas
+from flock_schemas import Schemas
 
 SCHEMA_FILES = [
     "vectorstore.yaml",
