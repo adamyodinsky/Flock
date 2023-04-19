@@ -2,6 +2,7 @@
 
 apiVersion: flock/v1
 kind: SearchTool
+namespace: default
 metadata:
   name: my-google-search
   description: a tool for interacting with google search

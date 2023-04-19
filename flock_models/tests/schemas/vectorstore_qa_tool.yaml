@@ -2,6 +2,7 @@
 
 apiVersion: flock/v1
 kind: VectorStoreQATool
+namespace: default
 metadata:
   name: langchain-docs
   description: retrieve docs from langchain docs vector store

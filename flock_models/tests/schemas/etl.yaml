@@ -1,5 +1,6 @@
 apiVersion: "flock/v1"
 kind: etl
+namespace: default
 metadata:
   name: my_etl
   description: extraction, transformation, and loading pipeline component

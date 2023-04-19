@@ -2,6 +2,7 @@
 
 apiVersion: flock/v1
 kind: VectorStore
+namespace: default
 metadata:
   name: documentation_vectorstore
   description: documentation vector store

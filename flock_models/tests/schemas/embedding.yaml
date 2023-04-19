@@ -2,6 +2,7 @@
 
 apiVersion: flock/v1
 kind: Embedding
+namespace: default
 metadata:
   name: my-openai-embedding
   description: OpenAI embedding
