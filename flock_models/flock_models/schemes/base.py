@@ -25,20 +25,20 @@ class BaseModelConfig(BaseModel):
         extra = Extra.forbid
 
 
-class Annotations(BaseModelConfig):
+class BaseAnnotations(BaseModelConfig):
     annotations: Optional[dict[str, str]] = Field(
         default=None,
         description="Annotations are useful for storing additional information",
     )
 
 
-class Labels(BaseModelConfig):
+class BaseLabels(BaseModelConfig):
     labels: Optional[dict[str, str]] = Field(
         default=None, description="Labels are useful for filtering and finding objects"
     )
 
 
-class Dependency(Labels):
+class BaseDependency(BaseLabels):
     name: str = Field(..., description="Name of the dependency")
     kind: Kind = Field(..., description="Kind of the dependency")
     namespace: Optional[str] = Field(
@@ -46,33 +46,26 @@ class Dependency(Labels):
     )
 
 
-class MetaData(Labels, Annotations):
+class BaseMetaData(BaseLabels, BaseAnnotations):
     name: str = Field(..., description="Name of the object", max_length=63)
     description: str = Field(..., description="Description", max_length=255)
-    Annotations
-    Labels
+    BaseAnnotations
+    BaseLabels
 
 
-class Namespace(BaseModelConfig):
+class BaseNamespace(BaseModelConfig):
     namespace: Optional[str] = Field(
         "default", description="The namespace of the object", max_length=63
     )
 
 
-class Options(BaseModelConfig):
+class BaseOptions(BaseModelConfig):
     options: Optional[dict] = Field({}, description="Resource options")
 
-# class Spec(Options):
-#     vendor: str = Field(
-#         ...,
-#         description="Resource vendor name",
-#     )
-#     dependencies: Optional[tuple] = Field(..., description="Resource dependencies")
 
-
-class FlockBaseSchema(Namespace):
+class BaseFlockSchema(BaseNamespace):
     apiVersion: Literal["flock/v1"] = Field(..., description="API version")
-    metadata: MetaData
+    metadata: BaseMetaData
     created_at: Optional[datetime] = Field(
         default=None, description="Creation timestamp"
     )
@@ -80,4 +73,3 @@ class FlockBaseSchema(Namespace):
     updated_at: Optional[datetime] = Field(
         default=None, description="Last update timestamp"
     )
-    # spec: Spec

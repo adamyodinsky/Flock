@@ -18,7 +18,7 @@
       "type": "string"
     },
     "metadata": {
-      "$ref": "#/definitions/MetaData"
+      "$ref": "#/definitions/BaseMetaData"
     },
     "created_at": {
       "title": "Created At",
@@ -49,8 +49,8 @@
   ],
   "additionalProperties": false,
   "definitions": {
-    "MetaData": {
-      "title": "MetaData",
+    "BaseMetaData": {
+      "title": "BaseMetaData",
       "type": "object",
       "properties": {
         "annotations": {
@@ -116,8 +116,8 @@
       ],
       "type": "string"
     },
-    "Tool": {
-      "title": "Tool",
+    "AgentTool": {
+      "title": "AgentTool",
       "type": "object",
       "properties": {
         "labels": {
@@ -160,8 +160,8 @@
       ],
       "additionalProperties": false
     },
-    "LLM": {
-      "title": "LLM",
+    "LLMDependency": {
+      "title": "LLMDependency",
       "type": "object",
       "properties": {
         "labels": {
@@ -219,7 +219,7 @@
           "description": "Agent tools",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Tool"
+            "$ref": "#/definitions/AgentTool"
           }
         },
         "dependencies": {
@@ -230,7 +230,7 @@
           "maxItems": 1,
           "items": [
             {
-              "$ref": "#/definitions/LLM"
+              "$ref": "#/definitions/LLMDependency"
             }
           ]
         }

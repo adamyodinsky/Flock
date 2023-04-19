@@ -18,7 +18,7 @@
       "type": "string"
     },
     "metadata": {
-      "$ref": "#/definitions/MetaData"
+      "$ref": "#/definitions/BaseMetaData"
     },
     "created_at": {
       "title": "Created At",
@@ -49,8 +49,8 @@
   ],
   "additionalProperties": false,
   "definitions": {
-    "MetaData": {
-      "title": "MetaData",
+    "BaseMetaData": {
+      "title": "BaseMetaData",
       "type": "object",
       "properties": {
         "annotations": {
@@ -96,8 +96,8 @@
       ],
       "type": "string"
     },
-    "Store": {
-      "title": "Store",
+    "StoreDependency": {
+      "title": "StoreDependency",
       "type": "object",
       "properties": {
         "labels": {
@@ -132,8 +132,8 @@
       ],
       "additionalProperties": false
     },
-    "LLM": {
-      "title": "LLM",
+    "LLMDependency": {
+      "title": "LLMDependency",
       "type": "object",
       "properties": {
         "labels": {
@@ -194,10 +194,10 @@
           "maxItems": 2,
           "items": [
             {
-              "$ref": "#/definitions/Store"
+              "$ref": "#/definitions/StoreDependency"
             },
             {
-              "$ref": "#/definitions/LLM"
+              "$ref": "#/definitions/LLMDependency"
             }
           ]
         }

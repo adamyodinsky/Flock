@@ -5,7 +5,7 @@ from typing import Any
 
 from langchain.agents import Tool as ToolWarperLC
 
-from flock_models.schemes.base import FlockBaseSchema
+from flock_models.schemes.base import BaseFlockSchema
 
 
 class Resource:
@@ -13,7 +13,7 @@ class Resource:
 
     def __init__(
         self,
-        manifest: FlockBaseSchema,
+        manifest: BaseFlockSchema,
         dependencies: dict[str, Any] = None,
     ):
         self.vendor: str = manifest.spec.vendor
@@ -25,7 +25,7 @@ class Resource:
 class ToolResource(Resource):
     """Base class for all tools."""
 
-    def __init__(self, manifest: FlockBaseSchema, dependencies: dict[str, Any] = None):
+    def __init__(self, manifest: BaseFlockSchema, dependencies: dict[str, Any] = None):
         super().__init__(manifest, dependencies)
 
         if getattr(manifest.metadata.annotations, "name", False):
@@ -44,7 +44,7 @@ class Agent(Resource):
 
     def __init__(
         self,
-        manifest: FlockBaseSchema,
+        manifest: BaseFlockSchema,
         dependencies: dict[str, Any] = None,
         tools: list[ToolWarperLC] = [],
     ):

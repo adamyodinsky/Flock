@@ -6,10 +6,10 @@ from flock_models.schemes.vectorstore_qa_tool import VectorStoreQAToolSchema
 from flock_models.schemes.agent import AgentSchema
 from flock_models.schemes.search_tool import SearchToolSchema
 from flock_models.schemes.base import (
-    MetaData as MetaDataSchema,
-    FlockBaseSchema,
+    BaseMetaData as MetaDataSchema,
+    BaseFlockSchema,
     Kind,
-    Dependency as DependencySchema,
+    BaseDependency as DependencySchema,
 )
 
 Schemas = {

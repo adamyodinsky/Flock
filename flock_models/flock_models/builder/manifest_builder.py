@@ -1,5 +1,5 @@
 """This module will handle the building of the manifest file for the flock."""
-from flock_models.schemes import Schemas, Kind, FlockBaseSchema, AgentSchema
+from flock_models.schemes import Schemas, Kind, BaseFlockSchema, AgentSchema
 from pydantic.schema import schema
 import json
 

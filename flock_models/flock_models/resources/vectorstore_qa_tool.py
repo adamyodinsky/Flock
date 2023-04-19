@@ -9,7 +9,7 @@ from langchain.schema import BaseLanguageModel as LCBaseLanguageModel
 from langchain.vectorstores.base import VectorStore as VectorStoreLC
 
 from flock_models.resources.base import ToolResource
-from flock_models.schemes.base import FlockBaseSchema, Kind
+from flock_models.schemes.base import BaseFlockSchema, Kind
 
 
 class VectorStoreQAToolResource(ToolResource):
@@ -19,7 +19,7 @@ class VectorStoreQAToolResource(ToolResource):
 
     def __init__(
             self,
-            manifest: FlockBaseSchema,
+            manifest: BaseFlockSchema,
             dependencies: dict[str, Any],
             ):
         super().__init__(manifest, dependencies)

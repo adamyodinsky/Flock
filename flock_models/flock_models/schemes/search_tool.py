@@ -5,13 +5,12 @@ from typing import Optional
 from pydantic import Field
 
 from flock_models.schemes.base import (
-    BaseModelConfig,
-    Dependency,
-    FlockBaseSchema,
+    BaseFlockSchema,
     Kind,
-    Options
+    BaseOptions
 )
 
+from flock_models.schemes.dependencies import LLMDependency
 
 class SearchToolVendor(str, Enum):
     """Enum for search_tool vendors."""
@@ -23,18 +22,14 @@ class SearchToolVendor(str, Enum):
     searx_search_results_json = "searx-search-results-json"
     
 
-class LLM(Dependency):
-    kind: str = Field(Kind.LLM, const=True)
-
-
-class SearchToolSpec(Options):
+class SearchToolSpec(BaseOptions):
     vendor: SearchToolVendor = Field(
         ...,
         description="The name of the search tool, e.g. serpapi, google-serper, etc.",
     )
-    dependencies: tuple[LLM] = Field(..., description="Tool dependencies")
+    dependencies: tuple[LLMDependency] = Field(..., description="Tool dependencies")
 
 
-class SearchToolSchema(FlockBaseSchema):
+class SearchToolSchema(BaseFlockSchema):
     kind: str = Field(Kind.SearchTool, const=True)
     spec: SearchToolSpec

@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
-from flock_models.schemes.base import FlockBaseSchema, Kind, Options
+from flock_models.schemes.base import BaseFlockSchema, Kind, BaseOptions
 
 
 class SplitterVendor(str, Enum):
@@ -13,13 +13,13 @@ class SplitterVendor(str, Enum):
     PythonCodeTextSplitter = "PythonCodeTextSplitter"
 
 
-class SplitterSpec(Options):
+class SplitterSpec(BaseOptions):
     vendor: SplitterVendor = Field(
         ..., description="The class of the splitter, e.g. CharacterTextSplitter, etc."
     )
 
 
-class SplitterSchema(FlockBaseSchema):
+class SplitterSchema(BaseFlockSchema):
     kind: str = Field(
         Kind.Splitter, const=True, description="The kind of the object"
     )

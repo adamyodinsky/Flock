@@ -5,7 +5,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.schema import BaseLanguageModel
 
 from flock_models.resources.base import Resource
-from flock_models.schemes.base import FlockBaseSchema
+from flock_models.schemes.base import BaseFlockSchema
 
 
 class LLMResource(Resource):
@@ -17,7 +17,7 @@ class LLMResource(Resource):
 
     def __init__(
         self,
-        manifest: FlockBaseSchema,
+        manifest: BaseFlockSchema,
         dependencies: dict[str, Any] = None,
     ):
         super().__init__(manifest)

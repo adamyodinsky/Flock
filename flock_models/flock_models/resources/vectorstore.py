@@ -7,7 +7,7 @@ from langchain.vectorstores.base import VectorStore as VectorStoreLC
 from langchain.vectorstores.chroma import Chroma as ChromaLC
 
 from flock_models.resources.base import Resource
-from flock_models.schemes.base import FlockBaseSchema, Kind
+from flock_models.schemes.base import BaseFlockSchema, Kind
 
 
 class VectorStoreResource(Resource):
@@ -17,7 +17,7 @@ class VectorStoreResource(Resource):
 
     def __init__(
         self,
-        manifest: FlockBaseSchema,
+        manifest: BaseFlockSchema,
         dependencies: dict[str, Any],
     ):
         super().__init__(manifest, dependencies)

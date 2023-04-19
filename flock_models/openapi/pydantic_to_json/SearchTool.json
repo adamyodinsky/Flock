@@ -18,7 +18,7 @@
       "type": "string"
     },
     "metadata": {
-      "$ref": "#/definitions/MetaData"
+      "$ref": "#/definitions/BaseMetaData"
     },
     "created_at": {
       "title": "Created At",
@@ -49,8 +49,8 @@
   ],
   "additionalProperties": false,
   "definitions": {
-    "MetaData": {
-      "title": "MetaData",
+    "BaseMetaData": {
+      "title": "BaseMetaData",
       "type": "object",
       "properties": {
         "annotations": {
@@ -100,8 +100,8 @@
       ],
       "type": "string"
     },
-    "LLM": {
-      "title": "LLM",
+    "LLMDependency": {
+      "title": "LLMDependency",
       "type": "object",
       "properties": {
         "labels": {
@@ -162,7 +162,7 @@
           "maxItems": 1,
           "items": [
             {
-              "$ref": "#/definitions/LLM"
+              "$ref": "#/definitions/LLMDependency"
             }
           ]
         }

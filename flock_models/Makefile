@@ -1,8 +1,10 @@
-.PHONY: models_validation schemas_validation
+.PHONY: validate-resources validate-schemas write-openapi
 
-resources-validation:
+validate-resources:
 	poetry run python tests/resources_validation.py
 
-schemas-validation:
+validate-schemas:
 	poetry run python tests/schemas_validation.py
 
+write-openapi:
+	poetry run python scripts/openapi_sync.py

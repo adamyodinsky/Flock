@@ -4,12 +4,12 @@ from typing import Optional
 from pydantic import Field
 
 from flock_models.schemes.base import (
-    Dependency,
-    FlockBaseSchema,
+    BaseFlockSchema,
     Kind,
-    Options
+    BaseOptions
 )
 
+from flock_models.schemes.dependencies import StoreDependency, LLMDependency
 
 class VectorStoreQAToolVendor(str, Enum):
     """Enum for vectorstore_qa_tool vendors."""
@@ -17,22 +17,14 @@ class VectorStoreQAToolVendor(str, Enum):
     RetrievalQAWithSourcesChain = "RetrievalQAWithSourcesChain"
 
 
-class Store(Dependency):
-    kind: str = Field(Kind.VectorStore, const=True)
-
-
-class LLM(Dependency):
-    kind: str = Field(Kind.LLM, const=True)
-
-
-class VectorStoreQAToolSpec(Options):
+class VectorStoreQAToolSpec(BaseOptions):
     vendor: VectorStoreQAToolVendor = Field(
         ..., description="The class of the tool, e.g. RetrievalQAWithSourcesChain, etc."
     )
     options: Optional[dict] = Field({}, description="Options for the tool")
-    dependencies: tuple[Store, LLM] = Field(..., description="Tool dependencies")
+    dependencies: tuple[StoreDependency, LLMDependency] = Field(..., description="Tool dependencies")
 
 
-class VectorStoreQAToolSchema(FlockBaseSchema):
+class VectorStoreQAToolSchema(BaseFlockSchema):
     kind: str = Field(Kind.VectorStoreQATool, const=True)
     spec: VectorStoreQAToolSpec

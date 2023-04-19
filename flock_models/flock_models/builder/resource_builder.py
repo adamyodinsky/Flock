@@ -23,14 +23,14 @@ class ResourceBuilder:
                 f"{dependency.namespace}/{dependency.kind}/{dependency.name}"
             )
 
-            dependency_manifest: schemes.FlockBaseSchema = self.resource_store.get_model(
+            dependency_manifest: schemes.BaseFlockSchema = self.resource_store.get_model(
                 dependency_key, schemes.Schemas[dependency.kind]
             )
 
             dependency_resource = self.build_resource(dependency_manifest)
             dependencies[dependency.kind] = dependency_resource.resource
 
-    def build_resource(self, manifest: schemes.FlockBaseSchema) -> Resource:
+    def build_resource(self, manifest: schemes.BaseFlockSchema) -> Resource:
         """Build resource from manifest. recursively build dependencies."""
 
         dependencies_bucket: dict[str, Resource] = {}

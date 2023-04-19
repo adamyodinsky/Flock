@@ -18,7 +18,7 @@
       "type": "string"
     },
     "metadata": {
-      "$ref": "#/definitions/MetaData"
+      "$ref": "#/definitions/BaseMetaData"
     },
     "created_at": {
       "title": "Created At",
@@ -49,8 +49,8 @@
   ],
   "additionalProperties": false,
   "definitions": {
-    "MetaData": {
-      "title": "MetaData",
+    "BaseMetaData": {
+      "title": "BaseMetaData",
       "type": "object",
       "properties": {
         "annotations": {
@@ -88,8 +88,8 @@
       ],
       "additionalProperties": false
     },
-    "Embedding": {
-      "title": "Embedding",
+    "EmbeddingDependency": {
+      "title": "EmbeddingDependency",
       "type": "object",
       "properties": {
         "labels": {
@@ -147,7 +147,7 @@
           "maxItems": 1,
           "items": [
             {
-              "$ref": "#/definitions/Embedding"
+              "$ref": "#/definitions/EmbeddingDependency"
             }
           ]
         }
