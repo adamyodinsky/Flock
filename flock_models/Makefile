@@ -6,9 +6,6 @@ validate-resources:
 validate-schemas:
 	poetry run python tests/schemas_validation.py
 
-write-openapi:
-	poetry run python scripts/openapi_sync.py
-
 format:
 	poetry run isort . && poetry run black . 
 
