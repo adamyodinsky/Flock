@@ -5,7 +5,12 @@ from flock_models.schemes.vectorstore import VectorStoreSchema
 from flock_models.schemes.vectorstore_qa_tool import VectorStoreQAToolSchema
 from flock_models.schemes.agent import AgentSchema
 from flock_models.schemes.search_tool import SearchToolSchema
-from flock_models.schemes.base import Kind, FlockBaseSchema, Dependency as DependencySchema
+from flock_models.schemes.base import (
+    MetaData as MetaDataSchema,
+    FlockBaseSchema,
+    Kind,
+    Dependency as DependencySchema,
+)
 
 Schemas = {
     Kind.Embedding: EmbeddingSchema,
@@ -15,5 +20,5 @@ Schemas = {
     Kind.VectorStoreQATool: VectorStoreQAToolSchema,
     Kind.Agent: AgentSchema,
     Kind.SearchTool: SearchToolSchema,
-    Kind.Splitter: SplitterSchema
+    Kind.Splitter: SplitterSchema,
 }
