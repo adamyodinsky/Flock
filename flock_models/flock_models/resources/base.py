@@ -3,9 +3,8 @@
 
 from typing import Any
 
-from langchain.agents import Tool as ToolWarperLC
-
 from flock_schemas.base import BaseFlockSchema
+from langchain.agents import Tool as ToolWarperLC
 
 
 class Resource:

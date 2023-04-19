@@ -2,31 +2,31 @@
 
 from typing import Any
 
+from flock_schemas.base import BaseFlockSchema, Kind
 from langchain.agents import Tool as ToolWarperLC
-from langchain.tools.base import BaseTool
-from langchain.schema import BaseLanguageModel as LCBaseLanguageModel
 from langchain.agents import load_tools as load_toolsLC
+from langchain.schema import BaseLanguageModel as LCBaseLanguageModel
+from langchain.tools.base import BaseTool
 
 from flock_models.resources.base import ToolResource
-from flock_schemas.base import BaseFlockSchema, Kind
 
 
 class SearchToolResource(ToolResource):
     """Class for vectorstore qa tool."""
 
     VENDORS = [
-      "google-search-results-json"
-      "searx-search-results-json"
-      "google-search"
-      "google-serper"
-      "serpapi"
+        "google-search-results-json"
+        "searx-search-results-json"
+        "google-search"
+        "google-serper"
+        "serpapi"
     ]
-        
+
     def __init__(
-            self,
-            manifest: BaseFlockSchema,
-            dependencies: dict[str, Any],
-            ):
+        self,
+        manifest: BaseFlockSchema,
+        dependencies: dict[str, Any],
+    ):
         super().__init__(manifest, dependencies)
         self.vendor_cls: BaseTool = self.vendor
         self.llm: LCBaseLanguageModel = self.dependencies[Kind.LLM]

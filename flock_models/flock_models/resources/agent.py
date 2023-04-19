@@ -2,12 +2,12 @@
 
 from typing import Any
 
+from flock_schemas.agent import AgentSchema, AgentType
+from flock_schemas.base import Kind
 from langchain.agents import Tool as ToolWarperLC
 from langchain.agents import initialize_agent
 
 from flock_models.resources.base import Agent
-from flock_schemas.agent import AgentSchema, AgentType
-from flock_schemas.base import Kind
 
 
 class AgentResource(Agent):

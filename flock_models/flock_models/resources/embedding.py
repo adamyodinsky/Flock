@@ -1,11 +1,12 @@
 """Interface for embedding models."""
 
 from typing import Any
+
+from flock_schemas.embedding import EmbeddingSchema
 from langchain.embeddings.base import Embeddings as EmbeddingsLC
 from langchain.embeddings.openai import OpenAIEmbeddings as OpenAIEmbeddingsLC
 
 from flock_models.resources.base import Resource
-from flock_schemas.embedding import EmbeddingSchema
 
 
 class EmbeddingResource(Resource):

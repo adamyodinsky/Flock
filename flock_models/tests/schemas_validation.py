@@ -1,9 +1,10 @@
+"""Validate all schemas in the schemas folder."""
+
 from typing import List
 
 import yaml
-from pydantic import ValidationError
-# from flock_schemas import Schemas
 from flock_schemas import Schemas
+from pydantic import ValidationError
 
 SCHEMA_FILES = [
     "vectorstore.yaml",
@@ -15,19 +16,22 @@ SCHEMA_FILES = [
     "agent.yaml",
 ]
 
-def validate_crds(crds: List[dict]):
-    for crd in crds:
+
+def validate_crds(_crds: List[dict]):
+    """Validate all schemas in the schemas folder."""
+    for crd in _crds:
         kind = crd["kind"]
         try:
             scheme = Schemas[kind]
             scheme(**crd)
-        except ValidationError as e:
+        except ValidationError as error:
             print(f"Error validating {kind}:")
-            print(e.json())
+            print(error.json())
         print(f"Validating {kind} - OK")
+
 
 # Validate all schemas
 for file in SCHEMA_FILES:
-    with open(f"tests/schemas/{file}") as f:
+    with open(f"tests/schemas/{file}", encoding='utf-8') as f:
         crds = list(yaml.load_all(f, Loader=yaml.FullLoader))
         validate_crds(crds)

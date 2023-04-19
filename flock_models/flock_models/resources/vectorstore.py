@@ -2,12 +2,12 @@
 
 from typing import Any
 
+from flock_schemas.base import BaseFlockSchema, Kind
 from langchain.embeddings.base import Embeddings as EmbeddingsLC
 from langchain.vectorstores.base import VectorStore as VectorStoreLC
 from langchain.vectorstores.chroma import Chroma as ChromaLC
 
 from flock_models.resources.base import Resource
-from flock_schemas.base import BaseFlockSchema, Kind
 
 
 class VectorStoreResource(Resource):

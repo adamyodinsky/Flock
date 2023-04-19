@@ -1,9 +1,10 @@
 """Resource builder."""
 
+import flock_schemas as schemas
 from flock_store.resources import ResourceStore
 from flock_store.secrets import SecretStore
-from flock_models.resources import Resource, Resources, AgentResource, ToolResource
-import flock_schemas as schemas
+
+from flock_models.resources import AgentResource, Resource, Resources, ToolResource
 
 
 class ResourceBuilder:
@@ -23,8 +24,10 @@ class ResourceBuilder:
                 f"{dependency.namespace}/{dependency.kind}/{dependency.name}"
             )
 
-            dependency_manifest: schemas.BaseFlockSchema = self.resource_store.get_model(
-                dependency_key, schemas.Schemas[dependency.kind]
+            dependency_manifest: schemas.BaseFlockSchema = (
+                self.resource_store.get_model(
+                    dependency_key, schemas.Schemas[dependency.kind]
+                )
             )
 
             dependency_resource = self.build_resource(dependency_manifest)
@@ -34,7 +37,7 @@ class ResourceBuilder:
         """Build resource from manifest. recursively build dependencies."""
 
         dependencies_bucket: dict[str, Resource] = {}
-        dependencies_section = getattr(manifest.spec, 'dependencies', [])
+        dependencies_section = getattr(manifest.spec, "dependencies", [])
         self.__build_recursive(dependencies_section, dependencies_bucket)
 
         resource = Resources[manifest.kind](manifest, dependencies_bucket)
@@ -44,13 +47,13 @@ class ResourceBuilder:
         """Build agent from manifest."""
 
         dependencies_bucket: dict[str, Resource] = {}
-        dependencies_list = getattr(manifest.spec, 'dependencies', [])
+        dependencies_list = getattr(manifest.spec, "dependencies", [])
         self.__build_recursive(dependencies_list, dependencies_bucket)
 
         tools_bucket = {}
-        tools_list: dict[str, ToolResource] = getattr(manifest.spec, 'tools', [])
+        tools_list: dict[str, ToolResource] = getattr(manifest.spec, "tools", [])
         self.__build_recursive(tools_list, tools_bucket)
-        
+
         tools_bucket = list(tools_bucket.values())
         agent_resource = AgentResource(
             manifest=manifest,

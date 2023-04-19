@@ -2,6 +2,7 @@
 
 from typing import Any
 
+from flock_schemas.base import BaseFlockSchema
 from langchain.text_splitter import (
     CharacterTextSplitter,
     PythonCodeTextSplitter,
@@ -9,7 +10,6 @@ from langchain.text_splitter import (
 )
 
 from flock_models.resources.base import Resource
-from flock_schemas.base import BaseFlockSchema
 
 
 class SplitterResource(Resource):

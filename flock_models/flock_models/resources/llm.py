@@ -1,11 +1,12 @@
 """Interface for LLM models."""
 
 from typing import Any
+
+from flock_schemas.base import BaseFlockSchema
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import BaseLanguageModel
 
 from flock_models.resources.base import Resource
-from flock_schemas.base import BaseFlockSchema
 
 
 class LLMResource(Resource):
