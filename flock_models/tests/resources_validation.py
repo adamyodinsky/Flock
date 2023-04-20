@@ -43,7 +43,7 @@ def test_building_resources(kind, file):
     resource_store.put_model(key=key, val=manifest)
     manifest: schema = resource_store.get_model(key=key, schema=schema)
 
-    resource = resource_builder.build_resource(manifest=manifest)
+    resource = resource_builder.build_resource(manifest)
 
     print(f"{manifest.kind} - OK")
     return resource
@@ -66,7 +66,7 @@ def test_building_agent(kind, file):
     resource_store.put_model(key=key, val=manifest)
     manifest: schema = resource_store.get_model(key=key, schema=schema)
 
-    resource = resource_builder.build_agent(manifest=manifest)
+    resource = resource_builder.build_agent(manifest)
 
     print(f"{manifest.kind} - OK")
     return resource
