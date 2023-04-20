@@ -1,0 +1,19 @@
+---
+
+apiVersion: flock/v1
+kind: VectorStore
+namespace: default
+metadata:
+  name: documentation_vectorstore
+  description: documentation vector store
+  annotations:
+    source: github.com/floc/flock.html
+spec:
+  vendor: Chroma
+  options:
+    persist_directory: './.documentation_vectorstore'
+    collection_name: 'documentation'
+  dependencies:
+    - kind: Embedding
+      name: my-openai-embedding
+      namespace: default

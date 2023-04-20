@@ -1,0 +1,17 @@
+---
+
+apiVersion: flock/v1
+kind: SearchTool
+namespace: default
+metadata:
+  name: my-google-search
+  description: a tool for interacting with google search
+  labels:
+    app: my_app
+spec:
+  vendor: serpapi
+  dependencies:
+    - kind: LLM
+      name: my-openai-llm
+      namespace: default
+      
