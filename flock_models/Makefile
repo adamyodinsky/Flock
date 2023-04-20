@@ -16,3 +16,6 @@ lint:
 	@echo "Linting code"
 	@poetry run pylint flock_scehmas tests --disable=E0401,F0001
 	
+build:
+	@echo "Building package"
+	@poetry build

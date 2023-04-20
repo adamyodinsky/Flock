@@ -1,3 +1,4 @@
 .vscode
 .resource_store
 .documentation_vectorstore
+dist

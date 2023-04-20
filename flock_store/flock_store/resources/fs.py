@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from flock_store.resources.base import ResourceStore
 
 
-class ResourceStoreFS(ResourceStore):
+class FSResourceStore(ResourceStore):
     """Entity store class. This class is used to save and load resources to and from the file system."""
 
     def __init__(self, resource_prefix: str):

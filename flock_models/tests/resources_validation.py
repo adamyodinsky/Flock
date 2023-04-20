@@ -1,8 +1,9 @@
 """Test building resources from yaml files"""
 
+import os
 import flock_schemas as schemas
 from flock_schemas import Kind
-from flock_store.resources import ResourceStoreFS
+from flock_store.resources import ResourceStoreFactory
 
 from flock_models import resources
 from flock_models.builder import ResourceBuilder
@@ -20,7 +21,12 @@ RESOURCES_FILES = {
 # Setup
 # pylint: disable=C0103
 secret_store = None
-resource_store = ResourceStoreFS(".resource_store")
+home_dir = os.path.expanduser("~")
+store_prefix = f"{home_dir}/.flock/resource_store"
+resource_store = ResourceStoreFactory.get_resource_store(
+    key_prefix=store_prefix, store_type="fs"
+)
+
 resource_builder = ResourceBuilder(
     resource_store=resource_store, secret_store=secret_store
 )
