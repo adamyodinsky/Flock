@@ -5,6 +5,10 @@ from flock_models.resources.base import Resource
 def __load_plugins(plugin_directory: str, plugin_base_class = Resource) -> dict:
     plugins_map = {}
 
+    # if plugin_directory not exist return empty dict
+    if not os.path.isdir(plugin_directory):
+        return plugins_map
+
     for file in os.listdir(plugin_directory):
         if file.endswith(".py") and file != "__init__.py":
             module_name = file[:-3]

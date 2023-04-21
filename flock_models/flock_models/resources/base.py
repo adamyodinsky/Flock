@@ -39,7 +39,7 @@ class ToolResource(Resource):
             self.description: str = manifest.metadata.description
 
 
-class Agent(Resource):
+class Agent(Resource, ):
     """Base class for all agents."""
     pass
 

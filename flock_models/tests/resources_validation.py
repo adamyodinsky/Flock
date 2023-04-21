@@ -74,9 +74,8 @@ def run_build_tests():
     baby_agi = test_building_resources("BabyAGI", "baby_agi.yaml")
 
     try:
-        agent.resource.run("What is langchain?")
-        baby_agi_agent.resource.run("What is langchain?")
-        baby_agi.run("Write a weather report for SF today")
+        agent.resource.run("Who is the current prime minister of israel?")
+        baby_agi.run("Write a financial report for the last week")
     # pylint: disable=W0703
     except Exception as e:
         print("\nError:", str(e))

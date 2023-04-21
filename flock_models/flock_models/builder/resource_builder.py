@@ -26,6 +26,7 @@ class ResourceBuilder:
         """Build resource from manifest. recursively build dependencies."""
 
         for dependency in dependencies_section:
+            print(dependency)
             dependency_key = (
                 f"{dependency.namespace}/{dependency.kind}/{dependency.name}"
             )
@@ -44,11 +45,13 @@ class ResourceBuilder:
 
         dependencies_bucket: dict[str, Resource] = {}
         dependencies_section = getattr(manifest.spec, "dependencies", [])
+        print(dependencies_section)
         self.__build_recursive(dependencies_section, dependencies_bucket)
 
-        tools_bucket = {}
-        tools_list: dict[str, Any] = getattr(manifest.spec, "tools", [])
-        self.__build_recursive(tools_list, tools_bucket)
+        tools_bucket: dict[str, Resource] = {}
+        tools_section: dict[str, Any] = getattr(manifest.spec, "tools", [])
+        print(tools_section)
+        self.__build_recursive(tools_section, tools_bucket)
         tools_bucket = list(tools_bucket.values())
 
         resource = self.merged_resources[manifest.kind](

@@ -1,7 +1,6 @@
 """Resource for vectorstore."""
 
 from typing import Any
-from flock_schemas import Kind, CustomSchema
 from langchain.agents import Tool as ToolWarperLC
 from langchain.experimental import BabyAGI
 from langchain.vectorstores import FAISS
@@ -9,7 +8,8 @@ from langchain.embeddings.base import Embeddings
 import faiss
 from langchain.docstore import InMemoryDocstore
 
-
+# tools for implementing a plugin can be exposed in a public library
+from flock_schemas import Kind, CustomSchema
 from flock_models.resources.base import Agent
 
 
