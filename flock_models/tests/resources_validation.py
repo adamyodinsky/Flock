@@ -72,7 +72,7 @@ def run_build_tests():
 
     try:
         agent.resource.run("Who is the current prime minister of israel?")
-        baby_agi.run("Write a financial report for the last week")
+        baby_agi.run("Write a weather report for SF today")
     # pylint: disable=W0703
     except Exception as e:
         print("\nError:", str(e))
