@@ -1,41 +1,43 @@
 """Validate all schemas in the schemas folder."""
-
 from typing import List
 
 import yaml
-from flock_schemas import Schemas
 from pydantic import ValidationError
 
-SCHEMA_FILES = [
-    "vectorstore.yaml",
-    "vectorstore_qa_tool.yaml",
-    "search_tool.yaml",
-    "splitter.yaml",
-    "embedding.yaml",
-    "llm.yaml",
-    "agent.yaml",
-    "prompt_template.yaml",
-    "llm_tool.yaml",
-    "baby_agi_agent.yaml",
-    "baby_agi.yaml",
-]
+from flock_schemas import Schemas
+
+SCHEMA_FILES = {
+    "VectorStore": "vectorstore.yaml",
+    "VectorStoreQATool": "vectorstore_qa_tool.yaml",
+    "SearchTool": "search_tool.yaml",
+    "Splitter": "splitter.yaml",
+    "Embedding": "embedding.yaml",
+    "LLM": "llm.yaml",
+    "Agent": "agent.yaml",
+    "PromptTemplate": "prompt_template.yaml",
+    "LLMTool": "llm_tool.yaml",
+    "Agent": "baby_agi_agent.yaml",
+    "Custom": "baby_agi.yaml",
+}
 
 
-def validate_crds(_crds: List[dict]):
-    """Validate all schemas in the schemas folder."""
-    for crd in _crds:
-        kind = crd["kind"]
-        try:
-            scheme = Schemas[kind]
-            scheme(**crd)
-        except ValidationError as error:
-            print(f"Error validating {kind}:")
-            print(error.json())
-        print(f"Validating {kind} - OK")
+def validate_crd(_kind, _crd: List[dict]):
+    """Validate all CRDs in a file."""
+    
+    try:
+        scheme = Schemas[_kind]
+        scheme(**_crd)
+    except ValidationError as error:
+        print(f"Error validating {_kind}:")
+        print(error.json())
+    print(f"{_kind} - OK")
 
 
-# Validate all schemas
-for file in SCHEMA_FILES:
-    with open(f"tests/schemas/{file}", encoding='utf-8') as f:
-        crds = list(yaml.load_all(f, Loader=yaml.FullLoader))
-        validate_crds(crds)
+# Validate all yaml schemas
+for file_kind, file_name in SCHEMA_FILES.items():
+    print(f"Validating {file_name} - ", end="", flush=True)
+    with open(f"tests/schemas/{file_name}", encoding="utf-8") as f:
+        crd = yaml.load(f, Loader=yaml.FullLoader)
+        validate_crd(file_kind, crd)
+    
+    

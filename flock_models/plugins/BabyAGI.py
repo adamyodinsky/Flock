@@ -10,10 +10,10 @@ import faiss
 from langchain.docstore import InMemoryDocstore
 
 
-from flock_models.resources.base import Resource
+from flock_models.resources.base import Agent
 
 
-class BabyAGIResource(Resource):
+class BabyAGIResource(Agent):
     """Class for self ask search agent."""
     
     def __init__(
@@ -38,4 +38,5 @@ class BabyAGIResource(Resource):
           task_execution_chain=self.dependencies[Kind.Agent],
           **self.options,
         )
+        self.run = self.resource
         

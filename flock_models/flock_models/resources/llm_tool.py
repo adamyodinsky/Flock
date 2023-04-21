@@ -22,6 +22,7 @@ class LLMToolResource(ToolResource):
         self,
         manifest: LLMToolSchema,
         dependencies: dict[str, Any],
+        tools: list[Any] = [],
     ):
         super().__init__(manifest, dependencies)
         self.vendor_cls: LLMChain = self.VENDORS[self.vendor]

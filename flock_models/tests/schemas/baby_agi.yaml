@@ -12,8 +12,7 @@ spec:
   vendor: BabyAGI
   options:
     verbose: false
-    max_iterations: max_iterations
-    objective: Write a weather report for SF today
+    max_iterations: 3
   dependencies:
     - kind: LLM
       name: my-openai-llm

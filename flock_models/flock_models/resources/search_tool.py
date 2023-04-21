@@ -26,6 +26,7 @@ class SearchToolResource(ToolResource):
         self,
         manifest: SearchToolSchema,
         dependencies: dict[str, Any],
+        tools: list[Any] = [],
     ):
         super().__init__(manifest, dependencies)
         self.vendor_cls: BaseTool = self.vendor

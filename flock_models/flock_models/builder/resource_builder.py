@@ -1,10 +1,11 @@
 """Resource builder."""
 
+from typing import Any
 import flock_schemas as schemas
 from flock_store.resources import ResourceStore
 from flock_store.secrets import SecretStore
 
-from flock_models.resources import AgentResource, Resource, Resources, ToolResource
+from flock_models.resources import Resource, Resources
 from flock_models.builder.plugins_loader import load_plugins
 
 
@@ -45,25 +46,14 @@ class ResourceBuilder:
         dependencies_section = getattr(manifest.spec, "dependencies", [])
         self.__build_recursive(dependencies_section, dependencies_bucket)
 
-        resource = self.merged_resources[manifest.kind](manifest, dependencies_bucket)
-        return resource
-
-    def build_agent(self, manifest: schemas.AgentSchema) -> AgentResource:
-        """Build agent from manifest."""
-
-        dependencies_bucket: dict[str, Resource] = {}
-        dependencies_list = getattr(manifest.spec, "dependencies", [])
-        self.__build_recursive(dependencies_list, dependencies_bucket)
-
         tools_bucket = {}
-        tools_list: dict[str, ToolResource] = getattr(manifest.spec, "tools", [])
+        tools_list: dict[str, Any] = getattr(manifest.spec, "tools", [])
         self.__build_recursive(tools_list, tools_bucket)
-
         tools_bucket = list(tools_bucket.values())
-        agent_resource = AgentResource(
+
+        resource = self.merged_resources[manifest.kind](
             manifest=manifest,
             dependencies=dependencies_bucket,
             tools=tools_bucket,
         )
-
-        return agent_resource
+        return resource

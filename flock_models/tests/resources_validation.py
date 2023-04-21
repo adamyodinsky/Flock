@@ -18,6 +18,9 @@ RESOURCES_FILES = {
     "SearchTool": "search_tool.yaml",
     "PromptTemplate": "prompt_template.yaml",
     "LLMTool": "llm_tool.yaml",
+    "Agent": "agent.yaml",
+    "Agent": "baby_agi_agent.yaml",
+    "BabyAGI": "baby_agi.yaml",
 }
 
 # Setup
@@ -37,14 +40,18 @@ resource_builder = ResourceBuilder(
 def test_building_resources(kind, file):
     """Test building resources from yaml files"""
 
-    assert kind in Kind.__members__, f"{kind} is not a valid member of Kind enum"
+    print(f"{file} - ", end="", flush=True)
 
+    if kind not in Kind.__members__:
+        kind = Kind.Custom
+    
     path = f"{PATH_TO_SCHEMAS}/{file}"
     schema = schemas.Schemas[kind]
 
     # test loading from yaml file
-    manifest: schema = resource_store.load_yaml(path, schema)
-    assert manifest.kind == kind, f"kind is not {kind} as expected in the manifest"
+    manifest = resource_store.load_yaml(path, schema)
+    if manifest.kind != kind and kind != Kind.Custom:
+        raise AssertionError(f"kind is not {kind} as expected in the manifest")
 
     # test save and load from resource store
     key = f"default/{manifest.kind}/{manifest.metadata.name}"
@@ -57,44 +64,22 @@ def test_building_resources(kind, file):
     return resource
 
 
-def test_building_agent(kind, file):
-    """Test building agent from yaml files"""
-
-    assert kind in Kind.__members__, f"{kind} is not a valid member of Kind enum"
-
-    path = f"{PATH_TO_SCHEMAS}/{file}"
-    schema = schemas.Schemas[kind]
-
-    # test loading from yaml file
-    manifest: schema = resource_store.load_yaml(path, schema)
-    assert manifest.kind == kind, f"kind is not {kind} as expected in the manifest"
-
-    # test save and load from resource store
-    key = f"default/{manifest.kind}/{manifest.metadata.name}"
-    resource_store.put_model(key=key, val=manifest)
-    manifest: schema = resource_store.get_model(key=key, schema=schema)
-
-    resource = resource_builder.build_agent(manifest)
-
-    print(f"{manifest.kind} - OK")
-    return resource
-
-
 def run_build_tests():
     """Run all tests"""
-    # for kind, file in RESOURCES_FILES.items():
-    #     test_building_resources(kind, file)
+    for kind, file in RESOURCES_FILES.items():
+        test_building_resources(kind, file)
     
-    # agent: resources.AgentResource = test_building_agent("Agent", "agent.yaml")
-    # baby_agi_agent: resources.AgentResource = test_building_agent("Agent", "baby_agi_agent.yaml")
-    baby_agi = test_building_resources("Custom", "baby_agi.yaml")
+    agent: resources.AgentResource = test_building_resources("Agent", "agent.yaml")
+    baby_agi_agent: resources.AgentResource = test_building_resources("Agent", "baby_agi_agent.yaml")
+    baby_agi = test_building_resources("BabyAGI", "baby_agi.yaml")
 
-    # try:
-    #     agent.resource.run("What is langchain?")
-    #     baby_agi_agent.resource.run("What is langchain?")
-    # # pylint: disable=W0703
-    # except Exception as e:
-    #     print("\nError:", str(e))
+    try:
+        agent.resource.run("What is langchain?")
+        baby_agi_agent.resource.run("What is langchain?")
+        baby_agi.run("Write a weather report for SF today")
+    # pylint: disable=W0703
+    except Exception as e:
+        print("\nError:", str(e))
 
 
 run_build_tests()

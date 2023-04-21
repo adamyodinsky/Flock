@@ -20,6 +20,7 @@ class EmbeddingResource(Resource):
         self,
         manifest: EmbeddingSchema,
         dependencies: dict[str, Any] = None,
+        tools: list[Any] = [],
     ):
         super().__init__(manifest)
         self.vendor_cls = self.VENDORS[self.vendor]

@@ -3,7 +3,7 @@
 
 from typing import Any
 
-from flock_schemas.base import BaseFlockSchema
+from flock_schemas import BaseFlockSchema, AgentSchema
 from langchain.agents import Tool as ToolWarperLC
 
 
@@ -14,6 +14,7 @@ class Resource:
         self,
         manifest: BaseFlockSchema,
         dependencies: dict[str, Any] = None,
+        tools: list[ToolWarperLC] = [],
     ):
         self.vendor: str = manifest.spec.vendor
         self.options: dict[str, Any] = manifest.spec.options
@@ -40,10 +41,11 @@ class ToolResource(Resource):
 
 class Agent(Resource):
     """Base class for all agents."""
+    pass
 
     def __init__(
         self,
-        manifest: BaseFlockSchema,
+        manifest: AgentSchema,
         dependencies: dict[str, Any] = None,
         tools: list[ToolWarperLC] = [],
     ):

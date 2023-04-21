@@ -21,6 +21,7 @@ class LLMResource(Resource):
         self,
         manifest: LLMSchema,
         dependencies: dict[str, Any] = None,
+        tools: list[Any] = [],
     ):
         super().__init__(manifest)
         self.vendor_cls: BaseLanguageModel = self.VENDORS[self.vendor]

@@ -22,6 +22,7 @@ class VectorStoreQAToolResource(ToolResource):
         self,
         manifest: VectorStoreQAToolSchema,
         dependencies: dict[str, Any],
+        tools: list[Any] = [],
     ):
         super().__init__(manifest, dependencies)
         self.vendor_cls: BaseQAWithSourcesChain = self.VENDORS[self.vendor]

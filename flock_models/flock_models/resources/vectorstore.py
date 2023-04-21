@@ -22,6 +22,7 @@ class VectorStoreResource(Resource):
         self,
         manifest: VectorStoreSchema,
         dependencies: dict[str, Any],
+        tools: list[Any] = [],
     ):
         super().__init__(manifest, dependencies)
         self.vendor_cls: VectorStoreLC = self.VENDORS[self.vendor]

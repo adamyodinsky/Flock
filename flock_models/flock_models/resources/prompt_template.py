@@ -19,6 +19,7 @@ class PromptTemplateResource(Resource):
         self,
         manifest: PromptTemplateSchema,
         dependencies: dict[str, Any] = None,
+        tools: list[Any] = [],
     ):
         super().__init__(manifest)
         self.vendor_cls: PromptTemplate = self.VENDORS[self.vendor]
