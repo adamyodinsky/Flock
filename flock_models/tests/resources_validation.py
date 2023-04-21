@@ -18,9 +18,7 @@ RESOURCES_FILES = {
     "SearchTool": "search_tool.yaml",
     "PromptTemplate": "prompt_template.yaml",
     "LLMTool": "llm_tool.yaml",
-    "Agent": "agent.yaml",
     "Agent": "baby_agi_agent.yaml",
-    "BabyAGI": "baby_agi.yaml",
 }
 
 # Setup
@@ -70,7 +68,6 @@ def run_build_tests():
         test_building_resources(kind, file)
     
     agent: resources.AgentResource = test_building_resources("Agent", "agent.yaml")
-    baby_agi_agent: resources.AgentResource = test_building_resources("Agent", "baby_agi_agent.yaml")
     baby_agi = test_building_resources("BabyAGI", "baby_agi.yaml")
 
     try:
