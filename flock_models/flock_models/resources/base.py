@@ -39,7 +39,7 @@ class ToolResource(Resource):
             self.description: str = manifest.metadata.description
 
 
-class Agent(Resource, ):
+class Agent(Resource):
     """Base class for all agents."""
     pass
 
@@ -51,3 +51,4 @@ class Agent(Resource, ):
     ):
         super().__init__(manifest, dependencies)
         self.tools = tools
+        self.run = None
