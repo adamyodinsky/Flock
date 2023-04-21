@@ -10,11 +10,12 @@ python = "^3.9"
 pydantic = "^1.10.7"
 pyyaml = "^6.0"
 flock-store = {path = "../flock_store", develop = true}
-langchain = "^0.0.141"
+langchain = "^0.0.146"
 chromadb = "^0.3.21"
 tiktoken = "^0.3.3"
 google-search-results = "^2.4.2"
 flock-schemas = {path = "../../Flock-Schemas", develop = true}
+openai = "^0.27.4"
 
 
 [tool.poetry.group.dev.dependencies]
