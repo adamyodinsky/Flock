@@ -1,0 +1,32 @@
+---
+
+apiVersion: flock/v1
+kind: Agent
+namespace: default
+metadata:
+  name: my-baby-agi-agent
+  description: An autonomous agent
+  labels:
+    app: my_app
+spec:
+  vendor: zero-shot-react-description
+  options:
+    verbose: true
+    prefix: |
+      You are an AI who performs one task based on the following objective: {objective}. Take into account these previously completed tasks: {context}.
+    suffix: |
+      Question: {task}
+      {agent_scratchpad}
+    input_variables: ["objective", "task", "context", "agent_scratchpad"]
+  dependencies:
+    - kind: LLM
+      name: my-openai-llm
+      namespace: default
+  tools:
+    - kind: LLMTool
+      name: my-llm-tool
+      namespace: default
+    - kind: SearchTool
+      name: my-google-search
+      namespace: default
+          
