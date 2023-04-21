@@ -10,8 +10,6 @@ metadata:
 spec:
   vendor: PromptTemplate
   options:
-    input_variables: ["question"]
+    input_variables: ["objective"]
     template: |
-      Question: {question}
-      
-      Answer: Let's think step by step.
+      "You are a planner who is an expert at coming up with a todo list for a given objective. Come up with a todo list for this objective: {objective}"

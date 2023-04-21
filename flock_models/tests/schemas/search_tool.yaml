@@ -5,7 +5,7 @@ kind: SearchTool
 namespace: default
 metadata:
   name: my-google-search
-  description: a tool for interacting with google search
+  description: Useful for answering questions about current events, and for further research on the internet
   labels:
     app: my_app
 spec:

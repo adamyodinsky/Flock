@@ -5,7 +5,7 @@ kind: LLMTool
 namespace: default
 metadata:
   name: my-llm-tool
-  description: an llm chain tool
+  description: "Useful for coming up with todo lists. Input: an objective to create a todo list for. Output: a todo list for that objective. Please be very clear what the objective is!"
   labels:
     app: my_app
 spec:
