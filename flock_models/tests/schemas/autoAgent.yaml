@@ -6,7 +6,7 @@ apiVersion: flock/v1
 kind: Agent
 namespace: default
 metadata:
-  name: my-auto-agent
+  name: my-baby-agi-agent
   description: An autonomous agent
   labels:
     app: my_app

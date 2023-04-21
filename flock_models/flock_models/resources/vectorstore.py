@@ -7,6 +7,8 @@ from flock_schemas.base import Kind
 from langchain.embeddings.base import Embeddings as EmbeddingsLC
 from langchain.vectorstores.base import VectorStore as VectorStoreLC
 from langchain.vectorstores.chroma import Chroma as ChromaLC
+from langchain.docstore import InMemoryDocstore
+
 
 from flock_models.resources.base import Resource
 
