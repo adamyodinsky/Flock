@@ -1,7 +1,7 @@
 ---
 
 apiVersion: flock/v1
-kind: Custom
+kind: BabyAGI
 namespace: default
 metadata:
   name: my-baby-agi

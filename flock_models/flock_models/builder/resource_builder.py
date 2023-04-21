@@ -5,6 +5,7 @@ from flock_store.resources import ResourceStore
 from flock_store.secrets import SecretStore
 
 from flock_models.resources import AgentResource, Resource, Resources, ToolResource
+from flock_models.builder.plugins_loader import load_plugins
 
 
 class ResourceBuilder:
@@ -13,6 +14,10 @@ class ResourceBuilder:
     def __init__(self, resource_store: ResourceStore, secret_store: SecretStore = None):
         self.resource_store = resource_store
         self.secret_store = secret_store
+        self.resources = Resources
+        self.plugins = load_plugins("plugins")
+        self.merged_resources = { **self.plugins, **self.resources }
+
 
     def __build_recursive(
         self, dependencies_section, dependencies: dict[str, Resource]
@@ -40,7 +45,7 @@ class ResourceBuilder:
         dependencies_section = getattr(manifest.spec, "dependencies", [])
         self.__build_recursive(dependencies_section, dependencies_bucket)
 
-        resource = Resources[manifest.kind](manifest, dependencies_bucket)
+        resource = self.merged_resources[manifest.kind](manifest, dependencies_bucket)
         return resource
 
     def build_agent(self, manifest: schemas.AgentSchema) -> AgentResource:

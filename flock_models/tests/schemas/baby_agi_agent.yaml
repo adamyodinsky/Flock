@@ -12,12 +12,13 @@ spec:
   vendor: zero-shot-react-description
   options:
     verbose: true
-    prefix: |
-      You are an AI who performs one task based on the following objective: {objective}. Take into account these previously completed tasks: {context}.
-    suffix: |
-      Question: {task}
-      {agent_scratchpad}
-    input_variables: ["objective", "task", "context", "agent_scratchpad"]
+    agent_kwargs:
+      prefix: |
+        You are an AI who performs one task based on the following objective: {objective}. Take into account these previously completed tasks: {context}.
+      suffix: |
+        Question: {task}
+        {agent_scratchpad}
+      input_variables: ["objective", "task", "context", "agent_scratchpad"]
   dependencies:
     - kind: LLM
       name: my-openai-llm

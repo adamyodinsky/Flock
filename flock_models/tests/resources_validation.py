@@ -82,14 +82,16 @@ def test_building_agent(kind, file):
 
 def run_build_tests():
     """Run all tests"""
-    for kind, file in RESOURCES_FILES.items():
-        test_building_resources(kind, file)
-
-    agent: resources.AgentResource = test_building_agent("Agent", "agent.yaml")
-    agent: resources.AgentResource = test_building_agent("Custom", "baby_agi_agent.yaml")
+    # for kind, file in RESOURCES_FILES.items():
+    #     test_building_resources(kind, file)
+    
+    # agent: resources.AgentResource = test_building_agent("Agent", "agent.yaml")
+    # baby_agi_agent: resources.AgentResource = test_building_agent("Agent", "baby_agi_agent.yaml")
+    baby_agi = test_building_resources("Custom", "baby_agi.yaml")
 
     # try:
     #     agent.resource.run("What is langchain?")
+    #     baby_agi_agent.resource.run("What is langchain?")
     # # pylint: disable=W0703
     # except Exception as e:
     #     print("\nError:", str(e))

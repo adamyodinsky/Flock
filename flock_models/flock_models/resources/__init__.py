@@ -1,5 +1,3 @@
-from flock_schemas.base import Kind as __Kind
-
 from flock_models.resources.agent import AgentResource
 from flock_models.resources.base import Agent, Resource, ToolResource
 from flock_models.resources.embedding import EmbeddingResource
@@ -12,13 +10,13 @@ from flock_models.resources.prompt_template import PromptTemplateResource
 from flock_models.resources.llm_tool import LLMToolResource
 
 Resources = {
-    __Kind.Embedding: EmbeddingResource,
-    __Kind.LLM: LLMResource,
-    __Kind.SearchTool: SearchToolResource,
-    __Kind.VectorStore: VectorStoreResource,
-    __Kind.VectorStoreQATool: VectorStoreQAToolResource,
-    __Kind.Agent: AgentResource,
-    __Kind.Splitter: SplitterResource,
-    __Kind.PromptTemplate: PromptTemplateResource,
-    __Kind.LLMTool: LLMToolResource,
+    "Embedding": EmbeddingResource,
+    "LLM": LLMResource,
+    "SearchTool": SearchToolResource,
+    "VectorStore": VectorStoreResource,
+    "VectorStoreQATool": VectorStoreQAToolResource,
+    "Agent": AgentResource,
+    "Splitter": SplitterResource,
+    "PromptTemplate": PromptTemplateResource,
+    "LLMTool": LLMToolResource
 }
