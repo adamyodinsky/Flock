@@ -86,11 +86,13 @@ def run_build_tests():
         test_building_resources(kind, file)
 
     agent: resources.AgentResource = test_building_agent("Agent", "agent.yaml")
-    try:
-        agent.resource.run("What is langchain?")
-    # pylint: disable=W0703
-    except Exception as e:
-        print("\nError:", str(e))
+    agent: resources.AgentResource = test_building_agent("Custom", "baby_agi_agent.yaml")
+
+    # try:
+    #     agent.resource.run("What is langchain?")
+    # # pylint: disable=W0703
+    # except Exception as e:
+    #     print("\nError:", str(e))
 
 
 run_build_tests()

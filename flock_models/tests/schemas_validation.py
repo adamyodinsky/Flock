@@ -16,6 +16,8 @@ SCHEMA_FILES = [
     "agent.yaml",
     "prompt_template.yaml",
     "llm_tool.yaml",
+    "baby_agi_agent.yaml",
+    "baby_agi.yaml",
 ]
 
 

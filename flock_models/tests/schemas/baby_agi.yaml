@@ -1,0 +1,26 @@
+---
+
+apiVersion: flock/v1
+kind: Custom
+namespace: default
+metadata:
+  name: my-baby-agi
+  description: A baby AGI
+  labels:
+    app: my_app
+spec:
+  vendor: BabyAGI
+  options:
+    verbose: false
+    max_iterations: max_iterations
+    objective: Write a weather report for SF today
+  dependencies:
+    - kind: LLM
+      name: my-openai-llm
+      namespace: default
+    - kind: Embedding
+      name: my-openai-embedding
+      namespace: default
+    - kind: Agent
+      name: my-baby-agi-agent
+      namespace: default
