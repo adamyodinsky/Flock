@@ -12,7 +12,7 @@ from flock_models.resources.base import Agent
 
 class AgentResource(Agent):
     """Class for self ask search agent."""
-
+    
     def __init__(
         self,
         manifest: AgentSchema,

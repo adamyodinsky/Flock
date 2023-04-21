@@ -2,7 +2,8 @@
 
 from typing import Any
 
-from flock_schemas.base import BaseFlockSchema, Kind
+from flock_schemas import VectorStoreSchema
+from flock_schemas.base import Kind
 from langchain.embeddings.base import Embeddings as EmbeddingsLC
 from langchain.vectorstores.base import VectorStore as VectorStoreLC
 from langchain.vectorstores.chroma import Chroma as ChromaLC
@@ -17,7 +18,7 @@ class VectorStoreResource(Resource):
 
     def __init__(
         self,
-        manifest: BaseFlockSchema,
+        manifest: VectorStoreSchema,
         dependencies: dict[str, Any],
     ):
         super().__init__(manifest, dependencies)

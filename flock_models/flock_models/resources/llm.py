@@ -2,6 +2,7 @@
 
 from typing import Any
 
+from flock_schemas import LLMSchema
 from flock_schemas.base import BaseFlockSchema
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import BaseLanguageModel
@@ -18,7 +19,7 @@ class LLMResource(Resource):
 
     def __init__(
         self,
-        manifest: BaseFlockSchema,
+        manifest: LLMSchema,
         dependencies: dict[str, Any] = None,
     ):
         super().__init__(manifest)

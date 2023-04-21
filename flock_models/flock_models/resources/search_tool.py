@@ -2,8 +2,8 @@
 
 from typing import Any
 
-from flock_schemas.base import BaseFlockSchema, Kind
-from langchain.agents import Tool as ToolWarperLC
+from flock_schemas import SearchToolSchema
+from flock_schemas.base import Kind
 from langchain.agents import load_tools as load_toolsLC
 from langchain.schema import BaseLanguageModel as LCBaseLanguageModel
 from langchain.tools.base import BaseTool
@@ -24,7 +24,7 @@ class SearchToolResource(ToolResource):
 
     def __init__(
         self,
-        manifest: BaseFlockSchema,
+        manifest: SearchToolSchema,
         dependencies: dict[str, Any],
     ):
         super().__init__(manifest, dependencies)

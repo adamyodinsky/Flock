@@ -2,7 +2,8 @@
 
 from typing import Any
 
-from flock_schemas.base import BaseFlockSchema, Kind
+from flock_schemas import VectorStoreQAToolSchema
+from flock_schemas import Kind
 from langchain.agents import Tool as ToolWarperLC
 from langchain.chains import RetrievalQAWithSourcesChain
 from langchain.chains.qa_with_sources.base import BaseQAWithSourcesChain
@@ -19,7 +20,7 @@ class VectorStoreQAToolResource(ToolResource):
 
     def __init__(
         self,
-        manifest: BaseFlockSchema,
+        manifest: VectorStoreQAToolSchema,
         dependencies: dict[str, Any],
     ):
         super().__init__(manifest, dependencies)

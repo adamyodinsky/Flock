@@ -2,6 +2,7 @@
 
 from typing import Any
 
+from flock_schemas import SplitterSchema
 from flock_schemas.base import BaseFlockSchema
 from langchain.text_splitter import (
     CharacterTextSplitter,
@@ -22,7 +23,7 @@ class SplitterResource(Resource):
 
     def __init__(
         self,
-        manifest: BaseFlockSchema,
+        manifest: SplitterSchema,
         dependencies: dict[str, Any] = None,
     ):
         super().__init__(manifest)

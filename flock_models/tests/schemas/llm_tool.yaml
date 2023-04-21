@@ -1,0 +1,20 @@
+---
+
+apiVersion: flock/v1
+kind: LLMTool
+namespace: default
+metadata:
+  name: my-llm-tool
+  description: an llm chain tool
+  labels:
+    app: my_app
+spec:
+  vendor: LLMChain
+  dependencies:
+    - kind: PromptTemplate
+      name: my-prompt-template
+      namespace: default
+    - kind: LLM
+      name: my-openai-llm
+      namespace: default
+      

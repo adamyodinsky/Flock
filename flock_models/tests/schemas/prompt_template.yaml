@@ -1,0 +1,17 @@
+---
+apiVersion: flock/v1
+kind: PromptTemplate
+namespace: default
+metadata:
+  name: my-prompt-template
+  description: prompt template
+  labels:
+    app: my_app
+spec:
+  vendor: PromptTemplate
+  options:
+    input_variables: ["question"]
+    template: |
+      Question: {question}
+      
+      Answer: Let's think step by step.

@@ -14,6 +14,8 @@ SCHEMA_FILES = [
     "embedding.yaml",
     "llm.yaml",
     "agent.yaml",
+    "prompt_template.yaml",
+    "llm_tool.yaml",
 ]
 
 

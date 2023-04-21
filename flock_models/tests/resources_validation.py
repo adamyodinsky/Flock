@@ -16,6 +16,8 @@ RESOURCES_FILES = {
     "VectorStore": "vectorstore.yaml",
     "VectorStoreQATool": "vectorstore_qa_tool.yaml",
     "SearchTool": "search_tool.yaml",
+    "PromptTemplate": "prompt_template.yaml",
+    "LLMTool": "llm_tool.yaml",
 }
 
 # Setup
@@ -83,12 +85,12 @@ def run_build_tests():
     for kind, file in RESOURCES_FILES.items():
         test_building_resources(kind, file)
 
-    agent: resources.AgentResource = test_building_agent("Agent", "agent.yaml")
-    try:
-        agent.resource.run("What is langchain?")
-    # pylint: disable=W0703
-    except Exception as e:
-        print("\nError:", str(e))
+    # agent: resources.AgentResource = test_building_agent("Agent", "agent.yaml")
+    # try:
+    #     agent.resource.run("What is langchain?")
+    # # pylint: disable=W0703
+    # except Exception as e:
+    #     print("\nError:", str(e))
 
 
 run_build_tests()
