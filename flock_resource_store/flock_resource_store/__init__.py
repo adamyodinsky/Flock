@@ -1,6 +1,6 @@
-from flock_store.resources.base import ResourceStore
-from flock_store.resources.etcd import EtcdResourceStore
-from flock_store.resources.fs import FSResourceStore
+from flock_resource_store.base import ResourceStore
+from flock_resource_store.etcd import EtcdResourceStore
+from flock_resource_store.fs import FSResourceStore
 
 class ResourceStoreFactory:
     @staticmethod

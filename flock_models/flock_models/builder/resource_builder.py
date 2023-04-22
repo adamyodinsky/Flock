@@ -2,8 +2,8 @@
 
 from typing import Any
 import flock_schemas as schemas
-from flock_store.resources import ResourceStore
-from flock_store.secrets import SecretStore
+from flock_resource_store import ResourceStore
+from flock_secrets_store import SecretStore
 
 from flock_models.resources import Resource, Resources
 from flock_models.builder.plugins_loader import load_plugins

@@ -3,7 +3,7 @@
 import etcd
 from pydantic import BaseModel
 
-from flock_store.resources.base import ResourceStore
+from flock_resource_store.base import ResourceStore
 
 
 class EtcdResourceStore(ResourceStore):

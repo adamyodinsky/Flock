@@ -1,20 +1,14 @@
 [tool.poetry]
-name = "flock-store"
-version = "0.1.0"
+name = "flock-secrets-store"
+version = "0.0.1"
 description = ""
 authors = ["Adam Yodinsky <27074934+adamyodinsky@users.noreply.github.com>"]
 readme = "README.md"
-packages = [{include = "flock_store"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
 hvac = "^1.1.0"
-python-etcd = "^0.4.5"
-pydantic = "^1.10.7"
 
-
-[tool.poetry.group.dev.dependencies]
-black = "^23.3.0"
 
 [build-system]
 requires = ["poetry-core"]

@@ -3,7 +3,7 @@
 import os
 import flock_schemas as schemas
 from flock_schemas import Kind
-from flock_store.resources import ResourceStoreFactory
+from flock_resource_store import ResourceStoreFactory
 
 from flock_models import resources
 from flock_models.builder import ResourceBuilder

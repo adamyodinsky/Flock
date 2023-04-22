@@ -4,7 +4,7 @@ from typing import Any
 
 import hvac
 
-from flock_store.secrets.base import SecretStore
+from flock_secrets_store.base import SecretStore
 
 
 class VaultSecretStore(SecretStore):

@@ -1,10 +1,9 @@
 """Entity store class. This class is used to save and load resources to and from the file system."""
 
 import os
-import pickle
 from pydantic import BaseModel
 
-from flock_store.resources.base import ResourceStore
+from flock_resource_store.base import ResourceStore
 
 
 class FSResourceStore(ResourceStore):
