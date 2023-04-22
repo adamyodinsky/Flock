@@ -1,7 +1,7 @@
 ---
 
 apiVersion: flock/v1
-kind: SearchTool
+kind: LoadTool
 namespace: default
 metadata:
   name: my-google-search

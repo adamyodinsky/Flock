@@ -20,7 +20,7 @@ spec:
     # - kind: VectorStoreQATool
     #   name: langchain-docs
     #   namespace: default
-    - kind: SearchTool
+    - kind: LoadTool
       name: my-google-search
       namespace: default
           

@@ -27,7 +27,7 @@ spec:
     - kind: LLMTool
       name: my-llm-tool
       namespace: default
-    - kind: SearchTool
+    - kind: LoadTool
       name: my-google-search
       namespace: default
           

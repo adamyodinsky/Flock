@@ -15,7 +15,7 @@ RESOURCES_FILES = {
     "LLM": "llm.yaml",
     "VectorStore": "vectorstore.yaml",
     "VectorStoreQATool": "vectorstore_qa_tool.yaml",
-    "SearchTool": "search_tool.yaml",
+    "LoadTool": "search_tool.yaml",
     "PromptTemplate": "prompt_template.yaml",
     "LLMTool": "llm_tool.yaml",
     "Agent": "baby_agi_agent.yaml",
