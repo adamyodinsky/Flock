@@ -24,13 +24,11 @@ class BabyAGIResource(Agent):
     ):
         super().__init__(manifest, dependencies, tools)
 
-        # Define your embedding model
-        self.embedding: Embeddings = self.dependencies[Kind.Embedding].resource
-
-        # Initialize the vectorstore as empty
+        # Define your embedding model and initialize the vectorstore as empty
+        embedding: Embeddings = self.dependencies[Kind.Embedding].resource
         embedding_size = 1536
         index = faiss.IndexFlatL2(embedding_size)
-        vectorstore = FAISS(self.embedding.embed_query, index, InMemoryDocstore({}), {})
+        vectorstore = FAISS(embedding.embed_query, index, InMemoryDocstore({}), {})
 
         self.resource = BabyAGI.from_llm(
           vectorstore=vectorstore,
