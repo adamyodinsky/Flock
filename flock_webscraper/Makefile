@@ -43,3 +43,4 @@ docker-test-run:
 
 clear:
 	rm -rf .spider_output
+	

@@ -1,12 +1,17 @@
 .PHONY: validate-resources validate-schemas write-openapi fomat lint
 
+help:
+	@echo "Please use \`make <target>' where <target> is one of"
+	@echo "  validate-resources  to validate the resources"
+	@echo "  validate-schemas    to validate the schemas"
+	@echo "  write-openapi       to write the openapi"
+	@echo "  format              to format the code"
+	@echo "  lint                to lint the code"
+	@echo "  build               to build the package"
+
 validate-resources:
 	@echo "Validating resources"
 	@poetry run python tests/resources_validation.py
-
-validate-schemas:
-	@echo "Validating schemas"
-	@poetry run python tests/schemas_validation.py
 
 format:
 	@echo "Formatting code"
@@ -19,3 +24,4 @@ lint:
 build:
 	@echo "Building package"
 	@poetry build
+	

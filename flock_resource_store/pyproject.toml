@@ -8,6 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.9"
 python-etcd = "^0.4.5"
+pyyaml = "^6.0"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -24,7 +24,7 @@ class FSResourceStore(ResourceStore):
             os.makedirs(os.path.dirname(key))
         
         with open(file=key, mode="w") as f:
-            f.write(value)
+            f.write(val)
 
     def get_model(self, key, schema: BaseModel) -> BaseModel:
         key = f"{self.resource_prefix}/{key}"
