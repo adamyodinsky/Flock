@@ -1,3 +1,17 @@
+.PHONY: help install test docker-test-build docker-test-run docker-build-prod clear
+
+help:
+	@echo "Please use \`make <target>' where <target> is one of"
+	@echo "  install           to install dependencies"
+	@echo "  test              to run tests"
+	@echo "  docker-test-build to build docker image for testing"
+	@echo "  docker-test-run   to run docker image for testing"
+	@echo "  docker-build-prod to build docker image for production"
+	@echo "  clear             to clear spider output"
+
+install:
+	poetry install
+
 test:
 	@SCRAPER_NAME="test_spider" \
 	SCRAPER_START_URLS="http://books.toscrape.com/catalogue/category/books/romance_8/index.html" \
@@ -8,11 +22,14 @@ test:
 	SCRAPER_FEED_EXPORT_BATCH_ITEM_COUNT=10 \
 	poetry run scrapy runspider flock_webscraper/flock_spider.py
 
-docker-build:
-	docker build -t flock_webscraper .
+docker-test-build:
+	@docker build -t flock_webscraper .
+
+docker-build-prod:
+	docker build -t flock_webscraper:`poetry version | cut -d ' ' -f 2` .
 
 docker-test-run:
-	docker run --rm \
+	@docker run --rm \
 	-e SCRAPER_NAME="test_spider" \
 	-e SCRAPER_START_URLS="http://books.toscrape.com/catalogue/category/books/romance_8/index.html" \
 	-e RULE_SCRAPER_ALLOWED_DOMAINS="books.toscrape.com" \
@@ -25,4 +42,4 @@ docker-test-run:
 	flock_webscraper
 
 clear:
-	rm -rf .spider_output/test_spider
+	rm -rf .spider_output
