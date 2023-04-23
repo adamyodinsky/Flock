@@ -1,36 +1,31 @@
-# First stage: Install dependencies using Poetry
-FROM python:3.9-slim-buster as builder
+# Stage 1: Build the intermediate image
+FROM python:3.9 AS builder
 
 # Set the working directory
 WORKDIR /app
 
-# Set the Poetry version as a build argument
-ARG POETRY_VERSION=1.1.9
+# Copy your Scrapy project files into the container
+COPY ./flock_webscraper .
 
-# Install Poetry
-RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
+# Install Scrapy and any other dependencies using pip
+RUN pip install --upgrade pip \
+    && pip install --user scrapy
 
-# Copy the pyproject.toml and poetry.lock files into the container
-COPY pyproject.toml poetry.lock ./
 
-# Install the dependencies and create a virtual environment
-RUN poetry config virtualenvs.in-project true \
-    && poetry install --no-root --no-dev
+# Stage 2: Create the final image
+FROM python:3.9-slim
 
-# Second stage: Prepare the final image
-FROM python:3.9-slim-buster
+# Copy the installed Scrapy from the builder image
+COPY --from=builder /root/.local /root/.local
+
+# Copy your Scrapy project files into the container
+COPY --from=builder /app /app
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the virtual environment from the builder stage
-COPY --from=builder /app/.venv /app/.venv
+# Make sure the scripts in .local are used
+ENV PATH=/root/.local/bin:$PATH
 
-# Activate the virtual environment
-ENV PATH="/app/.venv/bin:$PATH"
-
-# Copy the project files into the container
-COPY . .
-
-# Run the Scrapy spider
-CMD ["python", "run_spider.py"]
+# Run the Scrapy spider using the environment variables
+CMD ["scrapy", "runspider", "flock_spider.py"]

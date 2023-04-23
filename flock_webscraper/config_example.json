@@ -1,9 +1,0 @@
-{
-  "name": "test_spider",
-  "start_urls": ["https://www.gutenberg.org/"],
-  "allowed_domains": ["gutenberg.org"],
-  "deny_extensions": [],
-  "custom_settings": {
-    "DOWNLOAD_DELAY": 1
-  }
-}
