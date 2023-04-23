@@ -20,8 +20,8 @@ class AgentResource(Agent):
     ):
         super().__init__(manifest, dependencies, tools)
         self.resource = initialize_agent(
-            tools=self.tools,
-            llm=self.dependencies[Kind.LLM],
+            tools=self.agent_tools,
+            llm=self.dependencies[Kind.LLM].resource,
             agent=self.vendor,
             **self.options,
         )

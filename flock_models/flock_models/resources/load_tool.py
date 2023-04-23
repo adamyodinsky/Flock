@@ -50,7 +50,7 @@ class LoadToolResource(ToolResource):
     ):
         super().__init__(manifest, dependencies)
         self.vendor_cls: BaseTool = self.vendor
-        self.llm: LCBaseLanguageModel = self.dependencies[Kind.LLM]
+        self.llm: LCBaseLanguageModel = self.dependencies[Kind.LLM].resource
 
         self.tool_function = load_toolsLC(
             tool_names=[self.vendor],

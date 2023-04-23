@@ -26,8 +26,8 @@ class VectorStoreQAToolResource(ToolResource):
     ):
         super().__init__(manifest, dependencies)
         self.vendor_cls: BaseQAWithSourcesChain = self.VENDORS[self.vendor]
-        self.llm: LCBaseLanguageModel = self.dependencies[Kind.LLM]
-        self.vectorestore: VectorStoreLC = self.dependencies[Kind.VectorStore]
+        self.llm: LCBaseLanguageModel = self.dependencies[Kind.LLM].resource
+        self.vectorestore: VectorStoreLC = self.dependencies[Kind.VectorStore].resource
 
         self.tool_function = self.vendor_cls.from_chain_type(
             **self.options,

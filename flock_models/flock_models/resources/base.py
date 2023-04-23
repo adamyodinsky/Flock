@@ -51,4 +51,5 @@ class Agent(Resource):
     ):
         super().__init__(manifest, dependencies)
         self.tools = tools
+        self.agent_tools = [tool.resource for tool in self.tools]
         self.run = None

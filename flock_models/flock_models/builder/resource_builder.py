@@ -37,7 +37,7 @@ class ResourceBuilder:
             )
 
             dependency_resource = self.build_resource(dependency_manifest)
-            dependencies[dependency.kind] = dependency_resource.resource
+            dependencies[dependency.kind] = dependency_resource
 
     def build_resource(self, manifest: schemas.BaseFlockSchema) -> Resource:
         """Build resource from manifest. recursively build dependencies."""

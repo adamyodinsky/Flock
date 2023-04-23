@@ -25,7 +25,7 @@ class BabyAGIResource(Agent):
         super().__init__(manifest, dependencies, tools)
 
         # Define your embedding model
-        self.embedding: Embeddings = self.dependencies[Kind.Embedding]
+        self.embedding: Embeddings = self.dependencies[Kind.Embedding].resource
 
         # Initialize the vectorstore as empty
         embedding_size = 1536
@@ -34,8 +34,8 @@ class BabyAGIResource(Agent):
 
         self.resource = BabyAGI.from_llm(
           vectorstore=vectorstore,
-          llm=self.dependencies[Kind.LLM],
-          task_execution_chain=self.dependencies[Kind.Agent],
+          llm=self.dependencies[Kind.LLM].resource,
+          task_execution_chain=self.dependencies[Kind.Agent].resource,
           **self.options,
         )
         self.run = self.resource

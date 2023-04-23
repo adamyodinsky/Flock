@@ -28,7 +28,7 @@ class VectorStoreResource(Resource):
     ):
         super().__init__(manifest, dependencies)
         self.vendor_cls: VectorStoreLC = self.VENDORS[self.vendor]
-        self.embedding_function: EmbeddingsLC = dependencies[Kind.Embedding]
+        self.embedding_function: EmbeddingsLC = dependencies[Kind.Embedding].resource
 
         # Initialize the vectorstore as empty
         embedding_size = getattr(self.spec.options, 'embedding_size', self.DEFAULT_EMBEDDING_SIZE)

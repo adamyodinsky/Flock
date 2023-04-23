@@ -25,7 +25,7 @@ class VectorStoreResource(Resource):
     ):
         super().__init__(manifest, dependencies)
         self.vendor_cls: VectorStoreLC = self.VENDORS[self.vendor]
-        self.embedding_function: EmbeddingsLC = dependencies[Kind.Embedding]
+        self.embedding_function: EmbeddingsLC = dependencies[Kind.Embedding].resource
 
         self.resource = self.vendor_cls(
             **self.options,

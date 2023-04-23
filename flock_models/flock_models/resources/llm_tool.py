@@ -26,8 +26,8 @@ class LLMToolResource(ToolResource):
     ):
         super().__init__(manifest, dependencies)
         self.vendor_cls: LLMChain = self.VENDORS[self.vendor]
-        self.llm: LCBaseLanguageModel = self.dependencies[Kind.LLM]
-        self.prompt_template: BasePromptTemplate = self.dependencies[Kind.PromptTemplate]
+        self.llm: LCBaseLanguageModel = self.dependencies[Kind.LLM].resource
+        self.prompt_template: BasePromptTemplate = self.dependencies[Kind.PromptTemplate].resource
 
         self.tool_function = self.vendor_cls(
             llm=self.llm,
