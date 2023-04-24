@@ -1,7 +1,7 @@
 .PHONY: validate-resources validate-schemas write-openapi fomat lint
 
 help:
-	@echo "Please use \`make <target>' where <target> is one of"
+	@echo "Please use 'make <target>' where <target> is one of"
 	@echo "  validate-resources  to validate the resources"
 	@echo "  validate-schemas    to validate the schemas"
 	@echo "  write-openapi       to write the openapi"
