@@ -21,5 +21,4 @@ build:
 	@poetry build
 
 create-stubs:
-	@poetry run stubgen -p flock_schemas -o .
-	
+	@poetry run stubgen -p flock_schemas
