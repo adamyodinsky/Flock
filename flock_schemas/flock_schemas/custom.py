@@ -2,8 +2,12 @@ from typing import List, Optional
 
 from pydantic import Extra, Field
 
-from flock_schemas.base import BaseDependency, BaseFlockSchema, BaseOptions
-from flock_schemas.dependencies import ToolDependency
+from flock_schemas.base import (
+    BaseDependency,
+    BaseFlockSchema,
+    BaseOptions,
+    ToolDependency,
+)
 
 
 class CustomSpec(BaseOptions):

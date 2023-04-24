@@ -49,11 +49,13 @@ class BaseDependency(BaseLabels):
     )
 
 
+class ToolDependency(BaseDependency):
+    description: Optional[str] = Field(description="Tool description")
+
+
 class BaseMetaData(BaseLabels, BaseAnnotations):
     name: str = Field(..., description="Name of the object", max_length=63)
     description: str = Field(..., description="Description", max_length=255)
-    BaseAnnotations
-    BaseLabels
 
 
 class BaseNamespace(BaseModelConfig):
@@ -66,8 +68,22 @@ class BaseOptions(BaseModelConfig):
     options: Optional[dict] = Field({}, description="Resource options")
 
 
+class BaseSpec(BaseOptions):
+    vendor: str = Field(description="The resource class")
+    dependencies: Optional[List[BaseDependency]] = Field(
+        [], description="Dependencies for the object"
+    )
+    tools: Optional[List[ToolDependency]] = Field(
+        [], description="Tools for the object"
+    )
+
+    class Config:
+        extra = Extra.allow
+
+
 class BaseFlockSchema(BaseNamespace):
     apiVersion: Literal["flock/v1"] = Field(..., description="API version")
+    kind: Kind = Field(..., description="Kind of the object")
     metadata: BaseMetaData
     created_at: Optional[datetime] = Field(
         default=None, description="Creation timestamp"
@@ -76,3 +92,4 @@ class BaseFlockSchema(BaseNamespace):
     updated_at: Optional[datetime] = Field(
         default=None, description="Last update timestamp"
     )
+    spec: BaseSpec

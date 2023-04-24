@@ -30,9 +30,7 @@ resource_store = ResourceStoreFactory.get_resource_store(
     key_prefix=store_prefix, store_type="fs"
 )
 
-resource_builder = ResourceBuilder(
-    resource_store=resource_store, secret_store=secret_store
-)
+resource_builder = ResourceBuilder(resource_store=resource_store)
 
 
 def test_building_resources(kind, file):

@@ -19,3 +19,7 @@ lint:
 build:
 	@echo "Building Package\n"
 	@poetry build
+
+create-stubs:
+	@poetry run stubgen -p flock_schemas -o .
+	

@@ -1,7 +1,5 @@
 """Reusable Dependency Schemas"""
 
-from typing import Optional
-
 from pydantic import Field
 
 from flock_schemas.base import BaseDependency, Kind
@@ -21,7 +19,3 @@ class EmbeddingDependency(BaseDependency):
 
 class PromptTemplateDependency(BaseDependency):
     kind: str = Field(Kind.PromptTemplate.value, const=True)
-
-
-class ToolDependency(BaseDependency):
-    description: Optional[str] = Field(description="Tool description")

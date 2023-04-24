@@ -3,8 +3,8 @@ from typing import List, Literal
 
 from pydantic import Field
 
-from flock_schemas.base import BaseFlockSchema, BaseOptions
-from flock_schemas.dependencies import LLMDependency, ToolDependency
+from flock_schemas.base import BaseFlockSchema, BaseOptions, ToolDependency
+from flock_schemas.dependencies import LLMDependency
 
 
 class AgentType(str, Enum):
