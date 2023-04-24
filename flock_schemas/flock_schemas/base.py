@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import List, Literal, Optional
+from typing import Any, List, Literal, Mapping, Optional
 
 from pydantic import BaseModel, Extra, Field
 
@@ -65,7 +65,7 @@ class BaseNamespace(BaseModelConfig):
 
 
 class BaseOptions(BaseModelConfig):
-    options: Optional[dict] = Field({}, description="Resource options")
+    options: Optional[Mapping[str, Any]] = Field({}, description="Resource options")
 
 
 class BaseSpec(BaseOptions):
