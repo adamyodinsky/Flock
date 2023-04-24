@@ -1,9 +1,11 @@
 """Base class for all resources."""
 
 
-from typing import Any
+from typing import Any, List, Optional, cast
 
-from flock_schemas import BaseFlockSchema, AgentSchema
+from flock_schemas import AgentSchema
+from flock_schemas.base import BaseFlockSchema
+from flock_schemas.base import BaseOptions as BaseOptionsSchema
 from langchain.agents import Tool as ToolWarperLC
 
 
@@ -13,19 +15,29 @@ class Resource:
     def __init__(
         self,
         manifest: BaseFlockSchema,
-        dependencies: dict[str, Any] = None,
-        tools: list[ToolWarperLC] = [],
+        dependencies: Optional[dict[str, Any]] = None,
+        tools: Optional[list[Any]] = None,
     ):
-        self.vendor: str = manifest.spec.vendor
-        self.options: dict[str, Any] = manifest.spec.options
+        if dependencies is None:
+            dependencies = {}
+        if tools is None:
+            tools = []
+
+        self.tools = tools
         self.dependencies: dict[str, Any] = dependencies
+        self.vendor: str = manifest.spec.vendor
+        self.options: BaseOptionsSchema = cast(BaseOptionsSchema, manifest.spec.options)
         self.resource = None
 
 
 class ToolResource(Resource):
     """Base class for all tools."""
 
-    def __init__(self, manifest: BaseFlockSchema, dependencies: dict[str, Any] = None):
+    def __init__(
+        self,
+        manifest: BaseFlockSchema,
+        dependencies: Optional[dict[str, Resource]] = None,
+    ):
         super().__init__(manifest, dependencies)
 
         if getattr(manifest.metadata.annotations, "name", False):
@@ -41,15 +53,24 @@ class ToolResource(Resource):
 
 class Agent(Resource):
     """Base class for all agents."""
-    pass
 
     def __init__(
         self,
         manifest: AgentSchema,
-        dependencies: dict[str, Any] = None,
-        tools: list[ToolWarperLC] = [],
+        dependencies: Optional[dict[str, ToolResource]] = None,
+        tools: Optional[list[ToolResource]] = None,
     ):
-        super().__init__(manifest, dependencies)
-        self.tools = tools
-        self.agent_tools = [tool.resource for tool in self.tools]
+        super().__init__(
+            manifest=manifest,
+            dependencies=dependencies,
+            tools=tools,
+        )
+
+        if tools is None:
+            tools = []
+
+        self.tools: List[ToolResource] = tools
+        self.agent_tools: List[ToolWarperLC] = cast(
+            List[ToolWarperLC], [tool.resource for tool in self.tools]
+        )
         self.run = None

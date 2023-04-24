@@ -1,8 +1,8 @@
 """Resource builder."""
 
 from typing import cast
-import flock_schemas as schemas
 from flock_schemas.base import ToolDependency as ToolDependencySchema, BaseFlockSchema
+import flock_schemas as schemas
 from flock_resource_store import ResourceStore
 
 from flock_models.resources import Resource, Resources
