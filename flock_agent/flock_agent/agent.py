@@ -8,6 +8,8 @@ from pydantic import ValidationError
 
 
 class FlockAgent:
+    """Flock Agent class"""
+
     def __init__(self, manifest: CustomSchema):
         home_dir = os.path.expanduser("~")
 
@@ -18,7 +20,7 @@ class FlockAgent:
             "store_type": os.environ.get("RESOURCE_STORE_TYPE", "fs"),
             "leader_addr": os.environ.get("MAINFRAME_ADDR", "http://localhost:5000"),
         }
-        
+
         try:
             self.resource_store = ResourceStoreFactory.get_resource_store(
                 store_type=self.config["store_type"],

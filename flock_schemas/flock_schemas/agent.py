@@ -1,9 +1,9 @@
 from enum import Enum
-from typing import List, Literal, Optional
+from typing import List, Literal
 
 from pydantic import Field
 
-from flock_schemas.base import BaseDependency, BaseFlockSchema, BaseOptions, Kind
+from flock_schemas.base import BaseFlockSchema, BaseOptions
 from flock_schemas.dependencies import LLMDependency, ToolDependency
 
 
