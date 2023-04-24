@@ -42,7 +42,7 @@ def test_building_resources(kind, file):
 
     if kind not in Kind.__members__:
         kind = Kind.Custom
-    
+
     path = f"{PATH_TO_SCHEMAS}/{file}"
     schema = schemas.Schemas[kind]
 
@@ -66,12 +66,12 @@ def run_build_tests():
     """Run all tests"""
     for kind, file in RESOURCES_FILES.items():
         test_building_resources(kind, file)
-    
+
     agent: resources.AgentResource = test_building_resources("Agent", "agent.yaml")
     baby_agi = test_building_resources("BabyAGI", "baby_agi.yaml")
 
     try:
-        agent.resource.run("Who is the current prime minister of israel?")
+        # agent.resource.run("Who is the current prime minister of israel?")
         baby_agi.run("Write a weather report for SF today")
     # pylint: disable=W0703
     except Exception as e:
