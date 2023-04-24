@@ -23,3 +23,42 @@ First, it will run the app server (and report to the mainframe in a later stage)
 - Builds the agent
 - (Reports Ready)
 - Waiting for requests
+
+## VSCODe Testing configuration
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Current File",
+      "type": "python",
+      "request": "launch",
+      "program": "flock_agent/main.py",
+      "console": "internalConsole",
+      "justMyCode": true,
+      "env": {
+        "OPENAI_API_KEY": "token",
+        "SERPAPI_API_KEY": "token",
+        "INPUT_PATH": "tests/schemas/agent.json",
+      },
+      "args": ["run-agent"]
+    },
+    {
+      "name": "Pytest",
+      "type": "python",
+      "request": "launch",
+      "module": "pytest",
+      "args": [
+          "-s",
+          "-vv",
+          "-p",
+          "no:cacheprovider",
+          "${workspaceFolder}/tests"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+    }
+  ]
+}
+```

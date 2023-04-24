@@ -23,10 +23,11 @@ test:
 	poetry run scrapy runspider flock_webscraper/flock_spider.py
 
 docker-test-build:
-	@docker build -t flock_webscraper .
+	@echo "Building docker image for testing"
+	@docker build -t flock-webscraper .
 
 docker-build-prod:
-	docker build -t flock_webscraper:`poetry version | cut -d ' ' -f 2` .
+	docker build -t flock-webscraper:`poetry version | cut -d ' ' -f 2` .
 
 docker-test-run:
 	@docker run --rm \
@@ -39,7 +40,7 @@ docker-test-run:
 	-e SCRAPER_FEED_EXPORT_BATCH_ITEM_COUNT=10 \
 	--name flock_webscraper_test \
 	-v ${PWD}/.spider_output:/app/spider_output \
-	flock_webscraper
+	flock-webscraper
 
 clear:
 	rm -rf .spider_output

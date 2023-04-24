@@ -1,13 +1,17 @@
-.PHONY: validate-resources validate-schemas write-openapi fomat lint
+.PHONY: help install validate-resources validate-schemas write-openapi fomat lint
 
 help:
 	@echo "Please use 'make <target>' where <target> is one of"
+	@echo "  install             to install the dependencies"
 	@echo "  validate-resources  to validate the resources"
 	@echo "  validate-schemas    to validate the schemas"
 	@echo "  write-openapi       to write the openapi"
 	@echo "  format              to format the code"
 	@echo "  lint                to lint the code"
 	@echo "  build               to build the package"
+
+install:
+	@poetry install
 
 validate-resources:
 	@echo "Validating resources"

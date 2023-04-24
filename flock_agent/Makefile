@@ -1,5 +1,8 @@
 .PHONY: run-dev format lint install build test-publish test
 
+install:
+	poetry install
+
 run-dev:
 	@echo "Running in development mode"
 	@poetry run uvicorn flock_agent.main:app --reload  
