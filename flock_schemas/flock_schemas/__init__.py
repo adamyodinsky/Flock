@@ -7,8 +7,8 @@ from flock_schemas.custom import CustomSchema
 from flock_schemas.embedding import EmbeddingSchema
 from flock_schemas.llm import LLMSchema
 from flock_schemas.llm_tool import LLMToolSchema
-from flock_schemas.prompt_template import PromptTemplateSchema
 from flock_schemas.load_tool import LoadToolSchema
+from flock_schemas.prompt_template import PromptTemplateSchema
 from flock_schemas.splitter import SplitterSchema
 from flock_schemas.vectorstore import VectorStoreSchema
 from flock_schemas.vectorstore_qa_tool import VectorStoreQAToolSchema
