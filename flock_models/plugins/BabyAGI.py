@@ -13,10 +13,10 @@ from langchain.embeddings.base import Embeddings
 from langchain.experimental import BabyAGI
 from langchain.vectorstores import FAISS
 
-from flock_models.resources.base import Agent, ToolResource, Resource
+from flock_models.resources.base import CustomResource, Resource, ToolResource
 
 
-class BabyAGIAgent(Agent):
+class BabyAGIAgent(CustomResource):
     """Class for self ask search agent."""
 
     def __init__(
