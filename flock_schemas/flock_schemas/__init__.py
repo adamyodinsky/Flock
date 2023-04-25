@@ -16,7 +16,6 @@ from flock_schemas.vectorstore_qa_tool import VectorStoreQAToolSchema
 Schemas = {
     Kind.Embedding: EmbeddingSchema,
     Kind.LLM: LLMSchema,
-    Kind.Splitter: SplitterSchema,
     Kind.VectorStore: VectorStoreSchema,
     Kind.VectorStoreQATool: VectorStoreQAToolSchema,
     Kind.Agent: AgentSchema,

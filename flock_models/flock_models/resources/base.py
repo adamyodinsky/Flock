@@ -57,7 +57,7 @@ class Agent(Resource):
     def __init__(
         self,
         manifest: AgentSchema,
-        dependencies: Optional[dict[str, ToolResource]] = None,
+        dependencies: Optional[dict[str, Resource]],
         tools: Optional[list[ToolResource]] = None,
     ):
         super().__init__(

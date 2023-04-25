@@ -77,9 +77,6 @@ class BaseSpec(BaseOptions):
         [], description="Tools for the object"
     )
 
-    class Config:
-        extra = Extra.allow
-
 
 class BaseFlockSchema(BaseNamespace):
     apiVersion: Literal["flock/v1"] = Field(..., description="API version")

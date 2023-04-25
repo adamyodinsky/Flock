@@ -1,13 +1,9 @@
 """Resource for vectorstore."""
 
-from typing import Any, List, Optional, cast
+from typing import Optional
 
 from flock_schemas import AgentSchema
-from flock_schemas.agent import AgentSchema
-from flock_schemas.base import BaseFlockSchema
-from flock_schemas.base import BaseOptions as BaseOptionsSchema
 from flock_schemas.base import Kind
-from langchain.agents import Tool as ToolWarperLC
 from langchain.agents import initialize_agent
 
 from flock_models.resources.base import Agent, Resource, ToolResource
@@ -19,7 +15,7 @@ class AgentResource(Agent):
     def __init__(
         self,
         manifest: AgentSchema,
-        dependencies: Optional[dict[str, ToolResource]] = None,
+        dependencies: Optional[dict[str, Resource]] = None,
         tools: Optional[list[ToolResource]] = None,
     ):
         super().__init__(manifest, dependencies, tools)

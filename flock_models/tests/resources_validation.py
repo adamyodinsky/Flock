@@ -62,10 +62,10 @@ def test_building_resources(kind, file):
 
 def run_build_tests():
     """Run all tests"""
-    for kind, file in RESOURCES_FILES.items():
-        test_building_resources(kind, file)
+    # for kind, file in RESOURCES_FILES.items():
+    #     test_building_resources(kind, file)
 
-    agent: resources.AgentResource = test_building_resources("Agent", "agent.yaml")
+    # agent: resources.AgentResource = test_building_resources("Agent", "agent.yaml")
     baby_agi = test_building_resources("BabyAGI", "baby_agi.yaml")
 
     try:

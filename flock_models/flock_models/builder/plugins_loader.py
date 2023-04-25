@@ -1,11 +1,10 @@
 """Load plugins from plugins directory."""
 
-import os
 import importlib
-from flock_models.resources.base import Resource
+import os
 
 
-def __load_plugins(plugin_directory: str, plugin_base_class=Resource) -> dict:
+def __load_plugins(plugin_directory: str) -> dict:
     plugins_map = {}
 
     # if plugin_directory not exist return empty dict
@@ -17,15 +16,8 @@ def __load_plugins(plugin_directory: str, plugin_base_class=Resource) -> dict:
             module_name = file[:-3]
             module = importlib.import_module(f"{plugin_directory}.{module_name}")
 
-            for item in dir(module):
-                obj = getattr(module, item)
-
-                if (
-                    isinstance(obj, type)
-                    and issubclass(obj, plugin_base_class)
-                    and obj != plugin_base_class
-                ):
-                    plugins_map[module_name] = obj
+            for key, value in module.export.items():
+                plugins_map[key] = value
     return plugins_map
 
 
