@@ -1,7 +1,7 @@
 """VectorStoreQATool schema."""
 
 from enum import Enum
-from typing import Literal, Optional, Dict
+from typing import Dict, Literal, Optional
 
 from pydantic import Field
 
@@ -34,3 +34,13 @@ class VectorStoreQAToolSchema(BaseFlockSchema):
         ..., description="The kind of the object"
     )
     spec: VectorStoreQAToolSpec
+
+
+export = {
+    "sub": {
+        "VectorStoreQAToolSpec": VectorStoreQAToolSpec,
+    },
+    "main": {
+        "VectorStoreQAToolSchema": VectorStoreQAToolSchema,
+    },
+}

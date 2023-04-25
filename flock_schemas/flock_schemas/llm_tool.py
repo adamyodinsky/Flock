@@ -32,3 +32,13 @@ class LLMToolSchema(BaseFlockSchema):
 
     kind: Literal["LLMTool"] = Field(..., description="The kind of the object")
     spec: LLMToolSpec
+
+
+export = {
+    "sub": {
+        "LLMToolSpec": LLMToolSpec,
+    },
+    "main": {
+        "LLMToolSchema": LLMToolSchema,
+    },
+}

@@ -1,5 +1,6 @@
 {
   "title": "BaseMetaData",
+  "description": "Base metadata schema.",
   "type": "object",
   "properties": {
     "annotations": {

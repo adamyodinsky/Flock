@@ -28,3 +28,13 @@ class SplitterSchema(BaseFlockSchema):
 
     kind: Literal["Splitter"] = Field(..., description="The kind of the object")
     spec: SplitterSpec
+
+
+export = {
+    "sub": {
+        "SplitterSpec": SplitterSpec,
+    },
+    "main": {
+        "SplitterSchema": SplitterSchema,
+    },
+}

@@ -1,5 +1,6 @@
 {
-  "title": "SearchToolSchema",
+  "title": "AgentSchema",
+  "description": "Agent schema.",
   "type": "object",
   "properties": {
     "namespace": {
@@ -13,6 +14,14 @@
       "description": "API version",
       "enum": [
         "flock/v1"
+      ],
+      "type": "string"
+    },
+    "kind": {
+      "title": "Kind",
+      "description": "The kind of the object",
+      "enum": [
+        "Agent"
       ],
       "type": "string"
     },
@@ -31,29 +40,22 @@
       "type": "string",
       "format": "date-time"
     },
-    "kind": {
-      "title": "Kind",
-      "description": "The kind of the object",
-      "enum": [
-        "SearchTool"
-      ],
-      "type": "string"
-    },
     "spec": {
-      "$ref": "#/definitions/SearchToolSpec"
+      "$ref": "#/definitions/AgentSpec"
     }
   },
   "required": [
     "namespace",
     "apiVersion",
-    "metadata",
     "kind",
+    "metadata",
     "spec"
   ],
   "additionalProperties": false,
   "definitions": {
     "BaseMetaData": {
       "title": "BaseMetaData",
+      "description": "Base metadata schema.",
       "type": "object",
       "properties": {
         "annotations": {
@@ -91,20 +93,84 @@
       ],
       "additionalProperties": false
     },
-    "SearchToolVendor": {
-      "title": "SearchToolVendor",
-      "description": "Enum for search_tool vendors.",
+    "AgentType": {
+      "title": "AgentType",
+      "description": "Enum for Agent types.",
       "enum": [
-        "google-serper",
-        "google-search",
-        "serpapi",
-        "google-search-results-json",
-        "searx-search-results-json"
+        "zero-shot-react-description",
+        "react-docstore",
+        "self-ask-with-search",
+        "conversational-react-description",
+        "chat-zero-shot-react-description",
+        "chat-conversational-react-description"
       ],
       "type": "string"
     },
+    "Kind": {
+      "title": "Kind",
+      "description": "Enum for all kinds of resources.",
+      "enum": [
+        "Embedding",
+        "VectorStore",
+        "VectorStoreQATool",
+        "LLM",
+        "LoadTool",
+        "Splitter",
+        "Agent",
+        "PromptTemplate",
+        "LLMTool",
+        "Custom"
+      ],
+      "type": "string"
+    },
+    "BaseToolDependency": {
+      "title": "BaseToolDependency",
+      "description": "Base tool dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind of the dependency",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Kind"
+            }
+          ]
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "description": "Tool description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
     "LLMDependency": {
       "title": "LLMDependency",
+      "description": "LLM dependency schema.",
       "type": "object",
       "properties": {
         "labels": {
@@ -139,8 +205,9 @@
       ],
       "additionalProperties": false
     },
-    "SearchToolSpec": {
-      "title": "SearchToolSpec",
+    "AgentSpec": {
+      "title": "AgentSpec",
+      "description": "Agent spec.",
       "type": "object",
       "properties": {
         "options": {
@@ -150,16 +217,24 @@
           "type": "object"
         },
         "vendor": {
-          "description": "The name of the search tool, e.g. serpapi, google-serper, etc.",
+          "description": "Agent type",
           "allOf": [
             {
-              "$ref": "#/definitions/SearchToolVendor"
+              "$ref": "#/definitions/AgentType"
             }
           ]
         },
+        "tools": {
+          "title": "Tools",
+          "description": "Agent tools",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BaseToolDependency"
+          }
+        },
         "dependencies": {
           "title": "Dependencies",
-          "description": "Tool dependencies",
+          "description": "Agent dependencies",
           "type": "array",
           "minItems": 1,
           "maxItems": 1,
@@ -172,6 +247,7 @@
       },
       "required": [
         "vendor",
+        "tools",
         "dependencies"
       ],
       "additionalProperties": false

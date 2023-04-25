@@ -1,12 +1,14 @@
 """Resource builder."""
 
 from typing import cast
-from flock_schemas.base import ToolDependency as ToolDependencySchema, BaseFlockSchema
+
 import flock_schemas as schemas
 from flock_resource_store import ResourceStore
+from flock_schemas.base import BaseFlockSchema
+from flock_schemas.base import BaseToolDependency as ToolDependencySchema
 
-from flock_models.resources import Resource, Resources
 from flock_models.builder.plugins_loader import load_plugins
+from flock_models.resources import Resource, Resources
 
 
 class ResourceBuilder:

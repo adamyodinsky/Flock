@@ -24,3 +24,13 @@ class PromptTemplateSchema(BaseFlockSchema):
 
     kind: Literal["PromptTemplate"] = Field(..., description="The kind of the object")
     spec: PromptTemplateSpec
+
+
+export = {
+    "sub": {
+        "PromptTemplateSpec": PromptTemplateSpec,
+    },
+    "main": {
+        "PromptTemplateSchema": PromptTemplateSchema,
+    },
+}

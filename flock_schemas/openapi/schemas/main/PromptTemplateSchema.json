@@ -1,5 +1,6 @@
 {
-  "title": "LLMSchema",
+  "title": "PromptTemplateSchema",
+  "description": "PromptTemplate schema.",
   "type": "object",
   "properties": {
     "namespace": {
@@ -13,6 +14,14 @@
       "description": "API version",
       "enum": [
         "flock/v1"
+      ],
+      "type": "string"
+    },
+    "kind": {
+      "title": "Kind",
+      "description": "The kind of the object",
+      "enum": [
+        "PromptTemplate"
       ],
       "type": "string"
     },
@@ -31,29 +40,22 @@
       "type": "string",
       "format": "date-time"
     },
-    "kind": {
-      "title": "Kind",
-      "description": "The kind of the object",
-      "enum": [
-        "LLM"
-      ],
-      "type": "string"
-    },
     "spec": {
-      "$ref": "#/definitions/LLMSpec"
+      "$ref": "#/definitions/PromptTemplateSpec"
     }
   },
   "required": [
     "namespace",
     "apiVersion",
-    "metadata",
     "kind",
+    "metadata",
     "spec"
   ],
   "additionalProperties": false,
   "definitions": {
     "BaseMetaData": {
       "title": "BaseMetaData",
+      "description": "Base metadata schema.",
       "type": "object",
       "properties": {
         "annotations": {
@@ -91,16 +93,17 @@
       ],
       "additionalProperties": false
     },
-    "LLMVendor": {
-      "title": "LLMVendor",
-      "description": "Enum for llm vendors.",
+    "PromptTemplateVendor": {
+      "title": "PromptTemplateVendor",
+      "description": "Enum for prompt template vendors.",
       "enum": [
-        "ChatOpenAI"
+        "PromptTemplate"
       ],
       "type": "string"
     },
-    "LLMSpec": {
-      "title": "LLMSpec",
+    "PromptTemplateSpec": {
+      "title": "PromptTemplateSpec",
+      "description": "PromptTemplate spec.",
       "type": "object",
       "properties": {
         "options": {
@@ -110,10 +113,10 @@
           "type": "object"
         },
         "vendor": {
-          "description": "LLM vendor",
+          "description": "PromptTemplate vendor",
           "allOf": [
             {
-              "$ref": "#/definitions/LLMVendor"
+              "$ref": "#/definitions/PromptTemplateVendor"
             }
           ]
         }

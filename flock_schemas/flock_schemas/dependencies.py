@@ -27,3 +27,14 @@ class PromptTemplateDependency(BaseDependency):
     """Prompt template dependency schema."""
 
     kind: str = Field(Kind.PromptTemplate.value, const=True)
+
+
+export = {
+    "sub": {
+        "LLMDependency": LLMDependency,
+        "StoreDependency": StoreDependency,
+        "EmbeddingDependency": EmbeddingDependency,
+        "PromptTemplateDependency": PromptTemplateDependency,
+    },
+    "main": {},
+}

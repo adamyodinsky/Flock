@@ -30,3 +30,13 @@ class VectorStoreSchema(BaseFlockSchema):
 
     kind: Literal["VectorStore"] = Field(..., description="The kind of the object")
     spec: VectorStoreSpec
+
+
+export = {
+    "sub": {
+        "VectorStoreSpec": VectorStoreSpec,
+    },
+    "main": {
+        "VectorStoreSchema": VectorStoreSchema,
+    },
+}

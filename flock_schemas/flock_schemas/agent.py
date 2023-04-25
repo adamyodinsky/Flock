@@ -5,7 +5,7 @@ from typing import List, Literal
 
 from pydantic import Field
 
-from flock_schemas.base import BaseFlockSchema, BaseOptions, ToolDependency
+from flock_schemas.base import BaseFlockSchema, BaseOptions, BaseToolDependency
 from flock_schemas.dependencies import LLMDependency
 
 
@@ -24,7 +24,7 @@ class AgentSpec(BaseOptions):
     """Agent spec."""
 
     vendor: AgentType = Field(..., description="Agent type")
-    tools: List[ToolDependency] = Field(..., description="Agent tools")
+    tools: List[BaseToolDependency] = Field(..., description="Agent tools")
     dependencies: tuple[LLMDependency] = Field(..., description="Agent dependencies")
 
 
@@ -33,3 +33,13 @@ class AgentSchema(BaseFlockSchema):
 
     kind: Literal["Agent"] = Field(..., description="The kind of the object")
     spec: AgentSpec
+
+
+export = {
+    "sub": {
+        "AgentSpec": AgentSpec,
+    },
+    "main": {
+        "AgentSchema": AgentSchema,
+    },
+}

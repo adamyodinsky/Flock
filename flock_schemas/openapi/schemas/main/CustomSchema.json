@@ -1,5 +1,6 @@
 {
-  "title": "VectorStoreQAToolSchema",
+  "title": "CustomSchema",
+  "description": "Custom object schema.",
   "type": "object",
   "properties": {
     "namespace": {
@@ -14,6 +15,11 @@
       "enum": [
         "flock/v1"
       ],
+      "type": "string"
+    },
+    "kind": {
+      "title": "Kind",
+      "description": "The kind of the custom object",
       "type": "string"
     },
     "metadata": {
@@ -31,29 +37,22 @@
       "type": "string",
       "format": "date-time"
     },
-    "kind": {
-      "title": "Kind",
-      "description": "The kind of the object",
-      "enum": [
-        "VectorStoreQATool"
-      ],
-      "type": "string"
-    },
     "spec": {
-      "$ref": "#/definitions/VectorStoreQAToolSpec"
+      "$ref": "#/definitions/BaseSpec"
     }
   },
   "required": [
     "namespace",
     "apiVersion",
-    "metadata",
     "kind",
+    "metadata",
     "spec"
   ],
   "additionalProperties": false,
   "definitions": {
     "BaseMetaData": {
       "title": "BaseMetaData",
+      "description": "Base metadata schema.",
       "type": "object",
       "properties": {
         "annotations": {
@@ -91,16 +90,26 @@
       ],
       "additionalProperties": false
     },
-    "VectorStoreQAToolVendor": {
-      "title": "VectorStoreQAToolVendor",
-      "description": "Enum for vectorstore_qa_tool vendors.",
+    "Kind": {
+      "title": "Kind",
+      "description": "Enum for all kinds of resources.",
       "enum": [
-        "RetrievalQAWithSourcesChain"
+        "Embedding",
+        "VectorStore",
+        "VectorStoreQATool",
+        "LLM",
+        "LoadTool",
+        "Splitter",
+        "Agent",
+        "PromptTemplate",
+        "LLMTool",
+        "Custom"
       ],
       "type": "string"
     },
-    "StoreDependency": {
-      "title": "StoreDependency",
+    "BaseDependency": {
+      "title": "BaseDependency",
+      "description": "Base dependency schema.",
       "type": "object",
       "properties": {
         "labels": {
@@ -117,10 +126,12 @@
           "type": "string"
         },
         "kind": {
-          "title": "Kind",
-          "default": "VectorStore",
-          "const": "VectorStore",
-          "type": "string"
+          "description": "Kind of the dependency",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Kind"
+            }
+          ]
         },
         "namespace": {
           "title": "Namespace",
@@ -131,12 +142,14 @@
         }
       },
       "required": [
-        "name"
+        "name",
+        "kind"
       ],
       "additionalProperties": false
     },
-    "LLMDependency": {
-      "title": "LLMDependency",
+    "BaseToolDependency": {
+      "title": "BaseToolDependency",
+      "description": "Base tool dependency schema.",
       "type": "object",
       "properties": {
         "labels": {
@@ -153,10 +166,12 @@
           "type": "string"
         },
         "kind": {
-          "title": "Kind",
-          "default": "LLM",
-          "const": "LLM",
-          "type": "string"
+          "description": "Kind of the dependency",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Kind"
+            }
+          ]
         },
         "namespace": {
           "title": "Namespace",
@@ -164,50 +179,56 @@
           "default": "default",
           "maxLength": 63,
           "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "description": "Tool description",
+          "type": "string"
         }
       },
       "required": [
-        "name"
+        "name",
+        "kind"
       ],
       "additionalProperties": false
     },
-    "VectorStoreQAToolSpec": {
-      "title": "VectorStoreQAToolSpec",
+    "BaseSpec": {
+      "title": "BaseSpec",
+      "description": "Base spec schema.",
       "type": "object",
       "properties": {
         "options": {
           "title": "Options",
-          "description": "Options for the tool",
+          "description": "Resource options",
           "default": {},
           "type": "object"
         },
         "vendor": {
-          "description": "The class of the tool, e.g. RetrievalQAWithSourcesChain, etc.",
-          "allOf": [
-            {
-              "$ref": "#/definitions/VectorStoreQAToolVendor"
-            }
-          ]
+          "title": "Vendor",
+          "description": "The resource class",
+          "type": "string"
         },
         "dependencies": {
           "title": "Dependencies",
-          "description": "Tool dependencies",
+          "description": "Dependencies for the object",
+          "default": [],
           "type": "array",
-          "minItems": 2,
-          "maxItems": 2,
-          "items": [
-            {
-              "$ref": "#/definitions/StoreDependency"
-            },
-            {
-              "$ref": "#/definitions/LLMDependency"
-            }
-          ]
+          "items": {
+            "$ref": "#/definitions/BaseDependency"
+          }
+        },
+        "tools": {
+          "title": "Tools",
+          "description": "Tools for the object",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BaseToolDependency"
+          }
         }
       },
       "required": [
-        "vendor",
-        "dependencies"
+        "vendor"
       ],
       "additionalProperties": false
     }

@@ -1,5 +1,6 @@
 {
   "title": "EmbeddingSchema",
+  "description": "Embedding schema.",
   "type": "object",
   "properties": {
     "namespace": {
@@ -13,6 +14,14 @@
       "description": "API version",
       "enum": [
         "flock/v1"
+      ],
+      "type": "string"
+    },
+    "kind": {
+      "title": "Kind",
+      "description": "The kind of the object",
+      "enum": [
+        "Embedding"
       ],
       "type": "string"
     },
@@ -31,14 +40,6 @@
       "type": "string",
       "format": "date-time"
     },
-    "kind": {
-      "title": "Kind",
-      "description": "The kind of the object",
-      "enum": [
-        "Embedding"
-      ],
-      "type": "string"
-    },
     "spec": {
       "$ref": "#/definitions/EmbeddingSpec"
     }
@@ -46,14 +47,15 @@
   "required": [
     "namespace",
     "apiVersion",
-    "metadata",
     "kind",
+    "metadata",
     "spec"
   ],
   "additionalProperties": false,
   "definitions": {
     "BaseMetaData": {
       "title": "BaseMetaData",
+      "description": "Base metadata schema.",
       "type": "object",
       "properties": {
         "annotations": {
@@ -101,6 +103,7 @@
     },
     "EmbeddingSpec": {
       "title": "EmbeddingSpec",
+      "description": "Embedding spec.",
       "type": "object",
       "properties": {
         "options": {

@@ -1,5 +1,6 @@
 {
-  "title": "VectorStoreSchema",
+  "title": "LoadToolSchema",
+  "description": "LoadTool schema.",
   "type": "object",
   "properties": {
     "namespace": {
@@ -13,6 +14,14 @@
       "description": "API version",
       "enum": [
         "flock/v1"
+      ],
+      "type": "string"
+    },
+    "kind": {
+      "title": "Kind",
+      "description": "The kind of the object",
+      "enum": [
+        "LoadTool"
       ],
       "type": "string"
     },
@@ -31,29 +40,22 @@
       "type": "string",
       "format": "date-time"
     },
-    "kind": {
-      "title": "Kind",
-      "description": "The kind of the object",
-      "enum": [
-        "VectorStore"
-      ],
-      "type": "string"
-    },
     "spec": {
-      "$ref": "#/definitions/VectorStoreSpec"
+      "$ref": "#/definitions/LoadToolSpec"
     }
   },
   "required": [
     "namespace",
     "apiVersion",
-    "metadata",
     "kind",
+    "metadata",
     "spec"
   ],
   "additionalProperties": false,
   "definitions": {
     "BaseMetaData": {
       "title": "BaseMetaData",
+      "description": "Base metadata schema.",
       "type": "object",
       "properties": {
         "annotations": {
@@ -91,8 +93,41 @@
       ],
       "additionalProperties": false
     },
-    "EmbeddingDependency": {
-      "title": "EmbeddingDependency",
+    "LoadToolVendor": {
+      "title": "LoadToolVendor",
+      "description": "Enum for search_tool vendors.",
+      "enum": [
+        "python_repl",
+        "requests",
+        "requests_get",
+        "requests_post",
+        "requests_patch",
+        "requests_put",
+        "requests_delete",
+        "terminal",
+        "wolfram-alpha",
+        "google-search",
+        "google-search-results-json",
+        "searx-search-results-json",
+        "bing-search",
+        "google-serper",
+        "serpapi",
+        "searx-search",
+        "wikipedia",
+        "human",
+        "news-api",
+        "tmdb-api",
+        "podcast-api",
+        "pal-math",
+        "pal-colored-objects",
+        "llm-math",
+        "open-meteo-api"
+      ],
+      "type": "string"
+    },
+    "LLMDependency": {
+      "title": "LLMDependency",
+      "description": "LLM dependency schema.",
       "type": "object",
       "properties": {
         "labels": {
@@ -110,8 +145,8 @@
         },
         "kind": {
           "title": "Kind",
-          "default": "Embedding",
-          "const": "Embedding",
+          "default": "LLM",
+          "const": "LLM",
           "type": "string"
         },
         "namespace": {
@@ -127,8 +162,9 @@
       ],
       "additionalProperties": false
     },
-    "VectorStoreSpec": {
-      "title": "VectorStoreSpec",
+    "LoadToolSpec": {
+      "title": "LoadToolSpec",
+      "description": "LoadTool spec.",
       "type": "object",
       "properties": {
         "options": {
@@ -138,19 +174,22 @@
           "type": "object"
         },
         "vendor": {
-          "title": "Vendor",
-          "description": "The vendor of the vector store, e.g. Chroma, Pinecone, etc.",
-          "type": "string"
+          "description": "The name of the search tool, e.g. serpapi, google-serper, etc.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/LoadToolVendor"
+            }
+          ]
         },
         "dependencies": {
           "title": "Dependencies",
-          "description": "Vectorstore dependencies",
+          "description": "Tool dependencies",
           "type": "array",
           "minItems": 1,
           "maxItems": 1,
           "items": [
             {
-              "$ref": "#/definitions/EmbeddingDependency"
+              "$ref": "#/definitions/LLMDependency"
             }
           ]
         }

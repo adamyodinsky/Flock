@@ -1,5 +1,6 @@
 {
   "title": "BaseDependency",
+  "description": "Base dependency schema.",
   "type": "object",
   "properties": {
     "labels": {
@@ -45,9 +46,12 @@
         "VectorStore",
         "VectorStoreQATool",
         "LLM",
-        "SearchTool",
+        "LoadTool",
         "Splitter",
-        "Agent"
+        "Agent",
+        "PromptTemplate",
+        "LLMTool",
+        "Custom"
       ],
       "type": "string"
     }

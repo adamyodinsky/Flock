@@ -1,7 +1,7 @@
 """Embedding schema."""
 
 from enum import Enum
-from typing import Literal, Optional, Dict
+from typing import Dict, Literal, Optional
 
 from pydantic import Field
 
@@ -26,3 +26,13 @@ class EmbeddingSchema(BaseFlockSchema):
 
     kind: Literal["Embedding"] = Field(..., description="The kind of the object")
     spec: EmbeddingSpec
+
+
+export = {
+    "sub": {
+        "EmbeddingSpec": EmbeddingSpec,
+    },
+    "main": {
+        "EmbeddingSchema": EmbeddingSchema,
+    },
+}

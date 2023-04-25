@@ -53,3 +53,13 @@ class LoadToolSchema(BaseFlockSchema):
 
     kind: Literal["LoadTool"] = Field(..., description="The kind of the object")
     spec: LoadToolSpec
+
+
+export = {
+    "sub": {
+        "LoadToolSpec": LoadToolSpec,
+    },
+    "main": {
+        "LoadToolSchema": LoadToolSchema,
+    },
+}

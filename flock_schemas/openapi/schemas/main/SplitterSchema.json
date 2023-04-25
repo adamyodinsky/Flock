@@ -1,5 +1,6 @@
 {
   "title": "SplitterSchema",
+  "description": "Splitter schema.",
   "type": "object",
   "properties": {
     "namespace": {
@@ -13,6 +14,14 @@
       "description": "API version",
       "enum": [
         "flock/v1"
+      ],
+      "type": "string"
+    },
+    "kind": {
+      "title": "Kind",
+      "description": "The kind of the object",
+      "enum": [
+        "Splitter"
       ],
       "type": "string"
     },
@@ -31,14 +40,6 @@
       "type": "string",
       "format": "date-time"
     },
-    "kind": {
-      "title": "Kind",
-      "description": "The kind of the object",
-      "enum": [
-        "Splitter"
-      ],
-      "type": "string"
-    },
     "spec": {
       "$ref": "#/definitions/SplitterSpec"
     }
@@ -46,14 +47,15 @@
   "required": [
     "namespace",
     "apiVersion",
-    "metadata",
     "kind",
+    "metadata",
     "spec"
   ],
   "additionalProperties": false,
   "definitions": {
     "BaseMetaData": {
       "title": "BaseMetaData",
+      "description": "Base metadata schema.",
       "type": "object",
       "properties": {
         "annotations": {
@@ -102,6 +104,7 @@
     },
     "SplitterSpec": {
       "title": "SplitterSpec",
+      "description": "Splitter spec.",
       "type": "object",
       "properties": {
         "options": {

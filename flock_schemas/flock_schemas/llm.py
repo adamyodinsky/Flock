@@ -25,3 +25,13 @@ class LLMSchema(BaseFlockSchema):
 
     kind: Literal["LLM"] = Field(..., description="The kind of the object")
     spec: LLMSpec
+
+
+export = {
+    "sub": {
+        "LLMSpec": LLMSpec,
+    },
+    "main": {
+        "LLMSchema": LLMSchema,
+    },
+}

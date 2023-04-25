@@ -1,0 +1,161 @@
+{
+  "title": "AgentSpec",
+  "description": "Agent spec.",
+  "type": "object",
+  "properties": {
+    "options": {
+      "title": "Options",
+      "description": "Resource options",
+      "default": {},
+      "type": "object"
+    },
+    "vendor": {
+      "description": "Agent type",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AgentType"
+        }
+      ]
+    },
+    "tools": {
+      "title": "Tools",
+      "description": "Agent tools",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BaseToolDependency"
+      }
+    },
+    "dependencies": {
+      "title": "Dependencies",
+      "description": "Agent dependencies",
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": [
+        {
+          "$ref": "#/definitions/LLMDependency"
+        }
+      ]
+    }
+  },
+  "required": [
+    "vendor",
+    "tools",
+    "dependencies"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "AgentType": {
+      "title": "AgentType",
+      "description": "Enum for Agent types.",
+      "enum": [
+        "zero-shot-react-description",
+        "react-docstore",
+        "self-ask-with-search",
+        "conversational-react-description",
+        "chat-zero-shot-react-description",
+        "chat-conversational-react-description"
+      ],
+      "type": "string"
+    },
+    "Kind": {
+      "title": "Kind",
+      "description": "Enum for all kinds of resources.",
+      "enum": [
+        "Embedding",
+        "VectorStore",
+        "VectorStoreQATool",
+        "LLM",
+        "LoadTool",
+        "Splitter",
+        "Agent",
+        "PromptTemplate",
+        "LLMTool",
+        "Custom"
+      ],
+      "type": "string"
+    },
+    "BaseToolDependency": {
+      "title": "BaseToolDependency",
+      "description": "Base tool dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind of the dependency",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Kind"
+            }
+          ]
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "description": "Tool description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "LLMDependency": {
+      "title": "LLMDependency",
+      "description": "LLM dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string"
+        },
+        "kind": {
+          "title": "Kind",
+          "default": "LLM",
+          "const": "LLM",
+          "type": "string"
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
