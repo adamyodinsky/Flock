@@ -5,7 +5,7 @@ from typing import Literal
 
 from pydantic import Field
 
-from flock_schemas.base import BaseFlockSchema, BaseOptions, Kind
+from flock_schemas.base import BaseFlockSchema, BaseOptions
 
 
 class SplitterVendor(str, Enum):
