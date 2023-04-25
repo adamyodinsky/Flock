@@ -1,3 +1,5 @@
+"""LLM schema."""
+
 from enum import Enum
 from typing import Literal
 
@@ -13,9 +15,13 @@ class LLMVendor(str, Enum):
 
 
 class LLMSpec(BaseOptions):
+    """LLM spec."""
+
     vendor: LLMVendor = Field(..., description="LLM vendor")
 
 
 class LLMSchema(BaseFlockSchema):
+    """LLM schema."""
+
     kind: Literal["LLM"] = Field(..., description="The kind of the object")
     spec: LLMSpec

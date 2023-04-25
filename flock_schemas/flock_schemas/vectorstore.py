@@ -1,9 +1,10 @@
+"""Vectorstore schema."""
 from enum import Enum
-from typing import Literal, Optional
+from typing import Literal
 
 from pydantic import Field
 
-from flock_schemas.base import BaseFlockSchema, BaseOptions, Kind
+from flock_schemas.base import BaseFlockSchema, BaseOptions
 from flock_schemas.dependencies import EmbeddingDependency
 
 
@@ -14,6 +15,8 @@ class VectorStoreVendor(str, Enum):
 
 
 class VectorStoreSpec(BaseOptions):
+    """Vectorstore spec."""
+
     vendor: str = Field(
         ..., description="The vendor of the vector store, e.g. Chroma, Pinecone, etc."
     )
@@ -23,5 +26,7 @@ class VectorStoreSpec(BaseOptions):
 
 
 class VectorStoreSchema(BaseFlockSchema):
+    """Vectorstore schema."""
+
     kind: Literal["VectorStore"] = Field(..., description="The kind of the object")
     spec: VectorStoreSpec

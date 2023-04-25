@@ -1,5 +1,7 @@
+"""LLM Tool schema."""
+
 from enum import Enum
-from typing import Literal, Optional
+from typing import Dict, Literal, Optional
 
 from pydantic import Field
 
@@ -14,15 +16,19 @@ class LLMToolVendor(str, Enum):
 
 
 class LLMToolSpec(BaseOptions):
+    """LLM tool spec."""
+
     vendor: LLMToolVendor = Field(
         ..., description="The class of the tool, e.g. LLMChain, etc."
     )
-    options: Optional[dict] = Field({}, description="Options for the tool")
+    options: Optional[Dict] = Field({}, description="Options for the tool")
     dependencies: tuple[PromptTemplateDependency, LLMDependency] = Field(
         ..., description="Tool dependencies"
     )
 
 
 class LLMToolSchema(BaseFlockSchema):
+    """LLM tool schema."""
+
     kind: Literal["LLMTool"] = Field(..., description="The kind of the object")
     spec: LLMToolSpec

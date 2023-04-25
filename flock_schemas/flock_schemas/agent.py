@@ -1,3 +1,5 @@
+"""Agent schema."""
+
 from enum import Enum
 from typing import List, Literal
 
@@ -8,6 +10,8 @@ from flock_schemas.dependencies import LLMDependency
 
 
 class AgentType(str, Enum):
+    """Enum for Agent types."""
+
     ZERO_SHOT_REACT_DESCRIPTION = "zero-shot-react-description"
     REACT_DOCSTORE = "react-docstore"
     SELF_ASK_WITH_SEARCH = "self-ask-with-search"
@@ -17,11 +21,15 @@ class AgentType(str, Enum):
 
 
 class AgentSpec(BaseOptions):
+    """Agent spec."""
+
     vendor: AgentType = Field(..., description="Agent type")
     tools: List[ToolDependency] = Field(..., description="Agent tools")
     dependencies: tuple[LLMDependency] = Field(..., description="Agent dependencies")
 
 
 class AgentSchema(BaseFlockSchema):
+    """Agent schema."""
+
     kind: Literal["Agent"] = Field(..., description="The kind of the object")
     spec: AgentSpec

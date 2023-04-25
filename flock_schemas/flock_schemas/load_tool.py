@@ -1,9 +1,10 @@
+"""LoadTool schema."""
 from enum import Enum
 from typing import Literal
 
 from pydantic import Field
 
-from flock_schemas.base import BaseFlockSchema, BaseOptions, Kind
+from flock_schemas.base import BaseFlockSchema, BaseOptions
 from flock_schemas.dependencies import LLMDependency
 
 
@@ -38,6 +39,8 @@ class LoadToolVendor(str, Enum):
 
 
 class LoadToolSpec(BaseOptions):
+    """LoadTool spec."""
+
     vendor: LoadToolVendor = Field(
         ...,
         description="The name of the search tool, e.g. serpapi, google-serper, etc.",
@@ -46,5 +49,7 @@ class LoadToolSpec(BaseOptions):
 
 
 class LoadToolSchema(BaseFlockSchema):
+    """LoadTool schema."""
+
     kind: Literal["LoadTool"] = Field(..., description="The kind of the object")
     spec: LoadToolSpec

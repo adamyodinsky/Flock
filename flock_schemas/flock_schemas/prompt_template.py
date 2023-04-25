@@ -1,3 +1,4 @@
+"""PromptTemplate schema."""
 from enum import Enum
 from typing import Literal
 
@@ -13,9 +14,13 @@ class PromptTemplateVendor(str, Enum):
 
 
 class PromptTemplateSpec(BaseOptions):
+    """PromptTemplate spec."""
+
     vendor: PromptTemplateVendor = Field(..., description="PromptTemplate vendor")
 
 
 class PromptTemplateSchema(BaseFlockSchema):
+    """PromptTemplate schema."""
+
     kind: Literal["PromptTemplate"] = Field(..., description="The kind of the object")
     spec: PromptTemplateSpec

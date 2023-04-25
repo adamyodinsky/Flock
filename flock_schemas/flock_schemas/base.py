@@ -1,11 +1,9 @@
+"""Base schema for all Flock objects."""
 from datetime import datetime
 from enum import Enum
-from typing import Any, List, Literal, Mapping, Optional
+from typing import Any, List, Literal, Mapping, Optional, Dict
 
 from pydantic import BaseModel, Extra, Field
-
-# from uuid import UUID, uuid4
-
 
 class Kind(str, Enum):
     """Enum for all kinds of resources."""
@@ -23,25 +21,30 @@ class Kind(str, Enum):
 
 
 class BaseModelConfig(BaseModel):
+    """Base model config."""
+
     class Config:
         validate_all = True
         extra = Extra.forbid
 
 
 class BaseAnnotations(BaseModelConfig):
-    annotations: Optional[dict[str, str]] = Field(
+    """Base annotations schema."""
+    annotations: Optional[Dict[str, str]] = Field(
         default=None,
         description="Annotations are useful for storing additional information",
     )
 
 
 class BaseLabels(BaseModelConfig):
-    labels: Optional[dict[str, str]] = Field(
+    """Base labels schema."""
+    labels: Optional[Dict[str, str]] = Field(
         default=None, description="Labels are useful for filtering and finding objects"
     )
 
 
 class BaseDependency(BaseLabels):
+    """Base dependency schema."""
     name: str = Field(..., description="Name of the dependency")
     kind: Kind = Field(..., description="Kind of the dependency")
     namespace: Optional[str] = Field(
@@ -50,25 +53,30 @@ class BaseDependency(BaseLabels):
 
 
 class ToolDependency(BaseDependency):
+    """Base tool dependency schema."""
     description: Optional[str] = Field(description="Tool description")
 
 
 class BaseMetaData(BaseLabels, BaseAnnotations):
+    """Base metadata schema."""
     name: str = Field(..., description="Name of the object", max_length=63)
     description: str = Field(..., description="Description", max_length=255)
 
 
 class BaseNamespace(BaseModelConfig):
+    """Base namespace schema."""
     namespace: Optional[str] = Field(
         ..., description="The namespace of the object", max_length=63
     )
 
 
 class BaseOptions(BaseModelConfig):
+    """Base options schema."""
     options: Optional[Mapping[str, Any]] = Field({}, description="Resource options")
 
 
 class BaseSpec(BaseOptions):
+    """Base spec schema."""
     vendor: str = Field(description="The resource class")
     dependencies: Optional[List[BaseDependency]] = Field(
         [], description="Dependencies for the object"
@@ -79,6 +87,7 @@ class BaseSpec(BaseOptions):
 
 
 class BaseFlockSchema(BaseNamespace):
+    """Base schema for all Flock objects."""
     apiVersion: Literal["flock/v1"] = Field(..., description="API version")
     kind: Kind = Field(..., description="Kind of the object")
     metadata: BaseMetaData

@@ -1,5 +1,5 @@
 """Validate all schemas in the schemas folder."""
-from typing import List
+from typing import Any, Dict, List
 
 import yaml
 from pydantic import ValidationError
@@ -13,15 +13,14 @@ SCHEMA_FILES = {
     "Splitter": "splitter.yaml",
     "Embedding": "embedding.yaml",
     "LLM": "llm.yaml",
-    "Agent": "agent.yaml",
     "PromptTemplate": "prompt_template.yaml",
     "LLMTool": "llm_tool.yaml",
-    "Agent": "baby_agi_agent.yaml",
+    "Agent": "agent.yaml",
     "Custom": "baby_agi.yaml",
 }
 
 
-def validate_crd(_kind, _crd: List[dict]):
+def validate_crd(_kind, _crd: List[Dict[str, Any]]):
     """Validate all CRDs in a file."""
 
     try:
