@@ -6,13 +6,13 @@ import click
 from fastapi import FastAPI
 from uvicorn import run
 
-from agent import FlockAgent
-from routes import create_agent_routes
+from flock_agent.agent import FlockAgent
+from flock_agent.routes import create_agent_routes
 
 
 @click.group()
 def cli():
-    pass
+    """Flock Agent CLI"""
 
 
 @cli.command(
@@ -40,13 +40,15 @@ def cli():
     help="The port the server should listen on.",
 )
 def run_agent(input_path, input_value, host, port):
+    """Run the agent as a server."""
+
     config_str = ""
     click.echo("Initializing...")
 
     # Load configuration manifest from a file or a string
     if input_path:
         if os.path.exists(input_path):
-            with open(input_path, "r") as f:
+            with open(input_path, "r", encoding="utf-8") as f:
                 config_str = f.read()
                 config_str = json.loads(config_str)
         else:
@@ -66,7 +68,9 @@ def run_agent(input_path, input_value, host, port):
     app.include_router(routes)
 
     # Spin up the API server
-    click.echo("Ready. Waiting for requests on /agent")
+    click.echo(f"Ready. Waiting for requests on {host}:{port}...")
+    click.echo("/agent (POST) (http://localhost:8000/agent")
+    click.echo("/agent_ws (WebSocket) (ws://localhost:8000/agent_ws)")
 
     run(app, host=host, port=port, log_level="warning")
 

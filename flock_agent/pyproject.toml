@@ -13,6 +13,7 @@ click = "^8.1.3"
 fastapi = {extras = ["all"], version = "^0.95.1"}
 flock-models = {path = "../flock_models", develop = true}
 flock-schemas = {path = "../flock_schemas", develop = true}
+websockets = "^11.0.2"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"

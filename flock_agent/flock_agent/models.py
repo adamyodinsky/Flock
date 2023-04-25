@@ -1,3 +1,5 @@
+"""Models for the Flock Agent."""
+
 from pydantic import BaseModel
 
 
