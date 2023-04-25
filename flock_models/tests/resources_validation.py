@@ -9,7 +9,7 @@ from flock_schemas import Kind
 
 from flock_models import resources
 from flock_models.builder import ResourceBuilder
-from plugins.BabyAGI import BabyAGIAgent
+from plugins.baby_agi import BabyAGIAgent
 
 PATH_TO_SCHEMAS = "tests/schemas"
 RESOURCES_FILES = {
