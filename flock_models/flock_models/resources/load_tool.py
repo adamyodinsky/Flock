@@ -1,14 +1,13 @@
 """Resource for vectorstore."""
 
-from typing import Any
+from typing import List, Optional, Dict
 
 from flock_schemas import LoadToolSchema
 from flock_schemas.base import Kind
 from langchain.agents import load_tools as load_toolsLC
 from langchain.schema import BaseLanguageModel as LCBaseLanguageModel
-from langchain.tools.base import BaseTool
 
-from flock_models.resources.base import ToolResource
+from flock_models.resources.base import Resource, ToolResource
 
 
 class LoadToolResource(ToolResource):
@@ -45,17 +44,20 @@ class LoadToolResource(ToolResource):
     def __init__(
         self,
         manifest: LoadToolSchema,
-        dependencies: dict[str, Any],
-        tools: list[Any] = [],
+        dependencies: Optional[Dict[str, Resource]],
+        tools: Optional[List[ToolResource]] = None,
     ):
         super().__init__(manifest, dependencies)
-        self.vendor_cls: BaseTool = self.vendor
+
+        if tools is None:
+            tools = []
+
         self.llm: LCBaseLanguageModel = self.dependencies[Kind.LLM].resource
 
         self.tool_function = load_toolsLC(
             tool_names=[self.vendor],
             llm=self.llm,
-            **self.options,
+            **self.options,  # type: ignore
         )[0]
 
         self.resource = self.tool_function

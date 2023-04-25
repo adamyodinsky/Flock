@@ -17,16 +17,17 @@ class Resource:
         self,
         manifest: BaseFlockSchema,
         dependencies: Optional[dict[str, Any]] = None,
-        tools: Optional[list[Any]] = None,
+        tools: Optional[List[Any]] = None,
     ):
         if dependencies is None:
             dependencies = {}
         if tools is None:
             tools = []
 
+        self.manifest = manifest
         self.tools = tools
+        self.vendor = self.manifest.spec.vendor
         self.dependencies: dict[str, Any] = dependencies
-        self.vendor: str = manifest.spec.vendor
         self.options: BaseOptionsSchema = cast(BaseOptionsSchema, manifest.spec.options)
         self.resource = None
 
@@ -59,7 +60,7 @@ class Agent(Resource):
         self,
         manifest: AgentSchema,
         dependencies: Optional[dict[str, Resource]] = None,
-        tools: Optional[list[ToolResource]] = None,
+        tools: Optional[List[ToolResource]] = None,
     ):
         super().__init__(
             manifest=manifest,
@@ -94,7 +95,7 @@ class CustomResource(Resource):
         self,
         manifest: CustomSchema,
         dependencies: Optional[dict[str, Resource]] = None,
-        tools: Optional[list[ToolResource]] = None,
+        tools: Optional[List[ToolResource]] = None,
     ):
         super().__init__(
             manifest=manifest,

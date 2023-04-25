@@ -1,16 +1,15 @@
 """Interface for LLM models."""
 
-from typing import Any
+from typing import Dict, List, Optional
 
 from flock_schemas import SplitterSchema
-from flock_schemas.base import BaseFlockSchema
 from langchain.text_splitter import (
     CharacterTextSplitter,
     PythonCodeTextSplitter,
     TextSplitter,
 )
 
-from flock_models.resources.base import Resource
+from flock_models.resources.base import Resource, ToolResource
 
 
 class SplitterResource(Resource):
@@ -24,9 +23,9 @@ class SplitterResource(Resource):
     def __init__(
         self,
         manifest: SplitterSchema,
-        dependencies: dict[str, Any] = None,
-        tools: list[Any] = [],
+        dependencies: Optional[Dict[str, Resource]],
+        tools: Optional[List[ToolResource]] = None,
     ):
         super().__init__(manifest)
         self.vendor_cls: TextSplitter = self.VENDORS[self.vendor]
-        self.resource = self.vendor_cls(**self.options)
+        self.resource = self.vendor_cls(**self.options)  # type: ignore

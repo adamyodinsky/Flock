@@ -1,11 +1,11 @@
 """Interface for LLM models."""
 
-from typing import Any
+from typing import Dict, List, Optional, cast
 
 from flock_schemas import PromptTemplateSchema
 from langchain import PromptTemplate
 
-from flock_models.resources.base import Resource
+from flock_models.resources.base import Resource, ToolResource
 
 
 class PromptTemplateResource(Resource):
@@ -18,9 +18,11 @@ class PromptTemplateResource(Resource):
     def __init__(
         self,
         manifest: PromptTemplateSchema,
-        dependencies: dict[str, Any] = None,
-        tools: list[Any] = [],
+        dependencies: Optional[Dict[str, Resource]],
+        tools: Optional[List[ToolResource]] = None,
     ):
         super().__init__(manifest)
-        self.vendor_cls: PromptTemplate = self.VENDORS[self.vendor]
-        self.resource = self.vendor_cls(**self.options)
+        self.vendor_cls: PromptTemplate = cast(
+            PromptTemplate, self.VENDORS[self.vendor]
+        )
+        self.resource = self.vendor_cls(**self.options)  # type: ignore

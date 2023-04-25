@@ -1,5 +1,5 @@
 """BabyAGI agent plugin. example for custom resource plugin."""
-from typing import Optional
+from typing import Dict, List, Optional
 
 import faiss
 from flock_schemas import CustomSchema, Kind
@@ -17,8 +17,8 @@ class BabyAGIAgent(CustomResource):
     def __init__(
         self,
         manifest: CustomSchema,
-        dependencies: Optional[dict[str, Resource]],
-        tools: Optional[list[ToolResource]],
+        dependencies: Optional[Dict[str, Resource]],
+        tools: Optional[List[ToolResource]],
     ):
         super().__init__(manifest, dependencies, tools)
 
@@ -32,7 +32,7 @@ class BabyAGIAgent(CustomResource):
             vectorstore=vectorstore,
             llm=self.dependencies[Kind.LLM].resource,
             task_execution_chain=self.dependencies[Kind.Agent].resource,
-            **self.options,
+            **self.options,  # type: ignore
         )
         self.run = self.resource
 

@@ -1,13 +1,12 @@
 """Interface for LLM models."""
 
-from typing import Any
+from typing import Optional, cast, List
 
 from flock_schemas import LLMSchema
-from flock_schemas.base import BaseFlockSchema
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import BaseLanguageModel
 
-from flock_models.resources.base import Resource
+from flock_models.resources.base import Resource, ToolResource
 
 
 class LLMResource(Resource):
@@ -20,9 +19,11 @@ class LLMResource(Resource):
     def __init__(
         self,
         manifest: LLMSchema,
-        dependencies: dict[str, Any] = None,
-        tools: list[Any] = [],
+        dependencies: Optional[dict[str, Resource]] = None,
+        tools: Optional[List[ToolResource]] = None,
     ):
         super().__init__(manifest)
-        self.vendor_cls: BaseLanguageModel = self.VENDORS[self.vendor]
-        self.resource = self.vendor_cls(**self.options)
+        self.vendor_cls: BaseLanguageModel = cast(
+            BaseLanguageModel, self.VENDORS[self.vendor]
+        )
+        self.resource = self.vendor_cls(**self.options)  # type: ignore
