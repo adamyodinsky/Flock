@@ -1,12 +1,15 @@
 """Test building resources from yaml files"""
 
 import os
+from typing import cast
+
 import flock_schemas as schemas
-from flock_schemas import Kind
 from flock_resource_store import ResourceStoreFactory
+from flock_schemas import Kind
 
 from flock_models import resources
 from flock_models.builder import ResourceBuilder
+from plugins.BabyAGI import BabyAGIAgent
 
 PATH_TO_SCHEMAS = "tests/schemas"
 RESOURCES_FILES = {
@@ -62,18 +65,25 @@ def test_building_resources(kind, file):
 
 def run_build_tests():
     """Run all tests"""
-    # for kind, file in RESOURCES_FILES.items():
-    #     test_building_resources(kind, file)
+    for kind, file in RESOURCES_FILES.items():
+        test_building_resources(kind, file)
 
-    # agent: resources.AgentResource = test_building_resources("Agent", "agent.yaml")
-    baby_agi = test_building_resources("BabyAGI", "baby_agi.yaml")
+    agent: resources.AgentResource = cast(
+        resources.AgentResource, test_building_resources("Agent", "agent.yaml")
+    )
+    baby_agi = cast(BabyAGIAgent, test_building_resources("BabyAGI", "baby_agi.yaml"))
 
     try:
-        # agent.resource.run("Who is the current prime minister of israel?")
+        agent.resource.run("Who is the current prime minister of israel?")
+    # pylint: disable=W0703
+    except Exception as e:
+        print(str(e))
+
+    try:
         baby_agi.run("Write a weather report for SF today")
     # pylint: disable=W0703
     except Exception as e:
-        print("\nError:", str(e))
+        print(str(e))
 
 
 run_build_tests()
