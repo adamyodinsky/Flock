@@ -6,7 +6,7 @@ authors = ["Adam Yodinsky <27074934+adamyodinsky@users.noreply.github.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "<3.12,>=3.7"
 pydantic = "^1.10.7"
 pyyaml = "^6.0"
 datamodel-code-generator = "^0.18.0"

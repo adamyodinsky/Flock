@@ -6,9 +6,10 @@ authors = ["Adam Yodinsky <27074934+adamyodinsky@users.noreply.github.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "<3.12,>=3.7"
 python-etcd = "^0.4.5"
 pyyaml = "^6.0"
+pymongo = "^4.3.3"
 
 
 [tool.poetry.group.dev.dependencies]

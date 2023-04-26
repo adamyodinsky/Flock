@@ -1,19 +1,10 @@
 # Build Stage
-FROM flock-poetry:latest AS build
+FROM flock-base:latest AS build
 
-
-# Copy the pyproject.toml and poetry.lock files into the container
-COPY . /app/
-
-# Set the working directory
-WORKDIR /app/flock_agent
-
-# Install the project dependencies
-# RUN poetry install --no-dev
 
 # Expose the port the app runs on
 EXPOSE 8000
 
 # Start the application
-# ENTRYPOINT [ "python", "/app/flock_agent/main.py" ]
-# CMD [ "run-agent" ]
+ENTRYPOINT [ "poetry", "run", "python", "flock_agent/main.py" ]
+CMD [ "run-agent" ]
