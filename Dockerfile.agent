@@ -8,3 +8,5 @@ EXPOSE 8000
 # Start the application
 ENTRYPOINT [ "poetry", "run", "python", "flock_agent/main.py" ]
 CMD [ "run-agent" ]
+
+#flock-agent
