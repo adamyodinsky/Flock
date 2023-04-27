@@ -7,7 +7,7 @@ import re  # noqa: F401
 from typing import Any, Dict, List, Optional  # noqa: F401
 
 from pydantic import AnyUrl, BaseModel, EmailStr, Field, validator  # noqa: F401
-from server.models.code import Code
+from server.models.status_code import Code
 from server.models.resource_data import ResourceData
 from server.models.status import Status
 
@@ -29,5 +29,6 @@ class ResourceFetched(BaseModel):
     message: Optional[str] = Field(alias="message", default=None)
     code: Optional[Code] = Field(alias="code", default=None)
     data: Optional[ResourceData] = Field(alias="data", default=None)
+
 
 ResourceFetched.update_forward_refs()

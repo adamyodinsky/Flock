@@ -17,14 +17,14 @@ from fastapi import (  # noqa: F401
 )
 
 from server.models.extra_models import TokenModel  # noqa: F401
-from server.models.internal_server_error1 import InternalServerError1
+from server.models.internal_server_error import InternalServerError1
 from server.models.resource_accepted import ResourceAccepted
-from server.models.resource_already_exists1 import ResourceAlreadyExists1
-from server.models.resource_bad_request1 import ResourceBadRequest1
+from server.models.responses.resource_already_exists import ResourceAlreadyExists1
+from server.models.resource_bad_request import ResourceBadRequest1
 from server.models.resource_created import ResourceCreated
 from server.models.resource_data import ResourceData
-from server.models.resource_deleted import ResourceDeleted
-from server.models.resource_not_found1 import ResourceNotFound1
+from server.models.responses.resource_deleted import ResourceDeleted
+from server.models.resource_not_found import ResourceNotFound1
 from server.models.resource_updated import ResourceUpdated
 from server.models.resources_fetched import ResourcesFetched
 
@@ -79,7 +79,10 @@ async def delete_resource_namespace_kind_name(
         201: {"model": ResourceCreated, "description": "Resource Created"},
         202: {"model": ResourceAccepted, "description": "Resource Accepted"},
         400: {"model": ResourceBadRequest1, "description": "Resource Bad Request"},
-        409: {"model": ResourceAlreadyExists1, "description": "Resource Already Exists"},
+        409: {
+            "model": ResourceAlreadyExists1,
+            "description": "Resource Already Exists",
+        },
         500: {"model": InternalServerError1, "description": "Internal Server Error"},
     },
     tags=["default"],
@@ -103,7 +106,10 @@ async def post_resource(
         202: {"model": ResourceAccepted, "description": "Resource Accepted"},
         204: {"model": ResourceUpdated, "description": "Resource Updated"},
         400: {"model": ResourceBadRequest1, "description": "Resource Bad Request"},
-        409: {"model": ResourceAlreadyExists1, "description": "Resource Already Exists"},
+        409: {
+            "model": ResourceAlreadyExists1,
+            "description": "Resource Already Exists",
+        },
         500: {"model": InternalServerError1, "description": "Internal Server Error"},
     },
     tags=["default"],

@@ -7,8 +7,10 @@ readme = "README.md"
 include = ["server"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.9,<3.12"
 fastapi = {extras = ["all"], version = "^0.95.1"}
+pydantic = "^1.10.7"
+flock-schemas = {path = "../flock_schemas", develop = true}
 
 
 [build-system]

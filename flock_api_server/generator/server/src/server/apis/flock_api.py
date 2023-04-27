@@ -17,10 +17,10 @@ from fastapi import (  # noqa: F401
 )
 
 from server.models.extra_models import TokenModel  # noqa: F401
-from server.models.internal_server_error1 import InternalServerError1
-from server.models.resource_bad_request1 import ResourceBadRequest1
+from server.models.internal_server_error import InternalServerError1
+from server.models.resource_bad_request import ResourceBadRequest1
 from server.models.resource_fetched import ResourceFetched
-from server.models.resource_not_found1 import ResourceNotFound1
+from server.models.resource_not_found import ResourceNotFound1
 from server.models.resources_fetched import ResourcesFetched
 
 

@@ -19,7 +19,7 @@ from flock_schemas.vectorstore import VectorStoreSchema
 from flock_schemas.vectorstore_qa_tool import VectorStoreQAToolSchema
 
 Schemas = {
-    Kind.Embedding: EmbeddingSchema,
+    Embedding: EmbeddingSchema,
     Kind.LLM: LLMSchema,
     Kind.VectorStore: VectorStoreSchema,
     Kind.VectorStoreQATool: VectorStoreQAToolSchema,
@@ -63,3 +63,5 @@ class SchemasFactory:
                     for key, value in module.export["main"].items():
                         main_schemas_map[key] = value
         return sub_schemas_map, main_schemas_map
+
+    MAIN_SCHEMAS, SUB_SCHEMAS = load_schemas()
