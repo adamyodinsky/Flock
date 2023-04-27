@@ -1,14 +1,15 @@
 version: '3.8'
 
 services:
-  mongodb:
-    image: mongo:latest
+  flock_mongo:
+    image: mongo:5.0.17
     container_name: flock_mongo
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example_password
+    env_file: .env.dev
+    # command: --config /etc/mongo/mongod.conf
     volumes:
       - mongodb_data:/data/db
+      # - ./mongodb_config/mongod.conf:/etc/mongo/mongod.conf:ro
+      # - ./mongodb_cert:/etc/mongo/ssl
     ports:
       - "27017:27017"
     restart: always

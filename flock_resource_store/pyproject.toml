@@ -7,7 +7,7 @@ readme = "README.md"
 include = ["flock_resource_store", "flock_resource_store/*"]
 
 [tool.poetry.dependencies]
-python = "<3.12,>=3.7"
+python = ">=3.7.2,<3.12"
 python-etcd = "^0.4.5"
 pyyaml = "^6.0"
 pymongo = "^4.3.3"
@@ -16,6 +16,9 @@ pydantic = "^1.10.7"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"
+mongomock = "^4.1.2"
+pytest = "^7.3.1"
+pylint = "^2.17.3"
 
 [build-system]
 requires = ["poetry-core"]

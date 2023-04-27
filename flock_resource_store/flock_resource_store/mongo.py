@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Optional, Tuple
 
 from pymongo import MongoClient
 
@@ -12,9 +12,14 @@ class MongoResourceStore(ResourceStore):
         collection_name: str,
         host: str = "localhost",
         port: int = 27017,
+        client: Optional[MongoClient] = None,
     ):
-        self.client = MongoClient(host, port)
-        self.db = self.client[db_name]
+        if client:
+            self.client = client
+        else:
+            self.client = MongoClient(host, port)
+
+        self.db = self.client[db_name]  # pylint: disable=invalid-name
         self.collection = self.db[collection_name]
 
     def put(self, key, val) -> None:
