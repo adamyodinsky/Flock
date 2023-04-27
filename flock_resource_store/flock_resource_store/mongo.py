@@ -27,7 +27,7 @@ class MongoResourceStore(ResourceStore):
             self.collection = self.db[collection_name]
 
     def put(self, key, val) -> None:
-        namespace, kind, name = self.parse_key(key)
+        namespace, kind, name = self.parse3(key)
         self.collection.update_one(
             {
                 "namespace": namespace,
@@ -39,7 +39,7 @@ class MongoResourceStore(ResourceStore):
         )
 
     def get(self, key):
-        namespace, kind, name = self.parse_key(key)
+        namespace, kind, name = self.parse3(key)
         result = self.collection.find_one(
             {
                 "namespace": namespace,
@@ -49,8 +49,27 @@ class MongoResourceStore(ResourceStore):
         )
         return result if result else None
 
+    def get_many(self, key):
+        """Get many resources with the same namespace and kind"""
+
+        namespace, kind = self.parse2(key)
+        result = self.collection.find(
+            filter={
+                "namespace": namespace,
+                "kind": kind,
+            },
+            projection={
+                "namespace": True,
+                "kind": True,
+                "name": True,
+            },
+        ).limit(100)
+        return result if result else None
+
     def delete(self, key):
-        namespace, kind, name = self.parse_key(key)
+        """Delete a resource"""
+
+        namespace, kind, name = self.parse3(key)
         result = self.collection.delete_one(
             {
                 "namespace": namespace,
@@ -60,7 +79,7 @@ class MongoResourceStore(ResourceStore):
         )
         return result
 
-    def parse_key(self, key: str) -> Tuple[str, str, str]:
+    def parse3(self, key: str) -> Tuple[str, str, str]:
         """Parsing key to namespace, kind, name"""
 
         keys = key.split("/")
@@ -68,3 +87,11 @@ class MongoResourceStore(ResourceStore):
         kind = keys[1]
         name = keys[2]
         return namespace, kind, name
+
+    def parse2(self, key: str) -> Tuple[str, str]:
+        """Parsing key to namespace, kind, name"""
+
+        keys = key.split("/")
+        namespace = keys[0]
+        kind = keys[1]
+        return namespace, kind

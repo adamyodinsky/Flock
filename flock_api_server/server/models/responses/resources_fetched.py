@@ -7,15 +7,19 @@ from typing import List, Literal
 from pydantic import BaseModel, Field  # noqa: F401
 
 from server.models.resource_details import ResourceDetails
-from server.models.status_code import Code, Status
+from server.models.status_code import Code, Message, Status
 
 
 class ResourcesFetched(BaseModel):
-    message: Literal["Resources retrieved successfully"] = Field(
-        ..., description="Message of the response"
+    """Resources retrieved successfully"""
+
+    message: Literal[Message.FETCHED] = Field(
+        default=Message.FETCHED, description="Message of the response"
     )
-    status: Literal[Status.SUCCESS] = Field(..., description="Status of the response")
-    code: Literal[Code.OK] = Field(..., description="HTTP status codes")
+    status: Literal[Status.SUCCESS] = Field(
+        default=Status.SUCCESS, description="Status of the response"
+    )
+    code: Literal[Code.OK] = Field(default=Code.OK, description="HTTP status codes")
     data: List[ResourceDetails] = Field(..., description="Data of the response")
 
 

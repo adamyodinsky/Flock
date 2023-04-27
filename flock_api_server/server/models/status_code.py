@@ -1,6 +1,9 @@
 """Status codes for the API"""
 
 from enum import Enum
+from typing import Union
+
+import flock_schemas
 
 
 class Code(str, Enum):
@@ -28,5 +31,28 @@ class Status(str, Enum):
 class Message(str, Enum):
     """Message of the response"""
 
-    SUCCESS = "Resources retrieved successfully"
-    ERROR = "Error retrieving resources"
+    FETCHED = "Resources retrieved successfully"
+    CREATED = "Resource created successfully"
+    NOT_FOUND = "Resource not found"
+    DELETED = "Resource deleted successfully"
+    UPDATED = "Resource updated successfully"
+    BAD_REQUEST = "Bad request"
+    UNAUTHORIZED = "Unauthorized"
+    FORBIDDEN = "Forbidden"
+    CONFLICT = "Conflict"
+    INTERNAL_SERVER_ERROR = "Internal server error"
+
+
+class ResourceType(str, Enum):
+    """Resource type"""
+
+    AgentSchema = (flock_schemas.AgentSchema,)
+    EmbeddingSchema = (flock_schemas.EmbeddingSchema,)
+    LLMSchema = (flock_schemas.LLMSchema,)
+    LLMToolSchema = (flock_schemas.LLMToolSchema,)
+    LoadToolSchema = (flock_schemas.LoadToolSchema,)
+    PromptTemplateSchema = (flock_schemas.PromptTemplateSchema,)
+    SplitterSchema = (flock_schemas.SplitterSchema,)
+    VectorStoreSchema = (flock_schemas.VectorStoreSchema,)
+    VectorStoreQAToolSchema = (flock_schemas.VectorStoreQAToolSchema,)
+    CustomSchema = (flock_schemas.CustomSchema,)

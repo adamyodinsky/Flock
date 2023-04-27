@@ -12,3 +12,7 @@ class ResourceStore(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def get(self, key):
         """Load a resource from the store."""
+
+    @abc.abstractmethod
+    def get_many(self, key):
+        """Get many resources with the same namespace and kind"""

@@ -59,3 +59,6 @@ class FSResourceStore(ResourceStore):
         with open(file_path, "r", encoding="utf-8") as file:
             data = yaml.safe_load(file)
             return json.dumps(data)
+
+    def get_many(self, key):
+        """Get many resources with the same namespace and kind"""
