@@ -1,0 +1,1524 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: adam.yodinsky@gmail.com
+    name: Adam yodinsky
+  description: Flock Orchestrator
+  title: Flock
+  version: 0.0.1
+servers:
+- description: Flock
+  url: http://localhost:3000
+tags:
+- description: flock tag
+  name: flock
+paths:
+  /resource/{namespace}/{kind}/{name}:
+    delete:
+      deprecated: false
+      description: Delete a resource and returns it
+      operationId: delete-resource-namespace-kind-name
+      parameters:
+      - description: Namespace of resource
+        explode: false
+        in: path
+        name: namespace
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Kind of resource
+        explode: false
+        in: path
+        name: kind
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Name of a resource
+        explode: false
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceDeleted'
+          description: Resource Deleted
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceBadRequest1'
+          description: Resource Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound1'
+          description: Resource Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError1'
+          description: Internal Server Error
+      summary: delete-resource-namespace-kind-name
+    get:
+      deprecated: false
+      description: Get a resource
+      operationId: get-resource
+      parameters:
+      - description: Namespace of resource
+        explode: false
+        in: path
+        name: namespace
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Kind of resource
+        explode: false
+        in: path
+        name: kind
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Name of a resource
+        explode: false
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceFetched'
+          description: Resource Fetched
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound1'
+          description: Resource Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError1'
+          description: Internal Server Error
+      summary: get-resource
+      tags:
+      - flock
+    post:
+      deprecated: false
+      description: Create a resource
+      operationId: post-resource
+      parameters:
+      - description: Namespace of resource
+        explode: false
+        in: path
+        name: namespace
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Kind of resource
+        explode: false
+        in: path
+        name: kind
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Name of a resource
+        explode: false
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceData'
+        description: ""
+        required: false
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceCreated'
+          description: Resource Created
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceAccepted'
+          description: Resource Accepted
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceBadRequest1'
+          description: Resource Bad Request
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceAlreadyExists1'
+          description: Resource Already Exists
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError1'
+          description: Internal Server Error
+      summary: post-resource
+    put:
+      deprecated: false
+      description: Create or update a resource
+      operationId: put-resource
+      parameters:
+      - description: Namespace of resource
+        explode: false
+        in: path
+        name: namespace
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Kind of resource
+        explode: false
+        in: path
+        name: kind
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Name of a resource
+        explode: false
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceData'
+        description: ""
+        required: false
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceCreated'
+          description: Resource Created
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceAccepted'
+          description: Resource Accepted
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceUpdated'
+          description: Resource Updated
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceBadRequest1'
+          description: Resource Bad Request
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceAlreadyExists1'
+          description: Resource Already Exists
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError1'
+          description: Internal Server Error
+      summary: put-resource
+  /resource/{namespace}/{kind}:
+    delete:
+      deprecated: false
+      description: "Deletes all resources by namespace and kind, returns a list of\
+        \ the deleted resources."
+      operationId: delete-resource-namespace-kind
+      parameters:
+      - description: namespace
+        explode: false
+        in: path
+        name: namespace
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: kind
+        explode: false
+        in: path
+        name: kind
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourcesFetched'
+          description: Resources Fetched
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceBadRequest1'
+          description: Resource Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound1'
+          description: Resource Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError1'
+          description: Internal Server Error
+      summary: delete-resource-namespace-kind
+    get:
+      deprecated: false
+      description: Get Resources list by namespace and kind
+      operationId: get-resource-namespace-kind
+      parameters:
+      - description: namespace
+        explode: false
+        in: path
+        name: namespace
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: kind
+        explode: false
+        in: path
+        name: kind
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourcesFetched'
+          description: Resources Fetched
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceBadRequest1'
+          description: Resource Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound1'
+          description: Resource Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError1'
+          description: Internal Server Error
+      summary: get-resource-namespace-kind
+      tags:
+      - flock
+components:
+  schemas:
+    ResourceDetails:
+      example:
+        kind: kind
+        name: name
+        namespace: namespace
+      properties:
+        name:
+          title: name
+          type: string
+        namespace:
+          title: namespace
+          type: string
+        kind:
+          title: kind
+          type: string
+      title: ResourceDetails
+      type: object
+    AgentSchema:
+      description: Agent schema.
+      properties:
+        namespace:
+          description: The namespace of the object
+          maxLength: 63
+          title: namespace
+          type: string
+        apiVersion:
+          description: API version
+          enum:
+          - flock/v1
+          title: apiVersion
+          type: string
+        kind:
+          description: The kind of the object
+          enum:
+          - Agent
+          title: kind
+          type: string
+        metadata:
+          $ref: '#/components/schemas/AgentSchema_metadata'
+        created_at:
+          description: Creation timestamp
+          format: date-time
+          title: created_at
+          type: string
+        updated_at:
+          description: Last update timestamp
+          format: date-time
+          title: updated_at
+          type: string
+        spec:
+          $ref: '#/components/schemas/AgentSchema_spec'
+      required:
+      - apiVersion
+      - kind
+      - metadata
+      - namespace
+      - spec
+      title: AgentSchema
+      type: object
+    AgentSpec:
+      description: Agent spec.
+      properties:
+        options:
+          description: Resource options
+          title: options
+          type: object
+        vendor:
+          allOf:
+          - $ref: '#/components/schemas/AgentType'
+          - description: Agent type
+          title: vendor
+        tools:
+          description: Agent tools
+          items:
+            $ref: '#/components/schemas/BaseToolDependency'
+          title: tools
+          type: array
+        dependencies:
+          description: Agent dependencies
+          items: {}
+          maxItems: 1
+          minItems: 1
+          title: dependencies
+          type: array
+      required:
+      - dependencies
+      - tools
+      - vendor
+      title: AgentSpec
+      type: object
+    AgentType:
+      description: Enum for Agent types.
+      enum:
+      - zero-shot-react-description
+      - react-docstore
+      - self-ask-with-search
+      - conversational-react-description
+      - chat-zero-shot-react-description
+      - chat-conversational-react-description
+      title: AgentType
+      type: string
+    BaseDependency:
+      description: Base dependency schema.
+      properties:
+        labels:
+          additionalProperties:
+            type: string
+          description: Labels are useful for filtering and finding objects
+          title: labels
+          type: object
+        name:
+          description: Name of the dependency
+          title: name
+          type: string
+        kind:
+          allOf:
+          - $ref: '#/components/schemas/Kind'
+          - description: Kind of the dependency
+          title: kind
+        namespace:
+          default: default
+          description: The namespace of the object
+          maxLength: 63
+          title: namespace
+          type: string
+      required:
+      - kind
+      - name
+      title: BaseDependency
+      type: object
+    BaseMetaData:
+      description: Base metadata schema.
+      properties:
+        annotations:
+          additionalProperties:
+            type: string
+          description: Annotations are useful for storing additional information
+          title: annotations
+          type: object
+        labels:
+          additionalProperties:
+            type: string
+          description: Labels are useful for filtering and finding objects
+          title: labels
+          type: object
+        name:
+          description: Name of the object
+          maxLength: 63
+          title: name
+          type: string
+        description:
+          description: Description
+          maxLength: 255
+          title: description
+          type: string
+      required:
+      - description
+      - name
+      title: BaseMetaData
+      type: object
+    BaseSpec:
+      description: Base spec schema.
+      properties:
+        options:
+          description: Resource options
+          title: options
+          type: object
+        vendor:
+          description: The resource class
+          title: vendor
+          type: string
+        dependencies:
+          description: Dependencies for the object
+          items:
+            $ref: '#/components/schemas/BaseDependency'
+          title: dependencies
+          type: array
+        tools:
+          description: Tools for the object
+          items:
+            $ref: '#/components/schemas/BaseToolDependency'
+          title: tools
+          type: array
+      required:
+      - vendor
+      title: BaseSpec
+      type: object
+    BaseToolDependency:
+      description: Base tool dependency schema.
+      properties:
+        labels:
+          additionalProperties:
+            type: string
+          description: Labels are useful for filtering and finding objects
+          title: labels
+          type: object
+        name:
+          description: Name of the dependency
+          title: name
+          type: string
+        kind:
+          allOf:
+          - $ref: '#/components/schemas/Kind'
+          - description: Kind of the dependency
+          title: kind
+        namespace:
+          default: default
+          description: The namespace of the object
+          maxLength: 63
+          title: namespace
+          type: string
+        description:
+          description: Tool description
+          title: description
+          type: string
+      required:
+      - kind
+      - name
+      title: BaseToolDependency
+      type: object
+    Code:
+      enum:
+      - 200
+      title: Code
+      type: integer
+    Code1:
+      enum:
+      - 404
+      title: Code1
+      type: integer
+    Code2:
+      enum:
+      - 500
+      title: Code2
+      type: integer
+    Code3:
+      enum:
+      - 201
+      title: Code3
+      type: integer
+    Code4:
+      enum:
+      - 202
+      title: Code4
+      type: integer
+    Code5:
+      enum:
+      - 400
+      title: Code5
+      type: integer
+    Code6:
+      enum:
+      - 409
+      title: Code6
+      type: integer
+    Code7:
+      enum:
+      - 204
+      title: Code7
+      type: integer
+    CustomSchema:
+      description: Custom object schema.
+      properties:
+        namespace:
+          description: The namespace of the object
+          maxLength: 63
+          title: namespace
+          type: string
+        apiVersion:
+          description: API version
+          enum:
+          - flock/v1
+          title: apiVersion
+          type: string
+        kind:
+          description: The kind of the custom object
+          title: kind
+          type: string
+        metadata:
+          $ref: '#/components/schemas/AgentSchema_metadata'
+        created_at:
+          description: Creation timestamp
+          format: date-time
+          title: created_at
+          type: string
+        updated_at:
+          description: Last update timestamp
+          format: date-time
+          title: updated_at
+          type: string
+        spec:
+          $ref: '#/components/schemas/CustomSchema_spec'
+      required:
+      - apiVersion
+      - kind
+      - metadata
+      - namespace
+      - spec
+      title: CustomSchema
+      type: object
+    EmbeddingSchema:
+      description: Embedding schema.
+      properties:
+        namespace:
+          description: The namespace of the object
+          maxLength: 63
+          title: namespace
+          type: string
+        apiVersion:
+          description: API version
+          enum:
+          - flock/v1
+          title: apiVersion
+          type: string
+        kind:
+          description: The kind of the object
+          enum:
+          - Embedding
+          title: kind
+          type: string
+        metadata:
+          $ref: '#/components/schemas/AgentSchema_metadata'
+        created_at:
+          description: Creation timestamp
+          format: date-time
+          title: created_at
+          type: string
+        updated_at:
+          description: Last update timestamp
+          format: date-time
+          title: updated_at
+          type: string
+        spec:
+          $ref: '#/components/schemas/EmbeddingSchema_spec'
+      required:
+      - apiVersion
+      - kind
+      - metadata
+      - namespace
+      - spec
+      title: EmbeddingSchema
+      type: object
+    EmbeddingSpec:
+      description: Embedding spec.
+      properties:
+        options:
+          description: Embedding options
+          title: options
+          type: object
+        vendor:
+          allOf:
+          - $ref: '#/components/schemas/EmbeddingVendor'
+          - description: Embedding vendor
+          title: vendor
+      required:
+      - vendor
+      title: EmbeddingSpec
+      type: object
+    EmbeddingVendor:
+      description: Enum for embedding vendors.
+      enum:
+      - OpenAIEmbeddings
+      title: EmbeddingVendor
+      type: string
+    InternalServerError1:
+      properties:
+        status:
+          $ref: '#/components/schemas/Status1'
+        code:
+          $ref: '#/components/schemas/Code2'
+        message:
+          default: Internal Server Error
+          example: Internal server error
+          title: message
+          type: string
+        details:
+          description: ""
+          items:
+            type: string
+          title: details
+          type: array
+      title: InternalServerError1
+      type: object
+    Kind:
+      description: Enum for all kinds of resources.
+      enum:
+      - Embedding
+      - VectorStore
+      - VectorStoreQATool
+      - LLM
+      - LoadTool
+      - Splitter
+      - Agent
+      - PromptTemplate
+      - LLMTool
+      - Custom
+      title: Kind
+      type: string
+    LLMSchema:
+      description: LLM schema.
+      properties:
+        namespace:
+          description: The namespace of the object
+          maxLength: 63
+          title: namespace
+          type: string
+        apiVersion:
+          description: API version
+          enum:
+          - flock/v1
+          title: apiVersion
+          type: string
+        kind:
+          description: The kind of the object
+          enum:
+          - LLM
+          title: kind
+          type: string
+        metadata:
+          $ref: '#/components/schemas/AgentSchema_metadata'
+        created_at:
+          description: Creation timestamp
+          format: date-time
+          title: created_at
+          type: string
+        updated_at:
+          description: Last update timestamp
+          format: date-time
+          title: updated_at
+          type: string
+        spec:
+          $ref: '#/components/schemas/LLMSchema_spec'
+      required:
+      - apiVersion
+      - kind
+      - metadata
+      - namespace
+      - spec
+      title: LLMSchema
+      type: object
+    LLMSpec:
+      description: LLM spec.
+      properties:
+        options:
+          description: Resource options
+          title: options
+          type: object
+        vendor:
+          allOf:
+          - $ref: '#/components/schemas/LLMVendor'
+          - description: LLM vendor
+          title: vendor
+      required:
+      - vendor
+      title: LLMSpec
+      type: object
+    LLMToolSchema:
+      description: LLM tool schema.
+      properties:
+        namespace:
+          description: The namespace of the object
+          maxLength: 63
+          title: namespace
+          type: string
+        apiVersion:
+          description: API version
+          enum:
+          - flock/v1
+          title: apiVersion
+          type: string
+        kind:
+          description: The kind of the object
+          enum:
+          - LLMTool
+          title: kind
+          type: string
+        metadata:
+          $ref: '#/components/schemas/AgentSchema_metadata'
+        created_at:
+          description: Creation timestamp
+          format: date-time
+          title: created_at
+          type: string
+        updated_at:
+          description: Last update timestamp
+          format: date-time
+          title: updated_at
+          type: string
+        spec:
+          $ref: '#/components/schemas/LLMToolSchema_spec'
+      required:
+      - apiVersion
+      - kind
+      - metadata
+      - namespace
+      - spec
+      title: LLMToolSchema
+      type: object
+    LLMToolSpec:
+      description: LLM tool spec.
+      properties:
+        options:
+          description: Options for the tool
+          title: options
+          type: object
+        vendor:
+          allOf:
+          - $ref: '#/components/schemas/LLMToolVendor'
+          - description: "The class of the tool, e.g. LLMChain, etc."
+          title: vendor
+        dependencies:
+          description: Tool dependencies
+          items: {}
+          maxItems: 2
+          minItems: 2
+          title: dependencies
+          type: array
+      required:
+      - dependencies
+      - vendor
+      title: LLMToolSpec
+      type: object
+    LLMToolVendor:
+      description: Enum for LLM tool vendors.
+      enum:
+      - LLMChain
+      title: LLMToolVendor
+      type: string
+    LLMVendor:
+      description: Enum for llm vendors.
+      enum:
+      - ChatOpenAI
+      title: LLMVendor
+      type: string
+    LoadToolSchema:
+      description: LoadTool schema.
+      properties:
+        namespace:
+          description: The namespace of the object
+          maxLength: 63
+          title: namespace
+          type: string
+        apiVersion:
+          description: API version
+          enum:
+          - flock/v1
+          title: apiVersion
+          type: string
+        kind:
+          description: The kind of the object
+          enum:
+          - LoadTool
+          title: kind
+          type: string
+        metadata:
+          $ref: '#/components/schemas/AgentSchema_metadata'
+        created_at:
+          description: Creation timestamp
+          format: date-time
+          title: created_at
+          type: string
+        updated_at:
+          description: Last update timestamp
+          format: date-time
+          title: updated_at
+          type: string
+        spec:
+          $ref: '#/components/schemas/LoadToolSchema_spec'
+      required:
+      - apiVersion
+      - kind
+      - metadata
+      - namespace
+      - spec
+      title: LoadToolSchema
+      type: object
+    LoadToolSpec:
+      description: LoadTool spec.
+      properties:
+        options:
+          description: Resource options
+          title: options
+          type: object
+        vendor:
+          allOf:
+          - $ref: '#/components/schemas/LoadToolVendor'
+          - description: "The name of the search tool, e.g. serpapi, google-serper,\
+              \ etc."
+          title: vendor
+        dependencies:
+          description: Tool dependencies
+          items: {}
+          maxItems: 1
+          minItems: 1
+          title: dependencies
+          type: array
+      required:
+      - dependencies
+      - vendor
+      title: LoadToolSpec
+      type: object
+    LoadToolVendor:
+      description: Enum for search_tool vendors.
+      enum:
+      - python_repl
+      - requests
+      - requests_get
+      - requests_post
+      - requests_patch
+      - requests_put
+      - requests_delete
+      - terminal
+      - wolfram-alpha
+      - google-search
+      - google-search-results-json
+      - searx-search-results-json
+      - bing-search
+      - google-serper
+      - serpapi
+      - searx-search
+      - wikipedia
+      - human
+      - news-api
+      - tmdb-api
+      - podcast-api
+      - pal-math
+      - pal-colored-objects
+      - llm-math
+      - open-meteo-api
+      title: LoadToolVendor
+      type: string
+    PromptTemplateSchema:
+      description: PromptTemplate schema.
+      properties:
+        namespace:
+          description: The namespace of the object
+          maxLength: 63
+          title: namespace
+          type: string
+        apiVersion:
+          description: API version
+          enum:
+          - flock/v1
+          title: apiVersion
+          type: string
+        kind:
+          description: The kind of the object
+          enum:
+          - PromptTemplate
+          title: kind
+          type: string
+        metadata:
+          $ref: '#/components/schemas/AgentSchema_metadata'
+        created_at:
+          description: Creation timestamp
+          format: date-time
+          title: created_at
+          type: string
+        updated_at:
+          description: Last update timestamp
+          format: date-time
+          title: updated_at
+          type: string
+        spec:
+          $ref: '#/components/schemas/PromptTemplateSchema_spec'
+      required:
+      - apiVersion
+      - kind
+      - metadata
+      - namespace
+      - spec
+      title: PromptTemplateSchema
+      type: object
+    PromptTemplateSpec:
+      description: PromptTemplate spec.
+      properties:
+        options:
+          description: Resource options
+          title: options
+          type: object
+        vendor:
+          allOf:
+          - $ref: '#/components/schemas/PromptTemplateVendor'
+          - description: PromptTemplate vendor
+          title: vendor
+      required:
+      - vendor
+      title: PromptTemplateSpec
+      type: object
+    PromptTemplateVendor:
+      description: Enum for prompt template vendors.
+      enum:
+      - PromptTemplate
+      title: PromptTemplateVendor
+      type: string
+    ResourceAccepted:
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+        code:
+          $ref: '#/components/schemas/Code4'
+        data:
+          $ref: '#/components/schemas/ResourceData'
+        message:
+          default: Resource update request has been accepted and is being processed
+          example: Resource update request has been accepted and is being processed
+          title: message
+          type: string
+      title: ResourceAccepted
+      type: object
+    ResourceAlreadyExists1:
+      properties:
+        status:
+          $ref: '#/components/schemas/Status1'
+        code:
+          $ref: '#/components/schemas/Code6'
+        message:
+          default: A resource with the same unique property already exists
+          example: A resource with the same unique property already exists
+          title: message
+          type: string
+        details:
+          description: ""
+          items:
+            type: string
+          title: details
+          type: array
+      title: ResourceAlreadyExists1
+      type: object
+    ResourceBadRequest1:
+      properties:
+        status:
+          $ref: '#/components/schemas/Status1'
+        code:
+          $ref: '#/components/schemas/Code5'
+        message:
+          default: Invalid input provided
+          example: Invalid input provided
+          title: message
+          type: string
+        details:
+          description: ""
+          items:
+            type: string
+          title: details
+          type: array
+      title: ResourceBadRequest1
+      type: object
+    ResourceCreated:
+      example:
+        code: null
+        data: null
+        message: Resource created successfully
+        status: ""
+      properties:
+        status:
+          allOf:
+          - $ref: '#/components/schemas/Status'
+          - example: OK
+          title: status
+        code:
+          $ref: '#/components/schemas/Code3'
+        data:
+          $ref: '#/components/schemas/ResourceData'
+        message:
+          default: Resource created successfully
+          example: Resource created successfully
+          title: message
+          type: string
+      title: ResourceCreated
+      type: object
+    ResourceDeleted:
+      example:
+        code: null
+        data: null
+        message: Resource deleted
+        status: null
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+        message:
+          default: Resource deleted
+          example: Resource deleted
+          title: message
+          type: string
+        code:
+          $ref: '#/components/schemas/Code7'
+        data:
+          $ref: '#/components/schemas/ResourceDeleted_data'
+      title: ResourceDeleted
+      type: object
+    ResourceFetched:
+      example:
+        code: null
+        data: null
+        message: Resources retrieved successfully
+        status: null
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+        message:
+          default: Resources retrieved successfully
+          example: Resources retrieved successfully
+          title: message
+          type: string
+        code:
+          $ref: '#/components/schemas/Code'
+        data:
+          $ref: '#/components/schemas/ResourceData'
+      title: ResourceFetched
+      type: object
+    ResourceNotFound1:
+      properties:
+        status:
+          $ref: '#/components/schemas/Status1'
+        code:
+          $ref: '#/components/schemas/Code1'
+        message:
+          default: Resource not found
+          example: Resource not found
+          title: message
+          type: string
+        details:
+          description: ""
+          items:
+            type: string
+          title: details
+          type: array
+      title: ResourceNotFound1
+      type: object
+    ResourcesFetched:
+      example:
+        code: null
+        data:
+          kind: kind
+          name: name
+          namespace: namespace
+        message: message
+        status: null
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+        message:
+          title: message
+          type: string
+        code:
+          $ref: '#/components/schemas/Code'
+        data:
+          $ref: '#/components/schemas/ResourceDetails'
+      title: ResourcesFetched
+      type: object
+    ResourceUpdated:
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+        code:
+          $ref: '#/components/schemas/Code7'
+        data:
+          $ref: '#/components/schemas/ResourceData'
+        message:
+          default: Resource updated successfully
+          example: Resource updated successfully
+          title: message
+          type: string
+      title: ResourceUpdated
+      type: object
+    SplitterSchema:
+      description: Splitter schema.
+      properties:
+        namespace:
+          description: The namespace of the object
+          maxLength: 63
+          title: namespace
+          type: string
+        apiVersion:
+          description: API version
+          enum:
+          - flock/v1
+          title: apiVersion
+          type: string
+        kind:
+          description: The kind of the object
+          enum:
+          - Splitter
+          title: kind
+          type: string
+        metadata:
+          $ref: '#/components/schemas/AgentSchema_metadata'
+        created_at:
+          description: Creation timestamp
+          format: date-time
+          title: created_at
+          type: string
+        updated_at:
+          description: Last update timestamp
+          format: date-time
+          title: updated_at
+          type: string
+        spec:
+          $ref: '#/components/schemas/SplitterSchema_spec'
+      required:
+      - apiVersion
+      - kind
+      - metadata
+      - namespace
+      - spec
+      title: SplitterSchema
+      type: object
+    SplitterSpec:
+      description: Splitter spec.
+      properties:
+        options:
+          description: Resource options
+          title: options
+          type: object
+        vendor:
+          allOf:
+          - $ref: '#/components/schemas/SplitterVendor'
+          - description: "The class of the splitter, e.g. CharacterTextSplitter, etc."
+          title: vendor
+      required:
+      - vendor
+      title: SplitterSpec
+      type: object
+    SplitterVendor:
+      description: Enum for splitter vendors.
+      enum:
+      - CharacterTextSplitter
+      - PythonCodeTextSplitter
+      title: SplitterVendor
+      type: string
+    Status:
+      enum:
+      - OK
+      title: Status
+      type: string
+    Status1:
+      enum:
+      - error
+      title: Status1
+      type: string
+    VectorStoreQAToolSchema:
+      description: VectorStoreQATool schema.
+      properties:
+        namespace:
+          description: The namespace of the object
+          maxLength: 63
+          title: namespace
+          type: string
+        apiVersion:
+          description: API version
+          enum:
+          - flock/v1
+          title: apiVersion
+          type: string
+        kind:
+          description: The kind of the object
+          enum:
+          - VectorStoreQATool
+          title: kind
+          type: string
+        metadata:
+          $ref: '#/components/schemas/AgentSchema_metadata'
+        created_at:
+          description: Creation timestamp
+          format: date-time
+          title: created_at
+          type: string
+        updated_at:
+          description: Last update timestamp
+          format: date-time
+          title: updated_at
+          type: string
+        spec:
+          $ref: '#/components/schemas/VectorStoreQAToolSchema_spec'
+      required:
+      - apiVersion
+      - kind
+      - metadata
+      - namespace
+      - spec
+      title: VectorStoreQAToolSchema
+      type: object
+    VectorStoreQAToolSpec:
+      description: VectorStoreQATool spec.
+      properties:
+        options:
+          description: Options for the tool
+          title: options
+          type: object
+        vendor:
+          allOf:
+          - $ref: '#/components/schemas/VectorStoreQAToolVendor'
+          - description: "The class of the tool, e.g. RetrievalQAWithSourcesChain,\
+              \ etc."
+          title: vendor
+        dependencies:
+          description: Tool dependencies
+          items: {}
+          maxItems: 2
+          minItems: 2
+          title: dependencies
+          type: array
+      required:
+      - dependencies
+      - vendor
+      title: VectorStoreQAToolSpec
+      type: object
+    VectorStoreQAToolVendor:
+      description: Enum for vectorstore_qa_tool vendors.
+      enum:
+      - RetrievalQAWithSourcesChain
+      title: VectorStoreQAToolVendor
+      type: string
+    VectorStoreSchema:
+      description: Vectorstore schema.
+      properties:
+        namespace:
+          description: The namespace of the object
+          maxLength: 63
+          title: namespace
+          type: string
+        apiVersion:
+          description: API version
+          enum:
+          - flock/v1
+          title: apiVersion
+          type: string
+        kind:
+          description: The kind of the object
+          enum:
+          - VectorStore
+          title: kind
+          type: string
+        metadata:
+          $ref: '#/components/schemas/AgentSchema_metadata'
+        created_at:
+          description: Creation timestamp
+          format: date-time
+          title: created_at
+          type: string
+        updated_at:
+          description: Last update timestamp
+          format: date-time
+          title: updated_at
+          type: string
+        spec:
+          $ref: '#/components/schemas/VectorStoreSchema_spec'
+      required:
+      - apiVersion
+      - kind
+      - metadata
+      - namespace
+      - spec
+      title: VectorStoreSchema
+      type: object
+    VectorStoreSpec:
+      description: Vectorstore spec.
+      properties:
+        options:
+          description: Resource options
+          title: options
+          type: object
+        vendor:
+          description: "The vendor of the vector store, e.g. Chroma, Pinecone, etc."
+          title: vendor
+          type: string
+        dependencies:
+          description: Vectorstore dependencies
+          items: {}
+          maxItems: 1
+          minItems: 1
+          title: dependencies
+          type: array
+      required:
+      - dependencies
+      - vendor
+      title: VectorStoreSpec
+      type: object
+    ResourceData:
+      oneOf:
+      - $ref: '#/components/schemas/VectorStoreQAToolSchema'
+      - $ref: '#/components/schemas/PromptTemplateSchema'
+      - $ref: '#/components/schemas/LLMSchema'
+      - $ref: '#/components/schemas/CustomSchema'
+      - $ref: '#/components/schemas/SplitterSchema'
+      - $ref: '#/components/schemas/LLMToolSchema'
+      - $ref: '#/components/schemas/EmbeddingSchema'
+      - $ref: '#/components/schemas/VectorStoreSchema'
+      - $ref: '#/components/schemas/LoadToolSchema'
+      - $ref: '#/components/schemas/AgentSchema'
+      title: ResourceData
+    AgentSchema_metadata:
+      allOf:
+      - $ref: '#/components/schemas/BaseMetaData'
+      - description: Base metadata schema.
+      title: AgentSchema_metadata
+    AgentSchema_spec:
+      allOf:
+      - $ref: '#/components/schemas/AgentSpec'
+      - description: Agent spec.
+      title: AgentSchema_spec
+    CustomSchema_spec:
+      allOf:
+      - $ref: '#/components/schemas/BaseSpec'
+      - description: Base spec schema.
+      title: CustomSchema_spec
+    EmbeddingSchema_spec:
+      allOf:
+      - $ref: '#/components/schemas/EmbeddingSpec'
+      - description: Embedding spec.
+      title: EmbeddingSchema_spec
+    LLMSchema_spec:
+      allOf:
+      - $ref: '#/components/schemas/LLMSpec'
+      - description: LLM spec.
+      title: LLMSchema_spec
+    LLMToolSchema_spec:
+      allOf:
+      - $ref: '#/components/schemas/LLMToolSpec'
+      - description: LLM tool spec.
+      title: LLMToolSchema_spec
+    LoadToolSchema_spec:
+      allOf:
+      - $ref: '#/components/schemas/LoadToolSpec'
+      - description: LoadTool spec.
+      title: LoadToolSchema_spec
+    PromptTemplateSchema_spec:
+      allOf:
+      - $ref: '#/components/schemas/PromptTemplateSpec'
+      - description: PromptTemplate spec.
+      title: PromptTemplateSchema_spec
+    ResourceDeleted_data:
+      oneOf:
+      - $ref: '#/components/schemas/VectorStoreQAToolSchema'
+      - $ref: '#/components/schemas/PromptTemplateSchema'
+      - $ref: '#/components/schemas/LLMSchema'
+      - $ref: '#/components/schemas/CustomSchema'
+      - $ref: '#/components/schemas/SplitterSchema'
+      - $ref: '#/components/schemas/LLMToolSchema'
+      - $ref: '#/components/schemas/EmbeddingSchema'
+      - $ref: '#/components/schemas/VectorStoreSchema'
+      - $ref: '#/components/schemas/LoadToolSchema'
+      - $ref: '#/components/schemas/AgentSchema'
+      title: ResourceDeleted_data
+    SplitterSchema_spec:
+      allOf:
+      - $ref: '#/components/schemas/SplitterSpec'
+      - description: Splitter spec.
+      title: SplitterSchema_spec
+    VectorStoreQAToolSchema_spec:
+      allOf:
+      - $ref: '#/components/schemas/VectorStoreQAToolSpec'
+      - description: VectorStoreQATool spec.
+      title: VectorStoreQAToolSchema_spec
+    VectorStoreSchema_spec:
+      allOf:
+      - $ref: '#/components/schemas/VectorStoreSpec'
+      - description: Vectorstore spec.
+      title: VectorStoreSchema_spec
