@@ -1,0 +1,26 @@
+{
+  "title": "BaseLabels",
+  "x-stoplight": {
+    "id": "y7jntt6y2nyvo"
+  },
+  "description": "Base labels schema.",
+  "type": "object",
+  "properties": {
+    "labels": {
+      "title": "Labels",
+      "description": "Labels are useful for filtering and finding objects",
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "x-stoplight": {
+          "id": "bh3pke1bq7jih"
+        }
+      },
+      "x-stoplight": {
+        "id": "4sht6jl1xki9v"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "x-internal": true
+}

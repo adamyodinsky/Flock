@@ -1,0 +1,248 @@
+{
+  "title": "VectorStoreSchema",
+  "x-stoplight": {
+    "id": "8lvifgwafnchf"
+  },
+  "description": "Vectorstore schema.",
+  "type": "object",
+  "properties": {
+    "namespace": {
+      "title": "Namespace",
+      "description": "The namespace of the object",
+      "maxLength": 63,
+      "type": "string",
+      "x-stoplight": {
+        "id": "70tk5nbyp07n0"
+      }
+    },
+    "apiVersion": {
+      "title": "Apiversion",
+      "description": "API version",
+      "enum": [
+        "flock/v1"
+      ],
+      "type": "string",
+      "x-stoplight": {
+        "id": "fn08r3ydljehg"
+      }
+    },
+    "kind": {
+      "title": "Kind",
+      "description": "The kind of the object",
+      "enum": [
+        "VectorStore"
+      ],
+      "type": "string",
+      "x-stoplight": {
+        "id": "oszrxvzuvcmo4"
+      }
+    },
+    "metadata": {
+      "$ref": "#/definitions/BaseMetaData",
+      "x-stoplight": {
+        "id": "zyqhb5504dgin"
+      }
+    },
+    "created_at": {
+      "title": "Created At",
+      "description": "Creation timestamp",
+      "type": "string",
+      "format": "date-time",
+      "x-stoplight": {
+        "id": "m5sxwrj7dej56"
+      }
+    },
+    "updated_at": {
+      "title": "Updated At",
+      "description": "Last update timestamp",
+      "type": "string",
+      "format": "date-time",
+      "x-stoplight": {
+        "id": "f3phy8by2d7p3"
+      }
+    },
+    "spec": {
+      "$ref": "#/definitions/VectorStoreSpec",
+      "x-stoplight": {
+        "id": "uh3f1phewhybu"
+      }
+    }
+  },
+  "required": [
+    "namespace",
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "BaseMetaData": {
+      "title": "BaseMetaData",
+      "description": "Base metadata schema.",
+      "type": "object",
+      "properties": {
+        "annotations": {
+          "title": "Annotations",
+          "description": "Annotations are useful for storing additional information",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "s0vcjpk5pwkpo"
+            }
+          },
+          "x-stoplight": {
+            "id": "56bvyocofqsk5"
+          }
+        },
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "9jsdbhu27z41v"
+            }
+          },
+          "x-stoplight": {
+            "id": "uenllhooxve2t"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the object",
+          "maxLength": 63,
+          "type": "string",
+          "x-stoplight": {
+            "id": "mezannmi99vsy"
+          }
+        },
+        "description": {
+          "title": "Description",
+          "description": "Description",
+          "maxLength": 255,
+          "type": "string",
+          "x-stoplight": {
+            "id": "g9smfp072gi6w"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "description"
+      ],
+      "additionalProperties": false,
+      "x-stoplight": {
+        "id": "2jbciggibszk1"
+      }
+    },
+    "EmbeddingDependency": {
+      "title": "EmbeddingDependency",
+      "description": "Embedding dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "cgxf725vfcidh"
+            }
+          },
+          "x-stoplight": {
+            "id": "fd3jeq75thucb"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string",
+          "x-stoplight": {
+            "id": "fpdba4cpiknk0"
+          }
+        },
+        "kind": {
+          "title": "Kind",
+          "default": "Embedding",
+          "const": "Embedding",
+          "type": "string",
+          "x-stoplight": {
+            "id": "ia5s6pw9rsrnj"
+          }
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string",
+          "x-stoplight": {
+            "id": "e0hf4nzczyom3"
+          }
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "x-stoplight": {
+        "id": "690tv5no1tf8r"
+      }
+    },
+    "VectorStoreSpec": {
+      "title": "VectorStoreSpec",
+      "description": "Vectorstore spec.",
+      "type": "object",
+      "properties": {
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object",
+          "x-stoplight": {
+            "id": "fnkmul54y7yd0"
+          }
+        },
+        "vendor": {
+          "title": "Vendor",
+          "description": "The vendor of the vector store, e.g. Chroma, Pinecone, etc.",
+          "type": "string",
+          "x-stoplight": {
+            "id": "lduhqrrozv0jx"
+          }
+        },
+        "dependencies": {
+          "title": "Dependencies",
+          "description": "Vectorstore dependencies",
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": [
+            {
+              "$ref": "#/definitions/EmbeddingDependency",
+              "x-stoplight": {
+                "id": "rz2inzgqdnffu"
+              }
+            }
+          ],
+          "x-stoplight": {
+            "id": "pzryaucta06nj"
+          }
+        }
+      },
+      "required": [
+        "vendor",
+        "dependencies"
+      ],
+      "additionalProperties": false,
+      "x-stoplight": {
+        "id": "4n7b9qwc2pajd"
+      }
+    }
+  },
+  "x-internal": true
+}

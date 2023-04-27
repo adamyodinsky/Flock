@@ -1,0 +1,56 @@
+{
+  "title": "PromptTemplateDependency",
+  "x-stoplight": {
+    "id": "ze17v6dl3z03m"
+  },
+  "description": "Prompt template dependency schema.",
+  "type": "object",
+  "properties": {
+    "labels": {
+      "title": "Labels",
+      "description": "Labels are useful for filtering and finding objects",
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "x-stoplight": {
+          "id": "1u1li5bi4vczd"
+        }
+      },
+      "x-stoplight": {
+        "id": "6az9wekqivfoa"
+      }
+    },
+    "name": {
+      "title": "Name",
+      "description": "Name of the dependency",
+      "type": "string",
+      "x-stoplight": {
+        "id": "81khcsy02uic0"
+      }
+    },
+    "kind": {
+      "title": "Kind",
+      "default": "PromptTemplate",
+      "const": "PromptTemplate",
+      "type": "string",
+      "x-stoplight": {
+        "id": "mzozfhxnzbc47"
+      }
+    },
+    "namespace": {
+      "title": "Namespace",
+      "description": "The namespace of the object",
+      "default": "default",
+      "maxLength": 63,
+      "type": "string",
+      "x-stoplight": {
+        "id": "bldy1pq3pj1ng"
+      }
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "additionalProperties": false,
+  "x-internal": true
+}

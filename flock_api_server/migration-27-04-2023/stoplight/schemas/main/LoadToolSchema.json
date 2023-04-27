@@ -1,0 +1,289 @@
+{
+  "title": "LoadToolSchema",
+  "x-stoplight": {
+    "id": "b1g5as21385r7"
+  },
+  "description": "LoadTool schema.",
+  "type": "object",
+  "properties": {
+    "namespace": {
+      "title": "Namespace",
+      "description": "The namespace of the object",
+      "maxLength": 63,
+      "type": "string",
+      "x-stoplight": {
+        "id": "qls22zl1gyduu"
+      }
+    },
+    "apiVersion": {
+      "title": "Apiversion",
+      "description": "API version",
+      "enum": [
+        "flock/v1"
+      ],
+      "type": "string",
+      "x-stoplight": {
+        "id": "zurp3e5lokkbq"
+      }
+    },
+    "kind": {
+      "title": "Kind",
+      "description": "The kind of the object",
+      "enum": [
+        "LoadTool"
+      ],
+      "type": "string",
+      "x-stoplight": {
+        "id": "4c3i8ouhcazg8"
+      }
+    },
+    "metadata": {
+      "$ref": "#/definitions/BaseMetaData",
+      "x-stoplight": {
+        "id": "ngrs8fmsrlv26"
+      }
+    },
+    "created_at": {
+      "title": "Created At",
+      "description": "Creation timestamp",
+      "type": "string",
+      "format": "date-time",
+      "x-stoplight": {
+        "id": "utf0hif8y2agb"
+      }
+    },
+    "updated_at": {
+      "title": "Updated At",
+      "description": "Last update timestamp",
+      "type": "string",
+      "format": "date-time",
+      "x-stoplight": {
+        "id": "3gtaauac9dinc"
+      }
+    },
+    "spec": {
+      "$ref": "#/definitions/LoadToolSpec",
+      "x-stoplight": {
+        "id": "jk7qbg14jkbud"
+      }
+    }
+  },
+  "required": [
+    "namespace",
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "BaseMetaData": {
+      "title": "BaseMetaData",
+      "description": "Base metadata schema.",
+      "type": "object",
+      "properties": {
+        "annotations": {
+          "title": "Annotations",
+          "description": "Annotations are useful for storing additional information",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "l33j5r2mp93ca"
+            }
+          },
+          "x-stoplight": {
+            "id": "dazzhlrfi87ig"
+          }
+        },
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "wh4ooqt9mhlpp"
+            }
+          },
+          "x-stoplight": {
+            "id": "pwpbegx4avykx"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the object",
+          "maxLength": 63,
+          "type": "string",
+          "x-stoplight": {
+            "id": "yyy73atrf6ney"
+          }
+        },
+        "description": {
+          "title": "Description",
+          "description": "Description",
+          "maxLength": 255,
+          "type": "string",
+          "x-stoplight": {
+            "id": "gfvs5fsvzbjpk"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "description"
+      ],
+      "additionalProperties": false,
+      "x-stoplight": {
+        "id": "igy4r2bpw3rxn"
+      }
+    },
+    "LoadToolVendor": {
+      "title": "LoadToolVendor",
+      "description": "Enum for search_tool vendors.",
+      "enum": [
+        "python_repl",
+        "requests",
+        "requests_get",
+        "requests_post",
+        "requests_patch",
+        "requests_put",
+        "requests_delete",
+        "terminal",
+        "wolfram-alpha",
+        "google-search",
+        "google-search-results-json",
+        "searx-search-results-json",
+        "bing-search",
+        "google-serper",
+        "serpapi",
+        "searx-search",
+        "wikipedia",
+        "human",
+        "news-api",
+        "tmdb-api",
+        "podcast-api",
+        "pal-math",
+        "pal-colored-objects",
+        "llm-math",
+        "open-meteo-api"
+      ],
+      "type": "string",
+      "x-stoplight": {
+        "id": "1p7zll9ag10x4"
+      }
+    },
+    "LLMDependency": {
+      "title": "LLMDependency",
+      "description": "LLM dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "5fxkw6gg72vw1"
+            }
+          },
+          "x-stoplight": {
+            "id": "yi77wk1wwpv84"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string",
+          "x-stoplight": {
+            "id": "v3p4adzdsor80"
+          }
+        },
+        "kind": {
+          "title": "Kind",
+          "default": "LLM",
+          "const": "LLM",
+          "type": "string",
+          "x-stoplight": {
+            "id": "s0epanzte2gg2"
+          }
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string",
+          "x-stoplight": {
+            "id": "5qkkecueen18f"
+          }
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "x-stoplight": {
+        "id": "rojgxnqjtjtwj"
+      }
+    },
+    "LoadToolSpec": {
+      "title": "LoadToolSpec",
+      "description": "LoadTool spec.",
+      "type": "object",
+      "properties": {
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object",
+          "x-stoplight": {
+            "id": "7vm7mjxrati4j"
+          }
+        },
+        "vendor": {
+          "description": "The name of the search tool, e.g. serpapi, google-serper, etc.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/LoadToolVendor",
+              "x-stoplight": {
+                "id": "kwx6an3mlj9mv"
+              }
+            }
+          ],
+          "x-stoplight": {
+            "id": "ai3j9snljj26t"
+          }
+        },
+        "dependencies": {
+          "title": "Dependencies",
+          "description": "Tool dependencies",
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": [
+            {
+              "$ref": "#/definitions/LLMDependency",
+              "x-stoplight": {
+                "id": "nbtv2mvt4j2ra"
+              }
+            }
+          ],
+          "x-stoplight": {
+            "id": "4nljxykn4fjd5"
+          }
+        }
+      },
+      "required": [
+        "vendor",
+        "dependencies"
+      ],
+      "additionalProperties": false,
+      "x-stoplight": {
+        "id": "ahva7lbqouyvy"
+      }
+    }
+  },
+  "x-internal": true
+}

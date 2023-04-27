@@ -1,0 +1,56 @@
+{
+  "title": "LLMDependency",
+  "x-stoplight": {
+    "id": "akssz4efoqjlk"
+  },
+  "description": "LLM dependency schema.",
+  "type": "object",
+  "properties": {
+    "labels": {
+      "title": "Labels",
+      "description": "Labels are useful for filtering and finding objects",
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "x-stoplight": {
+          "id": "xs2uft45osbbj"
+        }
+      },
+      "x-stoplight": {
+        "id": "y06ie9ji1zops"
+      }
+    },
+    "name": {
+      "title": "Name",
+      "description": "Name of the dependency",
+      "type": "string",
+      "x-stoplight": {
+        "id": "xm18v2l1wibb7"
+      }
+    },
+    "kind": {
+      "title": "Kind",
+      "default": "LLM",
+      "const": "LLM",
+      "type": "string",
+      "x-stoplight": {
+        "id": "5k3si6wox30gc"
+      }
+    },
+    "namespace": {
+      "title": "Namespace",
+      "description": "The namespace of the object",
+      "default": "default",
+      "maxLength": 63,
+      "type": "string",
+      "x-stoplight": {
+        "id": "sjp6s82s5b2qs"
+      }
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "additionalProperties": false,
+  "x-internal": true
+}

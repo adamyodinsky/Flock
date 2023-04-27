@@ -1,0 +1,191 @@
+{
+  "title": "LLMSchema",
+  "x-stoplight": {
+    "id": "23fujo09ztn98"
+  },
+  "description": "LLM schema.",
+  "type": "object",
+  "properties": {
+    "namespace": {
+      "title": "Namespace",
+      "description": "The namespace of the object",
+      "maxLength": 63,
+      "type": "string",
+      "x-stoplight": {
+        "id": "dlg4ei8iq58ls"
+      }
+    },
+    "apiVersion": {
+      "title": "Apiversion",
+      "description": "API version",
+      "enum": [
+        "flock/v1"
+      ],
+      "type": "string",
+      "x-stoplight": {
+        "id": "iqzyakptkt7hb"
+      }
+    },
+    "kind": {
+      "title": "Kind",
+      "description": "The kind of the object",
+      "enum": [
+        "LLM"
+      ],
+      "type": "string",
+      "x-stoplight": {
+        "id": "ojit98px9cxz0"
+      }
+    },
+    "metadata": {
+      "$ref": "#/definitions/BaseMetaData",
+      "x-stoplight": {
+        "id": "ha7fk6ysbhxxn"
+      }
+    },
+    "created_at": {
+      "title": "Created At",
+      "description": "Creation timestamp",
+      "type": "string",
+      "format": "date-time",
+      "x-stoplight": {
+        "id": "je6nmij2xzud3"
+      }
+    },
+    "updated_at": {
+      "title": "Updated At",
+      "description": "Last update timestamp",
+      "type": "string",
+      "format": "date-time",
+      "x-stoplight": {
+        "id": "nvgk2yfs2snxa"
+      }
+    },
+    "spec": {
+      "$ref": "#/definitions/LLMSpec",
+      "x-stoplight": {
+        "id": "248lx2vphwn7s"
+      }
+    }
+  },
+  "required": [
+    "namespace",
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "BaseMetaData": {
+      "title": "BaseMetaData",
+      "description": "Base metadata schema.",
+      "type": "object",
+      "properties": {
+        "annotations": {
+          "title": "Annotations",
+          "description": "Annotations are useful for storing additional information",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "ei7sc1kekdrgl"
+            }
+          },
+          "x-stoplight": {
+            "id": "lzglalt3uehn5"
+          }
+        },
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "48xa0x4o8fy4b"
+            }
+          },
+          "x-stoplight": {
+            "id": "qowxbxcm532pm"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the object",
+          "maxLength": 63,
+          "type": "string",
+          "x-stoplight": {
+            "id": "4o4xu0ysrsvsr"
+          }
+        },
+        "description": {
+          "title": "Description",
+          "description": "Description",
+          "maxLength": 255,
+          "type": "string",
+          "x-stoplight": {
+            "id": "qgotwumbdcrqo"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "description"
+      ],
+      "additionalProperties": false,
+      "x-stoplight": {
+        "id": "m9vsajxnxxry9"
+      }
+    },
+    "LLMVendor": {
+      "title": "LLMVendor",
+      "description": "Enum for llm vendors.",
+      "enum": [
+        "ChatOpenAI"
+      ],
+      "type": "string",
+      "x-stoplight": {
+        "id": "y77cvq1qd0aai"
+      }
+    },
+    "LLMSpec": {
+      "title": "LLMSpec",
+      "description": "LLM spec.",
+      "type": "object",
+      "properties": {
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object",
+          "x-stoplight": {
+            "id": "tboad9twnw00h"
+          }
+        },
+        "vendor": {
+          "description": "LLM vendor",
+          "allOf": [
+            {
+              "$ref": "#/definitions/LLMVendor",
+              "x-stoplight": {
+                "id": "pdfh9josz1cxu"
+              }
+            }
+          ],
+          "x-stoplight": {
+            "id": "y9y2eqaflm43y"
+          }
+        }
+      },
+      "required": [
+        "vendor"
+      ],
+      "additionalProperties": false,
+      "x-stoplight": {
+        "id": "820s6efbnu2zr"
+      }
+    }
+  },
+  "x-internal": true
+}

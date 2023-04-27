@@ -1,0 +1,108 @@
+{
+  "title": "VectorStoreSpec",
+  "x-stoplight": {
+    "id": "iyf3qfpj32tvt"
+  },
+  "description": "Vectorstore spec.",
+  "type": "object",
+  "properties": {
+    "options": {
+      "title": "Options",
+      "description": "Resource options",
+      "default": {},
+      "type": "object",
+      "x-stoplight": {
+        "id": "4bg4psc1x6be4"
+      }
+    },
+    "vendor": {
+      "title": "Vendor",
+      "description": "The vendor of the vector store, e.g. Chroma, Pinecone, etc.",
+      "type": "string",
+      "x-stoplight": {
+        "id": "ycczd6citkef0"
+      }
+    },
+    "dependencies": {
+      "title": "Dependencies",
+      "description": "Vectorstore dependencies",
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": [
+        {
+          "$ref": "#/definitions/EmbeddingDependency",
+          "x-stoplight": {
+            "id": "4e98uh8049utf"
+          }
+        }
+      ],
+      "x-stoplight": {
+        "id": "e2eio2nxkqa6j"
+      }
+    }
+  },
+  "required": [
+    "vendor",
+    "dependencies"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "EmbeddingDependency": {
+      "title": "EmbeddingDependency",
+      "description": "Embedding dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "jmnnyg1kwccso"
+            }
+          },
+          "x-stoplight": {
+            "id": "ylz63fjuqfz9o"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string",
+          "x-stoplight": {
+            "id": "4erzvfr0m9jsh"
+          }
+        },
+        "kind": {
+          "title": "Kind",
+          "default": "Embedding",
+          "const": "Embedding",
+          "type": "string",
+          "x-stoplight": {
+            "id": "9kl7k032z9mbi"
+          }
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string",
+          "x-stoplight": {
+            "id": "ow2c6z7dpzbkz"
+          }
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "x-stoplight": {
+        "id": "m2phljoxa4xkz"
+      }
+    }
+  },
+  "x-internal": true
+}
