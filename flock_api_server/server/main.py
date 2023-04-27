@@ -13,7 +13,7 @@
 
 from fastapi import FastAPI
 
-from server.apis.default_api import router as DefaultApiRouter
+from server.apis.flock_api import router as DefaultApiRouter
 from server.apis.flock_api import router as FlockApiRouter
 
 app = FastAPI(

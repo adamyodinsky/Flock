@@ -1,6 +1,5 @@
-from typing import Optional
+from typing import Tuple
 
-from pydantic import BaseModel
 from pymongo import MongoClient
 
 from flock_resource_store.base import ResourceStore
@@ -18,21 +17,45 @@ class MongoResourceStore(ResourceStore):
         self.db = self.client[db_name]
         self.collection = self.db[collection_name]
 
-    def put(self, key, obj) -> None:
-        self.collection.update_one({"_id": key}, {"$set": obj}, upsert=True)
+    def put(self, key, val) -> None:
+        namespace, kind, name = self.parse_key(key)
+        self.collection.update_one(
+            {
+                "namespace": namespace,
+                "kind": kind,
+                "name": name,
+            },
+            {"$set": val},
+            upsert=True,
+        )
 
     def get(self, key):
-        result = self.collection.find_one({"_id": key})
+        namespace, kind, name = self.parse_key(key)
+        result = self.collection.find_one(
+            {
+                "namespace": namespace,
+                "kind": kind,
+                "name": name,
+            },
+        )
         return result if result else None
 
-    def get_model(self, key, schema: BaseModel) -> BaseModel:
-        result = self.get(key)
-        if result:
-            return schema(**result)
-        return None
+    def delete(self, key):
+        namespace, kind, name = self.parse_key(key)
+        result = self.collection.delete_one(
+            {
+                "namespace": namespace,
+                "kind": kind,
+                "name": name,
+            },
+        )
+        return result
 
-    def put_model(self, key, val: BaseModel, ttl: Optional[int] = None):
-        data = val.dict()
-        if ttl:
-            data["_ttl"] = {"$gt": datetime.utcnow() - timedelta(seconds=ttl)}
-        self.put(key, data)
+    def parse_key(self, key: str) -> Tuple[str, str, str]:
+        """Parsing key to namespace, kind, name"""
+
+        keys = key.split("/")
+        namespace = keys[0]
+        kind = keys[1]
+        name = keys[2]
+        return namespace, kind, name
