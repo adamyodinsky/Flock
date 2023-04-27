@@ -1,3 +1,8 @@
+import importlib
+import os
+from typing import Tuple
+
+import flock_schemas
 from flock_schemas.agent import AgentSchema
 from flock_schemas.base import BaseDependency as DependencySchema
 from flock_schemas.base import BaseFlockSchema
@@ -34,3 +39,27 @@ class SchemasFactory:
     def get_schema(kind: Kind) -> BaseFlockSchema:
         """Get schema by kind."""
         return Schemas[kind]
+
+    @staticmethod
+    def load_schemas(schemas_dir: str = "flock_schemas") -> Tuple[dict, dict]:
+        """Load schemas from flock_schemas directory."""
+
+        sub_schemas_map = {}
+        main_schemas_map = {}
+
+        module_dir = os.path.dirname(flock_schemas.__file__)
+
+        for file in os.listdir(module_dir):
+            path = os.path.join(module_dir, file)
+
+            if os.path.isfile(path):
+                if file.endswith(".py") and file != "__init__.py":
+                    module_name = file[:-3]
+                    module = importlib.import_module(f"{schemas_dir}.{module_name}")
+
+                    for key, value in module.export["sub"].items():
+                        sub_schemas_map[key] = value
+
+                    for key, value in module.export["main"].items():
+                        main_schemas_map[key] = value
+        return sub_schemas_map, main_schemas_map
