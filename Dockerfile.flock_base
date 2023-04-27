@@ -25,7 +25,6 @@ WORKDIR /app/flock_agent
 
 RUN poetry install
 
-# RUN pip install ../flock_resource_store
-# RUN pip install ../flock_schemas
-# RUN pip install ../flock_models
+#flock-base
+
 # RUN pyinstaller --onefile flock_agent/main.py
