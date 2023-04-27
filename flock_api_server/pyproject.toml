@@ -4,10 +4,11 @@ version = "0.0.1"
 description = ""
 authors = ["Adam Yodinsky <27074934+adamyodinsky@users.noreply.github.com>"]
 readme = "README.md"
-packages = [{include = "flock_api_server"}]
+packages = [{include = "api_server"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+fastapi = "^0.95.1"
 
 
 [build-system]
