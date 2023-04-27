@@ -4,7 +4,6 @@ version = "0.0.1"
 description = ""
 authors = ["Adam Yodinsky <27074934+adamyodinsky@users.noreply.github.com>"]
 readme = "README.md"
-packages = [{include = "api_server"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
