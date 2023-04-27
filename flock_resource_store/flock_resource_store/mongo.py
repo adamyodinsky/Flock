@@ -6,6 +6,10 @@ from flock_resource_store.base import ResourceStore
 
 
 class MongoResourceStore(ResourceStore):
+    """MongoDB Resource Store"""
+
+    _shared_state = {}
+
     def __init__(
         self,
         db_name: str,
@@ -14,13 +18,13 @@ class MongoResourceStore(ResourceStore):
         port: int = 27017,
         client: Optional[MongoClient] = None,
     ):
-        if client:
-            self.client = client
-        else:
-            self.client = MongoClient(host, port)
+        # Implement the Borg design pattern
+        self.__dict__ = self._shared_state
 
-        self.db = self.client[db_name]  # pylint: disable=invalid-name
-        self.collection = self.db[collection_name]
+        if not self._shared_state:
+            self.client = client or MongoClient(host, port)
+            self.db = self.client[db_name]  # pylint: disable=invalid-name
+            self.collection = self.db[collection_name]
 
     def put(self, key, val) -> None:
         namespace, kind, name = self.parse_key(key)

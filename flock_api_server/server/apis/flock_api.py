@@ -7,6 +7,7 @@ from fastapi import (  # Cookie,; Depends,; Header,; Query,; Response,; Security
     Body,
     Path,
 )
+from flock_resource_store.mongo import MongoResourceStore
 
 from server.models.resource_data import ResourceData
 from server.models.responses.internal_server_error import InternalServerError
@@ -42,7 +43,6 @@ async def get_resource(
     name: str = Path(None, description="Name of a resource"),
 ) -> ResourceFetched:
     """Get a resource"""
-    ...
 
 
 @router.get(
