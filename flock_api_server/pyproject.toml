@@ -12,6 +12,7 @@ fastapi = {extras = ["all"], version = "^0.95.1"}
 pydantic = "^1.10.7"
 flock-schemas = {path = "../flock_schemas", develop = true}
 flock-resource-store = {path = "../flock_resource_store", develop = true}
+flock-models = {path = "../flock_models", develop = true}
 
 
 [build-system]

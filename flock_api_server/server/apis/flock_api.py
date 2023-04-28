@@ -10,6 +10,8 @@ from fastapi import (  # Cookie,; Depends,; Header,; Query,; Response,; Security
     Path,
 )
 from flock_resource_store.mongo import MongoResourceStore, ResourceStore
+from flock_schemas import SchemasFactory
+from 
 
 from server.models.responses.internal_server_error import InternalServerError
 from server.models.responses.resource_accepted import ResourceAccepted
@@ -165,7 +167,7 @@ def get_router(resource_store: MongoResourceStore) -> APIRouter:
         namespace: str = Path(..., description="Namespace of resource"),
         kind: str = Path(..., description="Kind of resource"),
         name: str = Path(..., description="Name of a resource"),
-        resource_data: object = Body(..., description=""),
+        resource_data: dict = Body(..., description=""),
         resource_store: ResourceStore = Depends(lambda: resource_store),
     ) -> ResourceCreated:
         """Create or update a resource"""
@@ -178,6 +180,10 @@ def get_router(resource_store: MongoResourceStore) -> APIRouter:
         #         status_code=400,
         #         detail="Path parameters do not match resource data",
         #     )
+
+        # validate resource schema
+
+        SchemasFactory.get_schema(kind).validate(resource_data)
         resource_store.put(
             key=f"{resource_data['namespace']}/{resource_data['kind']}/{resource_data['name']}",
             val=resource_data,
