@@ -9,9 +9,9 @@ from fastapi import (  # Cookie,; Depends,; Header,; Query,; Response,; Security
     HTTPException,
     Path,
 )
+from flock_models.builder import ResourceBuilder
 from flock_resource_store.mongo import MongoResourceStore, ResourceStore
 from flock_schemas import SchemasFactory
-from 
 
 from server.models.responses.internal_server_error import InternalServerError
 from server.models.responses.resource_accepted import ResourceAccepted
@@ -169,6 +169,7 @@ def get_router(resource_store: MongoResourceStore) -> APIRouter:
         name: str = Path(..., description="Name of a resource"),
         resource_data: dict = Body(..., description=""),
         resource_store: ResourceStore = Depends(lambda: resource_store),
+        resource_builder: ResourceBuilder = Depends(lambda: resource_builder),
     ) -> ResourceCreated:
         """Create or update a resource"""
         # try:
@@ -182,8 +183,15 @@ def get_router(resource_store: MongoResourceStore) -> APIRouter:
         #     )
 
         # validate resource schema
-
         SchemasFactory.get_schema(kind).validate(resource_data)
+        # validate resource building
+        resource_builder.build_resource(resource_data)
+        # store resource
+        resource_store.put(
+            key=f"{namespace}/{kind}/{name}",
+            val=resource_data,
+        )
+
         resource_store.put(
             key=f"{resource_data['namespace']}/{resource_data['kind']}/{resource_data['name']}",
             val=resource_data,
