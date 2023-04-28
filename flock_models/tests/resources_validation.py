@@ -3,9 +3,8 @@
 import os
 from typing import cast
 
-import flock_schemas as schemas
 from flock_resource_store import ResourceStoreFactory
-from flock_schemas import Kind
+from flock_schemas import SchemasFactory
 
 from flock_models import resources
 from flock_models.builder import ResourceBuilder
@@ -36,42 +35,50 @@ resource_store = ResourceStoreFactory.get_resource_store(
 resource_builder = ResourceBuilder(resource_store=resource_store)
 
 
-def test_building_resources(kind, file):
+def test_building_resources(file):
     """Test building resources from yaml files"""
 
     print(f"{file} - ", end="", flush=True)
 
-    if kind not in Kind.__members__:
-        kind = Kind.Custom
-
-    path = f"{PATH_TO_SCHEMAS}/{file}"
-    schema = schemas.Schemas[kind]
-
     # test loading from yaml file
-    manifest = resource_store.load_yaml(path, schema)
-    if manifest.kind != kind and kind != Kind.Custom:
-        raise AssertionError(f"kind is not {kind} as expected in the manifest")
+    path = f"{PATH_TO_SCHEMAS}/{file}"
+    manifest = resource_store.load_file(path)  # type: ignore
+    manifest_kind = manifest["kind"]
+
+    # test schema validation
+    schema_cls = SchemasFactory.get_schema(manifest_kind)
+    schema_instance = schema_cls.validate(manifest)
+
+    # asset schema kind
+    if manifest_kind not in SchemasFactory.SCHEMAS_LIST:
+        print(
+            f"{schema_cls.__name__} Class as validator - ",
+            end="",
+            flush=True,
+        )
 
     # test save and load from resource store
-    key = f"default/{manifest.kind}/{manifest.metadata.name}"
-    resource_store.put_model(key=key, val=manifest)
-    manifest: schema = resource_store.get_model(key=key, schema=schema)
+    key = f"default/{schema_instance.kind}/{schema_instance.metadata.name}"
+    resource_store.put(key=key, val=manifest)
+    manifest = resource_store.get(key=key)
+    schema_instance = schema_cls.validate(manifest)
 
+    # test building resource
     resource = resource_builder.build_resource(manifest)
 
-    print(f"{manifest.kind} - OK")
+    print(f"{schema_instance.kind} - OK")
     return resource
 
 
 def run_build_tests():
     """Run all tests"""
-    for kind, file in RESOURCES_FILES.items():
-        test_building_resources(kind, file)
+    for _, file in RESOURCES_FILES.items():
+        test_building_resources(file)
 
     agent: resources.AgentResource = cast(
-        resources.AgentResource, test_building_resources("Agent", "agent.yaml")
+        resources.AgentResource, test_building_resources("agent.yaml")
     )
-    baby_agi = cast(BabyAGIAgent, test_building_resources("BabyAGI", "baby_agi.yaml"))
+    baby_agi = cast(BabyAGIAgent, test_building_resources("baby_agi.yaml"))
 
     try:
         agent.resource.run("Who is the current prime minister of israel?")

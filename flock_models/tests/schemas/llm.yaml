@@ -2,7 +2,6 @@
 apiVersion: flock/v1
 kind: LLM
 namespace: default
-# uuid: b70bb61d-6710-48bd-85b0-f32c91f1eed1
 metadata:
   name: my-openai-llm
   description: openai language model

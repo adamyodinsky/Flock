@@ -15,50 +15,60 @@ class FSResourceStore(ResourceStore):
     def __init__(self, resource_prefix: str):
         self.resource_prefix = resource_prefix
 
-    def get(self, key) -> str:
+    def get(self, key) -> dict:
+        val = None
         key = f"{self.resource_prefix}/{key}"
 
-        with open(file=key, mode="r") as f:
-            return f.read()
+        with open(file=key, mode="r", encoding="utf-8") as f:
+            val = f.read()
+            val = json.loads(val)
 
-    def put(self, key, val: str):
+        return val
+
+    def put(self, key, val: dict):
         key = f"{self.resource_prefix}/{key}"
         if not os.path.exists(os.path.dirname(key)):
             os.makedirs(os.path.dirname(key))
 
-        with open(file=key, mode="w") as f:
-            f.write(val)
+        with open(file=key, mode="w", encoding="utf-8") as f:
+            json.dump(val, f, indent=2)
 
-    def get_model(self, key, schema: BaseModel) -> BaseModel:
+    # def get_model(self, key, schema: BaseModel) -> BaseModel:
+    #     """Load a resource from the store."""
+
+    #     key = f"{self.resource_prefix}/{key}"
+    #     return schema.parse_file(key)
+
+    # def put_model(self, key, val: BaseModel, _=None):
+    #     """Save a resource to the store."""
+
+    #     key = f"{self.resource_prefix}/{key}"
+    #     json_instance = val.json().encode("utf-8")
+
+    #     if not os.path.exists(os.path.dirname(key)):
+    #         os.makedirs(os.path.dirname(key))
+
+    #     with open(file=key, mode="wb") as f:
+    #         f.write(json_instance)
+
+    def load_file(self, path, file_type="yaml") -> dict:
         """Load a resource from the store."""
 
-        key = f"{self.resource_prefix}/{key}"
-        return schema.parse_file(key)
+        val = None
 
-    def put_model(self, key, val: BaseModel, _=None):
-        """Save a resource to the store."""
+        with open(file=path, mode="r", encoding="utf-8") as f:
+            val = f.read()
 
-        key = f"{self.resource_prefix}/{key}"
-        json_instance = val.json().encode("utf-8")
+        if file_type == "yaml" or file_type == "yml":
+            val = yaml.load(val, Loader=yaml.FullLoader)
+        elif file_type == "json":
+            val = json.loads(val)
+        else:
+            raise ValueError(
+                f"Invalid file type. Expected [yaml, yml, json], got {file_type}"
+            )
 
-        if not os.path.exists(os.path.dirname(key)):
-            os.makedirs(os.path.dirname(key))
-
-        with open(file=key, mode="wb") as f:
-            f.write(json_instance)
-
-    def load_yaml(self, key, schema: BaseModel) -> BaseModel:
-        """Load a resource from the store."""
-
-        json_instance = self.yaml_to_json(key)
-        return schema.parse_raw(json_instance, content_type="application/json")
-
-    def yaml_to_json(self, file_path: str) -> str:
-        """Convert yaml file to json string."""
-
-        with open(file_path, "r", encoding="utf-8") as file:
-            data = yaml.safe_load(file)
-            return json.dumps(data)
+        return val
 
     def get_many(self, key):
         """Get many resources with the same namespace and kind"""

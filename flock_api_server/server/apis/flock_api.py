@@ -179,7 +179,7 @@ def get_router(resource_store: MongoResourceStore) -> APIRouter:
         #         detail="Path parameters do not match resource data",
         #     )
         resource_store.put(
-            key=f"{resource_data.namespace}/{resource_data.kind}/{resource_data.name}",
+            key=f"{resource_data['namespace']}/{resource_data['kind']}/{resource_data['name']}",
             val=resource_data,
         )
         return ResourceCreated(data=resource_data)

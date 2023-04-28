@@ -18,27 +18,43 @@ from flock_schemas.splitter import SplitterSchema
 from flock_schemas.vectorstore import VectorStoreSchema
 from flock_schemas.vectorstore_qa_tool import VectorStoreQAToolSchema
 
-Schemas = {
-    Kind.Embedding: EmbeddingSchema,
-    Kind.LLM: LLMSchema,
-    Kind.VectorStore: VectorStoreSchema,
-    Kind.VectorStoreQATool: VectorStoreQAToolSchema,
-    Kind.Agent: AgentSchema,
-    Kind.LoadTool: LoadToolSchema,
-    Kind.Splitter: SplitterSchema,
-    Kind.PromptTemplate: PromptTemplateSchema,
-    Kind.LLMTool: LLMToolSchema,
-    Kind.Custom: CustomSchema,
-}
-
 
 class SchemasFactory:
     """Class for schemas factory."""
 
+    SCHEMAS_MAP = {
+        "Embedding": EmbeddingSchema,
+        "LLM": LLMSchema,
+        "VectorStore": VectorStoreSchema,
+        "VectorStoreQATool": VectorStoreQAToolSchema,
+        "Agent": AgentSchema,
+        "LoadTool": LoadToolSchema,
+        "Splitter": SplitterSchema,
+        "PromptTemplate": PromptTemplateSchema,
+        "LLMTool": LLMToolSchema,
+        "Custom": CustomSchema,
+    }
+
+    SCHEMAS_LIST = [
+        "Embedding",
+        "LLM",
+        "VectorStore",
+        "VectorStoreQATool",
+        "Agent",
+        "LoadTool",
+        "Splitter",
+        "PromptTemplate",
+        "LLMTool",
+        "Custom",
+    ]
+
     @staticmethod
-    def get_schema(kind: Kind) -> BaseFlockSchema:
+    def get_schema(kind: str) -> BaseFlockSchema:
         """Get schema by kind."""
-        return Schemas[kind]
+        if kind in SchemasFactory.SCHEMAS_LIST:
+            return SchemasFactory.SCHEMAS_MAP[kind]
+        else:
+            return CustomSchema
 
     @staticmethod
     def load_schemas(schemas_dir: str = "flock_schemas") -> Tuple[dict, dict]:

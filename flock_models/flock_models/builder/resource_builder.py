@@ -1,12 +1,8 @@
 """Resource builder."""
 
-from typing import cast
 
-import flock_schemas as schemas
 from flock_resource_store import ResourceStore
-from flock_schemas.base import BaseFlockSchema
-from flock_schemas.base import BaseToolDependency as ToolDependencySchema
-
+from flock_schemas import SchemasFactory
 from flock_models.builder.plugins_loader import load_plugins
 from flock_models.resources import Resource, Resources
 
@@ -20,40 +16,39 @@ class ResourceBuilder:
         self.plugins = load_plugins("plugins")
         self.merged_resources = {**self.plugins, **self.resources}
 
-    def __build_recursive(
+    def __build_dependencies_recursively(
         self, dependencies_section, dependencies: dict[str, Resource]
     ) -> None:
         """Build resource from manifest. recursively build dependencies."""
 
         for dependency in dependencies_section:
             dependency_key = (
-                f"{dependency.namespace}/{dependency.kind}/{dependency.name}"
+                f"{dependency['namespace']}/{dependency['kind']}/{dependency['name']}"
             )
 
-            dependency_manifest = self.resource_store.get_model(
-                dependency_key, schemas.Schemas[dependency.kind]
-            )
+            dependency_manifest = self.resource_store.get(dependency_key)
+            dependency_resource = self.build_resource(dependency_manifest)
+            dependencies[dependency["kind"]] = dependency_resource
 
-            dependency_resource = self.build_resource(
-                cast(BaseFlockSchema, dependency_manifest)
-            )
-            dependencies[dependency.kind] = dependency_resource
-
-    def build_resource(self, manifest: schemas.BaseFlockSchema) -> Resource:
+    def build_resource(self, manifest: dict) -> Resource:
         """Build resource from manifest. recursively build dependencies."""
 
+        manifest_kind = manifest["kind"]
         dependencies_bucket: dict[str, Resource] = {}
-        dependencies_section = getattr(manifest.spec, "dependencies", [])
-        self.__build_recursive(dependencies_section, dependencies_bucket)
+        dependencies_section = manifest["spec"].get("dependencies", [])
+
+        self.__build_dependencies_recursively(dependencies_section, dependencies_bucket)
 
         tools_bucket: dict[str, Resource] = {}
-        tools_section: ToolDependencySchema = getattr(
-            manifest.spec, "tools", cast(ToolDependencySchema, [])
-        )
-        self.__build_recursive(tools_section, tools_bucket)
+        tools_section = manifest["spec"].get("tools", [])
 
-        resource = self.merged_resources[manifest.kind](
-            manifest=manifest,
+        self.__build_dependencies_recursively(tools_section, tools_bucket)
+
+        schema_cls = SchemasFactory.get_schema(manifest_kind)
+        schema_instance = schema_cls.validate(manifest)
+
+        resource = self.merged_resources[manifest_kind](
+            manifest=schema_instance,
             dependencies=dependencies_bucket,
             tools=list(tools_bucket.values()),
         )

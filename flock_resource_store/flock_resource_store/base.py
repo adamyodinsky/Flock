@@ -10,9 +10,13 @@ class ResourceStore(metaclass=abc.ABCMeta):
         """Save a resource to the store."""
 
     @abc.abstractmethod
-    def get(self, key):
+    def get(self, key) -> dict:
         """Load a resource from the store."""
 
     @abc.abstractmethod
     def get_many(self, key):
         """Get many resources with the same namespace and kind"""
+
+    @abc.abstractmethod
+    def load_file(self, path, file_type="yaml") -> dict:
+        """Load a file from the file system."""
