@@ -1,5 +1,8 @@
 """Resources store base class. This class is used to save and load entities."""
 import abc
+import json
+
+import yaml
 
 
 class ResourceStore(metaclass=abc.ABCMeta):
@@ -17,6 +20,21 @@ class ResourceStore(metaclass=abc.ABCMeta):
     def get_many(self, key):
         """Get many resources with the same namespace and kind"""
 
-    @abc.abstractmethod
     def load_file(self, path, file_type="yaml") -> dict:
-        """Load a file from the file system."""
+        """Load a resource from the store."""
+
+        val = None
+
+        with open(file=path, mode="r", encoding="utf-8") as f:
+            val = f.read()
+
+        if file_type == "yaml" or file_type == "yml":
+            val = yaml.load(val, Loader=yaml.FullLoader)
+        elif file_type == "json":
+            val = json.loads(val)
+        else:
+            raise ValueError(
+                f"Invalid file type. Expected [yaml, yml, json], got {file_type}"
+            )
+
+        return val
