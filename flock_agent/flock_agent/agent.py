@@ -6,14 +6,13 @@ import click
 from flock_models.builder.resource_builder import ResourceBuilder
 from flock_models.resources.base import Agent
 from flock_resource_store import ResourceStoreFactory
-from flock_schemas.custom import CustomSchema
 from pydantic import ValidationError
 
 
 class FlockAgent:
     """Flock Agent class"""
 
-    def __init__(self, manifest: CustomSchema):
+    def __init__(self, manifest: dict):
         home_dir = os.path.expanduser("~")
 
         self.config = {
@@ -29,7 +28,7 @@ class FlockAgent:
                 store_type=self.config["store_type"],
                 key_prefix=self.config["key_prefix"],
             )
-            self.manifest = CustomSchema(**manifest)  # type: ignore
+            self.manifest = manifest
             self.builder = ResourceBuilder(resource_store=self.resource_store)
             self.agent: Agent = cast(
                 Agent, self.builder.build_resource(manifest=self.manifest)
