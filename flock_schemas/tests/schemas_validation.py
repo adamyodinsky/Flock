@@ -4,7 +4,7 @@ from typing import Any, Dict, List
 import yaml
 from pydantic import ValidationError
 
-from flock_schemas import Schemas
+from flock_schemas import SchemasFactory
 
 SCHEMA_FILES = {
     "VectorStore": "vectorstore.yaml",
@@ -24,8 +24,8 @@ def validate_crd(_kind, _crd: List[Dict[str, Any]]):
     """Validate all CRDs in a file."""
 
     try:
-        scheme = Schemas[_kind]
-        scheme(**_crd)
+        scheme = SchemasFactory.get_schema(_kind)
+        scheme.validate(_crd)
     except ValidationError as error:
         print(f"Error validating {_kind}:")
         print(error.json())
