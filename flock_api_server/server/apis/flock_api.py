@@ -27,36 +27,38 @@ from server.models.responses.resources_fetched import ResourcesFetched
 # from server.modelsextra_models import TokenModel  # noqa: F401
 
 
-def get_router(resource_store: MongoResourceStore) -> APIRouter:
+def get_router(
+    resource_store: MongoResourceStore, resource_builder: ResourceBuilder
+) -> APIRouter:
     """Get API router"""
 
     router = APIRouter()
 
-    @router.get(
-        "/resource/{namespace}/{kind}/{name}",
-        responses={
-            200: {"model": ResourceFetched, "description": "Resource Fetched"},
-            404: {"model": ResourceNotFound, "description": "Resource Not Found"},
-            500: {"model": InternalServerError, "description": "Internal Server Error"},
-        },
-        tags=["flock"],
-        summary="get-resource",
-        response_model_by_alias=True,
-    )
-    async def get_resource(
-        namespace: str = Path(..., description="Namespace of resource"),
-        kind: str = Path(..., description="Kind of resource"),
-        name: str = Path(..., description="Name of a resource"),
-        resource_store: ResourceStore = Depends(lambda: resource_store),
-    ) -> ResourceFetched:
-        """Get a resource"""
-        resource = resource_store.get(f"{namespace}/{kind}/{name}")
-        if resource is None:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Did not find {namespace}/{kind}/{name}",
-            )
-        return ResourceFetched(data=resource)
+    # @router.get(
+    #     "/resource/{namespace}/{kind}/{name}",
+    #     responses={
+    #         200: {"model": ResourceFetched, "description": "Resource Fetched"},
+    #         404: {"model": ResourceNotFound, "description": "Resource Not Found"},
+    #         500: {"model": InternalServerError, "description": "Internal Server Error"},
+    #     },
+    #     tags=["flock"],
+    #     summary="get-resource",
+    #     response_model_by_alias=True,
+    # )
+    # async def get_resource(
+    #     namespace: str = Path(..., description="Namespace of resource"),
+    #     kind: str = Path(..., description="Kind of resource"),
+    #     name: str = Path(..., description="Name of a resource"),
+    #     resource_store: ResourceStore = Depends(lambda: resource_store),
+    # ) -> ResourceFetched:
+    #     """Get a resource"""
+    #     resource = resource_store.get(f"{namespace}/{kind}/{name}")
+    #     if resource is None:
+    #         raise HTTPException(
+    #             status_code=404,
+    #             detail=f"Did not find {namespace}/{kind}/{name}",
+    #         )
+    #     return ResourceFetched(data=resource)
 
     # @router.get(
     #     "/resource/{namespace}/{kind}",
@@ -170,32 +172,39 @@ def get_router(resource_store: MongoResourceStore) -> APIRouter:
         resource_data: dict = Body(..., description=""),
         resource_store: ResourceStore = Depends(lambda: resource_store),
         resource_builder: ResourceBuilder = Depends(lambda: resource_builder),
-    ) -> ResourceCreated:
+    ):
         """Create or update a resource"""
-        # try:
-        #     assert namespace == resource_data.namespace
-        #     assert kind == resource_data.kind
-        #     assert name == resource_data.name
-        # except AssertionError:
-        #     raise HTTPException(
-        #         status_code=400,
-        #         detail="Path parameters do not match resource data",
-        #     )
 
-        # validate resource schema
-        SchemasFactory.get_schema(kind).validate(resource_data)
-        # validate resource building
-        resource_builder.build_resource(resource_data)
-        # store resource
-        resource_store.put(
-            key=f"{namespace}/{kind}/{name}",
-            val=resource_data,
-        )
+        try:
+            assert namespace == resource_data["namespace"]
+            assert kind == resource_data["kind"]
+            assert name == resource_data["metadata"]["name"]
+        except AssertionError:
+            return ResourceBadRequest(
+                details=[
+                    "Resource data does not match parameters",
+                    f"Parameters: {namespace}/{kind}/{name}",
+                    f"Schema: {resource_data['namespace']}/{resource_data['kind']}/{resource_data['metadata']['name']}",
+                ],
+            )
 
-        resource_store.put(
-            key=f"{resource_data['namespace']}/{resource_data['kind']}/{resource_data['name']}",
-            val=resource_data,
-        )
-        return ResourceCreated(data=resource_data)
+        try:
+            # validate resource building
+            resource_builder.build_resource(resource_data)
+            # store resource
+            resource_store.put(
+                key=f"{namespace}/{kind}/{name}",
+                val=resource_data,
+            )
+        except Exception as error:  # pylint: disable=broad-except
+            return InternalServerError(
+                details=[
+                    "Failed to build resource",
+                    f"Error: {str(error)}",
+                ],
+            )
+
+        schema_instance = SchemasFactory.get_schema(kind).validate(resource_data)
+        return ResourceCreated(data=schema_instance)
 
     return router

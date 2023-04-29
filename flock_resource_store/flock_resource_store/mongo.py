@@ -1,3 +1,4 @@
+import os
 from typing import Optional, Tuple
 
 from pymongo import MongoClient
@@ -22,7 +23,12 @@ class MongoResourceStore(ResourceStore):
         self.__dict__ = self._shared_state
 
         if not self._shared_state:
-            self.client = client or MongoClient(host, port)
+            self.client = client or MongoClient(
+                host=host,
+                port=port,
+                username=os.environ.get("MONGO_USERNAME"),
+                password=os.environ.get("MONGO_PASSWORD"),
+            )
             self.db = self.client[db_name]  # pylint: disable=invalid-name
             self.collection = self.db[collection_name]
 

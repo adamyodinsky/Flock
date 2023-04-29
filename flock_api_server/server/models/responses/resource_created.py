@@ -4,9 +4,10 @@ from __future__ import annotations
 
 from typing import Literal
 
+from flock_schemas import BaseFlockSchema
 from pydantic import BaseModel, Field
 
-from server.models.status_code import Code, Message, Status, ResourceType
+from server.models.status_code import Code, Message, Status
 
 
 class ResourceCreated(BaseModel):
@@ -19,7 +20,7 @@ class ResourceCreated(BaseModel):
         default=Status.SUCCESS, description="Status of the response"
     )
     code: Literal[Code.OK] = Field(default=Code.OK, description="HTTP status codes")
-    data: ResourceType = Field(..., description="Data of the response")
+    data: BaseFlockSchema = Field(..., description="Data of the response")
 
 
 ResourceCreated.update_forward_refs()

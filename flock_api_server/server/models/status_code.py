@@ -1,9 +1,8 @@
 """Status codes for the API"""
 
 from enum import Enum
-from typing import Union
 
-import flock_schemas
+from flock_schemas import BaseFlockSchema
 
 
 class Code(str, Enum):
@@ -36,6 +35,7 @@ class Message(str, Enum):
     NOT_FOUND = "Resource not found"
     DELETED = "Resource deleted successfully"
     UPDATED = "Resource updated successfully"
+    ACCEPTED = "Resource accepted successfully"
     BAD_REQUEST = "Bad request"
     UNAUTHORIZED = "Unauthorized"
     FORBIDDEN = "Forbidden"
@@ -43,16 +43,18 @@ class Message(str, Enum):
     INTERNAL_SERVER_ERROR = "Internal server error"
 
 
-class ResourceType(str, Enum):
-    """Resource type"""
+ResourceType = BaseFlockSchema
+# class ResourceType(str, Enum):
+#     """Resource type"""
 
-    AgentSchema = (flock_schemas.AgentSchema,)
-    EmbeddingSchema = (flock_schemas.EmbeddingSchema,)
-    LLMSchema = (flock_schemas.LLMSchema,)
-    LLMToolSchema = (flock_schemas.LLMToolSchema,)
-    LoadToolSchema = (flock_schemas.LoadToolSchema,)
-    PromptTemplateSchema = (flock_schemas.PromptTemplateSchema,)
-    SplitterSchema = (flock_schemas.SplitterSchema,)
-    VectorStoreSchema = (flock_schemas.VectorStoreSchema,)
-    VectorStoreQAToolSchema = (flock_schemas.VectorStoreQAToolSchema,)
-    CustomSchema = (flock_schemas.CustomSchema,)
+#     AgentSchema = (flock_schemas.AgentSchema,)
+#     EmbeddingSchema = (flock_schemas.EmbeddingSchema,)
+#     LLMSchema = (flock_schemas.LLMSchema,)
+#     LLMToolSchema = (flock_schemas.LLMToolSchema,)
+#     LoadToolSchema = (flock_schemas.LoadToolSchema,)
+#     PromptTemplateSchema = (flock_schemas.PromptTemplateSchema,)
+#     SplitterSchema = (flock_schemas.SplitterSchema,)
+#     VectorStoreSchema = (flock_schemas.VectorStoreSchema,)
+#     VectorStoreQAToolSchema = (flock_schemas.VectorStoreQAToolSchema,)
+#     CustomSchema = (flock_schemas.CustomSchema,)
+#     BaseFlockSchema = (flock_schemas.BaseFlockSchema,)
