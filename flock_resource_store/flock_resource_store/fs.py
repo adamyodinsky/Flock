@@ -18,8 +18,8 @@ class FSResourceStore(ResourceStore):
         self.__dict__ = self._shared_state
 
         # Check env vars
-        required_vars = ["FLOCK_RESOURCE_STORE_PATH"]
-        optional_vars = []
+        required_vars = []
+        optional_vars = ["FLOCK_RESOURCE_STORE_PATH"]
 
         check_env_vars(required_vars, optional_vars)
 
