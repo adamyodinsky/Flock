@@ -841,6 +841,23 @@ docs = ["furo (>=2023.3.27)", "sphinx (>=6.1.3)", "sphinx-autodoc-typehints (>=1
 testing = ["covdefaults (>=2.3)", "coverage (>=7.2.3)", "diff-cover (>=7.5)", "pytest (>=7.3.1)", "pytest-cov (>=4)", "pytest-mock (>=3.10)", "pytest-timeout (>=2.1)"]
 
 [[package]]
+name = "flock-common"
+version = "0.1.0"
+description = ""
+category = "main"
+optional = false
+python-versions = "^3.9"
+files = []
+develop = true
+
+[package.dependencies]
+python-dotenv = "^1.0.0"
+
+[package.source]
+type = "directory"
+url = "../flock_common"
+
+[[package]]
 name = "flock-models"
 version = "0.0.1"
 description = ""
@@ -4158,4 +4175,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.12"
-content-hash = "fa8eb23533bee5d6841733566964f81b5459316b53e67be4a0ba8e503ce4cdd8"
+content-hash = "ac8f9c48114c3789d8fca972c0cdb16686fdb8f59d375c19d029234110a9d7d7"

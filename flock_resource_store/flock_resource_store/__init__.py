@@ -13,7 +13,7 @@ class ResourceStoreFactory:
     Stores = {"fs": FSResourceStore, "mongo": MongoResourceStore}
 
     @staticmethod
-    def get_resource_store(store_type: str, **kwargs) -> ResourceStore:
+    def get_resource_store(store_type: str = "fs", **kwargs) -> ResourceStore:
         """Get a resource store based on the store type"""
 
         # Check env vars
