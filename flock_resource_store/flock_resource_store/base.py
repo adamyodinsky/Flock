@@ -20,13 +20,14 @@ class ResourceStore(metaclass=abc.ABCMeta):
     def get_many(self, key):
         """Get many resources with the same namespace and kind"""
 
-    def load_file(self, path, file_type="yaml") -> dict:
+    @staticmethod
+    def load_file(path, file_type="yaml") -> dict:
         """Load a resource from the store."""
 
         val = None
 
-        with open(file=path, mode="r", encoding="utf-8") as f:
-            val = f.read()
+        with open(file=path, mode="r", encoding="utf-8") as file:
+            val = file.read()
 
         if file_type == "yaml" or file_type == "yml":
             val = yaml.load(val, Loader=yaml.FullLoader)

@@ -15,7 +15,7 @@ install:
 
 validate-resources:
 	@echo "Validating resources"
-	@poetry run python tests/resources_validation.py
+	@FLOCK_RESOURCE_STORE_PATH="/Users/adamyodinsky/.flock/resource_store" poetry run python tests/resources_validation.py
 
 format:
 	@echo "Formatting code"

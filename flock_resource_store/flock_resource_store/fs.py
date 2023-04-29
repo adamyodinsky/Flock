@@ -3,8 +3,7 @@
 import json
 import os
 
-import yaml
-from pydantic import BaseModel
+from flock_common import check_env_vars
 
 from flock_resource_store.base import ResourceStore
 
@@ -12,8 +11,21 @@ from flock_resource_store.base import ResourceStore
 class FSResourceStore(ResourceStore):
     """Entity store class. This class is used to save and load resources to and from the file system."""
 
-    def __init__(self, resource_prefix: str):
-        self.resource_prefix = resource_prefix
+    _shared_state = {}
+
+    def __init__(self, path: str = "/tmp/.flock/resource_store"):
+        # Implement the Borg design pattern
+        self.__dict__ = self._shared_state
+
+        # Check env vars
+        required_vars = ["FLOCK_RESOURCE_STORE_PATH"]
+        optional_vars = []
+
+        check_env_vars(required_vars, optional_vars)
+
+        # Initialize the client and db
+        if not self._shared_state:
+            self.resource_prefix = os.environ.get("FLOCK_RESOURCE_STORE_PATH", path)
 
     def get(self, key) -> dict:
         val = None

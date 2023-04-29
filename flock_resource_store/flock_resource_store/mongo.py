@@ -1,6 +1,7 @@
 import os
 from typing import Optional, Tuple
 
+from flock_common import check_env_vars
 from pymongo import MongoClient
 
 from flock_resource_store.base import ResourceStore
@@ -13,8 +14,8 @@ class MongoResourceStore(ResourceStore):
 
     def __init__(
         self,
-        db_name: str,
-        collection_name: str,
+        db_name: str = "flock_db",
+        collection_name: str = "flock_resources",
         host: str = "localhost",
         port: int = 27017,
         client: Optional[MongoClient] = None,
@@ -22,6 +23,12 @@ class MongoResourceStore(ResourceStore):
         # Implement the Borg design pattern
         self.__dict__ = self._shared_state
 
+        # Check env vars
+        required_vars = ["MONGO_USERNAME", "MONGO_PASSWORD"]
+        optional_vars = ["COLLECTION_NAME", "DB_NAME", "HOST", "PORT"]
+        check_env_vars(required_vars, optional_vars)
+
+        # Initialize the client and db
         if not self._shared_state:
             self.client = client or MongoClient(
                 host=host,
@@ -29,8 +36,12 @@ class MongoResourceStore(ResourceStore):
                 username=os.environ.get("MONGO_USERNAME"),
                 password=os.environ.get("MONGO_PASSWORD"),
             )
-            self.db = self.client[db_name]  # pylint: disable=invalid-name
-            self.collection = self.db[collection_name]
+            self.db = self.client[  # pylint: disable=invalid-name
+                os.environ.get("DB_NAME", db_name)
+            ]
+            self.collection = self.db[
+                os.environ.get("COLLECTION_NAME", collection_name)
+            ]
 
     def put(self, key, val) -> None:
         namespace, kind, name = self.parse3(key)

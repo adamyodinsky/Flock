@@ -10,8 +10,9 @@ from fastapi import (  # Cookie,; Depends,; Header,; Query,; Response,; Security
     Path,
 )
 from flock_models.builder import ResourceBuilder
-from flock_resource_store.mongo import MongoResourceStore, ResourceStore
+from flock_resource_store.mongo import ResourceStore
 from flock_schemas import SchemasFactory
+from pydantic import ValidationError
 
 from server.models.responses.internal_server_error import InternalServerError
 from server.models.responses.resource_accepted import ResourceAccepted
@@ -28,7 +29,7 @@ from server.models.responses.resources_fetched import ResourcesFetched
 
 
 def get_router(
-    resource_store: MongoResourceStore, resource_builder: ResourceBuilder
+    resource_store: ResourceStore, resource_builder: ResourceBuilder
 ) -> APIRouter:
     """Get API router"""
 
@@ -104,7 +105,7 @@ def get_router(
     #     ...
 
     # @router.delete(
-    #     "/resource/{namespace}/{kind}/{name}",
+    #     path="/resource/{namespace}/{kind}/{name}",
     #     responses={
     #         204: {"model": ResourceDeleted, "description": "Resource Deleted"},
     #         400: {"model": ResourceBadRequest, "description": "Resource Bad Request"},
@@ -124,7 +125,7 @@ def get_router(
     #     ...
 
     # @router.post(
-    #     "/resource/{namespace}/{kind}/{name}",
+    #     path="/resource/{namespace}/{kind}/{name}",
     #     responses={
     #         201: {"model": ResourceCreated, "description": "Resource Created"},
     #         202: {"model": ResourceAccepted, "description": "Resource Accepted"},
@@ -149,7 +150,7 @@ def get_router(
     #     ...
 
     @router.put(
-        "/resource/{namespace}/{kind}/{name}",
+        path="/resource/{namespace}/{kind}/{name}",
         responses={
             201: {"model": ResourceCreated, "description": "Resource Created"},
             202: {"model": ResourceAccepted, "description": "Resource Accepted"},
@@ -171,7 +172,6 @@ def get_router(
         name: str = Path(..., description="Name of a resource"),
         resource_data: dict = Body(..., description=""),
         resource_store: ResourceStore = Depends(lambda: resource_store),
-        resource_builder: ResourceBuilder = Depends(lambda: resource_builder),
     ):
         """Create or update a resource"""
 
@@ -191,7 +191,17 @@ def get_router(
         try:
             # validate resource building
             resource_builder.build_resource(resource_data)
-            # store resource
+        except ValidationError as error:
+            return ResourceBadRequest(
+                details=["Failed to build resource", str(error)],
+            )
+        except Exception as error:  # pylint: disable=broad-except
+            return InternalServerError(
+                details=["Failed to build resource", str(error)],
+            )
+
+        # store resource
+        try:
             resource_store.put(
                 key=f"{namespace}/{kind}/{name}",
                 val=resource_data,
@@ -199,8 +209,8 @@ def get_router(
         except Exception as error:  # pylint: disable=broad-except
             return InternalServerError(
                 details=[
-                    "Failed to build resource",
-                    f"Error: {str(error)}",
+                    "Failed to store resource",
+                    str(error),
                 ],
             )
 

@@ -26,11 +26,7 @@ RESOURCES_FILES = {
 # Setup
 # pylint: disable=C0103
 secret_store = None
-home_dir = os.path.expanduser("~")
-store_prefix = f"{home_dir}/.flock/resource_store"
-resource_store = ResourceStoreFactory.get_resource_store(
-    key_prefix=store_prefix, store_type="fs"
-)
+resource_store = ResourceStoreFactory.get_resource_store(store_type="fs")
 
 resource_builder = ResourceBuilder(resource_store=resource_store)
 
@@ -42,7 +38,7 @@ def test_building_resources(file):
 
     # test loading from yaml file
     path = f"{PATH_TO_SCHEMAS}/{file}"
-    manifest = resource_store.load_file(path)  # type: ignore
+    manifest = resource_store.load_file(path=path)  # type: ignore
     manifest_kind = manifest["kind"]
 
     # test schema validation

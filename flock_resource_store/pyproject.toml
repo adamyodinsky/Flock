@@ -7,11 +7,11 @@ readme = "README.md"
 include = ["flock_resource_store", "flock_resource_store/*"]
 
 [tool.poetry.dependencies]
-python = ">=3.7.2,<3.12"
+python = "^3.9"
 python-etcd = "^0.4.5"
 pyyaml = "^6.0"
 pymongo = "^4.3.3"
-pydantic = "^1.10.7"
+flock-common = {path = "../flock_common", develop = true}
 
 
 [tool.poetry.group.dev.dependencies]

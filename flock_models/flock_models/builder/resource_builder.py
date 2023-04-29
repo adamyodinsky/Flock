@@ -1,10 +1,10 @@
 """Resource builder."""
 
 
-from flock_resource_store import ResourceStore
-from flock_schemas import SchemasFactory
 from flock_models.builder.plugins_loader import load_plugins
 from flock_models.resources import Resource, Resources
+from flock_resource_store import ResourceStore
+from flock_schemas import SchemasFactory
 
 
 class ResourceBuilder:
