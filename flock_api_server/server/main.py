@@ -16,7 +16,3 @@ resource_builder = ResourceBuilder(resource_store=resource_store)
 
 router = get_router(resource_store=resource_store, resource_builder=resource_builder)
 app.include_router(router)
-# app.add_middleware(
-#     middleware=validate,
-#     dispatch=app.router.routes[0].endpoint,
-# )

@@ -35,31 +35,49 @@ def get_router(
 
     router = APIRouter()
 
-    # @router.get(
-    #     "/resource/{namespace}/{kind}/{name}",
-    #     responses={
-    #         200: {"model": ResourceFetched, "description": "Resource Fetched"},
-    #         404: {"model": ResourceNotFound, "description": "Resource Not Found"},
-    #         500: {"model": InternalServerError, "description": "Internal Server Error"},
-    #     },
-    #     tags=["flock"],
-    #     summary="get-resource",
-    #     response_model_by_alias=True,
-    # )
-    # async def get_resource(
-    #     namespace: str = Path(..., description="Namespace of resource"),
-    #     kind: str = Path(..., description="Kind of resource"),
-    #     name: str = Path(..., description="Name of a resource"),
-    #     resource_store: ResourceStore = Depends(lambda: resource_store),
-    # ) -> ResourceFetched:
-    #     """Get a resource"""
-    #     resource = resource_store.get(f"{namespace}/{kind}/{name}")
-    #     if resource is None:
-    #         raise HTTPException(
-    #             status_code=404,
-    #             detail=f"Did not find {namespace}/{kind}/{name}",
-    #         )
-    #     return ResourceFetched(data=resource)
+    @router.get(
+        "/resource/{namespace}/{kind}/{name}",
+        responses={
+            200: {"model": ResourceFetched, "description": "Resource Fetched"},
+            404: {"model": ResourceNotFound, "description": "Resource Not Found"},
+            500: {"model": InternalServerError, "description": "Internal Server Error"},
+        },
+        tags=["flock"],
+        summary="get-resource",
+        response_model_by_alias=True,
+    )
+    async def get_resource(
+        namespace: str = Path(..., description="Namespace of resource"),
+        kind: str = Path(..., description="Kind of resource"),
+        name: str = Path(..., description="Name of a resource"),
+        resource_store: ResourceStore = Depends(lambda: resource_store),
+    ):
+        """Get a resource"""
+        try:
+            resource_data = resource_store.get(f"{namespace}/{kind}/{name}")
+            if resource_data is None:
+                return ResourceNotFound(
+                    details=[
+                        "Resource not found",
+                        f"Parameters: {namespace}/{kind}/{name}",
+                    ]
+                )
+            schema_instance = SchemasFactory.get_schema(kind).validate(resource_data)
+            return ResourceFetched(data=schema_instance)
+        except ValidationError as error:
+            return ResourceBadRequest(
+                details=[
+                    "Resource is not valid",
+                    str(error),
+                ]
+            )
+        except Exception as error:  # pylint: disable=broad-except
+            return InternalServerError(
+                details=[
+                    "Failed to get resource",
+                    str(error),
+                ]
+            )
 
     # @router.get(
     #     "/resource/{namespace}/{kind}",
@@ -122,31 +140,6 @@ def get_router(
     #     name: str = Path(None, description="Name of a resource"),
     # ) -> ResourceDeleted:
     #     """Delete a resource and returns it"""
-    #     ...
-
-    # @router.post(
-    #     path="/resource/{namespace}/{kind}/{name}",
-    #     responses={
-    #         201: {"model": ResourceCreated, "description": "Resource Created"},
-    #         202: {"model": ResourceAccepted, "description": "Resource Accepted"},
-    #         400: {"model": ResourceBadRequest, "description": "Resource Bad Request"},
-    #         409: {
-    #             "model": ResourceAlreadyExists,
-    #             "description": "Resource Already Exists",
-    #         },
-    #         500: {"model": InternalServerError, "description": "Internal Server Error"},
-    #     },
-    #     tags=["default"],
-    #     summary="post-resource",
-    #     response_model_by_alias=True,
-    # )
-    # async def post_resource(
-    #     namespace: str = Path(None, description="Namespace of resource"),
-    #     kind: str = Path(None, description="Kind of resource"),
-    #     name: str = Path(None, description="Name of a resource"),
-    #     resource_data: ResourceData = Body(None, description=""),
-    # ) -> ResourceCreated:
-    #     """Create a resource"""
     #     ...
 
     @router.put(

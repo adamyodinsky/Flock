@@ -2,8 +2,11 @@
 from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, List, Literal, Mapping, Optional
+from uuid import UUID
 
 from pydantic import BaseModel, Extra, Field
+from odmantic import Model
+from odmantic.bson import BaseBSONModel
 
 
 class Kind(str, Enum):
@@ -21,7 +24,7 @@ class Kind(str, Enum):
     Custom = "Custom"
 
 
-class BaseModelConfig(BaseModel):
+class BaseModelConfig(BaseBSONModel):
     """Base model config."""
 
     class Config:
@@ -98,13 +101,15 @@ class BaseSpec(BaseOptions):
 class BaseFlockSchema(BaseNamespace):
     """Base schema for all Flock objects."""
 
+    _id: Optional[UUID] = Field(
+        default=None, description="UUID for the object", alias="id"
+    )
     apiVersion: Literal["flock/v1"] = Field(..., description="API version")
     kind: Kind = Field(..., description="Kind of the object")
     metadata: BaseMetaData
     created_at: Optional[datetime] = Field(
         default=None, description="Creation timestamp"
     )
-    # id: UUID = Field(default_factory=uuid4, description="UUID for the object")
     updated_at: Optional[datetime] = Field(
         default=None, description="Last update timestamp"
     )

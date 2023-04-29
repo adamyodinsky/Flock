@@ -9,6 +9,8 @@ app = FastAPI()
 
 @app.middleware("http")
 async def validate(request: Request, call_next):
+    """Validate resource data before storing it."""
+
     # try:
     #     assert namespace == resource_data["namespace"]
     #     assert kind == resource_data["kind"]
