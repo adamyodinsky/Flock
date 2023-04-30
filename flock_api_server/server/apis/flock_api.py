@@ -184,7 +184,7 @@ def get_router(
             ) from error
 
     @router.put(
-        path="/resource/{namespace}/{kind}/{name}",
+        path="/resource",
         responses={
             202: {"model": ResourceAccepted, "description": "Resource Accepted"},
             200: {"model": ResourceUpdated, "description": "Resource Updated"},
@@ -200,30 +200,33 @@ def get_router(
         response_model_by_alias=True,
     )
     async def put_resource(
-        namespace: str = Path(..., description="Namespace of resource"),
-        kind: str = Path(..., description="Kind of resource"),
-        name: str = Path(..., description="Name of a resource"),
+        # namespace: str = Path(..., description="Namespace of resource"),
+        # kind: str = Path(..., description="Kind of resource"),
+        # name: str = Path(..., description="Name of a resource"),
         resource_data: dict = Body(..., description=""),
         resource_store: ResourceStore = Depends(lambda: resource_store),
     ) -> ResourceUpdated:
         """Create or update a resource"""
 
-        try:
-            assert namespace == resource_data["namespace"]
-            assert kind == resource_data["kind"]
-            assert name == resource_data["metadata"]["name"]
-        except AssertionError as error:
-            raise HTTPException(
-                status_code=400,
-                detail=[
-                    "Resource data does not match parameters",
-                    f"Parameters: {namespace}/{kind}/{name}",
-                    f"Schema: {resource_data['namespace']}/{resource_data['kind']}/{resource_data['metadata']['name']}",
-                ],
-            ) from error
+        # try:
+        #     assert namespace == resource_data["namespace"]
+        #     assert kind == resource_data["kind"]
+        #     assert name == resource_data["metadata"]["name"]
+        # except AssertionError as error:
+        #     raise HTTPException(
+        #         status_code=400,
+        #         detail=[
+        #             "Resource data does not match parameters",
+        #             f"Parameters: {namespace}/{kind}/{name}",
+        #             f"Schema: {resource_data['namespace']}/{resource_data['kind']}/{resource_data['metadata']['name']}",
+        #         ],
+        #     ) from error
 
         try:
             # validate resource building
+            schema_instance = SchemasFactory.get_schema(resource_data["kind"]).validate(
+                resource_data
+            )
             resource_builder.build_resource(resource_data)
         except ValidationError as error:
             raise HTTPException(
@@ -239,8 +242,8 @@ def get_router(
         # store resource
         try:
             resource_store.put(
-                key=f"{namespace}/{kind}/{name}",
-                val=resource_data,
+                key=f"{schema_instance.namespace}/{schema_instance.kind}/{schema_instance.metadata.name}",
+                val=schema_instance.dict(by_alias=True),
             )
         except Exception as error:  # pylint: disable=broad-except
             raise HTTPException(
@@ -251,7 +254,6 @@ def get_router(
                 ],
             ) from error
 
-        schema_instance = SchemasFactory.get_schema(kind).validate(resource_data)
         return ResourceUpdated(data=schema_instance)
 
     return router

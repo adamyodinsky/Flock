@@ -1,5 +1,5 @@
 import os
-from typing import Optional, Tuple
+from typing import Optional
 
 from flock_common import check_env_vars
 from pymongo import MongoClient
@@ -43,75 +43,135 @@ class MongoResourceStore(ResourceStore):
                 os.environ.get("COLLECTION_NAME", collection_name)
             ]
 
-    def put(self, key, val) -> None:
-        namespace, kind, name = self.parse3(key)
+    def put(self, val: dict) -> None:
         self.collection.update_one(
             {
-                "namespace": namespace,
-                "kind": kind,
-                "metadata.name": name,
+                "namespace": val["namespace"],
+                "kind": val["kind"],
+                "metadata.name": val["name"]["metadata.name"],
             },
             {"$set": val},
             upsert=True,
         )
 
-    def get(self, key):
-        namespace, kind, name = self.parse3(key)
+    def get(
+        self,
+        category: str = "",
+        namespace: str = "",
+        name: str = "",
+        kind: str = "",
+    ):
+        query_filter = MongoResourceStore.create_filter(
+            category=category,
+            namespace=namespace,
+            name=name,
+            kind=kind,
+        )
         result = self.collection.find_one(
-            filter={
-                "namespace": namespace,
-                "kind": kind,
-                "metadata.name": name,
-            },
+            filter=query_filter,
             projection={
                 "_id": False,
             },
         )
-        return result if result else None
+        return result
 
-    def get_many(self, key):
+    def get_many(
+        self,
+        category: str = "",
+        namespace: str = "",
+        name: str = "",
+        kind: str = "",
+        page: int = 1,
+        page_size: int = 50,
+    ):
         """Get many resources with the same namespace and kind"""
 
-        namespace, kind = self.parse2(key)
-        result = self.collection.find(
-            filter={
-                "namespace": namespace,
-                "kind": kind,
-            },
-            projection={
-                "namespace": True,
-                "kind": True,
-                "name": "$metadata.name",
-            },
-        ).limit(100)
-        return result if result else None
+        skip_count = (page - 1) * page_size
+        filter_query = {}
+        if namespace:
+            filter_query["namespace"] = namespace
+        if category:
+            filter_query["category"] = category
+        if kind:
+            filter_query["kind"] = kind
+        if name:
+            filter_query["metadata.name"] = name
 
-    def delete(self, key):
-        """Delete a resource"""
-
-        namespace, kind, name = self.parse3(key)
-        result = self.collection.delete_one(
-            {
-                "namespace": namespace,
-                "kind": kind,
-                "metadata.name": name,
-            },
+        result = (
+            self.collection.find(
+                filter=filter_query,
+                projection={
+                    "name": "$metadata.name",
+                    "description": "$metadata.description",
+                    "kind": True,
+                    "category": True,
+                    "namespace": True,
+                },
+            )
+            .skip(skip_count)
+            .limit(page_size)
         )
         return result
 
-    def parse3(self, key: str) -> Tuple[str, str, str]:
-        """Parsing key to namespace, kind, name"""
+    def delete(
+        self,
+        category: str = "",
+        namespace: str = "",
+        name: str = "",
+        kind: str = "",
+    ):
+        """Delete a resource"""
 
-        keys = key.split("/")
-        namespace = keys[0]
-        kind = keys[1]
-        name = keys[2]
-        return namespace, kind, name
+        query_filter = MongoResourceStore.create_filter(
+            category=category,
+            namespace=namespace,
+            name=name,
+            kind=kind,
+        )
 
-    def parse2(self, key: str) -> Tuple[str, str]:
-        """Parsing key to namespace, kind, name"""
+        result = self.collection.delete_one(
+            filter=query_filter,
+        )
+        return result
 
-        keys = key.split("/")
-        namespace = keys[0]
-        kind = keys[1]
-        return namespace, kind
+    def delete_many(
+        self,
+        category: str = "",
+        namespace: str = "",
+        name: str = "",
+        kind: str = "",
+    ):
+        """Delete a resource"""
+
+        query_filter = MongoResourceStore.create_filter(
+            category=category,
+            namespace=namespace,
+            name=name,
+            kind=kind,
+        )
+
+        result = self.collection.delete_many(
+            filter=query_filter,
+        )
+        return result
+
+    @staticmethod
+    def create_filter(
+        category: str = "",
+        namespace: str = "",
+        name: str = "",
+        kind: str = "",
+    ) -> dict:
+        """Create a filter query"""
+
+        filter_query = {}
+        if namespace:
+            filter_query["namespace"] = namespace
+        if category:
+            filter_query["category"] = category
+        if kind:
+            filter_query["kind"] = kind
+        if name:
+            filter_query["metadata.name"] = name
+
+        return filter_query

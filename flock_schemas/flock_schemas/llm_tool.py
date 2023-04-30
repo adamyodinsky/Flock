@@ -31,8 +31,8 @@ class LLMToolSchema(BaseFlockSchema):
     """LLM tool schema."""
 
     kind: Literal["LLMTool"] = Field(..., description="The kind of the object")
-    categories: List[Category] = Field(
-        default=[Category.TOOL], description="The resource category"
+    category: Category = Field(
+        default=Category.TOOL, description="The resource category"
     )
     spec: LLMToolSpec
 

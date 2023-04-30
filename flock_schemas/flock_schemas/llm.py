@@ -24,8 +24,8 @@ class LLMSchema(BaseFlockSchema):
     """LLM schema."""
 
     kind: Literal["LLM"] = Field(..., description="The kind of the object")
-    categories: List[Category] = Field(
-        default=[Category.MODEL], description="The resource category"
+    category: Category = Field(
+        default=Category.MODEL, description="The resource category"
     )
     spec: LLMSpec
 

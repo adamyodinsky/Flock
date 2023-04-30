@@ -25,8 +25,8 @@ class EmbeddingSchema(BaseFlockSchema):
     """Embedding schema."""
 
     kind: Literal["Embedding"] = Field(..., description="The kind of the object")
-    categories: List[Category] = Field(
-        default=[Category.MODEL], description="The resource category"
+    category: Category = Field(
+        default=Category.MODEL, description="The resource category"
     )
     spec: EmbeddingSpec
 

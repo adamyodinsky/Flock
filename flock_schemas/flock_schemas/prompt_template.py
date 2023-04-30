@@ -23,8 +23,8 @@ class PromptTemplateSchema(BaseFlockSchema):
     """PromptTemplate schema."""
 
     kind: Literal["PromptTemplate"] = Field(..., description="The kind of the object")
-    categories: List[Category] = Field(
-        default=[Category.OTHER], description="The resource category"
+    category: Category = Field(
+        default=Category.OTHER, description="The resource category"
     )
     spec: PromptTemplateSpec
 

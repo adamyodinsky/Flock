@@ -1,6 +1,6 @@
 """LoadTool schema."""
 from enum import Enum
-from typing import Literal, List
+from typing import List, Literal
 
 from pydantic import Field
 
@@ -52,8 +52,8 @@ class LoadToolSchema(BaseFlockSchema):
     """LoadTool schema."""
 
     kind: Literal["LoadTool"] = Field(..., description="The kind of the object")
-    categories: List[Category] = Field(
-        default=[Category.TOOL], description="The resource category"
+    category: Category = Field(
+        default=Category.TOOL, description="The resource category"
     )
     spec: LoadToolSpec
 

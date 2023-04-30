@@ -9,19 +9,39 @@ class ResourceStore(metaclass=abc.ABCMeta):
     """Abstract base class for resource stores."""
 
     @abc.abstractmethod
-    def put(self, key, val) -> None:
+    def put(self, val: dict) -> None:
         """Save a resource to the store."""
 
     @abc.abstractmethod
-    def get(self, key) -> dict:
+    def get(
+        self,
+        category: str = "",
+        namespace: str = "",
+        name: str = "",
+        kind: str = "",
+    ) -> dict:
         """Load a resource from the store."""
 
     @abc.abstractmethod
-    def get_many(self, key):
+    def get_many(
+        self,
+        category: str = "",
+        namespace: str = "",
+        name: str = "",
+        kind: str = "",
+        page: int = 1,
+        page_size: int = 50,
+    ):
         """Get many resources with the same namespace and kind"""
 
     @abc.abstractmethod
-    def delete(self, key):
+    def delete(
+        self,
+        category: str = "",
+        namespace: str = "",
+        name: str = "",
+        kind: str = "",
+    ):
         """Delete a resource"""
 
     @staticmethod

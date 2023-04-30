@@ -1,6 +1,6 @@
 """Vectorstore schema."""
 from enum import Enum
-from typing import Literal, List
+from typing import List, Literal
 
 from pydantic import Field
 
@@ -29,8 +29,8 @@ class VectorStoreSchema(BaseFlockSchema):
     """Vectorstore schema."""
 
     kind: Literal["VectorStore"] = Field(..., description="The kind of the object")
-    categories: List[Category] = Field(
-        default=[Category.OTHER], description="The resource category"
+    category: Category = Field(
+        default=Category.OTHER, description="The resource category"
     )
     spec: VectorStoreSpec
 

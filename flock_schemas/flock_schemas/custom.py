@@ -11,8 +11,8 @@ class CustomSchema(BaseFlockSchema):
     """Custom object schema."""
 
     kind: str = Field(..., description="The kind of the custom object")
-    categories: List[Category] = Field(
-        default=[Category.OTHER], description="The resource category"
+    category: Category = Field(
+        default=Category.OTHER, description="The resource category"
     )
 
 

@@ -37,8 +37,8 @@ class AgentSchema(BaseFlockSchema):
     """Agent schema."""
 
     kind: Literal["Agent"] = Field(..., description="The kind of the object")
-    categories: List[Category] = Field(
-        default=[Category.AGENT], description="The resource category"
+    category: Category = Field(
+        default=Category.AGENT, description="The resource category"
     )
     spec: AgentSpec
 
