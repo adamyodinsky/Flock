@@ -1,14 +1,15 @@
+"""Test the API endpoints using FastAPI's TestClient."""
+from unittest.mock import MagicMock
+
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from server.api.flock_api import ResourceBuilder, ResourceStore, get_router
 
-# Replace "your_module" with the name of the module containing the get_router function
-
 app = FastAPI()
-resource_store = ResourceStore()
-resource_builder = ResourceBuilder()
+resource_store = MagicMock(spec=ResourceStore)
+resource_builder = MagicMock(spec=ResourceBuilder)
 router = get_router(resource_store, resource_builder)
 app.include_router(router)
 
@@ -17,6 +18,7 @@ client = TestClient(app)
 
 @pytest.fixture
 def test_data():
+    """Test data"""
     # Add test data here as a list of dictionaries
     return [
         {
@@ -35,6 +37,7 @@ def test_data():
 
 
 def test_get_resource(test_data):
+    """Test get_resource endpoint"""
     # Insert test data into resource_store
     for data in test_data:
         resource_store.put(data)
@@ -48,6 +51,7 @@ def test_get_resource(test_data):
 
 
 def test_get_resources(test_data):
+    """Test get_resources endpoint"""
     # Insert test data into resource_store
     for data in test_data:
         resource_store.put(data)
@@ -62,6 +66,8 @@ def test_get_resources(test_data):
 
 
 def test_put_resource(test_data):
+    """Test put_resource endpoint"""
+
     resource_data = test_data[0]
     response = client.put("/resource", json=resource_data)
     assert response.status_code == 200
@@ -76,6 +82,7 @@ def test_put_resource(test_data):
 
 
 def test_delete_resource(test_data):
+    """Test delete_resource endpoint"""
     # Insert test data into resource_store
     for data in test_data:
         resource_store.put(data)
@@ -92,6 +99,7 @@ def test_delete_resource(test_data):
 
 
 def test_delete_resources(test_data):
+    """Test delete_resources endpoint"""
     # Insert test data into resource_store
     for data in test_data:
         resource_store.put(data)
@@ -103,5 +111,5 @@ def test_delete_resources(test_data):
     response = client.get("/resource/ns1/k1")
     assert response.status_code == 404
 
-    # Cleanup test data
-    resource
+    # # Cleanup test data
+    # resource
