@@ -2,6 +2,8 @@
 
 # from typing import Dict, List  # noqa: F401
 # from fastapi import Form  # noqa: F401
+from typing import Union
+
 from fastapi import (  # Cookie,; Depends,; Header,; Query,; Response,; Security,; status,
     APIRouter,
     Body,
@@ -52,33 +54,36 @@ def get_router(
         kind: str = Path(..., description="Kind of resource"),
         name: str = Path(..., description="Name of a resource"),
         resource_store: ResourceStore = Depends(lambda: resource_store),
-    ):
+    ) -> ResourceFetched:
         """Get a resource"""
         try:
             resource_data = resource_store.get(f"{namespace}/{kind}/{name}")
             if resource_data is None:
-                return ResourceNotFound(
-                    details=[
+                raise HTTPException(
+                    status_code=404,
+                    detail=[
                         "Resource not found",
                         f"Parameters: {namespace}/{kind}/{name}",
-                    ]
+                    ],
                 )
             schema_instance = SchemasFactory.get_schema(kind).validate(resource_data)
             return ResourceFetched(data=schema_instance)
         except ValidationError as error:
-            return ResourceBadRequest(
-                details=[
+            raise HTTPException(
+                status_code=500,
+                detail=[
                     "Resource is not valid",
                     str(error),
-                ]
-            )
+                ],
+            ) from error
         except Exception as error:  # pylint: disable=broad-except
-            return InternalServerError(
-                details=[
+            raise HTTPException(
+                status_code=500,
+                detail=[
                     "Failed to get resource",
                     str(error),
-                ]
-            )
+                ],
+            ) from error
 
     @router.get(
         "/resource/{namespace}/{kind}",
@@ -96,28 +101,30 @@ def get_router(
         namespace: str = Path(..., description="namespace"),
         kind: str = Path(..., description="kind"),
         resource_store: ResourceStore = Depends(lambda: resource_store),
-    ):
+    ) -> ResourcesFetched:
         """Get Resources list by namespace and kind"""
         try:
             resource_data = resource_store.get_many(f"{namespace}/{kind}")
             if resource_data is None:
-                return ResourceNotFound(
-                    details=[
+                raise HTTPException(
+                    status_code=404,
+                    detail=[
                         "Resource not found",
                         f"Parameters: {namespace}/{kind}",
-                    ]
+                    ],
                 )
             schema_instances = [
-                ResourceDetails.validate(item) for item in resource_data
+                ResourceDetails.validate(item) for item in resource_data  # type: ignore
             ]
             return ResourcesFetched(data=schema_instances)
         except Exception as error:  # pylint: disable=broad-except
-            return InternalServerError(
-                details=[
+            raise HTTPException(
+                status_code=500,
+                detail=[
                     "Failed to get resource",
                     str(error),
-                ]
-            )
+                ],
+            ) from error
 
     # @router.delete(
     #     "/resource/{namespace}/{kind}",
@@ -181,33 +188,36 @@ def get_router(
         name: str = Path(..., description="Name of a resource"),
         resource_data: dict = Body(..., description=""),
         resource_store: ResourceStore = Depends(lambda: resource_store),
-    ):
+    ) -> Union[ResourceCreated, ResourceUpdated]:
         """Create or update a resource"""
 
         try:
             assert namespace == resource_data["namespace"]
             assert kind == resource_data["kind"]
             assert name == resource_data["metadata"]["name"]
-        except AssertionError:
-            return ResourceBadRequest(
-                details=[
+        except AssertionError as error:
+            raise HTTPException(
+                status_code=400,
+                detail=[
                     "Resource data does not match parameters",
                     f"Parameters: {namespace}/{kind}/{name}",
                     f"Schema: {resource_data['namespace']}/{resource_data['kind']}/{resource_data['metadata']['name']}",
                 ],
-            )
+            ) from error
 
         try:
             # validate resource building
             resource_builder.build_resource(resource_data)
         except ValidationError as error:
-            return ResourceBadRequest(
-                details=["Failed to build resource", str(error)],
-            )
+            raise HTTPException(
+                status_code=400,
+                detail=["Failed to build resource", str(error)],
+            ) from error
         except Exception as error:  # pylint: disable=broad-except
-            return InternalServerError(
-                details=["Failed to build resource", str(error)],
-            )
+            raise HTTPException(
+                status_code=500,
+                detail=["Failed to build resource", str(error)],
+            ) from error
 
         # store resource
         try:
@@ -216,12 +226,13 @@ def get_router(
                 val=resource_data,
             )
         except Exception as error:  # pylint: disable=broad-except
-            return InternalServerError(
-                details=[
+            raise HTTPException(
+                status_code=500,
+                detail=[
                     "Failed to store resource",
                     str(error),
                 ],
-            )
+            ) from error
 
         schema_instance = SchemasFactory.get_schema(kind).validate(resource_data)
         return ResourceCreated(data=schema_instance)
