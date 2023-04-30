@@ -8,7 +8,6 @@ packages = [{include = "flock_common"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-python-dotenv = "^1.0.0"
 
 
 [tool.poetry.group.dev.dependencies]

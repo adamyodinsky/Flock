@@ -2,8 +2,6 @@
 
 import os
 
-from dotenv import find_dotenv, load_dotenv
-
 
 class EnvVarNotSetError(Exception):
     """Raised when an environment variable is not set"""
@@ -15,7 +13,6 @@ class EnvVarNotSetError(Exception):
 
 def check_env_vars(required_vars, optional_vars=None):
     """Check that all required environment variables are set"""
-    load_dotenv(find_dotenv())
 
     for var in required_vars:
         if var not in os.environ:

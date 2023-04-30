@@ -1,10 +1,12 @@
 """Resource builder."""
 
 
-from flock_models.builder.plugins_loader import load_plugins
-from flock_models.resources import Resource, Resources
+from dotenv import find_dotenv, load_dotenv
 from flock_resource_store import ResourceStore
 from flock_schemas import SchemasFactory
+
+from flock_models.builder.plugins_loader import load_plugins
+from flock_models.resources import Resource, Resources
 
 
 class ResourceBuilder:
@@ -22,11 +24,11 @@ class ResourceBuilder:
         """Build resource from manifest. recursively build dependencies."""
 
         for dependency in dependencies_section:
-            dependency_key = (
-                f"{dependency['namespace']}/{dependency['kind']}/{dependency['name']}"
+            dependency_manifest = self.resource_store.get(
+                namespace=dependency["namespace"],
+                kind=dependency["kind"],
+                name=dependency["name"],
             )
-
-            dependency_manifest = self.resource_store.get(dependency_key)
             dependency_resource = self.build_resource(dependency_manifest)
             dependencies[dependency["kind"]] = dependency_resource
 

@@ -3,6 +3,8 @@
 import os
 from typing import cast
 
+from dotenv import find_dotenv, load_dotenv
+from flock_common.env_checker import check_env_vars
 from flock_resource_store import ResourceStoreFactory
 from flock_schemas import SchemasFactory
 
@@ -26,7 +28,15 @@ RESOURCES_FILES = {
 # Setup
 # pylint: disable=C0103
 secret_store = None
-resource_store = ResourceStoreFactory.get_resource_store(store_type="fs")
+required_vars = []
+optional_vars = ["FLOCK_RESOURCE_STORE_TYPE"]
+
+load_dotenv(find_dotenv())
+check_env_vars(required_vars, optional_vars)
+
+resource_store = ResourceStoreFactory.get_resource_store(
+    store_type=os.getenv("FLOCK_RESOURCE_STORE_TYPE", "mongo")
+)
 
 resource_builder = ResourceBuilder(resource_store=resource_store)
 

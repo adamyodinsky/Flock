@@ -3,14 +3,13 @@ import os
 from flock_common.env_checker import check_env_vars
 
 from flock_resource_store.base import ResourceStore
-from flock_resource_store.fs import FSResourceStore
 from flock_resource_store.mongo import MongoResourceStore
 
 
 class ResourceStoreFactory:
     """Factory class for resource stores"""
 
-    Stores = {"fs": FSResourceStore, "mongo": MongoResourceStore}
+    Stores = {"mongo": MongoResourceStore}
 
     @staticmethod
     def get_resource_store(store_type: str = "fs", **kwargs) -> ResourceStore:

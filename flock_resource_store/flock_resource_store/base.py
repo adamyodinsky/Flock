@@ -44,6 +44,16 @@ class ResourceStore(metaclass=abc.ABCMeta):
     ):
         """Delete a resource"""
 
+    @abc.abstractmethod
+    def delete_many(
+        self,
+        category: str = "",
+        namespace: str = "",
+        name: str = "",
+        kind: str = "",
+    ):
+        """Delete a resource"""
+
     @staticmethod
     def load_file(path, file_type="yaml") -> dict:
         """Load a resource from the store."""
