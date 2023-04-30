@@ -10,8 +10,10 @@ include = ["flock_resource_store", "flock_resource_store/*"]
 python = "^3.9"
 python-etcd = "^0.4.5"
 pyyaml = "^6.0"
-pymongo = "^4.3.3"
 flock-common = {path = "../flock_common", develop = true}
+odmantic = "^0.9.2"
+motor = "^3.1.2"
+pymongo = "^4.3.3"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -2,11 +2,10 @@
 from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, List, Literal, Mapping, Optional
-from uuid import UUID
 
-from pydantic import BaseModel, Extra, Field
-from odmantic import Model
-from odmantic.bson import BaseBSONModel
+from odmantic import Index
+from odmantic.bson import BaseBSONModel, ObjectId
+from pydantic import Extra, Field
 
 
 class Kind(str, Enum):
@@ -28,6 +27,8 @@ class BaseModelConfig(BaseBSONModel):
     """Base model config."""
 
     class Config:
+        """Base model config."""
+
         validate_all = True
         extra = Extra.forbid
 
@@ -101,9 +102,7 @@ class BaseSpec(BaseOptions):
 class BaseFlockSchema(BaseNamespace):
     """Base schema for all Flock objects."""
 
-    _id: Optional[UUID] = Field(
-        default=None, description="UUID for the object", alias="id"
-    )
+    id: Optional[ObjectId] = Field(None, alias="_id", description="Unique identifier")
     apiVersion: Literal["flock/v1"] = Field(..., description="API version")
     kind: Kind = Field(..., description="Kind of the object")
     metadata: BaseMetaData
@@ -114,6 +113,24 @@ class BaseFlockSchema(BaseNamespace):
         default=None, description="Last update timestamp"
     )
     spec: BaseSpec
+
+    class Config:
+        """Base model config."""
+
+        validate_all = True
+        extra = Extra.forbid
+        collection = "resources"
+
+        @staticmethod
+        def indexes():
+            """Return indexes."""
+
+            yield Index(
+                BaseFlockSchema.namespace,
+                BaseFlockSchema.kind,
+                BaseFlockSchema.metadata.name,
+                unique=True,
+            )
 
 
 export = {
