@@ -49,7 +49,7 @@ class MongoResourceStore(ResourceStore):
             {
                 "namespace": namespace,
                 "kind": kind,
-                "name": name,
+                "metadata.name": name,
             },
             {"$set": val},
             upsert=True,
@@ -61,7 +61,7 @@ class MongoResourceStore(ResourceStore):
             {
                 "namespace": namespace,
                 "kind": kind,
-                "name": name,
+                "metadata.name": name,
             },
         )
         return result if result else None
@@ -91,7 +91,7 @@ class MongoResourceStore(ResourceStore):
             {
                 "namespace": namespace,
                 "kind": kind,
-                "name": name,
+                "metadata.name": name,
             },
         )
         return result
