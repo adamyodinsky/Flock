@@ -23,6 +23,24 @@ class Kind(str, Enum):
     Custom = "Custom"
 
 
+class PyObjectId(ObjectId):
+    """Pydantic model for ObjectId."""
+
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, v):
+        if not ObjectId.is_valid(v):
+            raise ValueError("Invalid objectid")
+        return ObjectId(v)
+
+    @classmethod
+    def __modify_schema__(cls, field_schema):
+        field_schema.update(type="string")
+
+
 class BaseModelConfig(BaseBSONModel):
     """Base model config."""
 
@@ -102,7 +120,7 @@ class BaseSpec(BaseOptions):
 class BaseFlockSchema(BaseNamespace):
     """Base schema for all Flock objects."""
 
-    id: Optional[ObjectId] = Field(None, alias="_id", description="Unique identifier")
+    id: Optional[PyObjectId] = Field(None, alias="_id", description="Unique identifier")
     apiVersion: Literal["flock/v1"] = Field(..., description="API version")
     kind: Kind = Field(..., description="Kind of the object")
     metadata: BaseMetaData
