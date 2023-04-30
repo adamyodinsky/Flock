@@ -1,15 +1,16 @@
 # coding: utf-8
 
 from __future__ import annotations
-from datetime import date, datetime  # noqa: F401
 
 import re  # noqa: F401
+from datetime import date, datetime  # noqa: F401
 from typing import Any, Dict, List, Optional  # noqa: F401
 
 from pydantic import AnyUrl, BaseModel, EmailStr, Field, validator  # noqa: F401
-from server.models.status_code import Code
-from server.models.resource_data import ResourceData
+
 from server.models.status import Status
+from server.schemas.resource_data import ResourceData
+from server.schemas.status_code import Code
 
 
 class ResourceFetched(BaseModel):

@@ -17,4 +17,4 @@ from fastapi.security import (
 from fastapi.security.api_key import APIKeyHeader  # noqa: F401
 from fastapi.security.api_key import APIKeyCookie, APIKeyQuery
 
-from server.models.extra_models import TokenModel
+from server.schemas.extra_models import TokenModel

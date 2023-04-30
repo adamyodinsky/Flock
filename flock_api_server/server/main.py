@@ -6,7 +6,7 @@ from flock_common import check_env_vars
 from flock_models.builder import ResourceBuilder
 from flock_resource_store import ResourceStoreFactory
 
-from server.apis.flock_api import get_router
+from server.api.flock_api import get_router
 
 load_dotenv(find_dotenv())
 check_env_vars([], [])

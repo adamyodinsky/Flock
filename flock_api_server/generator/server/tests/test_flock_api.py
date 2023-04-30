@@ -2,12 +2,11 @@
 
 from fastapi.testclient import TestClient
 
-
-from server.models.internal_server_error import InternalServerError1  # noqa: F401
-from server.models.resource_bad_request import ResourceBadRequest1  # noqa: F401
-from server.models.resource_fetched import ResourceFetched  # noqa: F401
-from server.models.resource_not_found import ResourceNotFound1  # noqa: F401
-from server.models.resources_fetched import ResourcesFetched  # noqa: F401
+from server.schemas.internal_server_error import InternalServerError1  # noqa: F401
+from server.schemas.resource_bad_request import ResourceBadRequest1  # noqa: F401
+from server.schemas.resource_fetched import ResourceFetched  # noqa: F401
+from server.schemas.resource_not_found import ResourceNotFound1  # noqa: F401
+from server.schemas.resources_fetched import ResourcesFetched  # noqa: F401
 
 
 def test_get_resource(client: TestClient):

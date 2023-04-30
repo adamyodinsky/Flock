@@ -2,12 +2,12 @@
 
 from typing import Dict, List  # noqa: F401
 
-from fastapi import (  # noqa: F401
+from fastapi import (
     APIRouter,
     Body,
     Cookie,
     Depends,
-    Form,
+    Form,  # noqa: F401
     Header,
     Path,
     Query,
@@ -16,13 +16,12 @@ from fastapi import (  # noqa: F401
     status,
 )
 
-from server.models.extra_models import TokenModel  # noqa: F401
-from server.models.internal_server_error import InternalServerError1
-from server.models.resource_bad_request import ResourceBadRequest1
 from server.models.resource_fetched import ResourceFetched
-from server.models.resource_not_found import ResourceNotFound1
 from server.models.resources_fetched import ResourcesFetched
-
+from server.schemas.extra_models import TokenModel  # noqa: F401
+from server.schemas.internal_server_error import InternalServerError1
+from server.schemas.resource_bad_request import ResourceBadRequest1
+from server.schemas.resource_not_found import ResourceNotFound1
 
 router = APIRouter()
 

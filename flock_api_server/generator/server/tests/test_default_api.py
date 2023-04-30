@@ -2,19 +2,18 @@
 
 from fastapi.testclient import TestClient
 
-
-from server.models.internal_server_error import InternalServerError1  # noqa: F401
-from server.models.resource_accepted import ResourceAccepted  # noqa: F401
-from server.models.responses.resource_already_exists import (
+from server.schemas.internal_server_error import InternalServerError1  # noqa: F401
+from server.schemas.resource_accepted import ResourceAccepted  # noqa: F401
+from server.schemas.resource_bad_request import ResourceBadRequest1  # noqa: F401
+from server.schemas.resource_created import ResourceCreated  # noqa: F401
+from server.schemas.resource_data import ResourceData  # noqa: F401
+from server.schemas.resource_not_found import ResourceNotFound1  # noqa: F401
+from server.schemas.resource_updated import ResourceUpdated  # noqa: F401
+from server.schemas.resources_fetched import ResourcesFetched  # noqa: F401
+from server.schemas.responses.resource_already_exists import (
     ResourceAlreadyExists1,
 )  # noqa: F401
-from server.models.resource_bad_request import ResourceBadRequest1  # noqa: F401
-from server.models.resource_created import ResourceCreated  # noqa: F401
-from server.models.resource_data import ResourceData  # noqa: F401
-from server.models.responses.resource_deleted import ResourceDeleted  # noqa: F401
-from server.models.resource_not_found import ResourceNotFound1  # noqa: F401
-from server.models.resource_updated import ResourceUpdated  # noqa: F401
-from server.models.resources_fetched import ResourcesFetched  # noqa: F401
+from server.schemas.responses.resource_deleted import ResourceDeleted  # noqa: F401
 
 
 def test_delete_resource_namespace_kind(client: TestClient):
