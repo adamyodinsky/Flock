@@ -3,4 +3,5 @@
 .documentation_vectorstore
 .venv
 dist
+.env
 ```
