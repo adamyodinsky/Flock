@@ -58,10 +58,13 @@ class MongoResourceStore(ResourceStore):
     def get(self, key):
         namespace, kind, name = self.parse3(key)
         result = self.collection.find_one(
-            {
+            filter={
                 "namespace": namespace,
                 "kind": kind,
                 "metadata.name": name,
+            },
+            projection={
+                "_id": False,
             },
         )
         return result if result else None
@@ -78,7 +81,7 @@ class MongoResourceStore(ResourceStore):
             projection={
                 "namespace": True,
                 "kind": True,
-                "metadata.name": True,
+                "name": "$metadata.name",
             },
         ).limit(100)
         return result if result else None

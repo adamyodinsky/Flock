@@ -120,7 +120,8 @@ class BaseSpec(BaseOptions):
 class BaseFlockSchema(BaseNamespace):
     """Base schema for all Flock objects."""
 
-    id: Optional[PyObjectId] = Field(None, alias="_id", description="Unique identifier")
+    # id: Optional[PyObjectId] = Field(None, alias="_id", description="Unique identifier")
+    # id: Optional[int] = Field(..., alias="_id")
     apiVersion: Literal["flock/v1"] = Field(..., description="API version")
     kind: Kind = Field(..., description="Kind of the object")
     metadata: BaseMetaData
@@ -138,6 +139,9 @@ class BaseFlockSchema(BaseNamespace):
         validate_all = True
         extra = Extra.forbid
         collection = "resources"
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        # json_encoders = {ObjectId: str}
 
         @staticmethod
         def indexes():

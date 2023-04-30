@@ -9,7 +9,7 @@ class ResourceDetails(BaseModel):
     """ResourceDetails."""
 
     name: str = Field(alias="name", default=None)
-    namespace: str = Field(alias="namespace", default=None)
+    namespace: str = Field(default=None)
     kind: str = Field(alias="kind", default=None)
 
 
