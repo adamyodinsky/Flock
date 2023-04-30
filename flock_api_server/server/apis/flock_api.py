@@ -57,7 +57,9 @@ def get_router(
     ) -> ResourceFetched:
         """Get a resource"""
         try:
-            resource_data = resource_store.get(f"{namespace}/{kind}/{name}")
+            resource_data = resource_store.get(
+                namespace=namespace, kind=kind, name=name
+            )
             if resource_data is None:
                 raise HTTPException(
                     status_code=404,
@@ -104,7 +106,7 @@ def get_router(
     ) -> ResourcesFetched:
         """Get Resources list by namespace and kind"""
         try:
-            resource_data = resource_store.get_many(f"{namespace}/{kind}")
+            resource_data = resource_store.get_many(namespace=namespace, kind=kind)
             if resource_data is None:
                 raise HTTPException(
                     status_code=404,
@@ -166,7 +168,9 @@ def get_router(
         """Deletes a resource by namespace, kind and name."""
 
         try:
-            resource_data = resource_store.delete(f"{namespace}/{kind}/{name}")
+            resource_data = resource_store.delete(
+                namespace=namespace, kind=kind, name=name
+            )
             return ResourceDeleted(
                 details=[
                     "Resource deleted",
@@ -241,10 +245,7 @@ def get_router(
 
         # store resource
         try:
-            resource_store.put(
-                key=f"{schema_instance.namespace}/{schema_instance.kind}/{schema_instance.metadata.name}",
-                val=schema_instance.dict(by_alias=True),
-            )
+            resource_store.put(val=schema_instance.dict(by_alias=True))
         except Exception as error:  # pylint: disable=broad-except
             raise HTTPException(
                 status_code=500,

@@ -850,9 +850,6 @@ python-versions = "^3.9"
 files = []
 develop = true
 
-[package.dependencies]
-python-dotenv = "^1.0.0"
-
 [package.source]
 type = "directory"
 url = "../flock_common"
@@ -4221,4 +4218,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.12"
-content-hash = "ac8f9c48114c3789d8fca972c0cdb16686fdb8f59d375c19d029234110a9d7d7"
+content-hash = "acb22bddf654e05d2d593f738a52eedd7667837addc5a1fca350f1813c7572c4"
