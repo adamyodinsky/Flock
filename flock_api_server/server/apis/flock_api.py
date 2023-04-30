@@ -17,14 +17,8 @@ from flock_schemas import SchemasFactory
 from pydantic import ValidationError
 
 from server.models.resource_details import ResourceDetails
-from server.models.responses.internal_server_error import InternalServerError
-from server.models.responses.resource_accepted import ResourceAccepted
-from server.models.responses.resource_already_exists import ResourceAlreadyExists
-from server.models.responses.resource_bad_request import ResourceBadRequest
-from server.models.responses.resource_created import ResourceCreated
 from server.models.responses.resource_deleted import ResourceDeleted
 from server.models.responses.resource_fetched import ResourceFetched
-from server.models.responses.resource_not_found import ResourceNotFound
 from server.models.responses.resource_updated import ResourceUpdated
 from server.models.responses.resources_fetched import ResourcesFetched
 
@@ -38,23 +32,13 @@ def get_router(
 
     router = APIRouter()
 
-    @router.get(
-        "/resource/{namespace}/{kind}/{name}",
-        responses={
-            200: {"model": ResourceFetched, "description": "Resource Fetched"},
-            404: {"model": ResourceNotFound, "description": "Resource Not Found"},
-            500: {"model": InternalServerError, "description": "Internal Server Error"},
-        },
-        tags=["flock"],
-        summary="get-resource",
-        response_model_by_alias=True,
-    )
+    @router.get("/resource/{namespace}/{kind}/{name}", response_model=ResourceFetched)
     async def get_resource(
-        namespace: str = Path(..., description="Namespace of resource"),
-        kind: str = Path(..., description="Kind of resource"),
-        name: str = Path(..., description="Name of a resource"),
+        namespace: str,
+        kind: str,
+        name: str,
         resource_store: ResourceStore = Depends(lambda: resource_store),
-    ) -> ResourceFetched:
+    ):
         """Get a resource"""
         try:
             resource_data = resource_store.get(
@@ -87,26 +71,20 @@ def get_router(
                 ],
             ) from error
 
-    @router.get(
-        "/resource/{namespace}/{kind}",
-        responses={
-            200: {"model": ResourcesFetched, "description": "Resources Fetched"},
-            400: {"model": ResourceBadRequest, "description": "Resource Bad Request"},
-            404: {"model": ResourceNotFound, "description": "Resource Not Found"},
-            500: {"model": InternalServerError, "description": "Internal Server Error"},
-        },
-        tags=["flock"],
-        summary="get-resource-namespace-kind",
-        response_model_by_alias=True,
-    )
-    async def get_resource_namespace_kind(
-        namespace: str = Path(..., description="namespace"),
-        kind: str = Path(..., description="kind"),
+    @router.get("/resource/{namespace}/{category}")
+    @router.get("/resource/{namespace}/{kind}")
+    async def get_resources(
+        kind: str = "",
+        category: str = "",
+        namespace: str = "",
+        name: str = "",
         resource_store: ResourceStore = Depends(lambda: resource_store),
     ) -> ResourcesFetched:
         """Get Resources list by namespace and kind"""
         try:
-            resource_data = resource_store.get_many(namespace=namespace, kind=kind)
+            resource_data = resource_store.get_many(
+                namespace=namespace, kind=kind, category=category, name=name
+            )
             if resource_data is None:
                 raise HTTPException(
                     status_code=404,
@@ -128,106 +106,14 @@ def get_router(
                 ],
             ) from error
 
-    # @router.delete(
-    #     "/resource/{namespace}/{kind}",
-    #     responses={
-    #         200: {"model": ResourcesFetched, "description": "Resources Fetched"},
-    #         400: {"model": ResourceBadRequest, "description": "Resource Bad Request"},
-    #         404: {"model": ResourceNotFound, "description": "Resource Not Found"},
-    #         500: {"model": InternalServerError, "description": "Internal Server Error"},
-    #     },
-    #     tags=["default"],
-    #     summary="delete-resource-namespace-kind",
-    #     response_model_by_alias=True,
-    # )
-    # async def delete_resource_namespace_kind(
-    #     namespace: str = Path(None, description="namespace"),
-    #     kind: str = Path(None, description="kind"),
-    # ) -> ResourcesFetched:
-    #     """Deletes all resources by namespace and kind, returns a list of the deleted resources."""
-    #     ...
-
-    @router.delete(
-        path="/resource/{namespace}/{kind}/{name}",
-        responses={
-            # 204: {"model": ResourceDeleted, "description": "Resource Deleted"},
-            400: {"model": ResourceBadRequest, "description": "Resource Bad Request"},
-            404: {"model": ResourceNotFound, "description": "Resource Not Found"},
-            500: {"model": InternalServerError, "description": "Internal Server Error"},
-        },
-        tags=["default"],
-        summary="delete-resource-namespace-kind-name",
-        response_model_by_alias=True,
-    )
-    async def delete_resource_namespace_kind_name(
-        namespace: str = Path(..., description="Namespace of resource"),
-        kind: str = Path(..., description="Kind of resource"),
-        name: str = Path(..., description="Name of a resource"),
-        resource_store: ResourceStore = Depends(lambda: resource_store),
-    ) -> ResourceDeleted:
-        """Deletes a resource by namespace, kind and name."""
-
-        try:
-            resource_data = resource_store.delete(
-                namespace=namespace, kind=kind, name=name
-            )
-            return ResourceDeleted(
-                details=[
-                    "Resource deleted",
-                    f"Parameters: {namespace}/{kind}/{name}",
-                    f"Count: {resource_data.count}",
-                ],
-            )
-        except Exception as error:  # pylint: disable=broad-except
-            raise HTTPException(
-                status_code=500,
-                detail=[
-                    "Failed to delete resource",
-                    str(error),
-                ],
-            ) from error
-
-    @router.put(
-        path="/resource",
-        responses={
-            202: {"model": ResourceAccepted, "description": "Resource Accepted"},
-            200: {"model": ResourceUpdated, "description": "Resource Updated"},
-            400: {"model": ResourceBadRequest, "description": "Resource Bad Request"},
-            409: {
-                "model": ResourceAlreadyExists,
-                "description": "Resource Already Exists",
-            },
-            500: {"model": InternalServerError, "description": "Internal Server Error"},
-        },
-        tags=["flock"],
-        summary="put-resource",
-        response_model_by_alias=True,
-    )
+    @router.put("/resource")
     async def put_resource(
-        # namespace: str = Path(..., description="Namespace of resource"),
-        # kind: str = Path(..., description="Kind of resource"),
-        # name: str = Path(..., description="Name of a resource"),
         resource_data: dict = Body(..., description=""),
         resource_store: ResourceStore = Depends(lambda: resource_store),
     ) -> ResourceUpdated:
         """Create or update a resource"""
 
-        # try:
-        #     assert namespace == resource_data["namespace"]
-        #     assert kind == resource_data["kind"]
-        #     assert name == resource_data["metadata"]["name"]
-        # except AssertionError as error:
-        #     raise HTTPException(
-        #         status_code=400,
-        #         detail=[
-        #             "Resource data does not match parameters",
-        #             f"Parameters: {namespace}/{kind}/{name}",
-        #             f"Schema: {resource_data['namespace']}/{resource_data['kind']}/{resource_data['metadata']['name']}",
-        #         ],
-        #     ) from error
-
         try:
-            # validate resource building
             schema_instance = SchemasFactory.get_schema(resource_data["kind"]).validate(
                 resource_data
             )
@@ -256,5 +142,75 @@ def get_router(
             ) from error
 
         return ResourceUpdated(data=schema_instance)
+
+    @router.delete(
+        "/resource/{namespace}/{category}",
+        description="Delete all resources by namespace and category",
+    )
+    @router.delete(
+        "/resource/{namespace}/{kind}",
+        description="Delete all resources by namespace and kind",
+    )
+    async def delete_resources(
+        namespace: str = "",
+        kind: str = "",
+        name: str = "",
+        category: str = "",
+        resource_store: ResourceStore = Depends(lambda: resource_store),
+    ) -> ResourceDeleted:
+        """Deletes a resource by namespace, kind and name."""
+
+        try:
+            resource_data = resource_store.delete_many(
+                namespace=namespace, kind=kind, category=category, name=name
+            )
+            return ResourceDeleted(
+                details=[
+                    "Resource deleted",
+                    f"Parameters: {namespace}/{kind}/{name}",
+                    f"Count: {resource_data.count}",
+                ],
+            )
+        except Exception as error:  # pylint: disable=broad-except
+            raise HTTPException(
+                status_code=500,
+                detail=[
+                    "Failed to delete resource",
+                    str(error),
+                ],
+            ) from error
+
+    @router.delete(
+        "/resource/{namespace}/{kind}/{name}",
+        description="Delete a resource by namespace, kind and name",
+    )
+    async def delete_resource(
+        namespace: str = "",
+        kind: str = "",
+        name: str = "",
+        category: str = "",
+        resource_store: ResourceStore = Depends(lambda: resource_store),
+    ) -> ResourceDeleted:
+        """Deletes a resource by namespace, kind and name."""
+
+        try:
+            resource_data = resource_store.delete(
+                namespace=namespace, kind=kind, category=category, name=name
+            )
+            return ResourceDeleted(
+                details=[
+                    "Resource deleted",
+                    f"Parameters: {namespace}/{kind}/{name}",
+                    f"Count: {resource_data.count}",
+                ],
+            )
+        except Exception as error:  # pylint: disable=broad-except
+            raise HTTPException(
+                status_code=500,
+                detail=[
+                    "Failed to delete resource",
+                    str(error),
+                ],
+            ) from error
 
     return router

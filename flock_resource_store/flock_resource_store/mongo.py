@@ -67,8 +67,14 @@ class MongoResourceStore(ResourceStore):
             name=name,
             kind=kind,
         )
+
         result = self.collection.find_one(
-            filter=query_filter,
+            # filter=query_filter,
+            filter={
+                "namespace": "default",
+                "kind": "Splitter",
+                "metadata.name": "my-splitter",
+            },
             projection={
                 "_id": False,
             },
@@ -174,4 +180,5 @@ class MongoResourceStore(ResourceStore):
         if name:
             filter_query["metadata.name"] = name
 
+        print(filter_query)
         return filter_query
