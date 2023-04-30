@@ -78,7 +78,7 @@ class MongoResourceStore(ResourceStore):
             projection={
                 "namespace": True,
                 "kind": True,
-                "name": True,
+                "metadata.name": True,
             },
         ).limit(100)
         return result if result else None

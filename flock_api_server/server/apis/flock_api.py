@@ -14,6 +14,7 @@ from flock_resource_store.mongo import ResourceStore
 from flock_schemas import SchemasFactory
 from pydantic import ValidationError
 
+from server.models.resource_details import ResourceDetails
 from server.models.responses.internal_server_error import InternalServerError
 from server.models.responses.resource_accepted import ResourceAccepted
 from server.models.responses.resource_already_exists import ResourceAlreadyExists
@@ -79,29 +80,44 @@ def get_router(
                 ]
             )
 
-    # @router.get(
-    #     "/resource/{namespace}/{kind}",
-    #     responses={
-    #         200: {"model": ResourcesFetched, "description": "Resources Fetched"},
-    #         400: {"model": ResourceBadRequest, "description": "Resource Bad Request"},
-    #         404: {"model": ResourceNotFound, "description": "Resource Not Found"},
-    #         500: {"model": InternalServerError, "description": "Internal Server Error"},
-    #     },
-    #     tags=["flock"],
-    #     summary="get-resource-namespace-kind",
-    #     response_model_by_alias=True,
-    # )
-    # async def get_resource_namespace_kind(
-    #     namespace: str = Path(None, description="namespace"),
-    #     kind: str = Path(None, description="kind"),
-    # ) -> ResourcesFetched:
-    #     """Get Resources list by namespace and kind"""
-    #     resources = resource_store.get_many(f"{namespace}/{kind}")
-    #     if resources is None:
-    #         raise ResourceNotFound(
-    #             details=["Did not find", f"{namespace}/{kind}"],
-    #         )
-    #     return ResourcesFetched(data=resources)
+    @router.get(
+        "/resource/{namespace}/{kind}",
+        responses={
+            200: {"model": ResourcesFetched, "description": "Resources Fetched"},
+            400: {"model": ResourceBadRequest, "description": "Resource Bad Request"},
+            404: {"model": ResourceNotFound, "description": "Resource Not Found"},
+            500: {"model": InternalServerError, "description": "Internal Server Error"},
+        },
+        tags=["flock"],
+        summary="get-resource-namespace-kind",
+        response_model_by_alias=True,
+    )
+    async def get_resource_namespace_kind(
+        namespace: str = Path(..., description="namespace"),
+        kind: str = Path(..., description="kind"),
+        resource_store: ResourceStore = Depends(lambda: resource_store),
+    ):
+        """Get Resources list by namespace and kind"""
+        try:
+            resource_data = resource_store.get_many(f"{namespace}/{kind}")
+            if resource_data is None:
+                return ResourceNotFound(
+                    details=[
+                        "Resource not found",
+                        f"Parameters: {namespace}/{kind}",
+                    ]
+                )
+            schema_instances = [
+                ResourceDetails.validate(item) for item in resource_data
+            ]
+            return ResourcesFetched(data=schema_instances)
+        except Exception as error:  # pylint: disable=broad-except
+            return InternalServerError(
+                details=[
+                    "Failed to get resource",
+                    str(error),
+                ]
+            )
 
     # @router.delete(
     #     "/resource/{namespace}/{kind}",
@@ -155,7 +171,7 @@ def get_router(
             },
             500: {"model": InternalServerError, "description": "Internal Server Error"},
         },
-        tags=["default"],
+        tags=["flock"],
         summary="put-resource",
         response_model_by_alias=True,
     )
