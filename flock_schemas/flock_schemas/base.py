@@ -133,7 +133,7 @@ class BaseFlockSchema(BaseNamespace):
     apiVersion: Literal["flock/v1"] = Field(..., description="API version")
     kind: Kind = Field(..., description="Kind of the object")
     category: Optional[Category] = Field(
-        default=[], description="The resource category"
+        default=Category.OTHER, description="The resource category"
     )
     metadata: BaseMetaData
     created_at: Optional[datetime] = Field(

@@ -109,7 +109,7 @@ def get_router(
 
     @router.put("/resource")
     async def put_resource(
-        resource_data: ResourceType = Body(..., description=""),
+        resource_data: dict = Body(..., description=""),
         resource_store: ResourceStore = Depends(lambda: resource_store),
     ) -> ResourceUpdated:
         """Create or update a resource"""
