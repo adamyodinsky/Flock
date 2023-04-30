@@ -28,4 +28,10 @@ pip3 install pytest
 PYTHONPATH=src pytest tests
 ```
 
-https://github.com/mjhea0/awesome-fastapi
+- <https://github.com/mjhea0/awesome-fastapi>
+- <https://github.com/zhanymkanov/fastapi-best-practices>
+  
+## Docs
+
+<http://127.0.0.1:8000/redoc>
+<http://127.0.0.1:8000/docs>

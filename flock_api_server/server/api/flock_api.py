@@ -19,6 +19,7 @@ from server.schemas.responses.resource_deleted import ResourceDeleted
 from server.schemas.responses.resource_fetched import ResourceFetched
 from server.schemas.responses.resource_updated import ResourceUpdated
 from server.schemas.responses.resources_fetched import ResourcesFetched
+from server.schemas.status_code import ResourceType
 
 # from server.modelsextra_models import TokenModel  # noqa: F401
 
@@ -30,7 +31,10 @@ def get_router(
 
     router = APIRouter()
 
-    @router.get("/resource/{namespace}/{kind}/{name}", response_model=ResourceFetched)
+    @router.get(
+        "/resource/{namespace}/{kind}/{name}",
+        response_model=ResourceFetched,
+    )
     async def get_resource(
         namespace: str,
         kind: str,
@@ -75,13 +79,12 @@ def get_router(
         kind: str = "",
         category: str = "",
         namespace: str = "",
-        name: str = "",
         resource_store: ResourceStore = Depends(lambda: resource_store),
     ) -> ResourcesFetched:
         """Get Resources list by namespace and kind"""
         try:
             resource_data = resource_store.get_many(
-                namespace=namespace, kind=kind, category=category, name=name
+                namespace=namespace, kind=kind, category=category
             )
             if resource_data is None:
                 raise HTTPException(
@@ -106,7 +109,7 @@ def get_router(
 
     @router.put("/resource")
     async def put_resource(
-        resource_data: dict = Body(..., description=""),
+        resource_data: ResourceType = Body(..., description=""),
         resource_store: ResourceStore = Depends(lambda: resource_store),
     ) -> ResourceUpdated:
         """Create or update a resource"""
