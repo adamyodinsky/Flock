@@ -1,10 +1,10 @@
 """Vectorstore schema."""
 from enum import Enum
-from typing import Literal
+from typing import Literal, List
 
 from pydantic import Field
 
-from flock_schemas.base import BaseFlockSchema, BaseOptions
+from flock_schemas.base import BaseFlockSchema, BaseOptions, Category
 from flock_schemas.dependencies import EmbeddingDependency
 
 
@@ -29,6 +29,9 @@ class VectorStoreSchema(BaseFlockSchema):
     """Vectorstore schema."""
 
     kind: Literal["VectorStore"] = Field(..., description="The kind of the object")
+    categories: List[Category] = Field(
+        default=[Category.OTHER], description="The resource category"
+    )
     spec: VectorStoreSpec
 
 

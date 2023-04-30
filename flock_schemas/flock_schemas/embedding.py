@@ -1,11 +1,11 @@
 """Embedding schema."""
 
 from enum import Enum
-from typing import Dict, Literal, Optional
+from typing import Dict, List, Literal, Optional
 
 from pydantic import Field
 
-from flock_schemas.base import BaseFlockSchema, BaseOptions
+from flock_schemas.base import BaseFlockSchema, BaseOptions, Category
 
 
 class EmbeddingVendor(str, Enum):
@@ -25,6 +25,9 @@ class EmbeddingSchema(BaseFlockSchema):
     """Embedding schema."""
 
     kind: Literal["Embedding"] = Field(..., description="The kind of the object")
+    categories: List[Category] = Field(
+        default=[Category.MODEL], description="The resource category"
+    )
     spec: EmbeddingSpec
 
 

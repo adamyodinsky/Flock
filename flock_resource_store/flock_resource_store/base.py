@@ -20,6 +20,10 @@ class ResourceStore(metaclass=abc.ABCMeta):
     def get_many(self, key):
         """Get many resources with the same namespace and kind"""
 
+    @abc.abstractmethod
+    def delete(self, key):
+        """Delete a resource"""
+
     @staticmethod
     def load_file(path, file_type="yaml") -> dict:
         """Load a resource from the store."""

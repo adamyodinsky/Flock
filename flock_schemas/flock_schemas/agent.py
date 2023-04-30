@@ -5,7 +5,12 @@ from typing import List, Literal
 
 from pydantic import Field
 
-from flock_schemas.base import BaseFlockSchema, BaseOptions, BaseToolDependency
+from flock_schemas.base import (
+    BaseFlockSchema,
+    BaseOptions,
+    BaseToolDependency,
+    Category,
+)
 from flock_schemas.dependencies import LLMDependency
 
 
@@ -32,6 +37,9 @@ class AgentSchema(BaseFlockSchema):
     """Agent schema."""
 
     kind: Literal["Agent"] = Field(..., description="The kind of the object")
+    categories: List[Category] = Field(
+        default=[Category.AGENT], description="The resource category"
+    )
     spec: AgentSpec
 
 

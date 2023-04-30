@@ -145,32 +145,49 @@ def get_router(
     #     """Deletes all resources by namespace and kind, returns a list of the deleted resources."""
     #     ...
 
-    # @router.delete(
-    #     path="/resource/{namespace}/{kind}/{name}",
-    #     responses={
-    #         204: {"model": ResourceDeleted, "description": "Resource Deleted"},
-    #         400: {"model": ResourceBadRequest, "description": "Resource Bad Request"},
-    #         404: {"model": ResourceNotFound, "description": "Resource Not Found"},
-    #         500: {"model": InternalServerError, "description": "Internal Server Error"},
-    #     },
-    #     tags=["default"],
-    #     summary="delete-resource-namespace-kind-name",
-    #     response_model_by_alias=True,
-    # )
-    # async def delete_resource_namespace_kind_name(
-    #     namespace: str = Path(None, description="Namespace of resource"),
-    #     kind: str = Path(None, description="Kind of resource"),
-    #     name: str = Path(None, description="Name of a resource"),
-    # ) -> ResourceDeleted:
-    #     """Delete a resource and returns it"""
-    #     ...
+    @router.delete(
+        path="/resource/{namespace}/{kind}/{name}",
+        responses={
+            # 204: {"model": ResourceDeleted, "description": "Resource Deleted"},
+            400: {"model": ResourceBadRequest, "description": "Resource Bad Request"},
+            404: {"model": ResourceNotFound, "description": "Resource Not Found"},
+            500: {"model": InternalServerError, "description": "Internal Server Error"},
+        },
+        tags=["default"],
+        summary="delete-resource-namespace-kind-name",
+        response_model_by_alias=True,
+    )
+    async def delete_resource_namespace_kind_name(
+        namespace: str = Path(..., description="Namespace of resource"),
+        kind: str = Path(..., description="Kind of resource"),
+        name: str = Path(..., description="Name of a resource"),
+        resource_store: ResourceStore = Depends(lambda: resource_store),
+    ) -> ResourceDeleted:
+        """Deletes a resource by namespace, kind and name."""
+
+        try:
+            resource_data = resource_store.delete(f"{namespace}/{kind}/{name}")
+            return ResourceDeleted(
+                details=[
+                    "Resource deleted",
+                    f"Parameters: {namespace}/{kind}/{name}",
+                    f"Count: {resource_data.count}",
+                ],
+            )
+        except Exception as error:  # pylint: disable=broad-except
+            raise HTTPException(
+                status_code=500,
+                detail=[
+                    "Failed to delete resource",
+                    str(error),
+                ],
+            ) from error
 
     @router.put(
         path="/resource/{namespace}/{kind}/{name}",
         responses={
-            201: {"model": ResourceCreated, "description": "Resource Created"},
             202: {"model": ResourceAccepted, "description": "Resource Accepted"},
-            # 204: {"model": ResourceUpdated, "description": "Resource Updated"},
+            200: {"model": ResourceUpdated, "description": "Resource Updated"},
             400: {"model": ResourceBadRequest, "description": "Resource Bad Request"},
             409: {
                 "model": ResourceAlreadyExists,
@@ -188,7 +205,7 @@ def get_router(
         name: str = Path(..., description="Name of a resource"),
         resource_data: dict = Body(..., description=""),
         resource_store: ResourceStore = Depends(lambda: resource_store),
-    ) -> Union[ResourceCreated, ResourceUpdated]:
+    ) -> ResourceUpdated:
         """Create or update a resource"""
 
         try:
@@ -235,6 +252,6 @@ def get_router(
             ) from error
 
         schema_instance = SchemasFactory.get_schema(kind).validate(resource_data)
-        return ResourceCreated(data=schema_instance)
+        return ResourceUpdated(data=schema_instance)
 
     return router

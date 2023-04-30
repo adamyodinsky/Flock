@@ -1,11 +1,11 @@
 """LLM schema."""
 
 from enum import Enum
-from typing import Literal
+from typing import List, Literal
 
 from pydantic import Field
 
-from flock_schemas.base import BaseFlockSchema, BaseOptions
+from flock_schemas.base import BaseFlockSchema, BaseOptions, Category
 
 
 class LLMVendor(str, Enum):
@@ -24,6 +24,9 @@ class LLMSchema(BaseFlockSchema):
     """LLM schema."""
 
     kind: Literal["LLM"] = Field(..., description="The kind of the object")
+    categories: List[Category] = Field(
+        default=[Category.MODEL], description="The resource category"
+    )
     spec: LLMSpec
 
 

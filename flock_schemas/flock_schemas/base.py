@@ -23,6 +23,15 @@ class Kind(str, Enum):
     Custom = "Custom"
 
 
+class Category(str, Enum):
+    """Enum for all categories of resources."""
+
+    TOOL = "tool"
+    AGENT = "agent"
+    MODEL = "model"
+    OTHER = "other"
+
+
 class PyObjectId(ObjectId):
     """Pydantic model for ObjectId."""
 
@@ -124,6 +133,9 @@ class BaseFlockSchema(BaseNamespace):
     # id: Optional[int] = Field(..., alias="_id")
     apiVersion: Literal["flock/v1"] = Field(..., description="API version")
     kind: Kind = Field(..., description="Kind of the object")
+    categories: Optional[List[Category]] = Field(
+        default=[], description="The resource category"
+    )
     metadata: BaseMetaData
     created_at: Optional[datetime] = Field(
         default=None, description="Creation timestamp"

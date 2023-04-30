@@ -1,11 +1,11 @@
 """VectorStoreQATool schema."""
 
 from enum import Enum
-from typing import Dict, Literal, Optional
+from typing import Dict, List, Literal, Optional
 
 from pydantic import Field
 
-from flock_schemas.base import BaseFlockSchema, BaseOptions
+from flock_schemas.base import BaseFlockSchema, BaseOptions, Category
 from flock_schemas.dependencies import LLMDependency, StoreDependency
 
 
@@ -32,6 +32,9 @@ class VectorStoreQAToolSchema(BaseFlockSchema):
 
     kind: Literal["VectorStoreQATool"] = Field(
         ..., description="The kind of the object"
+    )
+    categories: List[Category] = Field(
+        default=[Category.OTHER], description="The resource category"
     )
     spec: VectorStoreQAToolSpec
 
