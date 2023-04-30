@@ -64,9 +64,12 @@ def test_building_resources(file):
         )
 
     # test save and load from resource store
-    key = f"default/{schema_instance.kind}/{schema_instance.metadata.name}"
-    resource_store.put(key=key, val=manifest)
-    manifest = resource_store.get(key=key)
+    resource_store.put(val=manifest)
+    manifest = resource_store.get(
+        namespace=schema_instance.namespace,
+        kind=schema_instance.kind,
+        name=schema_instance.metadata.name,
+    )
     schema_instance = schema_cls.validate(manifest)
 
     # test building resource

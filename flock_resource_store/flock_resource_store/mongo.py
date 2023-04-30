@@ -48,7 +48,7 @@ class MongoResourceStore(ResourceStore):
             {
                 "namespace": val["namespace"],
                 "kind": val["kind"],
-                "metadata.name": val["name"]["metadata.name"],
+                "metadata.name": val["metadata"]["name"],
             },
             {"$set": val},
             upsert=True,
