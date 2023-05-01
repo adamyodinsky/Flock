@@ -8,7 +8,7 @@ from flock_resource_store import ResourceStoreFactory
 
 from server.api.flock_api import get_router
 
-load_dotenv(find_dotenv())
+load_dotenv(find_dotenv(os.environ.get("FLOCK_ENV_FILE", ".env")))
 check_env_vars([], [])
 
 app = FastAPI(

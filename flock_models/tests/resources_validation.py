@@ -31,7 +31,7 @@ secret_store = None
 required_vars = []
 optional_vars = ["FLOCK_RESOURCE_STORE_TYPE"]
 
-load_dotenv(find_dotenv())
+load_dotenv(find_dotenv(os.environ.get("FLOCK_ENV_FILE", ".env")))
 check_env_vars(required_vars, optional_vars)
 
 resource_store = ResourceStoreFactory.get_resource_store(

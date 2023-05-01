@@ -54,8 +54,7 @@ def get_router(
                         f"Parameters: {namespace}/{kind}/{name}",
                     ],
                 )
-            schema_instance = SchemasFactory.get_schema(kind).validate(resource_data)
-            return ResourceFetched(data=schema_instance)
+            return ResourceFetched(data=resource_data)
         except ValidationError as error:
             raise HTTPException(
                 status_code=500,
