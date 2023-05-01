@@ -3,6 +3,7 @@
 apiVersion: flock/v1
 kind: ModelDeployment
 namespace: default
+category: deployment
 metadata:
   name: my-model-deployment
   description: An LLM as a service (api server)

@@ -1,7 +1,7 @@
 """LLM schema."""
 
 from enum import Enum
-from typing import List, Literal
+from typing import Literal
 
 from pydantic import Field
 
@@ -12,6 +12,7 @@ class LLMVendor(str, Enum):
     """Enum for llm vendors."""
 
     ChatOpenAI = "ChatOpenAI"
+    GPT4All = "GPT4All"
 
 
 class LLMSpec(BaseOptions):

@@ -1,8 +1,9 @@
 ---
 
 apiVersion: flock/v1
-kind: EmbeddingDataLoader
+kind: EmbeddingDataLoaderDeployment
 namespace: default
+category: deployment
 metadata:
   name: my-scraper-deployment
   description: A web scraper

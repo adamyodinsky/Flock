@@ -26,11 +26,12 @@ class Kind(str, Enum):
 class Category(str, Enum):
     """Enum for all categories of resources."""
 
-    TOOL = "tool"
-    AGENT = "agent"
-    MODEL = "model"
     OTHER = "other"
+    TOOL = "tool"
     SCRAPER = "scraper"
+    MODEL = "model"
+    AGENT = "agent"
+    DEPLOYMENT = "deployment"
 
 
 # class PyObjectId(ObjectId):

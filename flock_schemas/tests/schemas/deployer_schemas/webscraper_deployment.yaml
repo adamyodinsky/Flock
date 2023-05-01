@@ -1,8 +1,9 @@
 ---
 
 apiVersion: flock/v1
-kind: Deployment
+kind: WebScraperDeployment
 namespace: default
+category: deployment
 metadata:
   name: my-scraper-deployment
   description: A web scraper
@@ -15,7 +16,7 @@ spec:
     namespace: default
     labels:
       app: my_app
-    options: # this can be passed as arguments
+    # options: # this can be passed as arguments that will be passed to the Web-Scraper app. deployer can use this to override the options in the target's manifest
     env: # this is a dict of env that will be passed to the app
       SCRAPER_NAME: my-scraper
       SCRAPER_START_URLS: "http://books.toscrape.com/catalogue/category/books/romance_8/index.html"

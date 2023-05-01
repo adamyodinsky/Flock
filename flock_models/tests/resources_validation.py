@@ -13,17 +13,19 @@ from flock_models.builder import ResourceBuilder
 from plugins.baby_agi import BabyAGIAgent
 
 PATH_TO_SCHEMAS = "tests/schemas"
-RESOURCES_FILES = {
-    "Splitter": "splitter.yaml",
-    "Embedding": "embedding.yaml",
-    "LLM": "llm.yaml",
-    "VectorStore": "vectorstore.yaml",
-    "VectorStoreQATool": "vectorstore_qa_tool.yaml",
-    "LoadTool": "search_tool.yaml",
-    "PromptTemplate": "prompt_template.yaml",
-    "LLMTool": "llm_tool.yaml",
-    "Agent": "baby_agi_agent.yaml",
-}
+RESOURCES_FILES = [
+    "splitter.yaml",
+    "embedding.yaml",
+    "llm.yaml",
+    "vectorstore.yaml",
+    "vectorstore_qa_tool.yaml",
+    "search_tool.yaml",
+    "prompt_template.yaml",
+    "llm_tool.yaml",
+    "agent.yaml",
+    "agent_conversational.yaml",
+    "baby_agi_agent.yaml",
+]
 
 # Setup
 # pylint: disable=C0103
@@ -81,13 +83,16 @@ def test_building_resources(file):
 
 def run_build_tests():
     """Run all tests"""
-    for _, file in RESOURCES_FILES.items():
+    for file in RESOURCES_FILES:
         test_building_resources(file)
 
     agent: resources.AgentResource = cast(
         resources.AgentResource, test_building_resources("agent.yaml")
     )
-    baby_agi = cast(BabyAGIAgent, test_building_resources("baby_agi.yaml"))
+    agent_c: resources.AgentResource = cast(
+        resources.AgentResource, test_building_resources("agent_conversational.yaml")
+    )
+    # baby_agi = cast(BabyAGIAgent, test_building_resources("baby_agi.yaml"))
 
     try:
         agent.resource.run("Who is the current prime minister of israel?")
@@ -96,10 +101,24 @@ def run_build_tests():
         print(str(e))
 
     try:
-        baby_agi.run("Write a weather report for SF today")
+        agent_c.resource.run("Who is the current prime minister of israel?")
     # pylint: disable=W0703
     except Exception as e:
         print(str(e))
+
+    # try:
+    # baby_agi.run("Write a weather report for SF today")
+    # # pylint: disable=W0703
+    # except Exception as e:
+    #     print(str(e))
+
+    # try:
+    #     for i in range(10):
+    #         input_str = input("User: ")
+    #         agent_c.resource.run(input_str)
+    # # pylint: disable=W0703
+    # except Exception as e:
+    #     print(str(e))
 
 
 run_build_tests()

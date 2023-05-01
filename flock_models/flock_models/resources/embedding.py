@@ -1,6 +1,6 @@
 """Interface for embedding models."""
 
-from typing import List, Optional, Dict
+from typing import Dict, List, Optional
 
 from flock_schemas.embedding import EmbeddingSchema
 from langchain.embeddings.base import Embeddings as EmbeddingsLC
@@ -25,3 +25,7 @@ class EmbeddingResource(Resource):
         super().__init__(manifest)
         self.vendor_cls = self.VENDORS[self.vendor]
         self.resource: EmbeddingsLC = self.vendor_cls(**self.options)  # type: ignore
+        self.functions = {
+            "embed_query": self.resource.embed_query,
+            "embed_documents": self.resource.embed_documents,
+        }

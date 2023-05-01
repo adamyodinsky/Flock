@@ -1,9 +1,10 @@
 """Interface for LLM models."""
 
-from typing import Optional, cast, List
+from typing import List, Optional, cast
 
 from flock_schemas import LLMSchema
 from langchain.chat_models import ChatOpenAI
+from langchain.llms.gpt4all import GPT4All
 from langchain.schema import BaseLanguageModel
 
 from flock_models.resources.base import Resource, ToolResource
@@ -14,6 +15,7 @@ class LLMResource(Resource):
 
     VENDORS = {
         "ChatOpenAI": ChatOpenAI,
+        "GPT4All": GPT4All,
     }
 
     def __init__(

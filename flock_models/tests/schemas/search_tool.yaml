@@ -5,7 +5,7 @@ kind: LoadTool
 namespace: default
 metadata:
   name: my-google-search
-  description: Useful for answering questions about current events, and for further research on the internet
+  description: Useful for answering questions about current events, useful for when you need to answer questions about current events or the current state of the world.
   labels:
     app: my_app
 spec:

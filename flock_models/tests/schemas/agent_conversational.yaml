@@ -1,0 +1,26 @@
+---
+
+apiVersion: flock/v1
+kind: Agent
+namespace: default
+metadata:
+  name: my-c-agent
+  description: A Q&A conversation agent for internal projects
+  labels:
+    app: my_app
+spec:
+  vendor: conversational-react-description
+  options:
+    verbose: true
+  dependencies:
+    - kind: LLM
+      name: my-openai-llm
+      namespace: default
+  tools:
+    # - kind: VectorStoreQATool
+    #   name: langchain-docs
+    #   namespace: default
+    - kind: LoadTool
+      name: my-google-search
+      namespace: default
+          

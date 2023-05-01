@@ -3,6 +3,7 @@
 apiVersion: flock/v1
 kind: AgentDeployment
 namespace: default
+category: deployment
 metadata:
   name: my-agent-deployment
   description: A Q&A chat agent server
