@@ -3,7 +3,9 @@ import os
 import sys
 
 import click
+from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI
+from flock_common import EnvVarNotSetError, check_env_vars
 from uvicorn import run
 
 from flock_agent.agent import FlockAgent
@@ -45,6 +47,12 @@ def run_agent(input_path, input_value, host, port):
     config_str = ""
     click.echo("Initializing...")
 
+    # Check env vars
+    required_vars = []
+    optional_vars = ["INPUT_PATH", "INPUT_VALUE", "HOST", "PORT", "MAINFRAME_ADDR"]
+    load_dotenv(find_dotenv(os.environ.get("FLOCK_ENV_FILE", ".env")))
+    check_env_vars(required_vars, optional_vars)
+
     # Load configuration manifest from a file or a string
     if input_path:
         if os.path.exists(input_path):
@@ -78,4 +86,8 @@ def run_agent(input_path, input_value, host, port):
 cli.add_command(run_agent)
 
 if __name__ == "__main__":
-    cli()
+    try:
+        cli()
+    except EnvVarNotSetError as e:
+        print(str(e))
+        sys.exit(1)

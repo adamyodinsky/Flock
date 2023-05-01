@@ -7,12 +7,14 @@ run-dev:
 	@echo "Running in development mode"
 	@poetry run uvicorn flock_agent.main:app --reload  
 
+run-prod:
+	@echo "Running in production mode"
+	@poetry run uvicorn flock_agent.main:app --host
+	
 format:
-	@echo "Formatting code"
 	@poetry run isort . && poetry run black . 
 
 lint:
-	@echo "Linting code"
 	@poetry run pylint flock_scehmas tests --disable=E0401,F0001
 
 install:
@@ -20,8 +22,10 @@ install:
 	@poetry install
 
 test:
-	@echo "Running tests"
 	@poetry run pytest
+
+test_curl:
+	@curl -X POST -H "Content-Type: application/json" -d '{ "msg": "who is the president of USA?" }' localhost:8000/agent
 
 build: test install
 	@echo "Building Docker image"

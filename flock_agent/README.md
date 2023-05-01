@@ -62,3 +62,9 @@ First, it will run the app server (and report to the mainframe in a later stage)
   ]
 }
 ```
+
+Test it with:
+
+```bash
+ curl -X POST -H "Content-Type: application/json" -d '{ "msg": "who is the president of USA?" }' localhost:8000/agent
+```

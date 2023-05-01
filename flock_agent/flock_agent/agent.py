@@ -3,7 +3,6 @@ import os
 from typing import cast
 
 import click
-from flock_common.env_checker import check_env_vars
 from flock_models.builder.resource_builder import ResourceBuilder
 from flock_models.resources.base import Agent
 from flock_resource_store import ResourceStoreFactory
@@ -16,24 +15,12 @@ class FlockAgent:
     def __init__(self, manifest: dict):
         """Initialize Flock Agent"""
 
-        # check env vars
-        required_vars = []
-        optional_vars = [
-            "FLOCK_RESOURCE_STORE_TYPE",
-            "MAINFRAME_ADDR",
-        ]
-
-        check_env_vars(required_vars, optional_vars)
-
         self.config = {
-            "store_type": os.environ.get("FLOCK_RESOURCE_STORE_TYPE", "fs"),
             "leader_addr": os.environ.get("MAINFRAME_ADDR", "http://localhost:5000"),
         }
 
         try:
-            self.resource_store = ResourceStoreFactory.get_resource_store(
-                self.config["store_type"],
-            )
+            self.resource_store = ResourceStoreFactory.get_resource_store()
             self.manifest = manifest
             self.builder = ResourceBuilder(resource_store=self.resource_store)
             self.agent: Agent = cast(

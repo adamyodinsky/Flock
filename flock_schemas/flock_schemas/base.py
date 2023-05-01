@@ -3,9 +3,9 @@ from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, List, Literal, Mapping, Optional
 
-from odmantic import Index
-from odmantic.bson import BaseBSONModel, ObjectId
-from pydantic import Extra, Field
+# from odmantic import Index
+# from odmantic.bson import BaseBSONModel, ObjectId
+from pydantic import BaseModel, Extra, Field
 
 
 class Kind(str, Enum):
@@ -32,25 +32,25 @@ class Category(str, Enum):
     OTHER = "other"
 
 
-class PyObjectId(ObjectId):
-    """Pydantic model for ObjectId."""
+# class PyObjectId(ObjectId):
+#     """Pydantic model for ObjectId."""
 
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
+#     @classmethod
+#     def __get_validators__(cls):
+#         yield cls.validate
 
-    @classmethod
-    def validate(cls, v):
-        if not ObjectId.is_valid(v):
-            raise ValueError("Invalid objectid")
-        return ObjectId(v)
+#     @classmethod
+#     def validate(cls, v):
+#         if not ObjectId.is_valid(v):
+#             raise ValueError("Invalid objectid")
+#         return ObjectId(v)
 
-    @classmethod
-    def __modify_schema__(cls, field_schema):
-        field_schema.update(type="string")
+#     @classmethod
+#     def __modify_schema__(cls, field_schema):
+#         field_schema.update(type="string")
 
 
-class BaseModelConfig(BaseBSONModel):
+class BaseModelConfig(BaseModel):
     """Base model config."""
 
     class Config:
