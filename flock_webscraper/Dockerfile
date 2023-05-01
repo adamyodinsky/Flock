@@ -9,7 +9,8 @@ COPY ./flock_webscraper .
 
 # Install Scrapy and any other dependencies using pip
 RUN pip install --upgrade pip \
-    && pip install --user scrapy
+    && pip install --user scrapy \
+    && pip install --user python-dotenv
 
 
 # Stage 2: Create the final image

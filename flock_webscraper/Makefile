@@ -26,7 +26,7 @@ docker-test-build:
 	@echo "Building docker image for testing"
 	@docker build -t flock-webscraper .
 
-docker-build-prod:
+docker-prd-build:
 	docker build -t flock-webscraper:`poetry version | cut -d ' ' -f 2` .
 
 docker-test-run:
