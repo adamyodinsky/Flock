@@ -1,0 +1,26 @@
+---
+
+apiVersion: flock/v1
+kind: AgentDeployment
+namespace: default
+metadata:
+  name: my-agent-deployment
+  description: A Q&A chat agent server
+  labels:
+    app: my_app
+spec:
+  target:
+    kind: Agent # this is an agent resource manifest reference that should be loaded to the Flock-Agent FastAPI app.
+    name: my-agent
+    namespace: default
+    labels:
+      app: my_app
+    options: # this is a dict of options that will be passed to the Flock-Agent FastAPI app. deployer can use this to override the options in the target's manifest
+      verbose: true
+      input-path:
+      input-value:
+      host:
+      port:
+    env:
+
+    
