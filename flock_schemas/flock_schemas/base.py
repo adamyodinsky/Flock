@@ -30,6 +30,7 @@ class Category(str, Enum):
     AGENT = "agent"
     MODEL = "model"
     OTHER = "other"
+    SCRAPER = "scraper"
 
 
 # class PyObjectId(ObjectId):

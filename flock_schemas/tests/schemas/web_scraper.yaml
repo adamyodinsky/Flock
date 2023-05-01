@@ -3,14 +3,14 @@
 apiVersion: flock/v1
 kind: WebScraper
 namespace: default
-# uuid: b70bb61d-6710-48bd-85b0-f32c91f1eed1
+category: scraper
 metadata:
   name: my-web-scraper
   description: Web Scarper that can crawl websites and scrape web pages
   labels:
     app: my_app
 spec:
-  vendor: Scrapy
+  vendor: FlockSpider
   options:
     spider_name: my_spider
     start_urls: ["https://www.example.com"]
