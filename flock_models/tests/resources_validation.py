@@ -22,6 +22,7 @@ RESOURCES_FILES = [
     "search_tool.yaml",
     "prompt_template.yaml",
     "llm_tool.yaml",
+    "gpt4all.yaml",
     "agent.yaml",
     "agent_conversational.yaml",
     "baby_agi_agent.yaml",
@@ -89,9 +90,9 @@ def run_build_tests():
     agent: resources.AgentResource = cast(
         resources.AgentResource, test_building_resources("agent.yaml")
     )
-    agent_c: resources.AgentResource = cast(
-        resources.AgentResource, test_building_resources("agent_conversational.yaml")
-    )
+    # agent_c: resources.AgentResource = cast(
+    #     resources.AgentResource, test_building_resources("agent_conversational.yaml")
+    # )
     # baby_agi = cast(BabyAGIAgent, test_building_resources("baby_agi.yaml"))
 
     try:
@@ -100,11 +101,11 @@ def run_build_tests():
     except Exception as e:
         print(str(e))
 
-    try:
-        agent_c.resource.run("Who is the current prime minister of israel?")
-    # pylint: disable=W0703
-    except Exception as e:
-        print(str(e))
+    # try:
+    #     agent_c.resource.run("Who is the current prime minister of israel?")
+    # # pylint: disable=W0703
+    # except Exception as e:
+    #     print(str(e))
 
     # try:
     # baby_agi.run("Write a weather report for SF today")

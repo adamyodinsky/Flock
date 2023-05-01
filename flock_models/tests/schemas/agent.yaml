@@ -14,7 +14,7 @@ spec:
     verbose: true
   dependencies:
     - kind: LLM
-      name: my-openai-llm
+      name: my-gpt4all-llm #my-openai-llm
       namespace: default
   tools:
     # - kind: VectorStoreQATool
