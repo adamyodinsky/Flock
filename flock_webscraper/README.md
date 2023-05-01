@@ -90,3 +90,30 @@ def parse(self, response):
 ```
 
 Refer to the [Scrapy documentation](https://docs.scrapy.org/en/latest/) for more information on customizing spiders, handling different types of items, and storing the scraped data.
+
+# Environment Variables (all are optional)
+
+- FLOCK_ENV_FILE: The path to the environment file. optional, default: .env
+- SCRAPER_NAME: The name of the scraper.
+- SCRAPER_START_URLS:  A list of URLs to start the crawl.
+- SCRAPER_OUTPUT_DIR: The directory to store the scraped data.
+- RULE_SCRAPER_ALLOWED_DOMAINS: A list of domains the spider is allowed to crawl.
+- RULE_SCRAPER_DENY_EXTENSIONS: A list of file extensions to deny during the crawl.
+- RULE_SCRAPER_ALLOW: A list of regular expressions to allow during the crawl.
+- RULE_SCRAPER_DENY: A list of regular expressions to deny during the crawl.
+- RULE_SCRAPER_RESTRICT_XPATHS: A list of XPath expressions to restrict the crawl.
+- RULE_SCRAPER_TAGS: A list of HTML tags to restrict the crawl.
+- RULE_SCRAPER_ATTRS:  A list of HTML attributes to restrict the crawl.
+- RULE_SCRAPER_RESTRICT_CSS: A list of CSS expressions to restrict the crawl.
+- RULE_SCRAPER_RESTRICT_TEXT: A list of text expressions to restrict the crawl.
+- RULE_SCRAPER_CANONICALIZE: A list of regular expressions to canonicalize the crawl.
+- RULE_SCRAPER_UNIQUE: A list of regular expressions to uniquify the crawl.
+- RULE_SCRAPER_STRIP: 
+- SCRAPER_DOWNLOAD_DELAY: The amount of time to wait between requests.
+- SCRAPER_FEED_EXPORT_ENCODING: The encoding format to use when exporting the scraped data.
+- SCRAPER_FEED_FORMAT: The format to use when exporting the scraped data.
+- SCRAPER_REQUEST_FINGERPRINTER_IMPLEMENTATION: The fingerprinter implementation to use.
+- SCRAPER_TWISTED_REACTOR: The Twisted reactor to use.
+- SCRAPER_FEED_EXPORT_BATCH_ITEM_COUNT: The number of items to write to each output file.
+
+---

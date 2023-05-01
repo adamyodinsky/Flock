@@ -9,6 +9,7 @@ packages = [{include = "flock_webscraper"}]
 [tool.poetry.dependencies]
 python = "^3.9"
 scrapy = "^2.8.0"
+python-dotenv = "^1.0.0"
 
 [build-system]
 requires = ["poetry-core"]
