@@ -1,0 +1,17 @@
+{
+  "title": "BaseNamespace",
+  "description": "Base namespace schema.",
+  "type": "object",
+  "properties": {
+    "namespace": {
+      "title": "Namespace",
+      "description": "The namespace of the object",
+      "maxLength": 63,
+      "type": "string"
+    }
+  },
+  "required": [
+    "namespace"
+  ],
+  "additionalProperties": false
+}

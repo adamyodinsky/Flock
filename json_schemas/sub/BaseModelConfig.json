@@ -1,0 +1,7 @@
+{
+  "title": "BaseModelConfig",
+  "description": "Base model config.",
+  "type": "object",
+  "properties": {},
+  "additionalProperties": false
+}

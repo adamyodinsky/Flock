@@ -1,0 +1,14 @@
+{
+  "title": "BaseOptions",
+  "description": "Base options schema.",
+  "type": "object",
+  "properties": {
+    "options": {
+      "title": "Options",
+      "description": "Resource options",
+      "default": {},
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}
