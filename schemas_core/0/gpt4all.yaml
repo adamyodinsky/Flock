@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../json_schemas/main/LLMSchema.json
 ---
 apiVersion: flock/v1
 kind: LLM
@@ -13,4 +14,3 @@ spec:
     # temp: 0.28
     model: /Users/adamyodinsky/.flock/models/ggml-gpt4all-l13b-snoozy.bin
     # n_predict: 1024
-    

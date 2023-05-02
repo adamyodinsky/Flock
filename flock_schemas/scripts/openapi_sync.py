@@ -5,7 +5,7 @@ import os
 
 from flock_schemas import SchemasFactory
 
-PATH = "openapi/schemas/"
+PATH = "../json_schemas/"
 
 if not os.path.exists(PATH):
     os.makedirs(PATH)

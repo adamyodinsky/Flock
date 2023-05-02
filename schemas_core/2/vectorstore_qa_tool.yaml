@@ -1,5 +1,5 @@
+# yaml-language-server: $schema=../../json_schemas/main/VectorStoreQAToolSchema.json
 ---
-
 apiVersion: flock/v1
 kind: VectorStoreQATool
 namespace: default
@@ -20,5 +20,3 @@ spec:
     - kind: LLMChat
       name: my-openai-llm
       namespace: default
-      
-    

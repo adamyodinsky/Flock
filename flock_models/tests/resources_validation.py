@@ -11,23 +11,6 @@ from flock_schemas import SchemasFactory
 
 from flock_models import resources
 from flock_models.builder import ResourceBuilder
-from plugins.baby_agi import BabyAGIAgent
-
-PATH_TO_SCHEMAS = "tests/schemas"
-RESOURCES_FILES = [
-    "splitter.yaml",
-    "embedding.yaml",
-    "llm_chat.yaml",
-    "vectorstore.yaml",
-    "vectorstore_qa_tool.yaml",
-    "search_tool.yaml",
-    "prompt_template.yaml",
-    "llm_tool.yaml",
-    "gpt4all.yaml",
-    "agent.yaml",
-    "agent_conversational.yaml",
-    "baby_agi_agent.yaml",
-]
 
 # Setup
 # pylint: disable=C0103
@@ -45,7 +28,7 @@ resource_store = ResourceStoreFactory.get_resource_store(
 resource_builder = ResourceBuilder(resource_store=resource_store)
 
 
-def test_building_resources(manifest):
+def test_building_resource(manifest):
     """Test building resources from yaml files"""
 
     manifest_kind = manifest["kind"]
@@ -77,46 +60,30 @@ def test_building_resources(manifest):
     return resource
 
 
+def single_test(file_path, prompt="Who is the current prime minister of israel?"):
+    """Test building resources from yaml files"""
+
+    manifest = resource_store.load_file(file_path)
+    agent: resources.AgentResource = cast(
+        resources.AgentResource, test_building_resource(manifest)
+    )
+
+    try:
+        agent.resource.run(prompt)
+    # pylint: disable=W0703
+    except Exception as e:
+        print(str(e))
+
+
 def run_build_tests():
     """Run all tests"""
     validation_iterator(
         dir_path="../schemas_core",
-        validation_function=test_building_resources,
+        validation_function=test_building_resource,
     )
 
-    # agent: resources.AgentResource = cast(
-    #     resources.AgentResource, test_building_resources("agent.yaml")
-    # )
-    # agent_c: resources.AgentResource = cast(
-    #     resources.AgentResource, test_building_resources("agent_conversational.yaml")
-    # )
-    # baby_agi = cast(BabyAGIAgent, test_building_resources("baby_agi.yaml"))
-
-    # try:
-    #     agent.resource.run("Who is the current prime minister of israel?")
-    # # pylint: disable=W0703
-    # except Exception as e:
-    #     print(str(e))
-
-    # try:
-    #     agent_c.resource.run("Who is the current prime minister of israel?")
-    # # pylint: disable=W0703
-    # except Exception as e:
-    #     print(str(e))
-
-    # try:
-    # baby_agi.run("Write a weather report for SF today")
-    # # pylint: disable=W0703
-    # except Exception as e:
-    #     print(str(e))
-
-    # try:
-    #     for i in range(10):
-    #         input_str = input("User: ")
-    #         agent_c.resource.run(input_str)
-    # # pylint: disable=W0703
-    # except Exception as e:
-    #     print(str(e))
+    single_test("../schemas_core/3/agent.yaml")
+    # single_test("../schemas_core/4/baby_agi.yaml")
 
 
 run_build_tests()
