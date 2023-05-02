@@ -1,13 +1,13 @@
 """Resource for vectorstore."""
 
-from typing import Optional, cast, List, Dict
+from typing import Dict, List, Optional, cast
 
 from flock_schemas import LLMToolSchema
 from flock_schemas.base import Kind
 from langchain import LLMChain
 from langchain.agents import Tool as ToolWarperLC
+from langchain.base_language import BaseLanguageModel as LCBaseLanguageModel
 from langchain.prompts.base import BasePromptTemplate as BasePromptTemplate
-from langchain.schema import BaseLanguageModel as LCBaseLanguageModel
 
 from flock_models.resources.base import Resource, ToolResource
 
@@ -29,7 +29,10 @@ class LLMToolResource(ToolResource):
             tools = []
 
         self.vendor_cls: LLMChain = cast(LLMChain, self.VENDORS[self.vendor])
-        self.llm: LCBaseLanguageModel = self.dependencies[Kind.LLM].resource
+        try:
+            self.llm: LCBaseLanguageModel = self.dependencies[Kind.LLM].resource
+        except KeyError:
+            self.llm: LCBaseLanguageModel = self.dependencies[Kind.LLMChat].resource
         self.prompt_template: BasePromptTemplate = self.dependencies[
             Kind.PromptTemplate
         ].resource

@@ -16,7 +16,7 @@ PATH_TO_SCHEMAS = "tests/schemas"
 RESOURCES_FILES = [
     "splitter.yaml",
     "embedding.yaml",
-    "llm.yaml",
+    "llm_chat.yaml",
     "vectorstore.yaml",
     "vectorstore_qa_tool.yaml",
     "search_tool.yaml",

@@ -1,40 +1,20 @@
 """Validate all schemas in the schemas folder."""
-from typing import Any, Dict, List
 
-import yaml
-from pydantic import ValidationError
+from typing import Any, Dict
+
+from flock_common.validation import validation_iterator
 
 from flock_schemas import SchemasFactory
 
-SCHEMA_FILES = {
-    "VectorStore": "vectorstore.yaml",
-    "VectorStoreQATool": "vectorstore_qa_tool.yaml",
-    "LoadTool": "search_tool.yaml",
-    "Splitter": "splitter.yaml",
-    "Embedding": "embedding.yaml",
-    "LLM": "llm.yaml",
-    "PromptTemplate": "prompt_template.yaml",
-    "LLMTool": "llm_tool.yaml",
-    "Agent": "agent.yaml",
-    "Custom": "baby_agi.yaml",
-}
+# from pydantic import ValidationError
 
 
-def validate_crd(_kind, _crd: List[Dict[str, Any]]):
+def validate_schema(data: Dict[str, Any]):
     """Validate all CRDs in a file."""
 
-    try:
-        scheme = SchemasFactory.get_schema(_kind)
-        scheme.validate(_crd)
-    except ValidationError as error:
-        print(f"Error validating {_kind}:")
-        print(error.json())
-    print(f"{_kind} - OK")
+    kind = data["kind"]
+    scheme = SchemasFactory.get_schema(kind)
+    scheme.validate(data)
 
 
-# Validate all yaml schemas
-for file_kind, file_name in SCHEMA_FILES.items():
-    print(f"Validating {file_name} - ", end="", flush=True)
-    with open(f"tests/schemas/{file_name}", encoding="utf-8") as f:
-        crd = yaml.load(f, Loader=yaml.FullLoader)
-        validate_crd(file_kind, crd)
+validation_iterator("../schemas_core", validate_schema)

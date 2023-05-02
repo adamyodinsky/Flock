@@ -1,6 +1,6 @@
 import importlib
 import os
-from typing import Tuple
+from typing import Tuple, cast
 
 import flock_schemas
 from flock_schemas.agent import AgentSchema
@@ -11,6 +11,7 @@ from flock_schemas.base import Kind
 from flock_schemas.custom import CustomSchema
 from flock_schemas.embedding import EmbeddingSchema
 from flock_schemas.llm import LLMSchema
+from flock_schemas.llm_chat import LLMChatSchema
 from flock_schemas.llm_tool import LLMToolSchema
 from flock_schemas.load_tool import LoadToolSchema
 from flock_schemas.prompt_template import PromptTemplateSchema
@@ -33,6 +34,7 @@ class SchemasFactory:
         "PromptTemplate": PromptTemplateSchema,
         "LLMTool": LLMToolSchema,
         "Custom": CustomSchema,
+        "LLMChat": LLMChatSchema,
     }
 
     SCHEMAS_LIST = [
@@ -54,7 +56,10 @@ class SchemasFactory:
         if kind in SchemasFactory.SCHEMAS_LIST:
             return SchemasFactory.SCHEMAS_MAP[kind]
         else:
-            return CustomSchema
+            print(
+                f"- Unknown kind: {kind}, returning CustomSchema -", end=" ", flush=True
+            )
+            return cast(BaseFlockSchema, CustomSchema)
 
     @staticmethod
     def load_schemas(schemas_dir: str = "flock_schemas") -> Tuple[dict, dict]:

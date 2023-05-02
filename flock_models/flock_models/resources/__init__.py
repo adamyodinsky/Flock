@@ -8,15 +8,17 @@ from flock_models.resources.vectorstore import VectorStoreResource
 from flock_models.resources.vectorstore_qa_tool import VectorStoreQAToolResource
 from flock_models.resources.prompt_template import PromptTemplateResource
 from flock_models.resources.llm_tool import LLMToolResource
+from flock_models.resources.llm_chat import LLMChatResource
 
 Resources = {
     "Embedding": EmbeddingResource,
     "LLM": LLMResource,
+    "LLMChat": LLMChatResource,
     "LoadTool": LoadToolResource,
     "VectorStore": VectorStoreResource,
     "VectorStoreQATool": VectorStoreQAToolResource,
     "Agent": AgentResource,
     "Splitter": SplitterResource,
     "PromptTemplate": PromptTemplateResource,
-    "LLMTool": LLMToolResource
+    "LLMTool": LLMToolResource,
 }

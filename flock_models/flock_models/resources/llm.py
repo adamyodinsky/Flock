@@ -3,11 +3,8 @@
 from typing import List, Optional, cast
 
 from flock_schemas import LLMSchema
-from langchain.callbacks.base import CallbackManager
-from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
-from langchain.chat_models import ChatOpenAI
+from langchain.base_language import BaseLanguageModel
 from langchain.llms.gpt4all import GPT4All
-from langchain.schema import BaseLanguageModel
 
 from flock_models.resources.base import Resource, ToolResource
 
@@ -16,7 +13,6 @@ class LLMResource(Resource):
     """Class for LLM resources."""
 
     VENDORS = {
-        "ChatOpenAI": ChatOpenAI,
         "GPT4All": GPT4All,
     }
 
@@ -31,9 +27,4 @@ class LLMResource(Resource):
             BaseLanguageModel, self.VENDORS[self.vendor]
         )
 
-        callback = {}
-        if self.vendor == "GPT4All":
-            callback = {
-                "callback_manager": CallbackManager([StreamingStdOutCallbackHandler()])
-            }
-        self.resource = self.vendor_cls(**self.options, **callback)  # type: ignore
+        self.resource = self.vendor_cls(**self.options)  # type: ignore

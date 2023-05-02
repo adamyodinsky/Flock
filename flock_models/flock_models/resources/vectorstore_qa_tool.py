@@ -6,7 +6,7 @@ from flock_schemas import Kind, VectorStoreQAToolSchema
 from langchain.agents import Tool as ToolWarperLC
 from langchain.chains import RetrievalQAWithSourcesChain
 from langchain.chains.qa_with_sources.base import BaseQAWithSourcesChain
-from langchain.schema import BaseLanguageModel as LCBaseLanguageModel
+from langchain.base_language import BaseLanguageModel as LCBaseLanguageModel
 from langchain.vectorstores.base import VectorStore as VectorStoreLC
 
 from flock_models.resources.base import Resource, ToolResource

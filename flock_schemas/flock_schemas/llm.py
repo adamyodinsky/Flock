@@ -11,7 +11,6 @@ from flock_schemas.base import BaseFlockSchema, BaseOptions, Category
 class LLMVendor(str, Enum):
     """Enum for llm vendors."""
 
-    ChatOpenAI = "ChatOpenAI"
     GPT4All = "GPT4All"
 
 

@@ -5,7 +5,7 @@ from typing import List, Optional, Dict
 from flock_schemas import LoadToolSchema
 from flock_schemas.base import Kind
 from langchain.agents import load_tools as load_toolsLC
-from langchain.schema import BaseLanguageModel as LCBaseLanguageModel
+from langchain.base_language import BaseLanguageModel as LCBaseLanguageModel
 
 from flock_models.resources.base import Resource, ToolResource
 

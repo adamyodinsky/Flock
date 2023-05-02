@@ -15,6 +15,7 @@ class Kind(str, Enum):
     VectorStore = "VectorStore"
     VectorStoreQATool = "VectorStoreQATool"
     LLM = "LLM"
+    LLMChat = "LLMChat"
     LoadTool = "LoadTool"
     Splitter = "Splitter"
     Agent = "Agent"
