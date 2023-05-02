@@ -12,13 +12,17 @@
     "apiVersion": {
       "title": "Apiversion",
       "description": "API version",
-      "enum": ["flock/v1"],
+      "enum": [
+        "flock/v1"
+      ],
       "type": "string"
     },
     "kind": {
       "title": "Kind",
       "description": "The kind of the object",
-      "enum": ["Agent"],
+      "enum": [
+        "Agent"
+      ],
       "type": "string"
     },
     "category": {
@@ -49,13 +53,26 @@
       "$ref": "#/definitions/AgentSpec"
     }
   },
-  "required": ["namespace", "apiVersion", "kind", "metadata", "spec"],
+  "required": [
+    "namespace",
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
   "additionalProperties": false,
   "definitions": {
     "Category": {
       "title": "Category",
       "description": "Enum for all categories of resources.",
-      "enum": ["other", "tool", "scraper", "model", "agent", "deployment"],
+      "enum": [
+        "other",
+        "tool",
+        "scraper",
+        "model",
+        "agent",
+        "deployment"
+      ],
       "type": "string"
     },
     "BaseMetaData": {
@@ -92,7 +109,10 @@
           "type": "string"
         }
       },
-      "required": ["name", "description"],
+      "required": [
+        "name",
+        "description"
+      ],
       "additionalProperties": false
     },
     "AgentType": {
@@ -165,7 +185,10 @@
           "type": "string"
         }
       },
-      "required": ["name", "kind"],
+      "required": [
+        "name",
+        "kind"
+      ],
       "additionalProperties": false
     },
     "LLMDependency": {
@@ -200,7 +223,9 @@
           "type": "string"
         }
       },
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "additionalProperties": false
     },
     "LLMChatDependency": {
@@ -235,7 +260,9 @@
           "type": "string"
         }
       },
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "additionalProperties": false
     },
     "AgentSpec": {
@@ -285,7 +312,11 @@
           ]
         }
       },
-      "required": ["vendor", "tools", "dependencies"],
+      "required": [
+        "vendor",
+        "tools",
+        "dependencies"
+      ],
       "additionalProperties": false
     }
   }

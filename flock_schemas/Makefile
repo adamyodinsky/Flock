@@ -4,9 +4,8 @@ validate-schemas:
 	@echo "Validating Schemas\n"
 	@poetry run python tests/schemas_validation.py
 
-write-openapi:
-	@echo "Writing OpenAPI Schemas\n"
-	@poetry run python scripts/openapi_sync.py
+write-json-schemas:
+	@poetry run python scripts/write_json_schemas.py
 
 format:
 	@echo "Formatting Code\n"
