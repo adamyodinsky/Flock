@@ -33,13 +33,14 @@ class SchemasFactory:
         "Splitter": SplitterSchema,
         "PromptTemplate": PromptTemplateSchema,
         "LLMTool": LLMToolSchema,
-        "Custom": CustomSchema,
         "LLMChat": LLMChatSchema,
+        "Custom": CustomSchema,
     }
 
     SCHEMAS_LIST = [
         "Embedding",
         "LLM",
+        "LLMChat",
         "VectorStore",
         "VectorStoreQATool",
         "Agent",
