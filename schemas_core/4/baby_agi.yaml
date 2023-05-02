@@ -14,7 +14,7 @@ spec:
     verbose: false
     max_iterations: 3
   dependencies:
-    - kind: LLM
+    - kind: LLMChat
       name: my-openai-llm
       namespace: default
     - kind: Embedding

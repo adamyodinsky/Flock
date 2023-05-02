@@ -5,6 +5,7 @@ from typing import cast
 
 from dotenv import find_dotenv, load_dotenv
 from flock_common.env_checker import check_env_vars
+from flock_common.validation import validation_iterator
 from flock_resource_store import ResourceStoreFactory
 from flock_schemas import SchemasFactory
 
@@ -44,14 +45,9 @@ resource_store = ResourceStoreFactory.get_resource_store(
 resource_builder = ResourceBuilder(resource_store=resource_store)
 
 
-def test_building_resources(file):
+def test_building_resources(manifest):
     """Test building resources from yaml files"""
 
-    print(f"{file} - ", end="", flush=True)
-
-    # test loading from yaml file
-    path = f"{PATH_TO_SCHEMAS}/{file}"
-    manifest = resource_store.load_file(path=path)  # type: ignore
     manifest_kind = manifest["kind"]
 
     # test schema validation
@@ -78,28 +74,29 @@ def test_building_resources(file):
     # test building resource
     resource = resource_builder.build_resource(manifest)
 
-    print(f"{schema_instance.kind} - OK")
     return resource
 
 
 def run_build_tests():
     """Run all tests"""
-    for file in RESOURCES_FILES:
-        test_building_resources(file)
-
-    agent: resources.AgentResource = cast(
-        resources.AgentResource, test_building_resources("agent.yaml")
+    validation_iterator(
+        dir_path="../schemas_core",
+        validation_function=test_building_resources,
     )
+
+    # agent: resources.AgentResource = cast(
+    #     resources.AgentResource, test_building_resources("agent.yaml")
+    # )
     # agent_c: resources.AgentResource = cast(
     #     resources.AgentResource, test_building_resources("agent_conversational.yaml")
     # )
     # baby_agi = cast(BabyAGIAgent, test_building_resources("baby_agi.yaml"))
 
-    try:
-        agent.resource.run("Who is the current prime minister of israel?")
-    # pylint: disable=W0703
-    except Exception as e:
-        print(str(e))
+    # try:
+    #     agent.resource.run("Who is the current prime minister of israel?")
+    # # pylint: disable=W0703
+    # except Exception as e:
+    #     print(str(e))
 
     # try:
     #     agent_c.resource.run("Who is the current prime minister of israel?")

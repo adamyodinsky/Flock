@@ -11,7 +11,7 @@ metadata:
 spec:
   vendor: serpapi
   dependencies:
-    - kind: LLM
+    - kind: LLMChat
       name: my-openai-llm
       namespace: default
       

@@ -28,11 +28,11 @@ class LLMToolResource(ToolResource):
         if tools is None:
             tools = []
 
-        self.vendor_cls: LLMChain = cast(LLMChain, self.VENDORS[self.vendor])
-        try:
-            self.llm: LCBaseLanguageModel = self.dependencies[Kind.LLM].resource
-        except KeyError:
-            self.llm: LCBaseLanguageModel = self.dependencies[Kind.LLMChat].resource
+        llm = self.dependencies.get(Kind.LLM) or self.dependencies.get(Kind.LLMChat)
+        self.llm = llm.resource
+
+        self.vendor_cls = cast(LLMChain, self.VENDORS[self.vendor])
+
         self.prompt_template: BasePromptTemplate = self.dependencies[
             Kind.PromptTemplate
         ].resource

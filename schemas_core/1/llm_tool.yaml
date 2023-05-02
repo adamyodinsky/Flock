@@ -14,7 +14,7 @@ spec:
     - kind: PromptTemplate
       name: my-prompt-template
       namespace: default
-    - kind: LLM
+    - kind: LLMChat
       name: my-openai-llm
       namespace: default
       

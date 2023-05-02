@@ -1,7 +1,7 @@
 """Agent schema."""
 
 from enum import Enum
-from typing import List, Literal
+from typing import List, Literal, Union
 
 from pydantic import Field
 
@@ -11,7 +11,7 @@ from flock_schemas.base import (
     BaseToolDependency,
     Category,
 )
-from flock_schemas.dependencies import LLMDependency
+from flock_schemas.dependencies import LLMChatDependency, LLMDependency
 
 
 class AgentType(str, Enum):
@@ -30,7 +30,9 @@ class AgentSpec(BaseOptions):
 
     vendor: AgentType = Field(..., description="Agent type")
     tools: List[BaseToolDependency] = Field(..., description="Agent tools")
-    dependencies: tuple[LLMDependency] = Field(..., description="Agent dependencies")
+    dependencies: tuple[Union[LLMDependency, LLMChatDependency]] = Field(
+        ..., description="Agent dependencies"
+    )
 
 
 class AgentSchema(BaseFlockSchema):

@@ -17,7 +17,7 @@ spec:
     - kind: VectorStore
       name: documentation_vectorstore
       namespace: default
-    - kind: LLM
+    - kind: LLMChat
       name: my-openai-llm
       namespace: default
       

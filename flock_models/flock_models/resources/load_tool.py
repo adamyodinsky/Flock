@@ -1,6 +1,6 @@
 """Resource for vectorstore."""
 
-from typing import List, Optional, Dict
+from typing import Dict, List, Optional
 
 from flock_schemas import LoadToolSchema
 from flock_schemas.base import Kind
@@ -52,7 +52,8 @@ class LoadToolResource(ToolResource):
         if tools is None:
             tools = []
 
-        self.llm: LCBaseLanguageModel = self.dependencies[Kind.LLM].resource
+        llm = self.dependencies.get(Kind.LLM) or self.dependencies.get(Kind.LLMChat)
+        self.llm: LCBaseLanguageModel = llm.resource
 
         self.tool_function = load_toolsLC(
             tool_names=[self.vendor],

@@ -1,11 +1,11 @@
 """LoadTool schema."""
 from enum import Enum
-from typing import List, Literal
+from typing import List, Literal, Union
 
 from pydantic import Field
 
 from flock_schemas.base import BaseFlockSchema, BaseOptions, Category
-from flock_schemas.dependencies import LLMDependency
+from flock_schemas.dependencies import LLMDependency, LLMChatDependency
 
 
 class LoadToolVendor(str, Enum):
@@ -45,7 +45,9 @@ class LoadToolSpec(BaseOptions):
         ...,
         description="The name of the search tool, e.g. serpapi, google-serper, etc.",
     )
-    dependencies: tuple[LLMDependency] = Field(..., description="Tool dependencies")
+    dependencies: tuple[Union[LLMDependency, LLMChatDependency]] = Field(
+        ..., description="Tool dependencies"
+    )
 
 
 class LoadToolSchema(BaseFlockSchema):

@@ -1,7 +1,7 @@
 """Embedding schema."""
 
 from enum import Enum
-from typing import Dict, List, Literal, Optional
+from typing import Dict, Literal, Optional
 
 from pydantic import Field
 

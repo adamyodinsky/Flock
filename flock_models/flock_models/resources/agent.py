@@ -31,10 +31,12 @@ class AgentResource(Agent):
                     memory_key="chat_history", return_messages=True
                 )
             }
+        llm = self.dependencies.get(Kind.LLM) or self.dependencies.get(Kind.LLMChat)
+        self.llm = llm.resource
 
         self.resource = initialize_agent(
             tools=self.agent_tools,
-            llm=self.dependencies[Kind.LLM].resource,
+            llm=self.llm,
             agent=self.vendor,
             **self.options,  # type: ignore
             **memory,

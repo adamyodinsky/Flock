@@ -20,7 +20,7 @@ spec:
         {agent_scratchpad}
       input_variables: ["objective", "task", "context", "agent_scratchpad"]
   dependencies:
-    - kind: LLM
+    - kind: LLMChat
       name: my-openai-llm
       namespace: default
   tools:

@@ -11,6 +11,12 @@ class LLMDependency(BaseDependency):
     kind: str = Field(Kind.LLM, const=True)
 
 
+class LLMChatDependency(BaseDependency):
+    """LLMChat dependency schema."""
+
+    kind: str = Field(Kind.LLMChat, const=True)
+
+
 class StoreDependency(BaseDependency):
     """Store dependency schema."""
 

@@ -28,9 +28,12 @@ class BabyAGIAgent(CustomResource):
         index = faiss.IndexFlatL2(embedding_size)
         vectorstore = FAISS(embedding.embed_query, index, InMemoryDocstore({}), {})
 
+        llm = self.dependencies.get(Kind.LLM) or self.dependencies.get(Kind.LLMChat)
+        self.llm = llm.resource
+
         self.resource = BabyAGI.from_llm(
             vectorstore=vectorstore,
-            llm=self.dependencies[Kind.LLM].resource,
+            llm=self.llm,
             task_execution_chain=self.dependencies[Kind.Agent].resource,
             **self.options,  # type: ignore
         )

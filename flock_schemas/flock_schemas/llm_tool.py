@@ -1,12 +1,16 @@
 """LLM Tool schema."""
 
 from enum import Enum
-from typing import Dict, List, Literal, Optional
+from typing import Dict, Literal, Optional, Union
 
 from pydantic import Field
 
 from flock_schemas.base import BaseFlockSchema, BaseOptions, Category
-from flock_schemas.dependencies import LLMDependency, PromptTemplateDependency
+from flock_schemas.dependencies import (
+    LLMChatDependency,
+    LLMDependency,
+    PromptTemplateDependency,
+)
 
 
 class LLMToolVendor(str, Enum):
@@ -22,9 +26,9 @@ class LLMToolSpec(BaseOptions):
         ..., description="The class of the tool, e.g. LLMChain, etc."
     )
     options: Optional[Dict] = Field({}, description="Options for the tool")
-    dependencies: tuple[PromptTemplateDependency, LLMDependency] = Field(
-        ..., description="Tool dependencies"
-    )
+    dependencies: tuple[
+        PromptTemplateDependency, Union[LLMDependency, LLMChatDependency]
+    ] = Field(..., description="Tool dependencies")
 
 
 class LLMToolSchema(BaseFlockSchema):

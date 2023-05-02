@@ -2,7 +2,7 @@
 
 from typing import List, Optional, cast
 
-from flock_schemas import LLMSchema
+from flock_schemas import LLMChatSchema
 from langchain.base_language import BaseLanguageModel
 from langchain.chat_models import ChatOpenAI
 
@@ -16,7 +16,7 @@ class LLMChatResource(Resource):
 
     def __init__(
         self,
-        manifest: LLMSchema,
+        manifest: LLMChatSchema,
         dependencies: Optional[dict[str, Resource]] = None,
         tools: Optional[List[ToolResource]] = None,
     ):
