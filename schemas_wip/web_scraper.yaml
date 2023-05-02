@@ -1,0 +1,22 @@
+---
+
+apiVersion: flock/v1
+kind: WebScraper
+namespace: default
+category: scraper
+metadata:
+  name: my-web-scraper
+  description: Web Scarper that can crawl websites and scrape web pages
+  labels:
+    app: my_app
+spec:
+  vendor: FlockSpider
+  options:
+    spider_name: my_spider
+    start_urls: ["https://www.example.com"]
+    allowed_domains: ["example.com"]
+    deny_extensions: [".pdf", ".docx"]
+    custom_settings: 
+      FEED_FORMAT: 'json'
+      FEED_URI: '../outputs/%(name)s/%(batch_id)s.json'
+      FEED_EXPORT_BATCH_ITEM_COUNT: 100

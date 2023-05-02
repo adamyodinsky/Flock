@@ -1,0 +1,14 @@
+---
+apiVersion: flock/v1
+kind: Splitter
+namespace: default
+metadata:
+  name: my-splitter
+  description: text-splitter
+  labels:
+    app: my_app
+spec:
+  vendor: CharacterTextSplitter
+  options:
+    chunk_size: 30
+    chunk_overlap: 0
