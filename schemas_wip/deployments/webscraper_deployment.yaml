@@ -1,6 +1,6 @@
 ---
 apiVersion: flock/v1
-kind: WebScraperDeployment
+kind: FlockDeployment
 namespace: default
 category: deployment
 metadata:
@@ -9,6 +9,7 @@ metadata:
   labels:
     app: my_app
 spec:
+  container: flock-deployment
   targetResource:
     kind: WebScraper # this is a WebScraper resource manifest reference that should be loaded to the Web-Scarper app.
     name: my-scraper

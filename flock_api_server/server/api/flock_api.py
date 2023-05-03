@@ -1,14 +1,6 @@
-# coding: utf-8
+"""Flock API"""
 
-# from typing import Dict, List  # noqa: F401
-# from fastapi import Form  # noqa: F401
-
-from fastapi import (  # Cookie,; Depends,; Header,; Query,; Response,; Security,; status,
-    APIRouter,
-    Body,
-    Depends,
-    HTTPException,
-)
+from fastapi import APIRouter, Body, Depends, HTTPException
 from flock_models.builder import ResourceBuilder
 from flock_resource_store.mongo import ResourceStore
 from flock_schemas import SchemasFactory
@@ -19,9 +11,6 @@ from server.schemas.responses.resource_deleted import ResourceDeleted
 from server.schemas.responses.resource_fetched import ResourceFetched
 from server.schemas.responses.resource_updated import ResourceUpdated
 from server.schemas.responses.resources_fetched import ResourcesFetched
-from server.schemas.status_code import ResourceType
-
-# from server.modelsextra_models import TokenModel  # noqa: F401
 
 
 def get_router(
@@ -168,7 +157,7 @@ def get_router(
                 details=[
                     "Resource deleted",
                     f"Parameters: {namespace}/{kind}/{name}",
-                    f"Count: {resource_data.count}",
+                    f"Count: {resource_data.count}",  # type: ignore
                 ],
             )
         except Exception as error:  # pylint: disable=broad-except
@@ -201,7 +190,7 @@ def get_router(
                 details=[
                     "Resource deleted",
                     f"Parameters: {namespace}/{kind}/{name}",
-                    f"Count: {resource_data.count}",
+                    f"Count: {resource_data.count}",  # type: ignore
                 ],
             )
         except Exception as error:  # pylint: disable=broad-except
