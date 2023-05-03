@@ -1,7 +1,6 @@
 ---
-
 apiVersion: flock/v1
-kind: ModelDeployment
+kind: ChatModelDeployment
 namespace: default
 category: deployment
 metadata:
@@ -10,8 +9,8 @@ metadata:
   labels:
     app: my_app
 spec:
-  target: 
-    kind: LLM # this is an LLM resource manifest reference that should be loaded to the Flock-Agent FastAPI app.
+  target:
+    kind: LLMChat # this is an LLM resource manifest reference that should be loaded to the Flock-Agent FastAPI app.
     name: my-openai-llm
     namespace: default
     labels:
@@ -19,9 +18,8 @@ spec:
     env:
       UNKNOWN: 1
     # options: # this is a dict of options that will be passed to the MaSS-Service FastAPI app. deployer can use this to override the options in the target's manifest
-      # verbose: true
-      # input-path:
-      # input-value:
-      # host:
-      # port:
-    
+    # verbose: true
+    # input-path:
+    # input-value:
+    # host:
+    # port:

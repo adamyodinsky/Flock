@@ -1,5 +1,4 @@
 ---
-
 apiVersion: flock/v1
 kind: WebScraperDeployment
 namespace: default
@@ -10,7 +9,7 @@ metadata:
   labels:
     app: my_app
 spec:
-  target: 
+  targetResource:
     kind: WebScraper # this is a WebScraper resource manifest reference that should be loaded to the Web-Scarper app.
     name: my-scraper
     namespace: default
@@ -25,4 +24,3 @@ spec:
       RULE_SCRAPER_DENY_EXTENSIONS: ""
       SCRAPER_OUTPUT_DIR: "/app/spider_output"
       SCRAPER_FEED_EXPORT_BATCH_ITEM_COUNT: 10
-    

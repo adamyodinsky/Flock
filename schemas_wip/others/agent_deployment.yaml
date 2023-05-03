@@ -1,5 +1,4 @@
 ---
-
 apiVersion: flock/v1
 kind: AgentDeployment
 namespace: default
@@ -10,7 +9,8 @@ metadata:
   labels:
     app: my_app
 spec:
-  target:
+  containerVersion:
+  targetResource:
     kind: Agent # this is an agent resource manifest reference that should be loaded to the Flock-Agent FastAPI app.
     name: my-agent
     namespace: default
@@ -23,5 +23,3 @@ spec:
       host:
       port:
     env:
-
-    
