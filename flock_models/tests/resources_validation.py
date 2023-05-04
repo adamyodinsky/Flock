@@ -64,11 +64,9 @@ def single_test(file_path, prompt):
     """Test building resources from yaml files"""
 
     manifest = resource_store.load_file(file_path)
-    agent: resources.AgentResource = cast(
-        resources.AgentResource, test_building_resource(manifest)
-    )
+    agent = test_building_resource(manifest)
 
-    agent.resource.run(prompt)
+    agent.run(prompt)  # type: ignore
     # pylint: disable=W0703
 
 
@@ -80,10 +78,10 @@ def run_build_tests():
     )
 
     OBJECTIVE = "Write a weather report for SF today"
-    # single_test(
-    #     file_path="../schemas_core/3/agent.yaml",
-    #     prompt="Who is the current prime minister of israel?",
-    # )
+    single_test(
+        file_path="../schemas_core/3/agent.yaml",
+        prompt="Who is the current prime minister of israel?",
+    )
     single_test(
         file_path="../schemas_core/4/baby_agi.yaml", prompt={"objective": OBJECTIVE}
     )
