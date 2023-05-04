@@ -33,6 +33,7 @@ class Category(str, Enum):
     MODEL = "model"
     AGENT = "agent"
     DEPLOYMENT = "deployment"
+    STATEFULSET = "statefulset"
 
 
 # class PyObjectId(ObjectId):
