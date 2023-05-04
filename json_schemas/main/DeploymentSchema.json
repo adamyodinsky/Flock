@@ -1,0 +1,211 @@
+{
+  "title": "DeploymentSchema",
+  "description": "Deployment schema.",
+  "type": "object",
+  "properties": {
+    "apiVersion": {
+      "title": "Apiversion",
+      "description": "API version",
+      "enum": [
+        "flock/v1"
+      ],
+      "type": "string"
+    },
+    "metadata": {
+      "title": "Metadata",
+      "description": "The metadata of the object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BaseMetaData"
+        }
+      ]
+    },
+    "kind": {
+      "title": "Kind",
+      "description": "The kind of the object",
+      "enum": [
+        "FlockDeployment"
+      ],
+      "type": "string"
+    },
+    "category": {
+      "title": "Category",
+      "default": "deployment",
+      "type": "string"
+    },
+    "namespace": {
+      "title": "Namespace",
+      "description": "The namespace of the object",
+      "type": "string"
+    },
+    "spec": {
+      "title": "Spec",
+      "description": "The spec of the object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/DeploymentSpec"
+        }
+      ]
+    }
+  },
+  "required": [
+    "apiVersion",
+    "metadata",
+    "kind",
+    "namespace",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "BaseMetaData": {
+      "title": "BaseMetaData",
+      "description": "Base metadata schema.",
+      "type": "object",
+      "properties": {
+        "annotations": {
+          "title": "Annotations",
+          "description": "Annotations are useful for storing additional information",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the object",
+          "maxLength": 63,
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "description": "Description",
+          "maxLength": 255,
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "description"
+      ],
+      "additionalProperties": false
+    },
+    "Kind": {
+      "title": "Kind",
+      "description": "Enum for all kinds of resources.",
+      "enum": [
+        "Embedding",
+        "VectorStore",
+        "VectorStoreQATool",
+        "LLM",
+        "LLMChat",
+        "LoadTool",
+        "Splitter",
+        "Agent",
+        "PromptTemplate",
+        "LLMTool",
+        "Custom"
+      ],
+      "type": "string"
+    },
+    "DeploymentTargetResource": {
+      "title": "DeploymentTargetResource",
+      "description": "Deployment target resource schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind of the dependency",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Kind"
+            }
+          ]
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "description": "Tool description",
+          "type": "string"
+        },
+        "env": {
+          "title": "Env",
+          "description": "Environment variables to be set for the deployment",
+          "default": {},
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "options": {
+          "title": "Options",
+          "description": "Deployment target options",
+          "default": {},
+          "type": "object"
+        }
+      },
+      "required": [
+        "name",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "DeploymentSpec": {
+      "title": "DeploymentSpec",
+      "description": "Deployment spec schema.",
+      "type": "object",
+      "properties": {
+        "image": {
+          "title": "Image",
+          "description": "The container image to be deployed",
+          "type": "string"
+        },
+        "targetResource": {
+          "title": "Targetresource",
+          "description": "The target resource to be deployed",
+          "allOf": [
+            {
+              "$ref": "#/definitions/DeploymentTargetResource"
+            }
+          ]
+        },
+        "replicas": {
+          "title": "Replicas",
+          "description": "The number of replicas to be deployed",
+          "default": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "image",
+        "targetResource"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
