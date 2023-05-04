@@ -60,7 +60,7 @@ def test_building_resource(manifest):
     return resource
 
 
-def single_test(file_path, prompt="Who is the current prime minister of israel?"):
+def single_test(file_path, prompt):
     """Test building resources from yaml files"""
 
     manifest = resource_store.load_file(file_path)
@@ -68,11 +68,8 @@ def single_test(file_path, prompt="Who is the current prime minister of israel?"
         resources.AgentResource, test_building_resource(manifest)
     )
 
-    try:
-        agent.resource.run(prompt)
+    agent.resource.run(prompt)
     # pylint: disable=W0703
-    except Exception as e:
-        print(str(e))
 
 
 def run_build_tests():
@@ -82,8 +79,14 @@ def run_build_tests():
         validation_function=test_building_resource,
     )
 
-    single_test("../schemas_core/3/agent.yaml")
-    # single_test("../schemas_core/4/baby_agi.yaml")
+    OBJECTIVE = "Write a weather report for SF today"
+    # single_test(
+    #     file_path="../schemas_core/3/agent.yaml",
+    #     prompt="Who is the current prime minister of israel?",
+    # )
+    single_test(
+        file_path="../schemas_core/4/baby_agi.yaml", prompt={"objective": OBJECTIVE}
+    )
 
 
 run_build_tests()
