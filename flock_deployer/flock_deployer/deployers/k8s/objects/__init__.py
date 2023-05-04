@@ -2,6 +2,7 @@
 
 from flock_schemas.deployment import DeploymentSchema
 
+from flock_deployer.deployers.k8s.objects.base import K8sResource
 from flock_deployer.deployers.k8s.objects.deployment import K8sDeployment
 from flock_deployer.deployers.k8s.objects.statefulset import K8sStatefulSet
 
@@ -10,7 +11,7 @@ class K8sResourceFactory:
     """Factory class for creating k8s resources."""
 
     @staticmethod
-    def create(manifest: DeploymentSchema):
+    def create(manifest: DeploymentSchema) -> K8sResource:
         """Create a k8s resource."""
         if manifest.category == "deployment":
             return K8sDeployment(manifest)

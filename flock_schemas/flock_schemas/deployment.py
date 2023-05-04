@@ -1,6 +1,6 @@
 """Deployment schema."""
 
-from typing import Dict, Literal, Optional
+from typing import Any, Dict, Literal, Optional
 
 from pydantic import Field
 
@@ -18,6 +18,10 @@ class DeploymentTargetResource(BaseToolDependency):
     env: Optional[Dict[str, str]] = Field(
         default={},
         description="Environment variables to be set for the deployment",
+    )
+    options: Optional[Dict[str, Any]] = Field(
+        default={},
+        description="Deployment target options",
     )
 
 

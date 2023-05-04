@@ -3,7 +3,7 @@
 from flock_schemas.deployment import DeploymentSchema
 from kubernetes import client
 
-from flock_deployer.deployers.k8s.objects.k8sResource import K8sResource
+from flock_deployer.deployers.k8s.objects.base import K8sResource
 
 
 class K8sStatefulSet(K8sResource):

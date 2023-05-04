@@ -1,6 +1,7 @@
+# yaml-language-server: $schema=../../json_schemas/main/DeploymentSchema.json
 ---
 apiVersion: flock/v1
-kind: AgentDeployment
+kind: FlockDeployment
 namespace: default
 category: deployment
 metadata:
@@ -9,17 +10,17 @@ metadata:
   labels:
     app: my_app
 spec:
-  containerVersion:
+  image: flock-agent:latest
   targetResource:
     kind: Agent # this is an agent resource manifest reference that should be loaded to the Flock-Agent FastAPI app.
     name: my-agent
     namespace: default
     labels:
       app: my_app
+    env: {}
     options: # this is a dict of options that will be passed to the Flock-Agent FastAPI app. deployer can use this to override the options in the target's manifest
       verbose: true
-      input-path:
-      input-value:
-      host:
-      port:
-    env:
+      # input-path:
+      # input-value:
+      # host:
+      # port:

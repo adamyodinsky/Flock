@@ -3,7 +3,7 @@
 from flock_schemas.deployment import DeploymentSchema
 from kubernetes import client
 
-from flock_deployer.deployers.k8s.objects.k8sResource import K8sResource
+from flock_deployer.deployers.k8s.objects.base import K8sResource
 
 
 class K8sDeployment(K8sResource):
@@ -28,6 +28,7 @@ class K8sDeployment(K8sResource):
                     spec=client.V1PodSpec(
                         containers=[
                             client.V1Container(
+                                name=manifest.metadata.name,
                                 image=manifest.spec.image,
                                 env=[
                                     client.V1EnvVar(name=key, value=value)

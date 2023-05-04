@@ -89,7 +89,8 @@
         "scraper",
         "model",
         "agent",
-        "deployment"
+        "deployment",
+        "statefulset"
       ],
       "type": "string"
     },
