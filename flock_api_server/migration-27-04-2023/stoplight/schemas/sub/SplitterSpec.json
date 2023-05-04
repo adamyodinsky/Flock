@@ -1,0 +1,52 @@
+{
+  "title": "SplitterSpec",
+  "x-stoplight": {
+    "id": "ipwu7a3zw3xyq"
+  },
+  "description": "Splitter spec.",
+  "type": "object",
+  "properties": {
+    "options": {
+      "title": "Options",
+      "description": "Resource options",
+      "default": {},
+      "type": "object",
+      "x-stoplight": {
+        "id": "5r50oyz32bfrq"
+      }
+    },
+    "vendor": {
+      "description": "The class of the splitter, e.g. CharacterTextSplitter, etc.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SplitterVendor",
+          "x-stoplight": {
+            "id": "t4pidp2ezjm3w"
+          }
+        }
+      ],
+      "x-stoplight": {
+        "id": "uvrgu56r4nzml"
+      }
+    }
+  },
+  "required": [
+    "vendor"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "SplitterVendor": {
+      "title": "SplitterVendor",
+      "description": "Enum for splitter vendors.",
+      "enum": [
+        "CharacterTextSplitter",
+        "PythonCodeTextSplitter"
+      ],
+      "type": "string",
+      "x-stoplight": {
+        "id": "2wc1fls3iuw0h"
+      }
+    }
+  },
+  "x-internal": true
+}

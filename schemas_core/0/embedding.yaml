@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=../../json_schemas/main/EmbeddingSchema.json
+---
+apiVersion: flock/v1
+kind: Embedding
+namespace: default
+metadata:
+  name: my-openai-embedding
+  description: OpenAI embedding
+spec:
+  vendor: OpenAIEmbeddings
+  options:
+    embedding_ctx_length: 4096
+    chunk_size: 1000

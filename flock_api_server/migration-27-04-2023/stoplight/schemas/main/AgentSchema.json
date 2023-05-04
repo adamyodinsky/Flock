@@ -1,0 +1,374 @@
+{
+  "title": "AgentSchema",
+  "x-stoplight": {
+    "id": "0ulmvb2r0f6ib"
+  },
+  "description": "Agent schema.",
+  "type": "object",
+  "properties": {
+    "namespace": {
+      "title": "Namespace",
+      "description": "The namespace of the object",
+      "maxLength": 63,
+      "type": "string",
+      "x-stoplight": {
+        "id": "7i8jrabnmop9h"
+      }
+    },
+    "apiVersion": {
+      "title": "Apiversion",
+      "description": "API version",
+      "enum": [
+        "flock/v1"
+      ],
+      "type": "string",
+      "x-stoplight": {
+        "id": "h4nmr9t8mhiuu"
+      }
+    },
+    "kind": {
+      "title": "Kind",
+      "description": "The kind of the object",
+      "enum": [
+        "Agent"
+      ],
+      "type": "string",
+      "x-stoplight": {
+        "id": "wocamjd323i3u"
+      }
+    },
+    "metadata": {
+      "$ref": "#/definitions/BaseMetaData",
+      "x-stoplight": {
+        "id": "593hn00wrudos"
+      }
+    },
+    "created_at": {
+      "title": "Created At",
+      "description": "Creation timestamp",
+      "type": "string",
+      "format": "date-time",
+      "x-stoplight": {
+        "id": "lxvuqdhnaw8i5"
+      }
+    },
+    "updated_at": {
+      "title": "Updated At",
+      "description": "Last update timestamp",
+      "type": "string",
+      "format": "date-time",
+      "x-stoplight": {
+        "id": "7wqqq5ry4xbhh"
+      }
+    },
+    "spec": {
+      "$ref": "#/definitions/AgentSpec",
+      "x-stoplight": {
+        "id": "nub2z7t8gg917"
+      }
+    }
+  },
+  "required": [
+    "namespace",
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "BaseMetaData": {
+      "title": "BaseMetaData",
+      "description": "Base metadata schema.",
+      "type": "object",
+      "properties": {
+        "annotations": {
+          "title": "Annotations",
+          "description": "Annotations are useful for storing additional information",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "nea8j8puf0au5"
+            }
+          },
+          "x-stoplight": {
+            "id": "ye2fhzis75rv5"
+          }
+        },
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "4t88xz35dtnb8"
+            }
+          },
+          "x-stoplight": {
+            "id": "zc5mgl8z4y91y"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the object",
+          "maxLength": 63,
+          "type": "string",
+          "x-stoplight": {
+            "id": "q4f7332t1k7xl"
+          }
+        },
+        "description": {
+          "title": "Description",
+          "description": "Description",
+          "maxLength": 255,
+          "type": "string",
+          "x-stoplight": {
+            "id": "0xkpi1qk56f42"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "description"
+      ],
+      "additionalProperties": false,
+      "x-stoplight": {
+        "id": "busubdw789vjc"
+      }
+    },
+    "AgentType": {
+      "title": "AgentType",
+      "description": "Enum for Agent types.",
+      "enum": [
+        "zero-shot-react-description",
+        "react-docstore",
+        "self-ask-with-search",
+        "conversational-react-description",
+        "chat-zero-shot-react-description",
+        "chat-conversational-react-description"
+      ],
+      "type": "string",
+      "x-stoplight": {
+        "id": "elmp84zb4dtdv"
+      }
+    },
+    "Kind": {
+      "title": "Kind",
+      "description": "Enum for all kinds of resources.",
+      "enum": [
+        "Embedding",
+        "VectorStore",
+        "VectorStoreQATool",
+        "LLM",
+        "LoadTool",
+        "Splitter",
+        "Agent",
+        "PromptTemplate",
+        "LLMTool",
+        "Custom"
+      ],
+      "type": "string",
+      "x-stoplight": {
+        "id": "tyl4gjj1pc8ue"
+      }
+    },
+    "BaseToolDependency": {
+      "title": "BaseToolDependency",
+      "description": "Base tool dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "ugo7jcnl9rrd4"
+            }
+          },
+          "x-stoplight": {
+            "id": "kz94op22vg7ax"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string",
+          "x-stoplight": {
+            "id": "38gjj7hnmas6k"
+          }
+        },
+        "kind": {
+          "description": "Kind of the dependency",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Kind",
+              "x-stoplight": {
+                "id": "tu1d0k6qowkzh"
+              }
+            }
+          ],
+          "x-stoplight": {
+            "id": "ttaaqzcl8d1c1"
+          }
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string",
+          "x-stoplight": {
+            "id": "lx8kfnykefpaq"
+          }
+        },
+        "description": {
+          "title": "Description",
+          "description": "Tool description",
+          "type": "string",
+          "x-stoplight": {
+            "id": "y7iaget9evxvj"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "x-stoplight": {
+        "id": "slwtccywl9grr"
+      }
+    },
+    "LLMDependency": {
+      "title": "LLMDependency",
+      "description": "LLM dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "skdcb8ob57ab5"
+            }
+          },
+          "x-stoplight": {
+            "id": "r9ez3iykgixqz"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string",
+          "x-stoplight": {
+            "id": "c47h4nwdnxk9h"
+          }
+        },
+        "kind": {
+          "title": "Kind",
+          "default": "LLM",
+          "const": "LLM",
+          "type": "string",
+          "x-stoplight": {
+            "id": "0cyk480una2of"
+          }
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string",
+          "x-stoplight": {
+            "id": "dgcn44k54x60u"
+          }
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "x-stoplight": {
+        "id": "kjr83ybnwk4u9"
+      }
+    },
+    "AgentSpec": {
+      "title": "AgentSpec",
+      "description": "Agent spec.",
+      "type": "object",
+      "properties": {
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object",
+          "x-stoplight": {
+            "id": "6evd9difkzj9i"
+          }
+        },
+        "vendor": {
+          "description": "Agent type",
+          "allOf": [
+            {
+              "$ref": "#/definitions/AgentType",
+              "x-stoplight": {
+                "id": "9f6jvr4zkds1l"
+              }
+            }
+          ],
+          "x-stoplight": {
+            "id": "ih8b4q40sahp2"
+          }
+        },
+        "tools": {
+          "title": "Tools",
+          "description": "Agent tools",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BaseToolDependency",
+            "x-stoplight": {
+              "id": "tux5mqgozz6ns"
+            }
+          },
+          "x-stoplight": {
+            "id": "q0a6z3d7fk24m"
+          }
+        },
+        "dependencies": {
+          "title": "Dependencies",
+          "description": "Agent dependencies",
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": [
+            {
+              "$ref": "#/definitions/LLMDependency",
+              "x-stoplight": {
+                "id": "aeydyt6yionaa"
+              }
+            }
+          ],
+          "x-stoplight": {
+            "id": "wcwah8cip35zt"
+          }
+        }
+      },
+      "required": [
+        "vendor",
+        "tools",
+        "dependencies"
+      ],
+      "additionalProperties": false,
+      "x-stoplight": {
+        "id": "dk9bvm51xnfct"
+      }
+    }
+  },
+  "x-internal": true
+}

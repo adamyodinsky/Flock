@@ -1,0 +1,62 @@
+{
+  "title": "BaseMetaData",
+  "x-stoplight": {
+    "id": "y6ymuq4w2ajx1"
+  },
+  "description": "Base metadata schema.",
+  "type": "object",
+  "properties": {
+    "annotations": {
+      "title": "Annotations",
+      "description": "Annotations are useful for storing additional information",
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "x-stoplight": {
+          "id": "tsba3cwh2x62p"
+        }
+      },
+      "x-stoplight": {
+        "id": "li237yl1yypo9"
+      }
+    },
+    "labels": {
+      "title": "Labels",
+      "description": "Labels are useful for filtering and finding objects",
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "x-stoplight": {
+          "id": "3xzkrj5okcxsf"
+        }
+      },
+      "x-stoplight": {
+        "id": "u6n08dpmo3hjy"
+      }
+    },
+    "name": {
+      "title": "Name",
+      "description": "Name of the object",
+      "maxLength": 63,
+      "type": "string",
+      "x-stoplight": {
+        "id": "tg1sac88vg80k"
+      }
+    },
+    "description": {
+      "title": "Description",
+      "description": "Description",
+      "maxLength": 255,
+      "type": "string",
+      "x-stoplight": {
+        "id": "4wdkfjsmga8zm"
+      }
+    }
+  },
+  "required": [
+    "name",
+    "description"
+  ],
+  "additionalProperties": false,
+  "x-internal": true
+}

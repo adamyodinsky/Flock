@@ -1,0 +1,192 @@
+{
+  "title": "SplitterSchema",
+  "x-stoplight": {
+    "id": "rxov9munwim8c"
+  },
+  "description": "Splitter schema.",
+  "type": "object",
+  "properties": {
+    "namespace": {
+      "title": "Namespace",
+      "description": "The namespace of the object",
+      "maxLength": 63,
+      "type": "string",
+      "x-stoplight": {
+        "id": "1hxaman2w6q2r"
+      }
+    },
+    "apiVersion": {
+      "title": "Apiversion",
+      "description": "API version",
+      "enum": [
+        "flock/v1"
+      ],
+      "type": "string",
+      "x-stoplight": {
+        "id": "ki9w7e1v778al"
+      }
+    },
+    "kind": {
+      "title": "Kind",
+      "description": "The kind of the object",
+      "enum": [
+        "Splitter"
+      ],
+      "type": "string",
+      "x-stoplight": {
+        "id": "1uzsvu0dhi1ye"
+      }
+    },
+    "metadata": {
+      "$ref": "#/definitions/BaseMetaData",
+      "x-stoplight": {
+        "id": "f1zuu7bc4v598"
+      }
+    },
+    "created_at": {
+      "title": "Created At",
+      "description": "Creation timestamp",
+      "type": "string",
+      "format": "date-time",
+      "x-stoplight": {
+        "id": "y9d9z3jefsq5o"
+      }
+    },
+    "updated_at": {
+      "title": "Updated At",
+      "description": "Last update timestamp",
+      "type": "string",
+      "format": "date-time",
+      "x-stoplight": {
+        "id": "qx9jpzda401eq"
+      }
+    },
+    "spec": {
+      "$ref": "#/definitions/SplitterSpec",
+      "x-stoplight": {
+        "id": "usv37qbgkbk9p"
+      }
+    }
+  },
+  "required": [
+    "namespace",
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "BaseMetaData": {
+      "title": "BaseMetaData",
+      "description": "Base metadata schema.",
+      "type": "object",
+      "properties": {
+        "annotations": {
+          "title": "Annotations",
+          "description": "Annotations are useful for storing additional information",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "5exy5gwrj4ji7"
+            }
+          },
+          "x-stoplight": {
+            "id": "tq6b4atz7wlz7"
+          }
+        },
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "hi3y0x6d6hk4p"
+            }
+          },
+          "x-stoplight": {
+            "id": "l9ei0lbmciz4b"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the object",
+          "maxLength": 63,
+          "type": "string",
+          "x-stoplight": {
+            "id": "psiq1170vl4mv"
+          }
+        },
+        "description": {
+          "title": "Description",
+          "description": "Description",
+          "maxLength": 255,
+          "type": "string",
+          "x-stoplight": {
+            "id": "e23fn1i8evxlt"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "description"
+      ],
+      "additionalProperties": false,
+      "x-stoplight": {
+        "id": "oascrprp5o93i"
+      }
+    },
+    "SplitterVendor": {
+      "title": "SplitterVendor",
+      "description": "Enum for splitter vendors.",
+      "enum": [
+        "CharacterTextSplitter",
+        "PythonCodeTextSplitter"
+      ],
+      "type": "string",
+      "x-stoplight": {
+        "id": "r651bwve6qxl1"
+      }
+    },
+    "SplitterSpec": {
+      "title": "SplitterSpec",
+      "description": "Splitter spec.",
+      "type": "object",
+      "properties": {
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object",
+          "x-stoplight": {
+            "id": "k9yxfgc94prfy"
+          }
+        },
+        "vendor": {
+          "description": "The class of the splitter, e.g. CharacterTextSplitter, etc.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/SplitterVendor",
+              "x-stoplight": {
+                "id": "p85r0udqax5pb"
+              }
+            }
+          ],
+          "x-stoplight": {
+            "id": "5xmxf65sk9ovr"
+          }
+        }
+      },
+      "required": [
+        "vendor"
+      ],
+      "additionalProperties": false,
+      "x-stoplight": {
+        "id": "2rjperrtxh115"
+      }
+    }
+  },
+  "x-internal": true
+}

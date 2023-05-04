@@ -1,0 +1,526 @@
+openapi: 3.1.0
+x-stoplight:
+  id: l344a56mb8mx2
+info:
+  license:
+    name: Adam Yodinsky
+    url: 'https://url.com/license'
+  title: Flock
+  version: 0.0.1
+  contact:
+    name: Adam yodinsky
+    email: adam.yodinsky@gmail.com
+    url: aitomix.ai
+  description: Flock Orchestrator
+  summary: Flock Orchestrator
+  termsOfService: aitomix.ai
+servers:
+  - url: 'http://localhost:3000'
+    description: Flock
+paths:
+  '/resource/{namespace}/{kind}/{name}':
+    get:
+      summary: Get Resource
+      tags:
+        - flock
+      responses:
+        '200':
+          $ref: '#/components/responses/ResourceFetched'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      operationId: get-resource
+      x-internal: true
+      description: Get a resource
+    post:
+      summary: Create Resource
+      operationId: post-resource
+      x-internal: true
+      description: Create a resource
+      requestBody:
+        $ref: '#/components/requestBodies/Resource'
+      responses:
+        '201':
+          $ref: '#/components/responses/ResourceCreated'
+        '202':
+          $ref: '#/components/responses/ResourceAccepted'
+        '400':
+          $ref: '#/components/responses/ResourceBadRequest'
+        '409':
+          $ref: '#/components/responses/ResourceAlreadyExists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      summary: Update Resource
+      operationId: put-resource
+      x-internal: true
+      description: Create or update a resource
+      requestBody:
+        $ref: '#/components/requestBodies/Resource'
+      responses:
+        '201':
+          $ref: '#/components/responses/ResourceCreated'
+        '202':
+          $ref: '#/components/responses/ResourceAccepted'
+        '204':
+          $ref: '#/components/responses/ResourceUpdated'
+        '400':
+          $ref: '#/components/responses/ResourceBadRequest'
+        '409':
+          $ref: '#/components/responses/ResourceAlreadyExists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    parameters:
+      - schema:
+          type: string
+        name: namespace
+        in: path
+        description: Namespace of resource
+        required: true
+      - schema:
+          type: string
+        name: kind
+        in: path
+        description: Kind of resource
+        required: true
+      - schema:
+          type: string
+        name: name
+        in: path
+        required: true
+        description: Name of a resource
+    delete:
+      summary: Delete Resource
+      operationId: delete-resource-namespace-kind-name
+      responses:
+        '204':
+          $ref: '#/components/responses/ResourceDeleted'
+        '400':
+          $ref: '#/components/responses/ResourceBadRequest'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-internal: true
+      description: Delete a resource and returns it
+  '/resource/{namespace}/{kind}':
+    parameters:
+      - schema:
+          type: string
+        name: namespace
+        in: path
+        required: true
+        description: namespace
+      - schema:
+          type: string
+        name: kind
+        in: path
+        required: true
+        description: kind
+    get:
+      summary: Get Resources List
+      tags:
+        - flock
+      responses:
+        '200':
+          $ref: '#/components/responses/ResourcesFetched'
+        '400':
+          $ref: '#/components/responses/ResourceBadRequest'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      operationId: get-resource-namespace-kind
+      x-internal: true
+      description: Get Resources list by namespace and kind
+    delete:
+      summary: Delete Resources
+      operationId: delete-resource-namespace-kind
+      responses:
+        '200':
+          $ref: '#/components/responses/ResourcesFetched'
+        '400':
+          $ref: '#/components/responses/ResourceBadRequest'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      description: 'Deletes all resources by namespace and kind, returns a list of the deleted resources.'
+      x-internal: true
+      requestBody:
+        content: {}
+components:
+  requestBodies:
+    Resource:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResourceData'
+  responses:
+    ResourceBadRequest:
+      description: Resource Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                status: error
+                code: 400
+                message: Invalid input provided.
+                details:
+                  - The 'name' field is required.
+                  - The 'description' field is required.
+            properties:
+              status:
+                type: string
+                enum:
+                  - error
+              code:
+                type: integer
+                enum:
+                  - 400
+              message:
+                type: string
+                default: Invalid input provided
+                example: Invalid input provided
+              details:
+                type: array
+                items:
+                  type: string
+          examples: {}
+    ResourceCreated:
+      description: Resource Created
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                status: success
+                data:
+                  id: 124
+                  name: New Resource
+                  description: This is a new resource.
+                message: Resource created successfully.
+            properties:
+              status:
+                type: string
+                default: OK
+                enum:
+                  - OK
+                example: OK
+              code:
+                type: integer
+                enum:
+                  - 201
+              data:
+                $ref: '#/components/schemas/ResourceData'
+              message:
+                type: string
+                default: Resource created successfully
+                example: Resource created successfully
+          examples: {}
+    ResourceUpdated:
+      description: Resource Updated
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                status: OK
+                data:
+                  id: 123
+                  name: Updated Resource
+                  description: This is an updated resource.
+                message: Resource updated successfully.
+            properties:
+              status:
+                type: string
+                enum:
+                  - OK
+              code:
+                type: integer
+                enum:
+                  - 204
+              data:
+                $ref: '#/components/schemas/ResourceData'
+              message:
+                type: string
+                example: Resource updated successfully
+                default: Resource updated successfully
+          examples: {}
+    ResourceAlreadyExists:
+      description: Resource Already Exists
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                status: error
+                code: 409
+                message: Resource already exists.
+                details:
+                  - A resource with the same unique property already exists.
+            properties:
+              status:
+                type: string
+                enum:
+                  - error
+              code:
+                type: integer
+                enum:
+                  - 409
+              message:
+                type: string
+                default: A resource with the same unique property already exists
+                example: A resource with the same unique property already exists
+              details:
+                type: array
+                items:
+                  type: string
+          examples: {}
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                status: error
+                code: 500
+                message: Internal server error.
+                details:
+                  - An unexpected error occurred on the server.
+            properties:
+              status:
+                type: string
+                enum:
+                  - error
+              code:
+                type: integer
+                enum:
+                  - 500
+              message:
+                type: string
+                default: Internal Server Error
+                example: Internal server error
+              details:
+                type: array
+                items:
+                  type: string
+          examples: {}
+    ResourceNotFound:
+      description: Resource Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                status: error
+                code: 404
+                message: Resource not found.
+                details:
+                  - The resource with the specified ID could not be found.
+            properties:
+              status:
+                type: string
+                enum:
+                  - error
+              code:
+                type: integer
+                enum:
+                  - 404
+              message:
+                type: string
+                default: Resource not found
+                example: Resource not found
+              details:
+                type: array
+                items:
+                  type: string
+                  example: The resource could not be found
+                  default: The resource could not be found
+          examples: {}
+    ResourceAccepted:
+      description: Resource Accepted
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                status: success
+                data:
+                  id: 123
+                  name: Updated Resource
+                  description: This is an updated resource.
+                message: Resource updated successfully.
+            properties:
+              status:
+                type: string
+                enum:
+                  - OK
+              code:
+                type: integer
+                enum:
+                  - 202
+              data:
+                $ref: '#/components/schemas/ResourceData'
+              message:
+                type: string
+                default: Resource update request has been accepted and is being processed
+                example: Resource update request has been accepted and is being processed
+          examples: {}
+    ResourceFetched:
+      description: Resource Fetched
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                status: success
+                data:
+                  - id: 1
+                    name: Resource 1
+                    description: This is resource 1.
+                message: Resources retrieved successfully.
+            properties:
+              status:
+                type: string
+                enum:
+                  - OK
+              message:
+                type: string
+                default: Resources retrieved successfully
+                example: Resources retrieved successfully
+              code:
+                type: integer
+                enum:
+                  - 200
+              data:
+                $ref: '#/components/schemas/ResourceData'
+          examples: {}
+    ResourceDeleted:
+      description: Resource Deleted
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                status: OK
+                message: Resources retrieved successfully
+                code: 200
+                data: {}
+            properties:
+              status:
+                type: string
+                enum:
+                  - OK
+              message:
+                type: string
+                default: Resource deleted
+                example: Resource deleted
+              code:
+                type: integer
+                enum:
+                  - 204
+              data:
+                $ref: '#/components/schemas/ResourceData'
+                x-stoplight:
+                  id: dpluk49u909ke
+          examples: {}
+    ResourcesFetched:
+      description: Resources Fetched
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                status: OK
+                message: Resources retrieved successfully
+                code: 200
+                data: ''
+            properties:
+              status:
+                type: string
+                enum:
+                  - OK
+              message:
+                type: string
+              code:
+                type: integer
+                enum:
+                  - 200
+              data:
+                $ref: '#/components/schemas/ResourceDetails'
+          examples: {}
+  securitySchemes: {}
+  schemas:
+    ResourceData:
+      title: ResourceData
+      x-stoplight:
+        id: dh89d5xkynjy5
+      oneOf:
+        - $ref: ./schemas/main/VectorStoreQAToolSchema.json
+          x-stoplight:
+            id: d563hjsx196cz
+        - $ref: ./schemas/main/PromptTemplateSchema.json
+          x-stoplight:
+            id: ap48n4yzisrvg
+        - $ref: ./schemas/main/LLMSchema.json
+          x-stoplight:
+            id: p4lbiodaj3cqg
+        - $ref: ./schemas/main/CustomSchema.json
+          x-stoplight:
+            id: ts2nhrzdtnf42
+        - $ref: ./schemas/main/SplitterSchema.json
+          x-stoplight:
+            id: y2wpkbweb9yn6
+        - $ref: ./schemas/main/LLMToolSchema.json
+          x-stoplight:
+            id: ddsqrew86dogn
+        - $ref: ./schemas/main/EmbeddingSchema.json
+          x-stoplight:
+            id: 57iutu4n0tx7j
+        - $ref: ./schemas/main/VectorStoreSchema.json
+          x-stoplight:
+            id: fz5v66xu8esu1
+        - $ref: ./schemas/main/LoadToolSchema.json
+          x-stoplight:
+            id: nmbmdh3pgjort
+        - $ref: ./schemas/main/AgentSchema.json
+          x-stoplight:
+            id: z3zunnir4f7no
+      x-internal: true
+    ResourceDetails:
+      title: ResourceDetails
+      x-stoplight:
+        id: 4jjpqoc9js0vr
+      type: object
+      properties:
+        name:
+          type: string
+          x-stoplight:
+            id: psyth8qtoaz7l
+        namespace:
+          type: string
+          x-stoplight:
+            id: 7ojpscwikl9yf
+        kind:
+          type: string
+          x-stoplight:
+            id: wjkngyuf0ucrt
+      x-internal: true
+x-internal: true
+tags:
+  - name: flock
+    description: flock tag

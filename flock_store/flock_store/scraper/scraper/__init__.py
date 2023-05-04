@@ -1,1 +1,0 @@
-from spiders.scraper import FlockSpider

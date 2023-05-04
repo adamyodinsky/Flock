@@ -1,0 +1,186 @@
+{
+  "title": "VectorStoreQAToolSpec",
+  "x-stoplight": {
+    "id": "kwh6sgmokakdr"
+  },
+  "description": "VectorStoreQATool spec.",
+  "type": "object",
+  "properties": {
+    "options": {
+      "title": "Options",
+      "description": "Options for the tool",
+      "default": {},
+      "type": "object",
+      "x-stoplight": {
+        "id": "rh1zubdprzovn"
+      }
+    },
+    "vendor": {
+      "description": "The class of the tool, e.g. RetrievalQAWithSourcesChain, etc.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VectorStoreQAToolVendor",
+          "x-stoplight": {
+            "id": "evlgpfq7q7sfd"
+          }
+        }
+      ],
+      "x-stoplight": {
+        "id": "46x72o3nrxjlb"
+      }
+    },
+    "dependencies": {
+      "title": "Dependencies",
+      "description": "Tool dependencies",
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": [
+        {
+          "$ref": "#/definitions/StoreDependency",
+          "x-stoplight": {
+            "id": "f8fvavfna96qy"
+          }
+        },
+        {
+          "$ref": "#/definitions/LLMDependency",
+          "x-stoplight": {
+            "id": "co29dq9q1u2ob"
+          }
+        }
+      ],
+      "x-stoplight": {
+        "id": "wvrxf3ej90pth"
+      }
+    }
+  },
+  "required": [
+    "vendor",
+    "dependencies"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "VectorStoreQAToolVendor": {
+      "title": "VectorStoreQAToolVendor",
+      "description": "Enum for vectorstore_qa_tool vendors.",
+      "enum": [
+        "RetrievalQAWithSourcesChain"
+      ],
+      "type": "string",
+      "x-stoplight": {
+        "id": "z3qmtytst2phz"
+      }
+    },
+    "StoreDependency": {
+      "title": "StoreDependency",
+      "description": "Store dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "xn0985626xa8t"
+            }
+          },
+          "x-stoplight": {
+            "id": "xvcsjxtn34udy"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string",
+          "x-stoplight": {
+            "id": "6wulbpet2mb3i"
+          }
+        },
+        "kind": {
+          "title": "Kind",
+          "default": "VectorStore",
+          "const": "VectorStore",
+          "type": "string",
+          "x-stoplight": {
+            "id": "n0moo47ayc26t"
+          }
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string",
+          "x-stoplight": {
+            "id": "47guh4wsoi285"
+          }
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "x-stoplight": {
+        "id": "plrrejr3lwzqo"
+      }
+    },
+    "LLMDependency": {
+      "title": "LLMDependency",
+      "description": "LLM dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "ed7qxon3dk2l2"
+            }
+          },
+          "x-stoplight": {
+            "id": "z9vhq7wpixjiw"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string",
+          "x-stoplight": {
+            "id": "n46nhzeh5hziu"
+          }
+        },
+        "kind": {
+          "title": "Kind",
+          "default": "LLM",
+          "const": "LLM",
+          "type": "string",
+          "x-stoplight": {
+            "id": "4cm7q5flhcjki"
+          }
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string",
+          "x-stoplight": {
+            "id": "h8yey595ocnuy"
+          }
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "x-stoplight": {
+        "id": "riqeuwy02rbvd"
+      }
+    }
+  },
+  "x-internal": true
+}
