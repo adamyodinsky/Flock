@@ -11,8 +11,8 @@ help:
 docker-base-build:
 	docker build -f Dockerfile.python.base -t flock-python-base   .
 
-# docker-agent-builde:
-# 	docker build -f Dockerfile.flock.base --target -t flock-agent . 
+docker-agent-build:
+	docker build -f Dockerfile.flock --target agent-stage -t flock-agent .
 
-
-# setup dev environment
+docker-agent-run:
+	docker run flock-agent

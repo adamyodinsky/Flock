@@ -1,7 +1,3 @@
-# Dockerfile
-# Uses multi-stage builds requiring Docker 17.05 or higher
-# See https://docs.docker.com/develop/develop-images/multistage-build/
-
 # Creating a python base with shared environment variables
 FROM python:3.9.15-slim as flock-python-base
 ENV PYTHONUNBUFFERED=1 \
