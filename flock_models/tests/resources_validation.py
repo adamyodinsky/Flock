@@ -1,7 +1,6 @@
 """Test building resources from yaml files"""
 
 import os
-from typing import cast
 
 from dotenv import find_dotenv, load_dotenv
 from flock_common.env_checker import check_env_vars
@@ -9,7 +8,6 @@ from flock_common.validation import validation_iterator
 from flock_resource_store import ResourceStoreFactory
 from flock_schemas import SchemasFactory
 
-from flock_models import resources
 from flock_models.builder import ResourceBuilder
 
 # Setup

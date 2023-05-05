@@ -8,6 +8,11 @@ help:
 	@echo "  build-base  	 Build base image"
 	@echo "  build-agent   Build agent image"
 
-build-docker-base:
-	@docker build -t flock-base-agent -f Dockerfile.base.agent .
+docker-base-build:
+	docker build -f Dockerfile.python.base -t flock-python-base   .
 
+# docker-agent-builde:
+# 	docker build -f Dockerfile.flock.base --target -t flock-agent . 
+
+
+# setup dev environment
