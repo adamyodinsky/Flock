@@ -20,6 +20,7 @@ flock-schemas = {path = "../flock_schemas", develop = true}
 flock-common = {path = "../flock_common", develop = true}
 odmantic = "^0.9.2"
 python-dotenv = "^1.0.0"
+pygpt4all = "^1.1.0"
 
 
 [tool.poetry.group.dev.dependencies]

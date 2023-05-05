@@ -1,16 +1,16 @@
 FROM flock-python-base as flock-base
 # We copy our Python requirements here to cache them
 # and install only runtime deps using poetry
-WORKDIR $PYSETUP_PATH
 
-COPY flock_common ./flock_common
-COPY flock_schemas ./flock_schemas
-COPY flock_models ./flock_models
-COPY flock_resource_store ./flock_resource_store
-COPY flock_agent ./flock_agent
-COPY flock_api_server ./flock_api_server
-COPY flock_deployer ./flock_deployer
-COPY flock_webscraper ./flock_webscraper
+COPY flock_common $PYSETUP_PATH/flock_common
+COPY flock_schemas $PYSETUP_PATH/flock_schemas
+COPY flock_models $PYSETUP_PATH/flock_models
+COPY flock_resource_store $PYSETUP_PATH/flock_resource_store
+COPY flock_api_server $PYSETUP_PATH/flock_api_server
+COPY flock_deployer $PYSETUP_PATH/flock_deployer
+
+COPY flock_webscraper $PYSETUP_PATH/flock_webscraper
+COPY flock_agent $PYSETUP_PATH/flock_agent
 
 #############################################
 # builder-base is used to build dependencies
@@ -19,18 +19,33 @@ FROM flock-base as agent-base
 ENV FASTAPI_ENV=production
 WORKDIR $PYSETUP_PATH/flock_agent
 
-# ENV VENV_PATH="$PYSETUP_PATH/flock_agent/.venv"
-# ENV PATH="VENV_PATH:$PATH"
-RUN poetry install --only main  # respects
+RUN poetry install --only main
 # RUN poetry run python -m pip install pygpt4all --no-use-pep517
 
 # 'production' stage uses the clean 'python-base' stage and copyies
 # in only our runtime deps that were installed in the 'builder-base'
 #############################################
-# FROM python-base as agent
 
-# COPY --from=build-agent $VENV_PATH $VENV_PATH
+FROM python:3.9.15-slim as agent
+# FROM flock-python-base as agent
 
-# COPY ./flock_agent/flock_agent /app
-# WORKDIR /app
+ENV PYSETUP_PATH="/opt/pysetup"
 
+COPY --from=agent-base $PYSETUP_PATH/flock_schemas/flock_schemas $PYSETUP_PATH/flock_schemas/flock_schemas
+COPY --from=agent-base $PYSETUP_PATH/flock_resource_store/flock_resource_store $PYSETUP_PATH/flock_resource_store/flock_resource_store
+COPY --from=agent-base $PYSETUP_PATH/flock_common/flock_common $PYSETUP_PATH/flock_common/flock_common
+
+COPY --from=agent-base $PYSETUP_PATH/flock_agent/.venv $PYSETUP_PATH/flock_agent/.venv
+COPY ./flock_agent/flock_agent  $PYSETUP_PATH/flock_agent/flock_agent
+
+SHELL ["/bin/bash", "-c"] 
+WORKDIR $PYSETUP_PATH/flock_agent
+RUN source .venv/bin/activate
+
+EXPOSE 8000
+
+ENV VIRTUAL_ENV="${PYSETUP_PATH}/flock_agent/.venv"
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+ENTRYPOINT ["python", "flock_agent/main.py" ]
+CMD [ "run-agent" ]
