@@ -27,7 +27,7 @@ test:
 test_curl:
 	@curl -X POST -H "Content-Type: application/json" -d '{ "msg": "who is the president of USA?" }' localhost:8000/agent
 
-build: test install
+docker-build: test install
 	@echo "Building Docker image"
-	@pip freeze > requirements.txt
-	# @docker build -t flock-agent .
+	@version=$$(poetry version | awk '{print $$2}') && \
+	docker build -t flock-agent:${version} .

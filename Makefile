@@ -8,8 +8,6 @@ help:
 	@echo "  build-base  	 Build base image"
 	@echo "  build-agent   Build agent image"
 
-build-base:
-	@docker build -t flock-base -f Dockerfile.base .
+build-docker-base:
+	@docker build -t flock-base-agent -f Dockerfile.base.agent .
 
-build-agent:
-	@docker build -t flock-agent -f Dockerfile.agent .

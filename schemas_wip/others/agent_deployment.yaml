@@ -10,7 +10,7 @@ metadata:
   labels:
     app: my_app
 spec:
-  image: flock-agent:latest
+  image: flock-agent:0.1.1
   targetResource:
     kind: Agent # this is an agent resource manifest reference that should be loaded to the Flock-Agent FastAPI app.
     name: my-agent
