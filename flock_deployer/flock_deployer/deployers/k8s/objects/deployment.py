@@ -1,5 +1,6 @@
 """Kubernetes Deployment controller."""
 
+from flock_schemas import BaseFlockSchema
 from flock_schemas.deployment import DeploymentSchema
 from kubernetes import client
 
@@ -9,9 +10,8 @@ from flock_deployer.deployers.k8s.objects.base import K8sResource
 class K8sDeployment(K8sResource):
     """Kubernetes Deployment object."""
 
-    def __init__(self, manifest: DeploymentSchema):
-        super().__init__(manifest)
-        self.namespace = manifest.namespace
+    def __init__(self, manifest: DeploymentSchema, target_manifest: BaseFlockSchema):
+        super().__init__(manifest, target_manifest)
         self.rendered_manifest = client.V1Deployment(
             api_version="apps/v1",
             kind="Deployment",
@@ -28,14 +28,30 @@ class K8sDeployment(K8sResource):
                     spec=client.V1PodSpec(
                         containers=[
                             client.V1Container(
+                                image_pull_policy=manifest.spec.container.image_pull_policy,
                                 name=manifest.metadata.name,
-                                image=manifest.spec.image,
+                                image=manifest.spec.container.image,
                                 env=[
                                     client.V1EnvVar(name=key, value=value)
-                                    for key, value in manifest.spec.targetResource.env.items()
+                                    for key, value in self.manifest.spec.container.env.items()
+                                ]
+                                + [
+                                    client.V1EnvVar(
+                                        name="FLOCK_SCHEMA_VALUE",
+                                        value=self.target_manifest.json(),
+                                    )
                                 ],
                                 volume_mounts=[],
-                                ports=[client.V1ContainerPort(container_port=80)],
+                                ports=[
+                                    client.V1ContainerPort(
+                                        name=port.name,
+                                        protocol=port.protocol,
+                                        host_port=port.host_port,
+                                        container_port=port.container_port,
+                                        host_ip=port.host_ip,
+                                    )
+                                    for port in self.manifest.spec.container.ports
+                                ],
                             )
                         ],
                         volumes=[],

@@ -36,15 +36,6 @@
       "description": "Tool description",
       "type": "string"
     },
-    "env": {
-      "title": "Env",
-      "description": "Environment variables to be set for the deployment",
-      "default": {},
-      "type": "object",
-      "additionalProperties": {
-        "type": "string"
-      }
-    },
     "options": {
       "title": "Options",
       "description": "Deployment target options",

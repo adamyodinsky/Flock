@@ -1,9 +1,9 @@
 import os
 from typing import Optional
 
-from flock_common import check_env_vars
 from pymongo import MongoClient
 
+from flock_common import check_env_vars
 from flock_resource_store.base import ResourceStore
 
 
@@ -25,22 +25,27 @@ class MongoResourceStore(ResourceStore):
 
         # Check env vars
         required_vars = ["MONGO_USERNAME", "MONGO_PASSWORD"]
-        optional_vars = ["COLLECTION_NAME", "DB_NAME", "HOST", "PORT"]
+        optional_vars = [
+            "MONGO_COLLECTION_NAME",
+            "MONGO_DB_NAME",
+            "MONGO_HOST",
+            "MONGO_PORT",
+        ]
         check_env_vars(required_vars, optional_vars)
 
         # Initialize the client and db
         if not self._shared_state:
             self.client = client or MongoClient(
-                host=host,
-                port=port,
+                host=os.environ.get("MONGO_HOST", host),
+                port=int(os.environ.get("MONGO_PORT", port)),
                 username=os.environ.get("MONGO_USERNAME"),
                 password=os.environ.get("MONGO_PASSWORD"),
             )
             self.db = self.client[  # pylint: disable=invalid-name
-                os.environ.get("DB_NAME", db_name)
+                os.environ.get("MONGO_DB_NAME", db_name)
             ]
             self.collection = self.db[
-                os.environ.get("COLLECTION_NAME", collection_name)
+                os.environ.get("MONGO_COLLECTION_NAME", collection_name)
             ]
 
     def put(self, val: dict) -> None:

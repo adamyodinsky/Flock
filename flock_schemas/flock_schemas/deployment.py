@@ -1,8 +1,8 @@
 """Deployment schema."""
 
-from typing import Any, Dict, Literal, Optional
+from typing import Any, Dict, List, Literal, Optional
 
-from pydantic import Field
+from pydantic import Field, IPvAnyAddress
 
 from flock_schemas.base import (
     BaseMetaData,
@@ -12,13 +12,56 @@ from flock_schemas.base import (
 )
 
 
-class DeploymentTargetResource(BaseToolDependency):
-    """Deployment target resource schema."""
+class ContainerPort(BaseModelConfig):
+    """Container port schema."""
 
-    env: Optional[Dict[str, str]] = Field(
+    name: str = Field(
+        default=None,
+        description="The name of the port",
+        max_length=15,
+    )
+    protocol: Literal["tcp", "udp", "TCP", "UDP"] = Field(
+        "tcp",
+        description="The protocol for the port",
+    )
+    host_port: int = Field(
+        default=None,
+        description="The port number of the host",
+    )
+    container_port: int = Field(
+        default=None,
+        description="The port number of the container",
+    )
+    host_ip: IPvAnyAddress = Field(
+        default=None,
+        description="The IP address of the host",
+    )
+
+
+class DeploymentContainer(BaseModelConfig):
+    """Deployment spec schema."""
+
+    image: str = Field(
+        ...,
+        description="The container image to be deployed",
+    )
+    env: Dict[str, str] = Field(
         default={},
         description="Environment variables to be set for the deployment",
     )
+    ports: List[ContainerPort] = Field(
+        default=[],
+        description="The ports to be exposed by the container",
+    )
+    image_pull_policy: Literal["Always", "Never", "IfNotPresent"] = Field(
+        "IfNotPresent",
+        description="The image pull policy",
+    )
+
+
+class DeploymentTargetResource(BaseToolDependency):
+    """Deployment target resource schema."""
+
     options: Optional[Dict[str, Any]] = Field(
         default={},
         description="Deployment target options",
@@ -28,10 +71,6 @@ class DeploymentTargetResource(BaseToolDependency):
 class DeploymentSpec(BaseModelConfig):
     """Deployment spec schema."""
 
-    image: str = Field(
-        ...,
-        description="The container image to be deployed",
-    )
     targetResource: DeploymentTargetResource = Field(
         ...,
         description="The target resource to be deployed",
@@ -39,6 +78,10 @@ class DeploymentSpec(BaseModelConfig):
     replicas: int = Field(
         1,
         description="The number of replicas to be deployed",
+    )
+    container: DeploymentContainer = Field(
+        ...,
+        description="The container specs",
     )
 
 

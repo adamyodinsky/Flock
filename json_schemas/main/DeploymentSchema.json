@@ -153,15 +153,6 @@
           "description": "Tool description",
           "type": "string"
         },
-        "env": {
-          "title": "Env",
-          "description": "Environment variables to be set for the deployment",
-          "default": {},
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
         "options": {
           "title": "Options",
           "description": "Deployment target options",
@@ -175,8 +166,50 @@
       ],
       "additionalProperties": false
     },
-    "DeploymentSpec": {
-      "title": "DeploymentSpec",
+    "ContainerPort": {
+      "title": "ContainerPort",
+      "description": "Container port schema.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "description": "The name of the port",
+          "maxLength": 15,
+          "type": "string"
+        },
+        "protocol": {
+          "title": "Protocol",
+          "description": "The protocol for the port",
+          "default": "tcp",
+          "enum": [
+            "tcp",
+            "udp",
+            "TCP",
+            "UDP"
+          ],
+          "type": "string"
+        },
+        "host_port": {
+          "title": "Host Port",
+          "description": "The port number of the host",
+          "type": "integer"
+        },
+        "container_port": {
+          "title": "Container Port",
+          "description": "The port number of the container",
+          "type": "integer"
+        },
+        "host_ip": {
+          "title": "Host Ip",
+          "description": "The IP address of the host",
+          "type": "string",
+          "format": "ipvanyaddress"
+        }
+      },
+      "additionalProperties": false
+    },
+    "DeploymentContainer": {
+      "title": "DeploymentContainer",
       "description": "Deployment spec schema.",
       "type": "object",
       "properties": {
@@ -185,6 +218,46 @@
           "description": "The container image to be deployed",
           "type": "string"
         },
+        "env": {
+          "title": "Env",
+          "description": "Environment variables to be set for the deployment",
+          "default": {},
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "ports": {
+          "title": "Ports",
+          "description": "The ports to be exposed by the container",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContainerPort"
+          }
+        },
+        "image_pull_policy": {
+          "title": "Image Pull Policy",
+          "description": "The image pull policy",
+          "default": "IfNotPresent",
+          "enum": [
+            "Always",
+            "Never",
+            "IfNotPresent"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "image"
+      ],
+      "additionalProperties": false
+    },
+    "DeploymentSpec": {
+      "title": "DeploymentSpec",
+      "description": "Deployment spec schema.",
+      "type": "object",
+      "properties": {
         "targetResource": {
           "title": "Targetresource",
           "description": "The target resource to be deployed",
@@ -199,11 +272,20 @@
           "description": "The number of replicas to be deployed",
           "default": 1,
           "type": "integer"
+        },
+        "container": {
+          "title": "Container",
+          "description": "The container specs",
+          "allOf": [
+            {
+              "$ref": "#/definitions/DeploymentContainer"
+            }
+          ]
         }
       },
       "required": [
-        "image",
-        "targetResource"
+        "targetResource",
+        "container"
       ],
       "additionalProperties": false
     }
