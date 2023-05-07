@@ -355,6 +355,26 @@ type = "directory"
 url = "../flock_common"
 
 [[package]]
+name = "flock-resource-store"
+version = "0.0.1"
+description = ""
+category = "main"
+optional = false
+python-versions = "^3.9"
+files = []
+develop = true
+
+[package.dependencies]
+flock-common = {path = "../flock_common", develop = true}
+pymongo = "^4.3.3"
+python-etcd = "^0.4.5"
+pyyaml = "^6.0"
+
+[package.source]
+type = "directory"
+url = "../flock_resource_store"
+
+[[package]]
 name = "flock-schemas"
 version = "0.0.1"
 description = ""
@@ -1328,6 +1348,21 @@ files = [
 cli = ["click (>=5.0)"]
 
 [[package]]
+name = "python-etcd"
+version = "0.4.5"
+description = "A python client for etcd"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "python-etcd-0.4.5.tar.gz", hash = "sha256:f1b5ebb825a3e8190494f5ce1509fde9069f2754838ed90402a8c11e1f52b8cb"},
+]
+
+[package.dependencies]
+dnspython = ">=1.13.0"
+urllib3 = ">=1.7.1"
+
+[[package]]
 name = "python-multipart"
 version = "0.0.6"
 description = "A streaming multipart parser for Python"
@@ -1935,4 +1970,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "cc2660f10cbd082665bfcabd1329bd0d89e513364e0aad7d156cdb293704eb6d"
+content-hash = "a83c6b71c036fc78001aca060f748a3526b289102ff78b24c8ec5498f208757d"

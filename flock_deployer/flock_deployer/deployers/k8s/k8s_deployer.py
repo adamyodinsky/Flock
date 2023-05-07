@@ -5,8 +5,8 @@ from kubernetes import client, config
 
 from flock_deployer.deployers.base import BaseDeployer
 from flock_deployer.deployers.k8s.objects import K8sResourceFactory
-from flock_deployer.deployers.k8s.objects.deployment import K8sDeployment
 from flock_deployer.deployers.k8s.objects.base import K8sResource
+from flock_deployer.deployers.k8s.objects.deployment import K8sDeployment
 
 
 class K8sDeployer(BaseDeployer):

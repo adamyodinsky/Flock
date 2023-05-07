@@ -1,4 +1,5 @@
 import yaml
+from flock_resource_store import ResourceStoreFactory
 from flock_schemas.deployment import DeploymentSchema
 
 from flock_deployer.deployers import DeployerFactory
