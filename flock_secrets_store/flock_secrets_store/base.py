@@ -1,7 +1,6 @@
 """Secrets store base class. This class is used to save and load secrets."""
 
 import abc
-from typing import Any
 
 
 class SecretStore(metaclass=abc.ABCMeta):
@@ -12,16 +11,9 @@ class SecretStore(metaclass=abc.ABCMeta):
         self.app_name = app_name
 
     @abc.abstractmethod
-    def get(self, key: str, version: int = None) -> Any:
-        """Get a secret by key."""
-        pass
-
-    @abc.abstractmethod
-    def put(self, key: str, value: Any) -> None:
+    def put(self, path, secret_name, secret_data):
         """Put a secret with a specific key."""
-        pass
 
     @abc.abstractmethod
-    def list_versions(self, key: str) -> dict:
-        """List all versions of a specific secret."""
-        pass
+    def get(self, path, secret_name):
+        """Get a secret by key."""

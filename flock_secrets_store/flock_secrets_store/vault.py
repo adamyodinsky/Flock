@@ -13,7 +13,11 @@ class VaultSecretStore:
     def check_secret_engine_enabled(self, path):
         """Check if the secret engine is enabled at the given path."""
         secret_engines = self.client.sys.list_mounted_secrets_engines()
-        return path in secret_engines
+
+        # Ensure the path has a trailing slash
+        path_with_slash = path if path.endswith("/") else f"{path}/"
+
+        return path_with_slash in secret_engines
 
     def enable_kv_engine(self, path, version=2):
         """Enable the KV engine at the given path if it's not already enabled."""
@@ -22,7 +26,7 @@ class VaultSecretStore:
                 backend_type="kv", path=path, options={"version": version}
             )
 
-    def store_secret(self, path, secret_name, secret_data):
+    def put(self, path, secret_name, secret_data):
         """Store a secret in the Vault KV engine."""
         try:
             self.enable_kv_engine(path)
@@ -35,7 +39,7 @@ class VaultSecretStore:
         except VaultError as error:
             print(f"Error storing secret: {error}")
 
-    def fetch_secret(self, path, secret_name):
+    def get(self, path, secret_name):
         """Fetch a secret from the Vault KV engine."""
         try:
             secret_path = f"{path}/data/{secret_name}"
@@ -47,21 +51,3 @@ class VaultSecretStore:
         except VaultError as error:
             print(f"Error fetching secret: {error}")
             return None
-
-
-# Example usage:
-# vault_url = 'https://vault.example.com:8200'
-# token = 'your_vault_token_here'
-
-# vault_secret_store = VaultSecretStore(vault_url, token)
-
-# # Store a secret
-# vault_secret_store.store_secret(
-#     path='my-secrets',
-#     secret_name='api_key',
-#     secret_data={'key': '12345'}
-# )
-
-# # Fetch a secret
-# api_key_secret = vault_secret_store.fetch_secret(path='my-secrets', secret_name='api_key')
-# print(api_key_secret)
