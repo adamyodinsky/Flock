@@ -10,7 +10,6 @@ class SecretStore(metaclass=abc.ABCMeta):
     def __init__(self, app_name: str = "flock") -> None:
         """Initialize the secret store."""
         self.app_name = app_name
-        self.secret_path = f"kv/secrets/{app_name}"
 
     @abc.abstractmethod
     def get(self, key: str, version: int = None) -> Any:
