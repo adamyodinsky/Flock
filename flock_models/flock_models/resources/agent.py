@@ -42,3 +42,4 @@ class AgentResource(Agent):
             **memory,
         )
         self.run = self.resource.run
+        self.arun = self.resource.arun

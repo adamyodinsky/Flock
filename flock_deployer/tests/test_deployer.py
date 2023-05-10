@@ -5,8 +5,6 @@ from flock_schemas.deployment import DeploymentSchema
 
 from flock_deployer.deployers import DeployerFactory
 
-# INPUT_VALUE
-
 
 def test_deployer():
     """Test deployer from a schema manifest file."""
@@ -28,6 +26,7 @@ def test_deployer():
     )
     schema_cls = SchemasFactory.get_schema(target_manifest["kind"])
     target_manifest = schema_cls.validate(target_manifest)
+    # deployer.dry_deploy(schema_instance, target_manifest)
     deployer.deploy(schema_instance, target_manifest)
 
 

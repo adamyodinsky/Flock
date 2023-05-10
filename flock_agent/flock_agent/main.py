@@ -52,8 +52,8 @@ def run_agent(schema_path, schema_value, host, port):
     optional_vars = [
         "FLOCK_SCHEMA_PATH",
         "FLOCK_SCHEMA_VALUE",
-        "HOST",
-        "PORT",
+        "FLOCK_AGENT_HOST",
+        "FLOCK_AGENT_PORT",
         "MAINFRAME_ADDR",
     ]
     load_dotenv(find_dotenv(os.environ.get("FLOCK_ENV_FILE", ".env")))
@@ -81,11 +81,13 @@ def run_agent(schema_path, schema_value, host, port):
     routes = create_agent_routes(flock_agent)
     app.include_router(routes)
 
+    host = os.environ.get("FLOCK_AGENT_HOST", host)
+    port = int(os.environ.get("FLOCK_AGENT_PORT", port))
+
     # Spin up the API server
     click.echo(f"Ready. Waiting for requests on {host}:{port}...")
-    click.echo("/agent (POST) (http://localhost:8000/agent")
-    click.echo("/agent_ws (WebSocket) (ws://localhost:8000/agent_ws)")
-
+    click.echo(f"/agent (POST) (http://{host}:{port}/agent")
+    click.echo(f"/agent_ws (WebSocket) (ws://{host}:{port}/agent_ws)")
     run(app, host=host, port=port, log_level="warning")
 
 

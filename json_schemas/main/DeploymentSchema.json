@@ -215,21 +215,10 @@
           ],
           "type": "string"
         },
-        "host_port": {
-          "title": "Host Port",
-          "description": "The port number of the host",
+        "port": {
+          "title": "Port",
+          "description": "The port number",
           "type": "integer"
-        },
-        "container_port": {
-          "title": "Container Port",
-          "description": "The port number of the container",
-          "type": "integer"
-        },
-        "host_ip": {
-          "title": "Host Ip",
-          "description": "The IP address of the host",
-          "type": "string",
-          "format": "ipvanyaddress"
         }
       },
       "additionalProperties": false

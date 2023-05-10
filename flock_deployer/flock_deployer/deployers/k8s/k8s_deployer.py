@@ -6,8 +6,6 @@ from flock_secrets_store import SecretStore
 from kubernetes import client, config
 
 from flock_deployer.deployers.base import BaseDeployer
-from flock_deployer.deployers.k8s.objects import K8sResourceFactory
-from flock_deployer.deployers.k8s.objects.base import K8sResource
 from flock_deployer.deployers.k8s.objects.deployment import K8sDeployment
 from flock_deployer.deployers.k8s.objects.service import K8sService
 
@@ -63,6 +61,15 @@ class K8sDeployer(BaseDeployer):
                 return False
             else:
                 raise
+
+    def dry_deploy(self, manifest: DeploymentSchema, target_manifest: BaseFlockSchema):
+        """Dry run of deployment to Kubernetes"""
+
+        deployment = self._create_deployment(manifest, target_manifest)
+        service = self._create_service(manifest)
+
+        print(deployment.rendered_manifest)
+        print(service.rendered_manifest)
 
     def deploy(self, manifest: DeploymentSchema, target_manifest: BaseFlockSchema):
         """Deploy service and deployment to Kubernetes"""

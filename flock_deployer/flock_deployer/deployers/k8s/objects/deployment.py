@@ -63,9 +63,7 @@ class K8sDeployment(K8sResource):
                                     client.V1ContainerPort(
                                         name=port.name,
                                         protocol=port.protocol,
-                                        host_port=port.host_port,
-                                        container_port=port.container_port,
-                                        host_ip=port.host_ip,
+                                        container_port=port.port,
                                     )
                                     for port in self.manifest.spec.container.ports
                                 ],

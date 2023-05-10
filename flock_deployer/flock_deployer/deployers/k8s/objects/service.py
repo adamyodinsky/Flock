@@ -1,4 +1,3 @@
-from flock_schemas import BaseFlockSchema
 from flock_schemas.deployment import DeploymentSchema
 from kubernetes import client
 
@@ -24,8 +23,8 @@ class K8sService(K8sResource):
                     client.V1ServicePort(
                         name=port.name,
                         protocol=port.protocol,
-                        port=port.container_port,
-                        target_port=port.container_port,
+                        port=port.port,
+                        target_port=port.port,
                     )
                     for port in manifest.spec.container.ports
                 ],

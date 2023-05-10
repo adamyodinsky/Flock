@@ -17,6 +17,10 @@ class BaseDeployer(metaclass=abc.ABCMeta):
     def deploy(self, manifest: DeploymentSchema, target_manifest: BaseFlockSchema):
         """deploy a manifest"""
 
+    @abc.abstractmethod
+    def dry_deploy(self, manifest: DeploymentSchema, target_manifest: BaseFlockSchema):
+        """dry deploy a manifest"""
+
     # @abc.abstractmethod
     # def stop(self, manifest: DeploymentSchema):
     #     """stop a manifest"""

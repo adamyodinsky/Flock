@@ -24,17 +24,9 @@ class ContainerPort(BaseModelConfig):
         "tcp",
         description="The protocol for the port",
     )
-    host_port: int = Field(
+    port: int = Field(
         default=None,
-        description="The port number of the host",
-    )
-    container_port: int = Field(
-        default=None,
-        description="The port number of the container",
-    )
-    host_ip: IPvAnyAddress = Field(
-        default=None,
-        description="The IP address of the host",
+        description="The port number",
     )
 
 
