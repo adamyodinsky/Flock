@@ -26,8 +26,10 @@ def test_deployer():
     )
     schema_cls = SchemasFactory.get_schema(target_manifest["kind"])
     target_manifest = schema_cls.validate(target_manifest)
-    # deployer.dry_deploy(schema_instance, target_manifest)
-    deployer.deploy(schema_instance, target_manifest)
+    deployer.deploy(schema_instance, target_manifest, dry_run=True)
+    deployer.delete(schema_instance, target_manifest, dry_run=True)
+    # deployer.deploy(schema_instance, target_manifest)
+    # deployer.delete(schema_instance, target_manifest)
 
 
 test_deployer()

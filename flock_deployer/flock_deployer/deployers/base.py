@@ -14,17 +14,13 @@ class BaseDeployer(metaclass=abc.ABCMeta):
         self.secret_store: SecretStore = secret_store
 
     @abc.abstractmethod
-    def deploy(self, manifest: DeploymentSchema, target_manifest: BaseFlockSchema):
-        """deploy a manifest"""
+    def deploy(
+        self, manifest: DeploymentSchema, target_manifest: BaseFlockSchema, dry_run=None
+    ):
+        """Deploy"""
 
     @abc.abstractmethod
-    def dry_deploy(self, manifest: DeploymentSchema, target_manifest: BaseFlockSchema):
-        """dry deploy a manifest"""
-
-    # @abc.abstractmethod
-    # def stop(self, manifest: DeploymentSchema):
-    #     """stop a manifest"""
-
-    # @abc.abstractmethod
-    # def kill(self, manifest: DeploymentSchema):
-    #     """kill a manifest"""
+    def delete(
+        self, manifest: DeploymentSchema, target_manifest: BaseFlockSchema, dry_run=None
+    ):
+        """Delete"""
