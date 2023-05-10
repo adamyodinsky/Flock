@@ -6,7 +6,7 @@ import abc
 class SecretStore(metaclass=abc.ABCMeta):
     """Abstract base class for entity stores."""
 
-    def __init__(self, app_name: str = "flock") -> None:
+    def __init__(self, url="", token="", app_name="flock") -> None:
         """Initialize the secret store."""
         self.app_name = app_name
 

@@ -1,14 +1,24 @@
 """A module for storing and retrieving secrets from Vault."""
 
+import os
+
 import hvac
 from hvac.exceptions import InvalidPath, VaultError
 
+from flock_secrets_store.base import SecretStore
 
-class VaultSecretStore:
+
+class VaultSecretStore(SecretStore):
     """A class for storing and retrieving secrets from Vault."""
 
-    def __init__(self, vault_url, token):
-        self.client = hvac.Client(url=vault_url, token=token)
+    def __init__(self, url="http://localhost:8200", token="root", app_name="flock"):
+        """Initialize the Vault secret store."""
+        super().__init__(app_name=app_name, url=url, token=token)
+        self.url = os.environ.get("VAULT_URL", url)
+        self.token = os.environ.get("VAULT_TOKEN", token)
+
+        super().__init__(app_name)
+        self.client = hvac.Client(url=url, token=token)
 
     def check_secret_engine_enabled(self, path):
         """Check if the secret engine is enabled at the given path."""

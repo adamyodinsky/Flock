@@ -32,7 +32,11 @@ class K8sDeployment(K8sResource):
                                 name=manifest.metadata.name,
                                 image=manifest.spec.container.image,
                                 env=[
-                                    client.V1EnvVar(name=key, value=value)
+                                    client.V1EnvVar(
+                                        name=key,
+                                        value=value,
+                                        value_from=None,
+                                    )
                                     for key, value in self.manifest.spec.container.env.items()
                                 ]
                                 + [

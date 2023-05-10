@@ -38,6 +38,23 @@ class ContainerPort(BaseModelConfig):
     )
 
 
+class EnvironmentVariable(BaseModelConfig):
+    """Environment variable schema."""
+
+    name: str = Field(
+        ...,
+        description="The name of the environment variable",
+    )
+    value: Optional[str] = Field(
+        description="The value of the environment variable",
+    )
+
+    value_from: Optional[Dict[str, Any]] = Field(
+        default={},
+        description="The value of the environment variable",
+    )
+
+
 class DeploymentContainer(BaseModelConfig):
     """Deployment spec schema."""
 
@@ -45,8 +62,8 @@ class DeploymentContainer(BaseModelConfig):
         ...,
         description="The container image to be deployed",
     )
-    env: Dict[str, str] = Field(
-        default={},
+    env: List[EnvironmentVariable] = Field(
+        default=[],
         description="Environment variables to be set for the deployment",
     )
     ports: List[ContainerPort] = Field(

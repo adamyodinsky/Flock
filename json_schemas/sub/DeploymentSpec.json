@@ -103,6 +103,33 @@
       ],
       "additionalProperties": false
     },
+    "EnvironmentVariable": {
+      "title": "EnvironmentVariable",
+      "description": "Environment variable schema.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "description": "The name of the environment variable",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "description": "The value of the environment variable",
+          "type": "string"
+        },
+        "value_from": {
+          "title": "Value From",
+          "description": "The value of the environment variable",
+          "default": {},
+          "type": "object"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
     "ContainerPort": {
       "title": "ContainerPort",
       "description": "Container port schema.",
@@ -158,10 +185,10 @@
         "env": {
           "title": "Env",
           "description": "Environment variables to be set for the deployment",
-          "default": {},
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EnvironmentVariable"
           }
         },
         "ports": {

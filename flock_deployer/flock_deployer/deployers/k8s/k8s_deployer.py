@@ -2,6 +2,7 @@
 
 from flock_schemas import BaseFlockSchema
 from flock_schemas.deployment import DeploymentSchema
+from flock_secrets_store import SecretStore
 from kubernetes import client, config
 
 from flock_deployer.deployers.base import BaseDeployer
@@ -13,8 +14,9 @@ from flock_deployer.deployers.k8s.objects.deployment import K8sDeployment
 class K8sDeployer(BaseDeployer):
     """Abstract class for a deployer"""
 
-    def __init__(self):
+    def __init__(self, secret_store: SecretStore):
         """Initialize the deployer"""
+        super().__init__(secret_store)
         config.load_kube_config()
         self.apps_v1 = client.AppsV1Api()
         self.core_v1 = client.CoreV1Api()

@@ -13,6 +13,7 @@ fastapi = {extras = ["all"], version = "^0.95.1"}
 flock-common = {path = "../flock_common", develop = true}
 flock-schemas = {path = "../flock_schemas", develop = true}
 flock-resource-store = {path = "../flock_resource_store", develop = true}
+flock-secrets-store = {path = "../flock_secrets_store", develop = true}
 
 [build-system]
 requires = ["poetry-core"]
