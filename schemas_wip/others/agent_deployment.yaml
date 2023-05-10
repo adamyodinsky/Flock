@@ -23,17 +23,17 @@ spec:
       - name: MONGO_PASSWORD
         value: password
       - name: MONGO_HOST
-        value: 192.168.1.162
+        value: "192.168.1.162"
       - name: OPENAI_API_KEY
-        value_from:
+        valueFrom:
           secretKeyRef:
-            name: openai_api_key
-            key: openai_api_key
+            name: mysecret
+            key: openai-token
       - name: SERPAPI_API_KEY
-        value_from:
+        valueFrom:
           secretKeyRef:
-            name: serpapi_api_key
-            key: serpapi_api_key
+            name: mysecret
+            key: serpapi-token
   targetResource:
     kind: Agent # this is an agent resource manifest reference that should be loaded to the Flock-Agent FastAPI app.
     name: my-agent

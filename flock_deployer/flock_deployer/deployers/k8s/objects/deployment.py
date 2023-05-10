@@ -33,11 +33,24 @@ class K8sDeployment(K8sResource):
                                 image=manifest.spec.container.image,
                                 env=[
                                     client.V1EnvVar(
-                                        name=key,
-                                        value=value,
-                                        value_from=None,
+                                        name=env_item.name,
+                                        value_from=client.V1EnvVarSource(
+                                            secret_key_ref=client.V1SecretKeySelector(
+                                                name=env_item.valueFrom["secretKeyRef"][
+                                                    "name"
+                                                ],
+                                                key=env_item.valueFrom["secretKeyRef"][
+                                                    "key"
+                                                ],
+                                            )
+                                        ),
                                     )
-                                    for key, value in self.manifest.spec.container.env.items()
+                                    if env_item.valueFrom
+                                    else client.V1EnvVar(
+                                        name=env_item.name,
+                                        value=env_item.value,
+                                    )
+                                    for env_item in self.manifest.spec.container.env
                                 ]
                                 + [
                                     client.V1EnvVar(

@@ -49,8 +49,7 @@ class EnvironmentVariable(BaseModelConfig):
         description="The value of the environment variable",
     )
 
-    value_from: Optional[Dict[str, Any]] = Field(
-        default={},
+    valueFrom: Optional[Dict[str, Any]] = Field(
         description="The value of the environment variable",
     )
 

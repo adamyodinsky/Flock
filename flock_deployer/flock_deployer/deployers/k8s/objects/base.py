@@ -11,13 +11,18 @@ class K8sResource(metaclass=abc.ABCMeta):
 
     def __init__(self, manifest: DeploymentSchema, target_manifest: BaseFlockSchema):
         """Initialize the resource."""
-        manifest.spec.targetResource.options = {
-            **target_manifest.spec.options,  # type: ignore
-            **manifest.spec.targetResource.options,  # type: ignore
-        }
+
+        if target_manifest is not NotImplemented:
+            manifest.spec.targetResource.options = {
+                **target_manifest.spec.options,  # type: ignore
+                **manifest.spec.targetResource.options,  # type: ignore
+            }
+            self.target_manifest = SchemasFactory.get_schema(
+                target_manifest.kind
+            ).validate(target_manifest)
+        else:
+            self.target_manifest = None
+
         self.namespace = manifest.namespace
         self.manifest = manifest
-        self.target_manifest = SchemasFactory.get_schema(target_manifest.kind).validate(
-            target_manifest
-        )
         self.rendered_manifest = None

@@ -181,10 +181,9 @@
           "description": "The value of the environment variable",
           "type": "string"
         },
-        "value_from": {
-          "title": "Value From",
+        "valueFrom": {
+          "title": "Valuefrom",
           "description": "The value of the environment variable",
-          "default": {},
           "type": "object"
         }
       },
