@@ -1,12 +1,14 @@
 """Main module for the Flock Orchestrator server."""
 
+import os
+
 from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI
 from flock_common import check_env_vars
 from flock_models.builder import ResourceBuilder
 from flock_resource_store import ResourceStoreFactory
 
-from server.api.flock_api import get_router
+from server.api.resource_api import get_router
 
 load_dotenv(find_dotenv(os.environ.get("FLOCK_ENV_FILE", ".env")))
 check_env_vars([], [])

@@ -5,7 +5,7 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from server.api.flock_api import ResourceBuilder, ResourceStore, get_router
+from server.api.resource_api import ResourceBuilder, ResourceStore, get_router
 
 app = FastAPI()
 resource_store = MagicMock(spec=ResourceStore)

@@ -41,5 +41,6 @@ class AgentResource(Agent):
             **self.options,  # type: ignore
             **memory,
         )
+
         self.run = self.resource.run
         self.arun = self.resource.arun
