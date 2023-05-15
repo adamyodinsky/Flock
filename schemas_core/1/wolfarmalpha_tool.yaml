@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=../../json_schemas/main/LoadToolSchema.json
+---
+apiVersion: flock/v1
+kind: LoadTool
+namespace: default
+metadata:
+  name: my-wolfram-alpha
+  description: Use this tool for any mathematical calculation, math-related question, and verification of math-related results in your answers.
+  labels:
+    app: my_app
+spec:
+  vendor: wolfram-alpha
+  dependencies:
+    - kind: LLMChat
+      name: my-openai-llm
+      namespace: default
