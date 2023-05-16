@@ -28,6 +28,7 @@ class K8sDeployment(K8sResource):
                     spec=client.V1PodSpec(
                         containers=[
                             client.V1Container(
+                                args=manifest.spec.container.args,
                                 image_pull_policy=manifest.spec.container.image_pull_policy,
                                 name=manifest.metadata.name,
                                 image=manifest.spec.container.image,

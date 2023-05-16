@@ -3,14 +3,14 @@
 apiVersion: flock/v1
 kind: LLMChat
 namespace: default
-# uuid: b70bb61d-6710-48bd-85b0-f32c91f1eed1
 metadata:
-  name: my-openai-llm
+  name: my-openai-gpt4all-llm
   description: openai language model
   labels:
     app: my_app
 spec:
   vendor: ChatOpenAI
   options:
-    model_name: gpt-3.5-turbo
-    openai_api_base: https://api.openai.com/v1
+    model_name: ggml-gpt4all-l13b-snoozy.bin
+    openai_api_base: http://localhost:8080/v1 # using github.com/go-skynet/LocalAI
+    max_tokens: 700

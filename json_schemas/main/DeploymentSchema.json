@@ -261,6 +261,15 @@
             "IfNotPresent"
           ],
           "type": "string"
+        },
+        "args": {
+          "title": "Args",
+          "description": "The arguments to be passed to the container",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "required": [
@@ -299,7 +308,6 @@
         }
       },
       "required": [
-        "targetResource",
         "container"
       ],
       "additionalProperties": false

@@ -11,6 +11,4 @@ metadata:
 spec:
   vendor: GPT4All
   options:
-    # temp: 0.28
     model: /Users/adamyodinsky/.flock/models/ggml-gpt4all-l13b-snoozy.bin
-    # n_predict: 1024

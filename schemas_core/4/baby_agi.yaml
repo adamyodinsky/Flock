@@ -15,7 +15,7 @@ spec:
     max_iterations: 3
   dependencies:
     - kind: LLMChat
-      name: my-openai-llm
+      name: my-openai-llm # my-openai-gpt4all-llm # my-openai-llm
       namespace: default
     - kind: Embedding
       name: my-openai-embedding

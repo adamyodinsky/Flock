@@ -14,7 +14,7 @@ spec:
     verbose: true
   dependencies:
     - kind: LLMChat
-      name: my-openai-llm
+      name: my-openai-gpt4all-llm # my-openai-llm
       namespace: default
   tools:
     # - kind: VectorStoreQATool

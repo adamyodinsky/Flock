@@ -1283,6 +1283,22 @@ plugins = ["setuptools"]
 requirements-deprecated-finder = ["pip-api", "pipreqs"]
 
 [[package]]
+name = "jaraco-context"
+version = "4.3.0"
+description = "Context managers by jaraco"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "jaraco.context-4.3.0-py3-none-any.whl", hash = "sha256:5d9e95ca0faa78943ed66f6bc658dd637430f16125d86988e77844c741ff2f11"},
+    {file = "jaraco.context-4.3.0.tar.gz", hash = "sha256:4dad2404540b936a20acedec53355bdaea223acb88fd329fa6de9261c941566e"},
+]
+
+[package.extras]
+docs = ["furo", "jaraco.packaging (>=9)", "jaraco.tidelift (>=1.4)", "rst.linker (>=1.9)", "sphinx (>=3.5)", "sphinx-lint"]
+testing = ["flake8 (<5)", "pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=1.3)", "pytest-flake8", "pytest-mypy (>=0.9.1)"]
+
+[[package]]
 name = "jinja2"
 version = "3.1.2"
 description = "A very fast and expressive template engine."
@@ -1352,14 +1368,14 @@ typing-extensions = ">=4.3.0,<5.0.0"
 
 [[package]]
 name = "langchain"
-version = "0.0.168"
+version = "0.0.170"
 description = "Building applications with LLMs through composability"
 category = "main"
 optional = false
 python-versions = ">=3.8.1,<4.0"
 files = [
-    {file = "langchain-0.0.168-py3-none-any.whl", hash = "sha256:122590f9ccb343f19eefc5f7a548c96fab10d15fcf66fc33c0d9937b157f1c6b"},
-    {file = "langchain-0.0.168.tar.gz", hash = "sha256:ed1a38a5d0bff9f06250a928be25ca929567e36d409df8ca9f7a7a33a7b10790"},
+    {file = "langchain-0.0.170-py3-none-any.whl", hash = "sha256:3543c14c08d39c0eef2d1a88a98161a25329720660811c546c8881d91c272c77"},
+    {file = "langchain-0.0.170.tar.gz", hash = "sha256:799e047857b0b12606255e4e843c7eb3724ddb85242c97dccd49b007e40486bf"},
 ]
 
 [package.dependencies]
@@ -1380,7 +1396,7 @@ all = ["O365 (>=2.0.26,<3.0.0)", "aleph-alpha-client (>=2.15.0,<3.0.0)", "anthro
 azure = ["azure-core (>=1.26.4,<2.0.0)", "azure-cosmos (>=4.4.0b1,<5.0.0)", "azure-identity (>=1.12.0,<2.0.0)", "openai (>=0,<1)"]
 cohere = ["cohere (>=3,<4)"]
 embeddings = ["sentence-transformers (>=2,<3)"]
-extended-testing = ["pdfminer-six (>=20221105,<20221106)", "pypdf (>=3.4.0,<4.0.0)", "tqdm (>=4.48.0)"]
+extended-testing = ["jq (>=1.4.1,<2.0.0)", "lxml (>=4.9.2,<5.0.0)", "pdfminer-six (>=20221105,<20221106)", "pypdf (>=3.4.0,<4.0.0)", "tqdm (>=4.48.0)"]
 hnswlib = ["docarray (>=0.31.0,<0.32.0)", "hnswlib (>=0.7.0,<0.8.0)", "protobuf (==3.19)"]
 in-memory-store = ["docarray (>=0.31.0,<0.32.0)"]
 llms = ["anthropic (>=0.2.6,<0.3.0)", "cohere (>=3,<4)", "huggingface_hub (>=0,<1)", "manifest-ml (>=0.0.1,<0.0.2)", "nlpcloud (>=1,<2)", "openai (>=0,<1)", "torch (>=1,<3)", "transformers (>=4,<5)"]
@@ -1600,6 +1616,18 @@ python-versions = "*"
 files = [
     {file = "monotonic-1.6-py2.py3-none-any.whl", hash = "sha256:68687e19a14f11f26d140dd5c86f3dba4bf5df58003000ed467e0e2a69bca96c"},
     {file = "monotonic-1.6.tar.gz", hash = "sha256:3a55207bcfed53ddd5c5bae174524062935efed17792e9de2ad0205ce9ad63f7"},
+]
+
+[[package]]
+name = "more-itertools"
+version = "9.1.0"
+description = "More routines for operating on iterables, beyond itertools"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "more-itertools-9.1.0.tar.gz", hash = "sha256:cabaa341ad0389ea83c17a94566a53ae4c9d07349861ecb14dc6d0345cf9ac5d"},
+    {file = "more_itertools-9.1.0-py3-none-any.whl", hash = "sha256:d2bc7f02446e86a68911e58ded76d6561eea00cddfb2a91e7019bbb586c799f3"},
 ]
 
 [[package]]
@@ -3964,6 +3992,39 @@ files = [
 test = ["pytest (>=6.0.0)"]
 
 [[package]]
+name = "wolframalpha"
+version = "5.0.0"
+description = "Wolfram|Alpha 2.0 API client"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "wolframalpha-5.0.0-py3-none-any.whl", hash = "sha256:159f5d8fd31e4a734a34a9f3ae8aec4e9b2ef392607f82069b4a324b6b1831d5"},
+    {file = "wolframalpha-5.0.0.tar.gz", hash = "sha256:38bf27654039ec85cc62c199dd319b6a4d6a7badfed7af1cd161f081afdb57c0"},
+]
+
+[package.dependencies]
+"jaraco.context" = "*"
+more-itertools = "*"
+xmltodict = "*"
+
+[package.extras]
+docs = ["jaraco.packaging (>=8.2)", "rst.linker (>=1.9)", "sphinx"]
+testing = ["keyring", "pmxbot", "pytest (>=3.5,!=3.7.3)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=1.2.3)", "pytest-cov", "pytest-enabler", "pytest-flake8", "pytest-mypy"]
+
+[[package]]
+name = "xmltodict"
+version = "0.13.0"
+description = "Makes working with XML feel like you are working with JSON"
+category = "main"
+optional = false
+python-versions = ">=3.4"
+files = [
+    {file = "xmltodict-0.13.0-py2.py3-none-any.whl", hash = "sha256:aa89e8fd76320154a40d19a0df04a4695fb9dc5ba977cbb68ab3e4eb225e7852"},
+    {file = "xmltodict-0.13.0.tar.gz", hash = "sha256:341595a488e3e01a85a9d8911d8912fd922ede5fecc4dce437eb4b6c8d037e56"},
+]
+
+[[package]]
 name = "yarl"
 version = "1.9.2"
 description = "Yet another URL library"
@@ -4129,4 +4190,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "9af5911d69845390a915bd567eb9d63b76b85460bb2afd1b01d64691aa4ac13b"
+content-hash = "db7273b2ec831d8ae1fac6d11d70b034c92cae5fb994399b118529f33b6cb02d"

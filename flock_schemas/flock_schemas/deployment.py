@@ -65,6 +65,10 @@ class DeploymentContainer(BaseModelConfig):
         "IfNotPresent",
         description="The image pull policy",
     )
+    args: List[str] = Field(
+        default=[],
+        description="The arguments to be passed to the container",
+    )
 
 
 class DeploymentTargetResource(BaseToolDependency):
@@ -79,8 +83,7 @@ class DeploymentTargetResource(BaseToolDependency):
 class DeploymentSpec(BaseModelConfig):
     """Deployment spec schema."""
 
-    targetResource: DeploymentTargetResource = Field(
-        ...,
+    targetResource: Optional[DeploymentTargetResource] = Field(
         description="The target resource to be deployed",
     )
     replicas: int = Field(
