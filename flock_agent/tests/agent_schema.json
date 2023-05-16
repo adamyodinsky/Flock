@@ -10,21 +10,21 @@
     }
   },
   "spec": {
-    "vendor": "zero-shot-react-description",
+    "vendor": "conversational-react-description",
     "options": {
       "verbose": true
     },
     "dependencies": [
       {
         "kind": "LLMChat",
-        "name": "my-openai-llm",
+        "name": "my-openai-llm-gpt4",
         "namespace": "default"
       }
     ],
     "tools": [
       {
         "kind": "LoadTool",
-        "name": "my-google-search",
+        "name": "my-google-search-gpt4",
         "namespace": "default"
       }
     ]

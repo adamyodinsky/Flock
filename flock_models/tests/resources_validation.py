@@ -7,6 +7,7 @@ from flock_common.env_checker import check_env_vars
 from flock_common.validation import validation_iterator
 from flock_resource_store import ResourceStoreFactory
 from flock_schemas import SchemasFactory
+import readline
 
 from flock_models.builder import ResourceBuilder
 
@@ -75,14 +76,29 @@ def run_build_tests():
         validation_function=test_building_resource,
     )
 
-    OBJECTIVE = "Write a weather report for SF today"
-    single_test(
-        file_path="../schemas_core/3/agent.yaml",
-        prompt="Who is the current prime minister of israel?",
+    # OBJECTIVE = "Write a weather report for SF today"
+    # single_test(
+    #     file_path="../schemas_core/3/agent.yaml",
+    #     prompt="Who is the current prime minister of israel?",
+    # )
+
+    # single_test(
+    #     file_path="../schemas_core/3/agent_with_memory.yaml",
+    #     prompt="Who is the current prime minister of israel?",
+    # )
+
+    # single_test(
+    #     file_path="../schemas_core/4/baby_agi.yaml", prompt={"objective": OBJECTIVE}
+    # )
+
+    gpt4all = test_building_resource(
+        resource_store.load_file("../schemas_core/0/gpt4all.yaml")
     )
-    single_test(
-        file_path="../schemas_core/4/baby_agi.yaml", prompt={"objective": OBJECTIVE}
-    )
+
+    while True:
+        user_input = input("User: ")
+        answer = gpt4all.resource(user_input)
+        print(f"Agent: {answer}")
 
 
 run_build_tests()

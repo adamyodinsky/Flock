@@ -8,6 +8,11 @@ packages = [{include = "flock_client"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+gradio = "^3.30.0"
+click = "^8.1.3"
+flock-common = {path = "../flock_common", develop = true}
+gpt4all = "^0.2.1"
+fastapi = "^0.95.2"
 
 
 [build-system]

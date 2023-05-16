@@ -7,6 +7,7 @@ from typing import Union
 
 from fastapi import APIRouter, Depends, WebSocket
 
+from flock_agent.agent import FlockAgent
 from flock_agent.models import (
     AgentRequest,
     AgentResponse,
@@ -29,7 +30,7 @@ def create_agent_routes(agent):
 
     @router.post("/agent")
     async def agent_endpoint(
-        req: AgentRequest, agent=Depends(lambda: agent)
+        req: AgentRequest, agent: FlockAgent = Depends(lambda: agent)
     ) -> Union[AgentResponse, ErrorResponse]:
         response = agent.get_response(req.msg)
         return AgentResponse(data=str(response))
