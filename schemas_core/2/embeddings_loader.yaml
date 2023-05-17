@@ -14,7 +14,6 @@ spec:
   vendor: v1
   options:
     source_directory: /Users/adamyodinsky/.flock
-    unknown: 1
   dependencies:
     - kind: Splitter
       name: my-splitter

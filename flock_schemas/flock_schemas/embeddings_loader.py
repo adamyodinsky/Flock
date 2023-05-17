@@ -1,11 +1,11 @@
 """LLM Tool schema."""
 
 
-from typing import Dict, Literal, Optional
+from typing import Literal, Optional
 
 from pydantic import Field
 
-from flock_schemas.base import BaseFlockSchema, BaseSpec, Category
+from flock_schemas.base import BaseFlockSchema, BaseModelConfig, BaseSpec, Category
 from flock_schemas.dependencies import (
     EmbeddingDependency,
     SplitterDependency,
@@ -13,15 +13,40 @@ from flock_schemas.dependencies import (
 )
 
 
+class EmbeddingsLoaderOptions(BaseModelConfig):
+    """Options schema."""
+
+    source_directory: str = Field(
+        default="$HOME/.flock/data/raw",
+        description="The directory containing the data files",
+    )
+    base_meta_source: str = Field(
+        default="", description="The base meta source file name"
+    )
+    archive_path: str = Field(
+        default="$HOME/.flock/data/archive",
+        description="The path to the archive file containing the data files",
+    )
+    allowed_extensions: str = Field(
+        default="", description="The allowed extensions for the data files"
+    )
+    deny_extensions: str = Field(
+        default="", description="The denied extensions for the data files"
+    )
+
+
 class EmbeddingsLoaderSpec(BaseSpec):
     """EmbeddingsLoader spec."""
 
-    vendor: Optional[str] = Field(
-        default="v1", description="The class of the tool, e.g, etc."
-    )
+    vendor: Optional[str] = Field(default="v1", description="")
     dependencies: tuple[
         SplitterDependency, EmbeddingDependency, VectorStoreDependency
-    ] = Field(..., description="Tool dependencies")
+    ] = Field(..., description="dependencies")
+
+    options: EmbeddingsLoaderOptions = Field(
+        default_factory=EmbeddingsLoaderOptions,
+        description="Options for the embeddings loader",
+    )
 
 
 class EmbeddingsLoaderSchema(BaseFlockSchema):

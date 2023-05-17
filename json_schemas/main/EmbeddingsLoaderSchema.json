@@ -116,6 +116,39 @@
       ],
       "additionalProperties": false
     },
+    "EmbeddingsLoaderOptions": {
+      "title": "EmbeddingsLoaderOptions",
+      "description": "Options schema.",
+      "type": "object",
+      "properties": {
+        "source_directory": {
+          "title": "Source Directory",
+          "description": "The directory containing the data files",
+          "type": "string"
+        },
+        "base_meta_source": {
+          "title": "Base Meta Source",
+          "description": "The base meta source file name",
+          "type": "string"
+        },
+        "archive_path": {
+          "title": "Archive Path",
+          "description": "The path to the archive file containing the data files",
+          "type": "string"
+        },
+        "allowed_extensions": {
+          "title": "Allowed Extensions",
+          "description": "The allowed extensions for the data files",
+          "type": "string"
+        },
+        "deny_extensions": {
+          "title": "Deny Extensions",
+          "description": "The denied extensions for the data files",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
     "SplitterDependency": {
       "title": "SplitterDependency",
       "description": "Embedding dependency schema.",
@@ -321,19 +354,22 @@
       "properties": {
         "options": {
           "title": "Options",
-          "description": "Resource options",
+          "description": "Options for the embeddings loader",
           "default": {},
-          "type": "object"
+          "allOf": [
+            {
+              "$ref": "#/definitions/EmbeddingsLoaderOptions"
+            }
+          ]
         },
         "vendor": {
           "title": "Vendor",
-          "description": "The class of the tool, e.g, etc.",
           "default": "v1",
           "type": "string"
         },
         "dependencies": {
           "title": "Dependencies",
-          "description": "Tool dependencies",
+          "description": "dependencies",
           "type": "array",
           "minItems": 3,
           "maxItems": 3,

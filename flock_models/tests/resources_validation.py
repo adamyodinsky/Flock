@@ -1,15 +1,16 @@
 """Test building resources from yaml files"""
 
 import os
+import readline
 
 from dotenv import find_dotenv, load_dotenv
 from flock_common.env_checker import check_env_vars
 from flock_common.validation import validation_iterator
 from flock_resource_store import ResourceStoreFactory
 from flock_schemas import SchemasFactory
-import readline
 
 from flock_models.builder import ResourceBuilder
+from flock_models.resources.embeddings_loader import EmbeddingsLoaderResource
 
 # Setup
 # pylint: disable=C0103
@@ -75,6 +76,12 @@ def run_build_tests():
         dir_path="../schemas_core",
         validation_function=test_building_resource,
     )
+
+    embeddings_loader: EmbeddingsLoaderResource = test_building_resource(  # type: ignore
+        resource_store.load_file("../schemas_core/2/embeddings_loader.yaml")
+    )
+
+    embeddings_loader.load_plain_text_to_vectorstore()
 
     # OBJECTIVE = "Write a weather report for SF today"
     # single_test(

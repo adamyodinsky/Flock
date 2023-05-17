@@ -36,33 +36,38 @@ class EmbeddingsLoaderResource(Resource):
     ) -> None:
         super().__init__(manifest, dependencies, tools)
 
-        self.source_directory = os.environ.get(
-            "EMBEDDINGS_SOURCE_DIRECTORY", None
-        ) or manifest.spec.options.get(  # type: ignore
-            "source_directory", "$HOME/.flock/data/raw"
+        self.source_directory = (
+            os.environ.get("SOURCE_DIRECTORY", None)
+            or manifest.spec.options.source_directory
         )
 
-        self.archive_path = os.environ.get(
-            "ARCHIVE_PATH", None
-        ) or manifest.spec.options.get(  # type: ignore
-            "archive_path", "$HOME/.flock/data/archive"
+        self.archive_path = (
+            os.environ.get("ARCHIVE_PATH", None) or manifest.spec.options.archive_path
         )
 
-        self.base_meta_source = os.environ.get(
-            "BASE_META_SOURCE", None
-        ) or manifest.spec.options.get(  # type: ignore
-            "base_meta_source", self.source_directory
+        self.base_meta_source = (
+            os.environ.get("BASE_META_SOURCE", None)
+            or manifest.spec.options.base_meta_source
         )
 
-        self.allowed_extensions = manifest.spec.options.get("deny_extensions", "").split(" ")  # type: ignore
-        self.deny_extensions = manifest.spec.options.get("deny_extensions", "").split(" ")  # type: ignore
+        allowed_extensions = (
+            os.environ.get("ALLOWED_EXTENSIONS", None)
+            or manifest.spec.options.allowed_extensions
+        )
+
+        deny_extensions = (
+            os.environ.get("DENY_EXTENSIONS", None)
+            or manifest.spec.options.deny_extensions
+        )
+
+        self.allowed_extensions = allowed_extensions.split(",")
+        self.deny_extensions = deny_extensions.split(",")
 
         self.splitter: SplitterResource = self.dependencies.get(Kind.Splitter)  # type: ignore
         self.embedding: EmbeddingResource = self.dependencies.get(Kind.Embedding)  # type: ignore
         self.vectorstore: VectorStoreResource = self.dependencies.get(Kind.VectorStore)  # type: ignore
 
-    @staticmethod
-    def _list_files_recursive(folder: str):
+    def _list_files_recursive(self, folder: str):
         """List all files in a folder recursively."""
 
         file_list = []
@@ -75,13 +80,11 @@ class EmbeddingsLoaderResource(Resource):
 
         return file_list
 
-    @staticmethod
-    def _get_file_subpath(path):
+    def _get_file_subpath(self, path):
         path_parts = path.split(os.sep)
         return os.path.join(path_parts[-2], path_parts[-1])
 
-    @staticmethod
-    def _get_files_list(path: str):
+    def _get_files_list(self, path: str):
         files = os.listdir(path)
         files.sort(key=lambda x: os.path.getmtime(os.path.join(path, x)))
 
@@ -106,8 +109,7 @@ class EmbeddingsLoaderResource(Resource):
         ]
         return filtered_files
 
-    @staticmethod
-    def _load_json(file_name: str):
+    def _load_json(self, file_name: str):
         json_obj = []
 
         try:
@@ -118,8 +120,7 @@ class EmbeddingsLoaderResource(Resource):
 
         return json_obj
 
-    @staticmethod
-    def _load_text(file: str):
+    def _load_text(self, file: str):
         """Load text file from local storage."""
 
         with open(file=file, mode="r", encoding="utf-8") as conv_file:
