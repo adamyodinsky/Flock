@@ -1,0 +1,250 @@
+{
+  "title": "EmbeddingsLoaderSpec",
+  "description": "EmbeddingsLoader spec.",
+  "type": "object",
+  "properties": {
+    "options": {
+      "title": "Options",
+      "description": "Resource options",
+      "default": {},
+      "type": "object"
+    },
+    "vendor": {
+      "title": "Vendor",
+      "description": "The class of the tool, e.g, etc.",
+      "default": "v1",
+      "type": "string"
+    },
+    "dependencies": {
+      "title": "Dependencies",
+      "description": "Tool dependencies",
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": [
+        {
+          "$ref": "#/definitions/SplitterDependency"
+        },
+        {
+          "$ref": "#/definitions/EmbeddingDependency"
+        },
+        {
+          "$ref": "#/definitions/VectorStoreDependency"
+        }
+      ]
+    },
+    "tools": {
+      "title": "Tools",
+      "description": "Tools for the object",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BaseToolDependency"
+      }
+    }
+  },
+  "required": [
+    "dependencies"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "SplitterDependency": {
+      "title": "SplitterDependency",
+      "description": "Embedding dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string"
+        },
+        "kind": {
+          "title": "Kind",
+          "default": "Splitter",
+          "const": "Splitter",
+          "type": "string"
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string"
+        },
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "EmbeddingDependency": {
+      "title": "EmbeddingDependency",
+      "description": "Embedding dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string"
+        },
+        "kind": {
+          "title": "Kind",
+          "default": "Embedding",
+          "const": "Embedding",
+          "type": "string"
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string"
+        },
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "VectorStoreDependency": {
+      "title": "VectorStoreDependency",
+      "description": "Store dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string"
+        },
+        "kind": {
+          "title": "Kind",
+          "default": "VectorStore",
+          "const": "VectorStore",
+          "type": "string"
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string"
+        },
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "Kind": {
+      "title": "Kind",
+      "description": "Enum for all kinds of resources.",
+      "enum": [
+        "Embedding",
+        "VectorStore",
+        "VectorStoreQATool",
+        "LLM",
+        "LLMChat",
+        "LoadTool",
+        "Splitter",
+        "Agent",
+        "PromptTemplate",
+        "LLMTool",
+        "Custom"
+      ],
+      "type": "string"
+    },
+    "BaseToolDependency": {
+      "title": "BaseToolDependency",
+      "description": "Base tool dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind of the dependency",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Kind"
+            }
+          ]
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string"
+        },
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object"
+        },
+        "description": {
+          "title": "Description",
+          "description": "Tool description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "kind"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
