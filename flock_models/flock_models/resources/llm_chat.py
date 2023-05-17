@@ -29,7 +29,7 @@ class LLMChatResource(Resource):
         dependencies: Optional[dict[str, Resource]] = None,
         tools: Optional[List[ToolResource]] = None,
     ):
-        super().__init__(manifest)
+        super().__init__(manifest, dependencies, tools)
         self.vendor_cls: BaseLanguageModel = cast(
             BaseLanguageModel, self.VENDORS[self.vendor]
         )

@@ -84,16 +84,16 @@
           "maxLength": 63,
           "type": "string"
         },
-        "description": {
-          "title": "Description",
-          "description": "Tool description",
-          "type": "string"
-        },
         "options": {
           "title": "Options",
           "description": "Deployment target options",
           "default": {},
           "type": "object"
+        },
+        "description": {
+          "title": "Description",
+          "description": "Tool description",
+          "type": "string"
         }
       },
       "required": [

@@ -3,8 +3,6 @@ from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, List, Literal, Mapping, Optional
 
-# from odmantic import Index
-# from odmantic.bson import BaseBSONModel, ObjectId
 from pydantic import BaseModel, Extra, Field
 
 
@@ -34,24 +32,6 @@ class Category(str, Enum):
     AGENT = "agent"
     DEPLOYMENT = "deployment"
     STATEFULSET = "statefulset"
-
-
-# class PyObjectId(ObjectId):
-#     """Pydantic model for ObjectId."""
-
-#     @classmethod
-#     def __get_validators__(cls):
-#         yield cls.validate
-
-#     @classmethod
-#     def validate(cls, v):
-#         if not ObjectId.is_valid(v):
-#             raise ValueError("Invalid objectid")
-#         return ObjectId(v)
-
-#     @classmethod
-#     def __modify_schema__(cls, field_schema):
-#         field_schema.update(type="string")
 
 
 class BaseModelConfig(BaseModel):
@@ -89,6 +69,7 @@ class BaseDependency(BaseLabels):
     namespace: Optional[str] = Field(
         "default", description="The namespace of the object", max_length=63
     )
+    options: Optional[Dict[str, Any]] = Field({}, description="Resource options")
 
 
 class BaseToolDependency(BaseDependency):
@@ -115,7 +96,7 @@ class BaseNamespace(BaseModelConfig):
 class BaseOptions(BaseModelConfig):
     """Base options schema."""
 
-    options: Optional[Mapping[str, Any]] = Field({}, description="Resource options")
+    options: Optional[Dict[str, Any]] = Field({}, description="Resource options")
 
 
 class BaseSpec(BaseOptions):
@@ -156,17 +137,6 @@ class BaseFlockSchema(BaseNamespace):
         collection = "resources"
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
-
-        @staticmethod
-        def indexes():
-            """Return indexes."""
-
-            yield Index(
-                BaseFlockSchema.namespace,
-                BaseFlockSchema.kind,
-                BaseFlockSchema.metadata.name,
-                unique=True,
-            )
 
 
 export = {

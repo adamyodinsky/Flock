@@ -25,7 +25,7 @@
       "maxItems": 2,
       "items": [
         {
-          "$ref": "#/definitions/StoreDependency"
+          "$ref": "#/definitions/VectorStoreDependency"
         },
         {
           "anyOf": [
@@ -54,8 +54,8 @@
       ],
       "type": "string"
     },
-    "StoreDependency": {
-      "title": "StoreDependency",
+    "VectorStoreDependency": {
+      "title": "VectorStoreDependency",
       "description": "Store dependency schema.",
       "type": "object",
       "properties": {
@@ -84,6 +84,12 @@
           "default": "default",
           "maxLength": 63,
           "type": "string"
+        },
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object"
         }
       },
       "required": [
@@ -121,6 +127,12 @@
           "default": "default",
           "maxLength": 63,
           "type": "string"
+        },
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object"
         }
       },
       "required": [
@@ -158,6 +170,12 @@
           "default": "default",
           "maxLength": 63,
           "type": "string"
+        },
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object"
         }
       },
       "required": [

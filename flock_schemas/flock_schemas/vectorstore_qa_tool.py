@@ -6,7 +6,11 @@ from typing import Dict, Literal, Optional, Union
 from pydantic import Field
 
 from flock_schemas.base import BaseFlockSchema, BaseOptions, Category
-from flock_schemas.dependencies import LLMChatDependency, LLMDependency, StoreDependency
+from flock_schemas.dependencies import (
+    LLMChatDependency,
+    LLMDependency,
+    VectorStoreDependency,
+)
 
 
 class VectorStoreQAToolVendor(str, Enum):
@@ -23,7 +27,7 @@ class VectorStoreQAToolSpec(BaseOptions):
     )
     options: Optional[Dict] = Field({}, description="Options for the tool")
     dependencies: tuple[
-        StoreDependency, Union[LLMChatDependency, LLMDependency]
+        VectorStoreDependency, Union[LLMChatDependency, LLMDependency]
     ] = Field(..., description="Tool dependencies")
 
 

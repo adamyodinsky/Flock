@@ -180,6 +180,12 @@
           "maxLength": 63,
           "type": "string"
         },
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object"
+        },
         "description": {
           "title": "Description",
           "description": "Tool description",
@@ -222,6 +228,12 @@
           "default": "default",
           "maxLength": 63,
           "type": "string"
+        },
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object"
         }
       },
       "required": [
@@ -259,6 +271,12 @@
           "default": "default",
           "maxLength": 63,
           "type": "string"
+        },
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object"
         }
       },
       "required": [

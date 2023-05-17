@@ -17,7 +17,7 @@ class LLMChatDependency(BaseDependency):
     kind: str = Field(Kind.LLMChat, const=True)
 
 
-class StoreDependency(BaseDependency):
+class VectorStoreDependency(BaseDependency):
     """Store dependency schema."""
 
     kind: str = Field(Kind.VectorStore, const=True)
@@ -29,6 +29,12 @@ class EmbeddingDependency(BaseDependency):
     kind: str = Field(Kind.Embedding.value, const=True)
 
 
+class SplitterDependency(BaseDependency):
+    """Embedding dependency schema."""
+
+    kind: str = Field(Kind.Splitter.value, const=True)
+
+
 class PromptTemplateDependency(BaseDependency):
     """Prompt template dependency schema."""
 
@@ -38,7 +44,7 @@ class PromptTemplateDependency(BaseDependency):
 export = {
     "sub": {
         "LLMDependency": LLMDependency,
-        "StoreDependency": StoreDependency,
+        "VectorStoreDependency": VectorStoreDependency,
         "EmbeddingDependency": EmbeddingDependency,
         "PromptTemplateDependency": PromptTemplateDependency,
     },

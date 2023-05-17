@@ -31,6 +31,12 @@
       "maxLength": 63,
       "type": "string"
     },
+    "options": {
+      "title": "Options",
+      "description": "Resource options",
+      "default": {},
+      "type": "object"
+    },
     "description": {
       "title": "Description",
       "description": "Tool description",

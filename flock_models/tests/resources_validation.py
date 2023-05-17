@@ -91,14 +91,14 @@ def run_build_tests():
     #     file_path="../schemas_core/4/baby_agi.yaml", prompt={"objective": OBJECTIVE}
     # )
 
-    gpt4all = test_building_resource(
-        resource_store.load_file("../schemas_core/0/gpt4all.yaml")
-    )
+    # gpt4all = test_building_resource(
+    #     resource_store.load_file("../schemas_core/0/lllm_openai_gpt4all.yaml")
+    # )
 
-    while True:
-        user_input = input("User: ")
-        answer = gpt4all.resource(user_input)
-        print(f"Agent: {answer}")
+    # while True:
+    #     user_input = input("User: ")
+    #     answer = gpt4all.resource(user_input)
+    #     print(f"Agent: {answer}")
 
 
 run_build_tests()

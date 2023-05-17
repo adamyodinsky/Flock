@@ -5,7 +5,6 @@ from typing import Dict, List, Optional
 from flock_schemas import LoadToolSchema
 from flock_schemas.base import Kind
 from langchain.agents import load_tools as load_toolsLC
-from langchain.base_language import BaseLanguageModel as LCBaseLanguageModel
 
 from flock_models.resources.base import Resource, ToolResource
 
@@ -52,12 +51,13 @@ class LoadToolResource(ToolResource):
         if tools is None:
             tools = []
 
-        llm = self.dependencies.get(Kind.LLM) or self.dependencies.get(Kind.LLMChat)
-        self.llm: LCBaseLanguageModel = llm.resource
+        self.llm = self.dependencies.get(Kind.LLM) or self.dependencies.get(
+            Kind.LLMChat
+        )
 
         self.tool_function = load_toolsLC(
             tool_names=[self.vendor],
-            llm=self.llm,
+            llm=self.llm.resource,  # type: ignore
             **self.options,  # type: ignore
         )[0]
 

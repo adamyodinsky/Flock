@@ -36,7 +36,7 @@ app = FastAPI()
 
 
 @app.post("/v1/chat/completions")
-async def agent_endpoint(req: Request):
+async def chat(req: Request):
     """Endpoint for the agent to call for inference."""
 
     # TODO: pass config to chat_completion - **req.dict(exclude={"messages"})

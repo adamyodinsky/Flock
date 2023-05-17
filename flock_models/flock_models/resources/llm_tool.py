@@ -28,8 +28,9 @@ class LLMToolResource(ToolResource):
         if tools is None:
             tools = []
 
-        llm = self.dependencies.get(Kind.LLM) or self.dependencies.get(Kind.LLMChat)
-        self.llm = llm.resource
+        self.llm = self.dependencies.get(Kind.LLM) or self.dependencies.get(
+            Kind.LLMChat
+        )
 
         self.vendor_cls = cast(LLMChain, self.VENDORS[self.vendor])
 
@@ -38,7 +39,7 @@ class LLMToolResource(ToolResource):
         ].resource
 
         self.tool_function = self.vendor_cls(
-            llm=self.llm, prompt=self.prompt_template, **self.options  # type: ignore
+            llm=self.llm.resource, prompt=self.prompt_template, **self.options  # type: ignore
         )
 
         self.resource = ToolWarperLC(

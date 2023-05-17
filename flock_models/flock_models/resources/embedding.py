@@ -22,7 +22,7 @@ class EmbeddingResource(Resource):
         dependencies: Optional[Dict[str, Resource]],
         tools: Optional[List[ToolResource]] = None,
     ):
-        super().__init__(manifest)
+        super().__init__(manifest, dependencies, tools)
         self.vendor_cls = self.VENDORS[self.vendor]
         self.resource: EmbeddingsLC = self.vendor_cls(**self.options)  # type: ignore
         self.functions = {
