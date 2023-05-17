@@ -39,9 +39,8 @@ app = FastAPI()
 async def agent_endpoint(req: Request):
     """Endpoint for the agent to call for inference."""
 
-    answer = gpt.chat_completion(
-        messages=req.messages
-    )  # **req.dict(exclude={"messages"}
+    # TODO: pass config to chat_completion - **req.dict(exclude={"messages"})
+    answer = gpt.chat_completion(messages=req.messages)
 
     try:
         bot_message = answer.get("choices", [{}])[0].get("message", {}).get("content", "")  # type: ignore

@@ -4,7 +4,7 @@ import click
 import gradio as gr
 from flock_common.env_checker import check_env_vars
 
-from flock_client.reponses import Responder
+from flock_client.responder import Responder
 
 
 @click.group()
@@ -76,12 +76,15 @@ def run_server(host, port, backend_host, backend_type, backend_llm_model):
 
     with gr.Blocks() as demo:
         chatbot = gr.Chatbot(label=backend_type.title())
-        msg = gr.Textbox(label="User", placeholder="Type your message here...")
+        msg: gr.Textbox = gr.Textbox(
+            label="User", placeholder="Type your message here..."
+        )
         clear = gr.Button("Clear")
 
-        respond = responder
-
-        msg.submit(respond, [msg, chatbot], [msg, chatbot])
+        msg.submit(Responder.user, [msg, chatbot], [msg, chatbot]).then(
+            responder, [msg, chatbot], [msg, chatbot]
+        )
+        # msg.submit(responder, [msg, chatbot], [msg, chatbot])
         clear.click(lambda: None, None, chatbot, queue=False)
 
     demo.launch(

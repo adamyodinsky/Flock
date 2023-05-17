@@ -654,14 +654,14 @@ dev = ["mkautodoc", "mkdocs-jupyter", "mkdocs-material", "mkdocstrings[python]",
 
 [[package]]
 name = "gradio"
-version = "3.30.0"
+version = "3.31.0"
 description = "Python library for easily interacting with trained machine learning models"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "gradio-3.30.0-py3-none-any.whl", hash = "sha256:ef084eb4b13835dc86d4c8feecc730c9e9c3974ab768b5c5e69187bab630354c"},
-    {file = "gradio-3.30.0.tar.gz", hash = "sha256:9ed78a9dafffb72108eb2efe962e17c5b144c3c111d499230495cc1288e54c11"},
+    {file = "gradio-3.31.0-py3-none-any.whl", hash = "sha256:ec18abacbcd9f459d864c7e42c4d2c0dd23ba229346665787d01c2784eefd888"},
+    {file = "gradio-3.31.0.tar.gz", hash = "sha256:e18221863eb875a2ce7ceaa6cec242f1268dca6fce3b07bfe5fa5bd0103c37dd"},
 ]
 
 [package.dependencies]
@@ -695,14 +695,14 @@ websockets = ">=10.0"
 
 [[package]]
 name = "gradio-client"
-version = "0.2.4"
+version = "0.2.5"
 description = "Python library for easily interacting with trained machine learning models"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "gradio_client-0.2.4-py3-none-any.whl", hash = "sha256:84ad65717eb3eed1d92b62dcd1dc688c98a537ba0ee97ff9a081c2ac9653558f"},
-    {file = "gradio_client-0.2.4.tar.gz", hash = "sha256:08fb18bb86eaff4cfca273e8135027780d3e742c18dbd4cddc679902a230c79a"},
+    {file = "gradio_client-0.2.5-py3-none-any.whl", hash = "sha256:922a5188c93797adce023b4caa655318b9c09834095d31763443c1e7a707e301"},
+    {file = "gradio_client-0.2.5.tar.gz", hash = "sha256:1a24dd7a09976db70fd32cdb5512b6f7b15c1a084f310b5f6b3021c9794d90a4"},
 ]
 
 [package.dependencies]
