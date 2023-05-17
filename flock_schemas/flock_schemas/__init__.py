@@ -10,6 +10,7 @@ from flock_schemas.base import BaseMetaData as MetaDataSchema
 from flock_schemas.base import Kind
 from flock_schemas.custom import CustomSchema
 from flock_schemas.embedding import EmbeddingSchema
+from flock_schemas.embeddings_loader import EmbeddingsLoaderSchema
 from flock_schemas.llm import LLMSchema
 from flock_schemas.llm_chat import LLMChatSchema
 from flock_schemas.llm_tool import LLMToolSchema
@@ -25,6 +26,7 @@ class SchemasFactory:
 
     SCHEMAS_MAP = {
         "Embedding": EmbeddingSchema,
+        "EmbeddingsLoader": EmbeddingsLoaderSchema,
         "LLM": LLMSchema,
         "VectorStore": VectorStoreSchema,
         "VectorStoreQATool": VectorStoreQAToolSchema,
@@ -39,6 +41,7 @@ class SchemasFactory:
 
     SCHEMAS_LIST = [
         "Embedding",
+        "EmbeddingsLoader",
         "LLM",
         "LLMChat",
         "VectorStore",
