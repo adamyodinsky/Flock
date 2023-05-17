@@ -33,12 +33,13 @@ class VectorStoreQAToolResource(ToolResource):
         )
         self.vectorestore: VectorStoreLC = self.dependencies[Kind.VectorStore].resource
 
-        llm = self.dependencies.get(Kind.LLM) or self.dependencies.get(Kind.LLMChat)
-        self.llm = llm.resource
+        self.llm = self.dependencies.get(Kind.LLM) or self.dependencies.get(
+            Kind.LLMChat
+        )
 
         self.tool_function = self.vendor_cls.from_chain_type(
             **self.options,  # type: ignore
-            llm=self.llm,
+            llm=self.llm.resource,  # type: ignore
             retriever=self.vectorestore.as_retriever(),
         )
 

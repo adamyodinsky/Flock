@@ -1,6 +1,6 @@
 """Resource for vectorstore."""
 
-from typing import Optional, cast, List, Dict
+from typing import Dict, List, Optional, cast
 
 import faiss
 from flock_schemas import VectorStoreSchema

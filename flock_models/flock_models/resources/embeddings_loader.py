@@ -14,7 +14,7 @@ from flock_models.resources.splitter import SplitterResource
 from flock_models.resources.vectorstore import VectorStoreResource
 
 
-class EmbeddingsLoader(Resource):
+class EmbeddingsLoaderResource(Resource):
     """Class for loading embeddings to vectorstore.
 
     Attributes:

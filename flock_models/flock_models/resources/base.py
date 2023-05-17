@@ -11,7 +11,21 @@ from langchain.agents import Tool as ToolWarperLC
 
 
 class Resource:
-    """Base class for all resources."""
+    """Base class for all resources.
+
+    Args:
+        manifest (BaseFlockSchema): Manifest of the resource.
+        dependencies (Optional[dict[str, Resource]], optional): Dependencies of the resource. Defaults to None.
+        tools (Optional[List[Any]], optional): Tools of the resource. Defaults to None.
+
+    Attributes:
+        manifest (BaseFlockSchema): Manifest of the resource.
+        dependencies (dict[str, Resource]): Dependencies of the resource.
+        tools (List[Any]): Tools of the resource.
+        vendor (str): Vendor of the resource.
+        options (BaseOptionsSchema): Options of the resource.
+        resource (Any): Resource object.
+    """
 
     def __init__(
         self,
@@ -33,7 +47,12 @@ class Resource:
 
 
 class ToolResource(Resource):
-    """Base class for all tools."""
+    """Base class for all tools.
+
+    Attributes:
+        name (str): Name of the tool.
+        description (str): Description of the tool.
+    """
 
     def __init__(
         self,

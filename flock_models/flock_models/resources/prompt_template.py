@@ -21,7 +21,7 @@ class PromptTemplateResource(Resource):
         dependencies: Optional[Dict[str, Resource]],
         tools: Optional[List[ToolResource]] = None,
     ):
-        super().__init__(manifest)
+        super().__init__(manifest, dependencies, tools)
         self.vendor_cls: PromptTemplate = cast(
             PromptTemplate, self.VENDORS[self.vendor]
         )

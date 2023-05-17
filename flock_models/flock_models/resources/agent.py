@@ -11,7 +11,13 @@ from flock_models.resources.base import Agent, Resource, ToolResource
 
 
 class AgentResource(Agent):
-    """Class for self ask search agent."""
+    """Class for self ask search agent.
+
+    Attributes:
+        llm: The llm resource.
+        run: The run function of the agent.
+        arun: The async run function of the agent.
+    """
 
     def __init__(
         self,
