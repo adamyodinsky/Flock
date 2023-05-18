@@ -1,13 +1,17 @@
 import os
 from typing import Dict, List, Optional
 
+import click
 from fastapi import FastAPI
+from flock_common.env_checker import check_env_vars
 from gpt4all import GPT4All
 from pydantic import BaseModel
 from uvicorn import run
 
 
 class Request(BaseModel):
+    """Request model for the chat endpoint."""
+
     messages: List[Dict]
     model: str
     temperature: Optional[float]
@@ -20,6 +24,8 @@ class Request(BaseModel):
 
 
 class Response(BaseModel):
+    """Response model for the chat endpoint."""
+
     object: str
     model: str
     choices: List[Dict]
@@ -55,9 +61,40 @@ async def chat(req: Request):
     )
 
 
-host = os.environ.get("FLOCK_GPT4ALL_HOST", "localhost")
-port = int(os.environ.get("FLOCK_GPT4ALL_PORT", "8080"))
+@click.group()
+def cli():
+    """Flock Client CLI"""
 
-print(f"Starting server on {host}:{port}")
+    required_vars = []
+    optional_vars = [
+        "HOST",
+        "PORT",
+    ]
 
-run(app, host=host, port=port, log_level="warning")
+    check_env_vars(required_vars, optional_vars)
+
+
+@cli.command(help="Run the client server.")
+@click.option(
+    "--host",
+    default=os.environ.get("HOST", "127.0.0.1"),
+    help="The host address to bind the server to.",
+)
+@click.option(
+    "--port",
+    default=os.environ.get("PORT", 7860),
+    type=int,
+    help="The port the server should listen on.",
+)
+@click.option(
+    "--log_level",
+    default=os.environ.get("LOG_LEVEL", "warning"),
+    type=str,
+    help="The log level for the server.",
+)
+def serve(host, port, log_level):
+    """Run the server."""
+
+    print(f"Starting server on {host}:{port}")
+
+    run(app, host=host, port=port, log_level=log_level)
