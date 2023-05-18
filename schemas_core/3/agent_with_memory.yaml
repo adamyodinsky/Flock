@@ -17,9 +17,9 @@ spec:
       name: my-openai-llm
       namespace: default
   tools:
-    # - kind: VectorStoreQATool
-    #   name: langchain-docs
-    #   namespace: default
+    - kind: VectorStoreQATool
+      name: finance-qa-tool
+      namespace: default
     - kind: LoadTool
       name: my-google-search
       namespace: default

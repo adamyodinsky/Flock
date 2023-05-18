@@ -1,6 +1,7 @@
 """LLM Tool schema."""
 
 
+from pathlib import Path
 from typing import Literal, Optional
 
 from pydantic import Field
@@ -13,18 +14,25 @@ from flock_schemas.dependencies import (
 )
 
 
+def home_dir():
+    """Get the home directory."""
+
+    h_dir = Path.home()
+    return str(h_dir)
+
+
 class EmbeddingsLoaderOptions(BaseModelConfig):
     """Options schema."""
 
     source_directory: str = Field(
-        default="$HOME/.flock/data/raw",
+        default=f"{home_dir()}/.flock/data/raw",
         description="The directory containing the data files",
     )
     base_meta_source: str = Field(
         default="", description="The base meta source file name"
     )
     archive_path: str = Field(
-        default="$HOME/.flock/data/archive",
+        default=f"{home_dir()}/.flock/data/archive",
         description="The path to the archive file containing the data files",
     )
     allowed_extensions: str = Field(

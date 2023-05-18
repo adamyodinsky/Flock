@@ -17,6 +17,7 @@ class VectorStoreQAToolVendor(str, Enum):
     """Enum for vectorstore_qa_tool vendors."""
 
     RetrievalQAWithSourcesChain = "RetrievalQAWithSourcesChain"
+    VectorDBQAWithSourcesChain = "VectorDBQAWithSourcesChain"
 
 
 class VectorStoreQAToolSpec(BaseOptions):

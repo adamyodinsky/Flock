@@ -10,6 +10,8 @@ metadata:
     app: my_app
 spec:
   vendor: serpapi
+  options:
+    verbose: true
   dependencies:
     - kind: LLMChat
       name: my-openai-llm-gpt4

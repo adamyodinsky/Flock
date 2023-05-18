@@ -81,7 +81,7 @@ def run_build_tests():
         resource_store.load_file("../schemas_core/2/embeddings_loader.yaml")
     )
 
-    embeddings_loader.load_plain_text_to_vectorstore()
+    embeddings_loader.load_files_to_vectorstore()
 
     # OBJECTIVE = "Write a weather report for SF today"
     # single_test(

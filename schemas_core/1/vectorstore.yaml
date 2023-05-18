@@ -5,7 +5,7 @@ kind: VectorStore
 namespace: default
 metadata:
   name: documentation_vectorstore
-  description: documentation vector store
+  description: Meta Reports First Quarter 2023 Results
   annotations:
     source: github.com/floc/flock.html
 spec:

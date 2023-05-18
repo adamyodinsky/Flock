@@ -7,6 +7,7 @@ from typing import Dict, List, Optional
 from flock_schemas.base import Kind
 from flock_schemas.embeddings_loader import EmbeddingsLoaderSchema
 from langchain.docstore.document import Document
+from langchain.document_loaders import CSVLoader, PDFMinerLoader, TextLoader
 
 from flock_models.resources.base import Resource, ToolResource
 from flock_models.resources.embedding import EmbeddingResource
@@ -60,8 +61,15 @@ class EmbeddingsLoaderResource(Resource):
             or manifest.spec.options.deny_extensions
         )
 
-        self.allowed_extensions = allowed_extensions.split(",")
-        self.deny_extensions = deny_extensions.split(",")
+        if allowed_extensions:
+            self.allowed_extensions = allowed_extensions.split(",")
+        else:
+            self.allowed_extensions = []
+
+        if deny_extensions:
+            self.deny_extensions = deny_extensions.split(",")
+        else:
+            self.deny_extensions = []
 
         self.splitter: SplitterResource = self.dependencies.get(Kind.Splitter)  # type: ignore
         self.embedding: EmbeddingResource = self.dependencies.get(Kind.Embedding)  # type: ignore
@@ -80,7 +88,8 @@ class EmbeddingsLoaderResource(Resource):
 
         return file_list
 
-    def _get_file_subpath(self, path):
+    @staticmethod
+    def get_file_subpath(path):
         path_parts = path.split(os.sep)
         return os.path.join(path_parts[-2], path_parts[-1])
 
@@ -102,6 +111,9 @@ class EmbeddingsLoaderResource(Resource):
         return filtered_files
 
     def _filter_files_by_deny_extensions(self, files: list):
+        if self.deny_extensions == []:
+            return files
+
         filtered_files = [
             file
             for file in files
@@ -113,20 +125,50 @@ class EmbeddingsLoaderResource(Resource):
         json_obj = []
 
         try:
-            with open(file=file_name, mode="r", encoding="utf-8") as conv_file:
-                json_obj = json.load(conv_file)
+            with open(file=file_name, mode="r", encoding="utf-8") as file:
+                json_obj = json.load(file)
         except Exception as error:
             print(f"Error: {error}")
 
         return json_obj
 
-    def _load_text(self, file: str):
+    class FlockTextLoader(TextLoader):
         """Load text file from local storage."""
 
-        with open(file=file, mode="r", encoding="utf-8") as conv_file:
-            text = conv_file.read()
+        def __init__(
+            self,
+            file_path: str,
+            encoding: Optional[str] = None,
+            base_meta_source: str = "",
+        ):
+            super().__init__(file_path, encoding)
+            self.base_meta_source = base_meta_source
 
-        return text
+        def load(self) -> List[Document]:
+            with open(file=self.file_path, mode="r", encoding="utf-8") as file:
+                text = file.read()
+
+            return [
+                Document(
+                    page_content=text,
+                    metadata={
+                        "source": f"{self.base_meta_source}/{EmbeddingsLoaderResource.get_file_subpath(file)}"
+                    },
+                )
+            ]
+
+    def load_single_document(self, file_path: str) -> Document:
+        """Load a single document from a file path."""
+        if file_path.endswith(".pdf"):
+            loader = PDFMinerLoader(file_path)
+        elif file_path.endswith(".csv"):
+            loader = CSVLoader(file_path)
+        else:
+            loader = self.FlockTextLoader(
+                file_path, encoding="utf8", base_meta_source=self.base_meta_source
+            )
+
+        return loader.load()[0]
 
     def load_scraped_data_to_vectorstore(self):
         """Load scraped data to vectorstore."""
@@ -157,7 +199,7 @@ class EmbeddingsLoaderResource(Resource):
             print(f"Moving {file} to archive...")
             os.rename(f"{self.source_directory}/{file}", f"{self.archive_path}/{file}")
 
-    def load_plain_text_to_vectorstore(self):
+    def load_files_to_vectorstore(self):
         """Load plain text data to vectorstore."""
 
         if not os.path.exists(self.source_directory):
@@ -174,19 +216,9 @@ class EmbeddingsLoaderResource(Resource):
         for file in files:
             print(f"Adding {file} to the vectorstore.")
 
-            text = self._load_text(f"{self.source_directory}/{file}")
-
-            if text:
-                document = [
-                    Document(
-                        page_content=text,
-                        metadata={
-                            "source": f"{self.base_meta_source}/{self._get_file_subpath(file)}"
-                        },
-                    )
-                ]
-                document = self.splitter.resource.split_documents(document)
-                self.vectorstore.resource.add_documents(document)
+            document = self.load_single_document(f"{self.source_directory}/{file}")
+            document = self.splitter.resource.split_documents([document])
+            self.vectorstore.resource.add_documents(document)
 
             print(f"Moving {file} to archive...")
             os.rename(

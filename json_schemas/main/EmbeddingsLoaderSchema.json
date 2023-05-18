@@ -3,12 +3,6 @@
   "description": "EmbeddingsLoader schema.",
   "type": "object",
   "properties": {
-    "namespace": {
-      "title": "Namespace",
-      "description": "The namespace of the object",
-      "maxLength": 63,
-      "type": "string"
-    },
     "apiVersion": {
       "title": "Apiversion",
       "description": "API version",
@@ -34,6 +28,12 @@
         }
       ]
     },
+    "namespace": {
+      "title": "Namespace",
+      "description": "The namespace of the object",
+      "maxLength": 63,
+      "type": "string"
+    },
     "metadata": {
       "$ref": "#/definitions/BaseMetaData"
     },
@@ -54,9 +54,9 @@
     }
   },
   "required": [
-    "namespace",
     "apiVersion",
     "kind",
+    "namespace",
     "metadata",
     "spec"
   ],
@@ -124,26 +124,31 @@
         "source_directory": {
           "title": "Source Directory",
           "description": "The directory containing the data files",
+          "default": "/Users/adamyodinsky/.flock/data/raw",
           "type": "string"
         },
         "base_meta_source": {
           "title": "Base Meta Source",
           "description": "The base meta source file name",
+          "default": "",
           "type": "string"
         },
         "archive_path": {
           "title": "Archive Path",
           "description": "The path to the archive file containing the data files",
+          "default": "/Users/adamyodinsky/.flock/data/archive",
           "type": "string"
         },
         "allowed_extensions": {
           "title": "Allowed Extensions",
           "description": "The allowed extensions for the data files",
+          "default": "",
           "type": "string"
         },
         "deny_extensions": {
           "title": "Deny Extensions",
           "description": "The denied extensions for the data files",
+          "default": "",
           "type": "string"
         }
       },
@@ -355,7 +360,6 @@
         "options": {
           "title": "Options",
           "description": "Options for the embeddings loader",
-          "default": {},
           "allOf": [
             {
               "$ref": "#/definitions/EmbeddingsLoaderOptions"

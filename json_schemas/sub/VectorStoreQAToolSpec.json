@@ -50,7 +50,8 @@
       "title": "VectorStoreQAToolVendor",
       "description": "Enum for vectorstore_qa_tool vendors.",
       "enum": [
-        "RetrievalQAWithSourcesChain"
+        "RetrievalQAWithSourcesChain",
+        "VectorDBQAWithSourcesChain"
       ],
       "type": "string"
     },

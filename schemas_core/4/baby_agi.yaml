@@ -11,7 +11,7 @@ metadata:
 spec:
   vendor: BabyAGI
   options:
-    verbose: false
+    verbose: true
     max_iterations: 3
   dependencies:
     - kind: LLMChat

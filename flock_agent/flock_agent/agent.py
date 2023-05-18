@@ -27,9 +27,13 @@ class FlockAgent:
                 Agent, self.builder.build_resource(manifest=self.manifest)
             )
         except ValidationError as error:
-            raise click.ClickException(f"Invalid configuration manifest: {str(error)}")
+            raise click.ClickException(
+                f"Invalid configuration manifest: {str(error)}"
+            ) from error
         except Exception as error:
-            raise click.ClickException(f"Error while initializing agent: {str(error)}")
+            raise click.ClickException(
+                f"Error while initializing agent: {str(error)}"
+            ) from error
 
     def get_response(self, message):
         """Get response from the agent"""
@@ -39,6 +43,7 @@ class FlockAgent:
         try:
             response = self.agent.run(message)  # type: ignore
         except Exception as error:  # pylint: disable=broad-except
-            response = f"Error: {str(error)}"
+            response = f"Sorry, i'm experiencing an error. {str(error)}"
+            print(f"Error: {error}")
 
         return response

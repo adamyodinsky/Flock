@@ -12,8 +12,6 @@ metadata:
     app: my_app
 spec:
   vendor: v1
-  options:
-    source_directory: /Users/adamyodinsky/.flock
   dependencies:
     - kind: Splitter
       name: my-splitter

@@ -44,7 +44,6 @@ def validation_iterator(dir_path, validation_function):
                 except Exception as error:  # pylint: disable=broad-except
                     print(f"Error validating {yaml_file}:")
                     print(f"Full Path: {yaml_path}")
-                    print(error)
-                    sys.exit(1)
+                    raise error
 
                 print(f"{kind} - OK")

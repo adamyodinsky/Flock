@@ -28,4 +28,4 @@ class SplitterResource(Resource):
     ):
         super().__init__(manifest)
         self.vendor_cls: TextSplitter = self.VENDORS[self.vendor]
-        self.resource = self.vendor_cls(**self.options)  # type: ignore
+        self.resource: TextSplitter = self.vendor_cls(**self.options)  # type: ignore

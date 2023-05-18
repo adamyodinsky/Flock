@@ -10,6 +10,8 @@ metadata:
     app: my_app
 spec:
   vendor: LLMChain
+  options:
+    verbose: true
   dependencies:
     - kind: PromptTemplate
       name: my-prompt-template

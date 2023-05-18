@@ -5,11 +5,13 @@ kind: LoadTool
 namespace: default
 metadata:
   name: my-google-search
-  description: Reliable source for current events, facts, and extensive research beyond 2021.
+  description: Reliable source for knowledge about current events and facts beyond 2021.
   labels:
     app: my_app
 spec:
   vendor: serpapi
+  options:
+    verbose: true
   dependencies:
     - kind: LLMChat
       name: my-openai-llm

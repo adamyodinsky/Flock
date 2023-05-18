@@ -85,14 +85,6 @@ class BaseMetaData(BaseLabels, BaseAnnotations):
     description: str = Field(..., description="Description", max_length=255)
 
 
-class BaseNamespace(BaseModelConfig):
-    """Base namespace schema."""
-
-    namespace: Optional[str] = Field(
-        ..., description="The namespace of the object", max_length=63
-    )
-
-
 class BaseOptions(BaseModelConfig):
     """Base options schema."""
 
@@ -111,7 +103,7 @@ class BaseSpec(BaseOptions):
     )
 
 
-class BaseFlockSchema(BaseNamespace):
+class BaseFlockSchema(BaseModelConfig):
     """Base schema for all Flock objects."""
 
     # id: Optional[PyObjectId] = Field(None, alias="_id", description="Unique identifier")
@@ -119,6 +111,9 @@ class BaseFlockSchema(BaseNamespace):
     kind: Kind = Field(..., description="Kind of the object")
     category: Optional[Category] = Field(
         default=Category.OTHER, description="The resource category"
+    )
+    namespace: str = Field(
+        ..., description="The namespace of the object", max_length=63
     )
     metadata: BaseMetaData
     created_at: Optional[datetime] = Field(
@@ -147,7 +142,6 @@ export = {
         "BaseDependency": BaseDependency,
         "BaseToolDependency": BaseToolDependency,
         "BaseMetaData": BaseMetaData,
-        "BaseNamespace": BaseNamespace,
         "BaseOptions": BaseOptions,
         "BaseSpec": BaseSpec,
     },

@@ -3,12 +3,6 @@
   "description": "PromptTemplate schema.",
   "type": "object",
   "properties": {
-    "namespace": {
-      "title": "Namespace",
-      "description": "The namespace of the object",
-      "maxLength": 63,
-      "type": "string"
-    },
     "apiVersion": {
       "title": "Apiversion",
       "description": "API version",
@@ -34,6 +28,12 @@
         }
       ]
     },
+    "namespace": {
+      "title": "Namespace",
+      "description": "The namespace of the object",
+      "maxLength": 63,
+      "type": "string"
+    },
     "metadata": {
       "$ref": "#/definitions/BaseMetaData"
     },
@@ -54,9 +54,9 @@
     }
   },
   "required": [
-    "namespace",
     "apiVersion",
     "kind",
+    "namespace",
     "metadata",
     "spec"
   ],

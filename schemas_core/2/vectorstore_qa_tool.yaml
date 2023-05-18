@@ -4,15 +4,16 @@ apiVersion: flock/v1
 kind: VectorStoreQATool
 namespace: default
 metadata:
-  name: langchain-docs
-  description: retrieve docs from langchain docs vector store
+  name: finance-qa-tool
+  description: Knowledge about Meta Reports First Quarter 2023 Results
   labels:
     app: my_app
 spec:
-  vendor: RetrievalQAWithSourcesChain
+  vendor: RetrievalQAWithSourcesChain # VectorDBQAWithSourcesChain
   options:
     chain_type: stuff
     reduce_k_below_max_tokens: true
+    verbose: true
   dependencies:
     - kind: VectorStore
       name: documentation_vectorstore
