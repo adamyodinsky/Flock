@@ -5,7 +5,7 @@ kind: LoadTool
 namespace: default
 metadata:
   name: my-wolfram-alpha
-  description: Mathematical calculations and facts.
+  description: Data computation, factual information retrieval, mathematics problems, scientific queries, and statistics.
   labels:
     app: my_app
 spec:

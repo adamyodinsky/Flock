@@ -4,7 +4,7 @@ apiVersion: flock/v1
 kind: Agent
 namespace: default
 metadata:
-  name: advanced-exp-agent
+  name: advanced-agent
   description: an agent with set of tools
   labels:
     app: my_app

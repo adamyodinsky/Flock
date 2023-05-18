@@ -43,7 +43,7 @@ class FlockAgent:
         try:
             response = self.agent.run(message)  # type: ignore
         except Exception as error:  # pylint: disable=broad-except
-            response = f"Sorry, i'm experiencing an error. {str(error)}"
+            response = f"Sorry, i'm experiencing an error.\n\nError:{str(error)}"
             print(f"Error: {error}")
 
         return response

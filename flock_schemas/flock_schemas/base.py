@@ -47,7 +47,7 @@ class BaseModelConfig(BaseModel):
 class BaseAnnotations(BaseModelConfig):
     """Base annotations schema."""
 
-    annotations: Optional[Dict[str, str]] = Field(
+    annotations: Dict[str, str] = Field(
         default=None,
         description="Annotations are useful for storing additional information",
     )
@@ -88,7 +88,7 @@ class BaseMetaData(BaseLabels, BaseAnnotations):
 class BaseOptions(BaseModelConfig):
     """Base options schema."""
 
-    options: Optional[Dict[str, Any]] = Field({}, description="Resource options")
+    options: Dict[str, Any] = Field({}, description="Resource options")
 
 
 class BaseSpec(BaseOptions):

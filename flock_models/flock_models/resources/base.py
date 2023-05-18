@@ -62,12 +62,12 @@ class ToolResource(Resource):
         super().__init__(manifest, dependencies)
 
         if getattr(manifest.metadata.annotations, "name", False):
-            self.name: str = manifest.metadata.annotations.name
+            self.name: str = manifest.metadata.annotations["name"]
         else:
             self.name: str = manifest.metadata.name
 
         if getattr(manifest.metadata.annotations, "description", False):
-            self.description: str = manifest.metadata.annotations.description
+            self.description: str = manifest.metadata.annotations["description"]
         else:
             self.description: str = manifest.metadata.description
 
@@ -88,12 +88,12 @@ class Agent(Resource):
         )
 
         if getattr(manifest.metadata.annotations, "name", False):
-            self.name: str = manifest.metadata.annotations.name
+            self.name: str = manifest.metadata.annotations["name"]
         else:
             self.name: str = manifest.metadata.name
 
         if getattr(manifest.metadata.annotations, "description", False):
-            self.description: str = manifest.metadata.annotations.description
+            self.description: str = manifest.metadata.annotations["description"]
         else:
             self.description: str = manifest.metadata.description
 
