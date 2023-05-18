@@ -32,13 +32,13 @@ class Response(BaseModel):
     usage: Dict
 
 
-gpt = GPT4All(
+app = FastAPI()
+
+llm = GPT4All(
     model_name="ggml-gpt4all-l13b-snoozy",
     model_path="/Users/adamyodinsky/.flock/models/",
     model_type="llama",
 )
-
-app = FastAPI()
 
 
 @app.post("/v1/chat/completions")
@@ -46,7 +46,7 @@ async def chat(req: Request):
     """Endpoint for the agent to call for inference."""
 
     # TODO: pass config to chat_completion - **req.dict(exclude={"messages"})
-    answer = gpt.chat_completion(messages=req.messages)
+    answer = llm.chat_completion(messages=req.messages)
 
     try:
         bot_message = answer.get("choices", [{}])[0].get("message", {}).get("content", "")  # type: ignore
@@ -97,4 +97,12 @@ def serve(host, port, log_level):
 
     print(f"Starting server on {host}:{port}")
 
+    # TODO: pass manifest of an LLM to the LLM as a service engine GPT4All (for now)
+    # from there it will get the path of the model, the model name and the model type
+    # it can get type from annotations
+    # llm = GPT4All(
+    #     model_name="ggml-gpt4all-l13b-snoozy",
+    #     model_path="/Users/adamyodinsky/.flock/models/",
+    #     model_type="llama",
+    # )
     run(app, host=host, port=port, log_level=log_level)
