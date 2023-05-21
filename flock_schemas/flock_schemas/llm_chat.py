@@ -12,6 +12,7 @@ class LLMChatVendor(str, Enum):
     """Enum for llm vendors."""
 
     ChatOpenAI = "ChatOpenAI"
+    OpenAICopyCat = "OpenAICopyCat"
 
 
 class LLMChatSpec(BaseOptions):

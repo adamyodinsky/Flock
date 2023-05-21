@@ -36,6 +36,7 @@ def test_building_resource(manifest):
     # test schema validation
     schema_cls = SchemasFactory.get_schema(manifest_kind)
     schema_instance = schema_cls.validate(manifest)
+    # print(schema_instance.json())
 
     # asset schema kind
     if manifest_kind not in SchemasFactory.SCHEMAS_LIST:

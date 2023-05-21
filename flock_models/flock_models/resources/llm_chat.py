@@ -21,7 +21,7 @@ from flock_models.resources.base import Resource, ToolResource
 class LLMChatResource(Resource):
     """Class for LLM resources."""
 
-    VENDORS = {"ChatOpenAI": ChatOpenAI}
+    VENDORS = {"ChatOpenAI": ChatOpenAI, "OpenAICopyCat": ChatOpenAI}
 
     def __init__(
         self,

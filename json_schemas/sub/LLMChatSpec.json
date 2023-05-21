@@ -27,7 +27,8 @@
       "title": "LLMChatVendor",
       "description": "Enum for llm vendors.",
       "enum": [
-        "ChatOpenAI"
+        "ChatOpenAI",
+        "OpenAICopyCat"
       ],
       "type": "string"
     }

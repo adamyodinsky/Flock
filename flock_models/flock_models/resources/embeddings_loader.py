@@ -90,6 +90,7 @@ class EmbeddingsLoaderResource(Resource):
 
     @staticmethod
     def get_file_subpath(path):
+        """Get subpath of a file."""
         path_parts = path.split(os.sep)
         return os.path.join(path_parts[-2], path_parts[-1])
 
