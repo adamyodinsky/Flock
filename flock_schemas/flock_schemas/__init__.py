@@ -9,8 +9,10 @@ from flock_schemas.base import BaseFlockSchema
 from flock_schemas.base import BaseMetaData as MetaDataSchema
 from flock_schemas.base import Kind
 from flock_schemas.custom import CustomSchema
+from flock_schemas.deployment import DeploymentSchema
 from flock_schemas.embedding import EmbeddingSchema
 from flock_schemas.embeddings_loader import EmbeddingsLoaderSchema
+from flock_schemas.job import CronJobSchema, JobSchema
 from flock_schemas.llm import LLMSchema
 from flock_schemas.llm_chat import LLMChatSchema
 from flock_schemas.llm_tool import LLMToolSchema
@@ -37,6 +39,9 @@ class SchemasFactory:
         "LLMTool": LLMToolSchema,
         "LLMChat": LLMChatSchema,
         "Custom": CustomSchema,
+        "DeploymentSchema": DeploymentSchema,
+        "JobSchema": JobSchema,
+        "CronJobSchema": CronJobSchema,
     }
 
     SCHEMAS_LIST = [
@@ -52,6 +57,9 @@ class SchemasFactory:
         "PromptTemplate",
         "LLMTool",
         "Custom",
+        "DeploymentSchema",
+        "JobSchema",
+        "CronJobSchema",
     ]
 
     @staticmethod

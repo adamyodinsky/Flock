@@ -1,6 +1,6 @@
 """Vectorstore schema."""
 from enum import Enum
-from typing import List, Literal
+from typing import Literal
 
 from pydantic import Field
 

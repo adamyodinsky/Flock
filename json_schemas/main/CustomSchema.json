@@ -69,6 +69,8 @@
         "model",
         "agent",
         "deployment",
+        "job",
+        "cronjob",
         "statefulset"
       ],
       "type": "string"
@@ -127,6 +129,7 @@
         "Agent",
         "PromptTemplate",
         "LLMTool",
+        "EmbeddingsLoader",
         "Custom"
       ],
       "type": "string"

@@ -1,8 +1,8 @@
 """Deployment schema."""
 
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, Dict, List, Literal, Optional, Union
 
-from pydantic import Field, IPvAnyAddress
+from pydantic import BaseModel, Field, root_validator, validator
 
 from flock_schemas.base import (
     BaseMetaData,
@@ -46,7 +46,110 @@ class EnvironmentVariable(BaseModelConfig):
     )
 
 
-class DeploymentContainer(BaseModelConfig):
+class VolumeMounts(BaseModelConfig):
+    """Volume mount schema."""
+
+    name: str = Field(
+        ...,
+        description="The name of the volume mount",
+    )
+    mountPath: str = Field(
+        ...,
+        description="The path where the volume should be mounted",
+    )
+    readOnly: bool = Field(
+        False,
+        description="Whether the volume should be mounted as read-only",
+    )
+
+
+class PersistentVolumeClaim(BaseModel):
+    """PersistentVolumeClaim schema."""
+
+    claimName: str
+
+
+class Secret(BaseModel):
+    """Secret schema."""
+
+    secretName: str
+
+
+class VolumeEmptyDir(BaseModel):
+    """EmptyDir volume schema."""
+
+    medium: Literal["", "Memory", "HugePages"] = Field(
+        "", description="What type of storage medium should back this directory."
+    )
+    sizeLimit: str = Field(
+        None,
+        description="Total amount of local storage required for this EmptyDir volume.",
+    )
+
+
+class VolumeHostPath(BaseModel):
+    """HostPath volume schema."""
+
+    path: str = Field(..., description="Path of the directory on the host.")
+    type: str = Field(None, description="Type for HostPath volume.")
+
+    @validator("path")
+    def validate_path(self, path):
+        """Validate path."""
+        if not path:
+            raise ValueError("path cannot be an empty string")
+        # Here you can add further validation for path format if required.
+        return path
+
+
+class VolumePersistentVolumeClaim(BaseModel):
+    """PersistentVolumeClaim schema."""
+
+    claimName: str = Field(..., description="Name of the PersistentVolumeClaim to use.")
+    readOnly: bool = Field(False, description="Whether the volume is read only.")
+
+    @validator("claimName")
+    def validate_claim_name(self, claim_name):
+        """Validate claim_name."""
+
+        if not claim_name:
+            raise ValueError("claimName cannot be an empty string")
+        # Here you can add further validation for claimName format if required.
+        return claim_name
+
+
+class VolumeSource(BaseModel):
+    """Volume source schema."""
+
+    class Config:
+        extra = "allow"
+
+    __root__: Union[VolumeEmptyDir, VolumeHostPath, VolumePersistentVolumeClaim]
+
+
+class Volume(BaseModel):
+    """Volume schema."""
+
+    name: str = Field(
+        ..., description="Volume name. Must be a DNS_LABEL and unique within the pod."
+    )
+    volume_source: VolumeSource
+    persistentVolumeClaim: Optional[PersistentVolumeClaim]
+    secret: Optional[Secret]
+
+    @root_validator
+    def validate_name(self, values):
+        """Validate name."""
+
+        name = values.get("name")
+        if not name.islower():
+            raise ValueError("name must be all lower case")
+        if len(name) > 253:
+            raise ValueError("name must be 253 characters or less")
+        return values
+
+
+class ContainerSpec(BaseModelConfig):
     """Deployment spec schema."""
 
     image: str = Field(
@@ -69,9 +172,17 @@ class DeploymentContainer(BaseModelConfig):
         default=[],
         description="The arguments to be passed to the container",
     )
+    command: List[str] = Field(
+        default=[],
+        description="The command to be executed in the container",
+    )
+    volume_mounts: List[VolumeMounts] = Field(
+        default=[],
+        description="The volume mounts to be mounted in the container",
+    )
 
 
-class DeploymentTargetResource(BaseToolDependency):
+class TargetResource(BaseToolDependency):
     """Deployment target resource schema."""
 
     options: Optional[Dict[str, Any]] = Field(
@@ -83,16 +194,21 @@ class DeploymentTargetResource(BaseToolDependency):
 class DeploymentSpec(BaseModelConfig):
     """Deployment spec schema."""
 
-    targetResource: Optional[DeploymentTargetResource] = Field(
+    targetResource: TargetResource = Field(
+        default={},
         description="The target resource to be deployed",
     )
     replicas: int = Field(
         1,
         description="The number of replicas to be deployed",
     )
-    container: DeploymentContainer = Field(
+    container: ContainerSpec = Field(
         ...,
         description="The container specs",
+    )
+    volumes: List[Volume] = Field(
+        default=[],
+        description="The volumes to be mounted in the container",
     )
 
 
@@ -109,8 +225,11 @@ class DeploymentSchema(BaseModelConfig):
 
 export = {
     "sub": {
-        "DeploymentTargetResource": DeploymentTargetResource,
+        "DeploymentTargetResource": TargetResource,
         "DeploymentSpec": DeploymentSpec,
+        "ContainerSpec": ContainerSpec,
+        "ContainerPort": ContainerPort,
+        "EnvironmentVariable": EnvironmentVariable,
     },
     "main": {
         "DeploymentSchema": DeploymentSchema,

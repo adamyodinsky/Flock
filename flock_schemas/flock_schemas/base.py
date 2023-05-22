@@ -1,7 +1,7 @@
 """Base schema for all Flock objects."""
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Literal, Mapping, Optional
+from typing import Any, Dict, List, Literal, Optional
 
 from pydantic import BaseModel, Extra, Field
 
@@ -19,6 +19,7 @@ class Kind(str, Enum):
     Agent = "Agent"
     PromptTemplate = "PromptTemplate"
     LLMTool = "LLMTool"
+    EmbeddingsLoader = "EmbeddingsLoader"
     Custom = "Custom"
 
 
@@ -31,6 +32,8 @@ class Category(str, Enum):
     MODEL = "model"
     AGENT = "agent"
     DEPLOYMENT = "deployment"
+    JOB = "job"
+    CRON_JOB = "cronjob"
     STATEFULSET = "statefulset"
 
 

@@ -4,6 +4,8 @@ from typing import List, Optional, cast
 
 from flock_schemas import LLMSchema
 from langchain.base_language import BaseLanguageModel
+
+# TODO: waiting for GPT4All langchain to be updated, pygpt4all is not supported anymore.
 from langchain.llms.gpt4all import GPT4All
 
 from flock_models.resources.base import Resource, ToolResource

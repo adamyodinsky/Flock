@@ -52,6 +52,7 @@
         "Agent",
         "PromptTemplate",
         "LLMTool",
+        "EmbeddingsLoader",
         "Custom"
       ],
       "type": "string"

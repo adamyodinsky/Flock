@@ -9,7 +9,7 @@ metadata:
   labels:
     app: my_app
 spec:
-  vendor: ChatOpenAI
+  vendor: OpenAICopyCat
   options:
     model_name: ggml-gpt4all-l13b-snoozy.bin
     openai_api_base: http://localhost:8080/v1 # using github.com/go-skynet/LocalAI

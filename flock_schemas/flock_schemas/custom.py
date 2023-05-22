@@ -1,6 +1,5 @@
 """Custom object schemas for Flock."""
 
-from typing import List
 
 from pydantic import Field
 

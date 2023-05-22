@@ -27,7 +27,7 @@ class K8sDeployer(BaseDeployer):
     ):
         """Deploy service and deployment to Kubernetes"""
 
-        if dry_run != None:
+        if dry_run is not None:
             dry_run = "All"
 
         deployment = self._create_deployment_obj(manifest, target_manifest)
@@ -62,7 +62,7 @@ class K8sDeployer(BaseDeployer):
     ):
         """Delete a deployment from Kubernetes"""
 
-        if dry_run != None:
+        if dry_run is not None:
             dry_run = "All"
 
         deployment = self._create_deployment_obj(manifest, target_manifest)

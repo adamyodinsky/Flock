@@ -1,11 +1,11 @@
 """LoadTool schema."""
 from enum import Enum
-from typing import List, Literal, Union
+from typing import Literal, Union
 
 from pydantic import Field
 
 from flock_schemas.base import BaseFlockSchema, BaseOptions, Category
-from flock_schemas.dependencies import LLMDependency, LLMChatDependency
+from flock_schemas.dependencies import LLMChatDependency, LLMDependency
 
 
 class LoadToolVendor(str, Enum):

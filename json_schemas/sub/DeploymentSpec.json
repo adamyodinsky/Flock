@@ -47,6 +47,7 @@
         "Agent",
         "PromptTemplate",
         "LLMTool",
+        "EmbeddingsLoader",
         "Custom"
       ],
       "type": "string"
@@ -201,6 +202,15 @@
         "args": {
           "title": "Args",
           "description": "The arguments to be passed to the container",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "command": {
+          "title": "Command",
+          "description": "The command to be executed in the container",
           "default": [],
           "type": "array",
           "items": {

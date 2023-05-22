@@ -14,5 +14,11 @@ docker-base-build:
 docker-agent-build:
 	docker build -f Dockerfile.flock --target agent-stage -t flock-agent .
 
+docker-embeddings-loader-build:
+	docker build -f Dockerfile.flock --target embeddings-loader-stage -t embeddings-loader .
+
 docker-agent-run:
 	docker run flock-agent
+
+docker-embeddings-loader-run:
+	docker run embeddings-loader
