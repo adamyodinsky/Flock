@@ -1,0 +1,286 @@
+{
+  "title": "CronJobSchema",
+  "description": "CronJob schema.",
+  "type": "object",
+  "properties": {
+    "apiVersion": {
+      "title": "Apiversion",
+      "description": "API version",
+      "enum": [
+        "flock/v1"
+      ],
+      "type": "string"
+    },
+    "metadata": {
+      "title": "Metadata",
+      "description": "The metadata of the object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BaseMetaData"
+        }
+      ]
+    },
+    "kind": {
+      "title": "Kind",
+      "description": "The kind of the object",
+      "enum": [
+        "FlockCronJob"
+      ],
+      "type": "string"
+    },
+    "category": {
+      "title": "Category",
+      "default": "cronjob",
+      "type": "string"
+    },
+    "namespace": {
+      "title": "Namespace",
+      "description": "The namespace of the object",
+      "type": "string"
+    },
+    "spec": {
+      "title": "Spec",
+      "description": "The spec of the object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CronJobSpec"
+        }
+      ]
+    }
+  },
+  "required": [
+    "apiVersion",
+    "metadata",
+    "kind",
+    "namespace",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "BaseMetaData": {
+      "title": "BaseMetaData",
+      "description": "Base metadata schema.",
+      "type": "object",
+      "properties": {
+        "annotations": {
+          "title": "Annotations",
+          "description": "Annotations are useful for storing additional information",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the object",
+          "maxLength": 63,
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "description": "Description",
+          "maxLength": 255,
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "description"
+      ],
+      "additionalProperties": false
+    },
+    "Kind": {
+      "title": "Kind",
+      "description": "Enum for all kinds of resources.",
+      "enum": [
+        "Embedding",
+        "VectorStore",
+        "VectorStoreQATool",
+        "LLM",
+        "LLMChat",
+        "LoadTool",
+        "Splitter",
+        "Agent",
+        "PromptTemplate",
+        "LLMTool",
+        "EmbeddingsLoader",
+        "Custom"
+      ],
+      "type": "string"
+    },
+    "JobTargetResource": {
+      "title": "JobTargetResource",
+      "description": "Job target resource schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind of the dependency",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Kind"
+            }
+          ]
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string"
+        },
+        "options": {
+          "title": "Options",
+          "description": "Job target options",
+          "default": {},
+          "type": "object"
+        },
+        "description": {
+          "title": "Description",
+          "description": "Tool description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "EnvironmentVariable": {
+      "title": "EnvironmentVariable",
+      "description": "Environment variable schema.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "description": "The name of the environment variable",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "description": "The value of the environment variable",
+          "type": "string"
+        },
+        "valueFrom": {
+          "title": "Valuefrom",
+          "description": "The value of the environment variable",
+          "type": "object"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "JobContainer": {
+      "title": "JobContainer",
+      "description": "Job spec schema.",
+      "type": "object",
+      "properties": {
+        "image": {
+          "title": "Image",
+          "description": "The container image to be deployed",
+          "type": "string"
+        },
+        "env": {
+          "title": "Env",
+          "description": "Environment variables to be set for the Job",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EnvironmentVariable"
+          }
+        },
+        "image_pull_policy": {
+          "title": "Image Pull Policy",
+          "description": "The image pull policy",
+          "default": "IfNotPresent",
+          "enum": [
+            "Always",
+            "Never",
+            "IfNotPresent"
+          ],
+          "type": "string"
+        },
+        "args": {
+          "title": "Args",
+          "description": "The arguments to be passed to the container",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "command": {
+          "title": "Command",
+          "description": "The command to be executed in the container",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "image"
+      ],
+      "additionalProperties": false
+    },
+    "CronJobSpec": {
+      "title": "CronJobSpec",
+      "description": "CronJob spec schema.",
+      "type": "object",
+      "properties": {
+        "targetResource": {
+          "title": "Targetresource",
+          "description": "The target resource to be deployed",
+          "allOf": [
+            {
+              "$ref": "#/definitions/JobTargetResource"
+            }
+          ]
+        },
+        "container": {
+          "title": "Container",
+          "description": "The container specs",
+          "allOf": [
+            {
+              "$ref": "#/definitions/JobContainer"
+            }
+          ]
+        },
+        "schedule": {
+          "title": "Schedule",
+          "description": "The cron schedule",
+          "type": "string"
+        }
+      },
+      "required": [
+        "container",
+        "schedule"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
