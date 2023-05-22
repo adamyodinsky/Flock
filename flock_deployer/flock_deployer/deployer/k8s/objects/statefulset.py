@@ -3,7 +3,7 @@
 from flock_schemas.deployment import DeploymentSchema
 from kubernetes import client
 
-from flock_deployer.deployers.k8s.objects.base import K8sResource
+from flock_deployer.deployer.k8s.objects.base import K8sResource
 
 
 class K8sStatefulSet(K8sResource):
@@ -42,21 +42,3 @@ class K8sStatefulSet(K8sResource):
                 service_name=manifest.metadata.name,
             ),
         )
-
-    def add_volume(self, volume: client.V1Volume):
-        """Add a volume to the statefulset."""
-        self.rendered_manifest.spec.template.spec.volumes.append(volume)
-
-    def add_volume_mount(self, volume_mount: client.V1VolumeMount):
-        """Add a volume mount to the statefulset."""
-        self.rendered_manifest.spec.template.spec.containers[0].volume_mounts.append(
-            volume_mount
-        )
-
-    def add_port(self, port: client.V1ContainerPort):
-        """Add a port to the statefulset."""
-        self.rendered_manifest.spec.template.spec.containers[0].ports.append(port)
-
-    def add_env(self, env: client.V1EnvVar):
-        """Add an environment variable to the statefulset."""
-        self.rendered_manifest.spec.template.spec.containers[0].env.append(env)

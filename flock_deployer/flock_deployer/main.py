@@ -7,7 +7,7 @@ from fastapi import FastAPI
 from flock_common import check_env_vars
 
 from flock_deployer.api import get_router
-from flock_deployer.deployers import DeployerFactory
+from flock_deployer.deployer import DeployerFactory
 
 load_dotenv(find_dotenv(os.environ.get("FLOCK_ENV_FILE", ".env")))
 

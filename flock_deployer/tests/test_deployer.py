@@ -3,7 +3,7 @@ from flock_resource_store import ResourceStoreFactory
 from flock_schemas import SchemasFactory
 from flock_schemas.deployment import DeploymentSchema
 
-from flock_deployer.deployers import DeployerFactory
+from flock_deployer.deployer import DeployerFactory
 
 
 def test_deployer():

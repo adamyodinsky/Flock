@@ -3,9 +3,9 @@
 from flock_schemas import BaseFlockSchema
 from flock_schemas.deployment import DeploymentSchema
 
-from flock_deployer.deployers.k8s.objects.base import K8sResource
-from flock_deployer.deployers.k8s.objects.deployment import K8sDeployment
-from flock_deployer.deployers.k8s.objects.statefulset import K8sStatefulSet
+from flock_deployer.deployer.k8s.objects.base import K8sResource
+from flock_deployer.deployer.k8s.objects.deployment import K8sDeployment
+from flock_deployer.deployer.k8s.objects.statefulset import K8sStatefulSet
 
 
 class K8sResourceFactory:

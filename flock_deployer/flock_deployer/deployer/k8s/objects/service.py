@@ -1,7 +1,7 @@
 from flock_schemas.deployment import DeploymentSchema
 from kubernetes import client
 
-from flock_deployer.deployers.k8s.objects.base import K8sResource
+from flock_deployer.deployer.k8s.objects.base import K8sResource
 
 
 class K8sService(K8sResource):
@@ -29,11 +29,4 @@ class K8sService(K8sResource):
                     for port in manifest.spec.container.ports
                 ],
             ),
-        )
-
-    def create(self):
-        """Create the service."""
-        api_instance = client.CoreV1Api()
-        api_instance.create_namespaced_service(
-            body=self.rendered_manifest, namespace=self.namespace
         )

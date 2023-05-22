@@ -5,8 +5,8 @@ from flock_schemas import BaseFlockSchema
 from flock_schemas.job import CronJobSchema, JobSchema
 from kubernetes import client
 
-from flock_deployer.deployers.k8s.objects.base import K8sResource
-from flock_deployer.deployers.k8s.objects.pod_template import FlockPodTemplateSpec
+from flock_deployer.deployer.k8s.objects.base import K8sResource
+from flock_deployer.deployer.k8s.objects.pod_template import FlockPodTemplateSpec
 
 
 class K8sJob(K8sResource):
