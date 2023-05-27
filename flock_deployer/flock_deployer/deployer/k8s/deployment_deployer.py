@@ -8,6 +8,7 @@ from flock_secrets_store import SecretStore
 from kubernetes import client, config
 
 from flock_deployer.deployer.base import BaseDeployer
+from flock_deployer.deployer.k8s.common import set_dry_run
 from flock_deployer.deployer.k8s.objects.deployment import K8sDeployment
 
 
@@ -71,7 +72,11 @@ class K8sDeploymentDeployer(BaseDeployer):
         try:
             self._patch_deployment(deployment, dry_run)
         except client.ApiException:
-            self._delete(deployment, dry_run)
+            self._delete(
+                name=deployment.metadata.name,
+                namespace=deployment.namespace,
+                dry_run=dry_run,
+            )
             while self.exists(
                 name=deployment.manifest.metadata.name, namespace=deployment.namespace
             ):
@@ -81,8 +86,7 @@ class K8sDeploymentDeployer(BaseDeployer):
     def delete(self, name, namespace, dry_run=None):
         """Delete a deployment from Kubernetes"""
 
-        if dry_run is not None:
-            dry_run = "All"
+        dry_run = set_dry_run(dry_run)
 
         try:
             self._delete(name, namespace, dry_run)
@@ -94,8 +98,7 @@ class K8sDeploymentDeployer(BaseDeployer):
     ):
         """Update a deployment in Kubernetes"""
 
-        if dry_run is not None:
-            dry_run = "All"
+        dry_run = set_dry_run(dry_run)
 
         deployment = self._create_deployment_obj(manifest, target_manifest)
 
@@ -114,8 +117,7 @@ class K8sDeploymentDeployer(BaseDeployer):
     ):
         """Deploy service and deployment to Kubernetes"""
 
-        if dry_run is not None:
-            dry_run = "All"
+        dry_run = set_dry_run(dry_run)
 
         deployment = self._create_deployment_obj(manifest, target_manifest)
 
@@ -146,8 +148,7 @@ class K8sDeploymentDeployer(BaseDeployer):
     ):
         """Create a deployment in Kubernetes"""
 
-        if dry_run is not None:
-            dry_run = "All"
+        dry_run = set_dry_run(dry_run)
 
         deployment = self._create_deployment_obj(manifest, target_manifest)
 

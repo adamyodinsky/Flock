@@ -13,12 +13,14 @@ docker-base-build:
 
 docker-agent-build:
 	docker build -f Dockerfile.flock --target agent-stage -t flock-agent .
+	minikube image load flock-agent
 
 docker-embeddings-loader-build:
-	docker build -f Dockerfile.flock --target embeddings-loader-stage -t embeddings-loader .
+	docker build -f Dockerfile.flock --target embeddings-loader-stage -t flock-embeddings-loader .
+	minikube image load flock-embeddings-loader
 
 docker-agent-run:
 	docker run flock-agent
 
 docker-embeddings-loader-run:
-	docker run embeddings-loader
+	docker run flock-embeddings-loader

@@ -1,35 +1,132 @@
+import time
+
 import yaml
 from flock_resource_store import ResourceStoreFactory
 from flock_schemas import SchemasFactory
 from flock_schemas.deployment import DeploymentSchema
+from flock_secrets_store import SecretStoreFactory
 
 from flock_deployer.deployer import DeployerFactory
+from flock_deployer.manifest_creator.creator import ManifestCreator
+
+deployment_example = {
+    "apiVersion": "flock/v1",
+    "kind": "Agent",
+    "namespace": "default",
+    "metadata": {
+        "name": "my-agent",
+        "description": "A Q&A agent for internal projects",
+        "labels": {"app": "my_app"},
+    },
+    "spec": {
+        "vendor": "conversational-react-description",
+        "options": {"verbose": True},
+        "dependencies": [
+            {"kind": "LLMChat", "name": "my-openai-llm-gpt4", "namespace": "default"}
+        ],
+        "tools": [
+            {
+                "kind": "LoadTool",
+                "name": "my-google-search-gpt4",
+                "namespace": "default",
+            }
+        ],
+    },
+}
 
 
 def test_deployer():
     """Test deployer from a schema manifest file."""
 
     # create deployer
-    deployer = DeployerFactory.get_deployer("k8s")
+
+    secret_store = SecretStoreFactory.get_secret_store("vault")
     resource_store = ResourceStoreFactory.get_resource_store()
+    deployer = DeployerFactory.get_deployer(
+        deployer_type="k8s",
+        secret_store=secret_store,
+    )
 
     # load from yaml file
-    path = "../schemas_wip/others/agent_deployment.yaml"
+    path = "../schemas_deployments/0/agent_deployment.yaml"
     with open(path, encoding="utf-8") as file:
         deployment_data = yaml.safe_load(file)
 
-    schema_instance = DeploymentSchema.validate(deployment_data)
+    deployment_manifest = DeploymentSchema.validate(deployment_data)
     target_manifest = resource_store.get(
-        name=schema_instance.spec.targetResource.name,
-        kind=schema_instance.spec.targetResource.kind,
-        namespace=schema_instance.spec.targetResource.namespace,  # type: ignore
+        name=deployment_manifest.spec.targetResource.name,
+        kind=deployment_manifest.spec.targetResource.kind,
+        namespace=deployment_manifest.spec.targetResource.namespace,  # type: ignore
     )
     schema_cls = SchemasFactory.get_schema(target_manifest["kind"])
     target_manifest = schema_cls.validate(target_manifest)
-    deployer.deploy(schema_instance, target_manifest, dry_run=True)
-    deployer.delete(schema_instance, target_manifest, dry_run=True)
-    # deployer.deploy(schema_instance, target_manifest)
-    # deployer.delete(schema_instance, target_manifest)
+    deployer.deployment_deployer.deploy(
+        deployment_manifest, target_manifest, dry_run=True
+    )
+    deployer.service_deployer.deploy(deployment_manifest, target_manifest, dry_run=True)
+    deployer.deployment_deployer.delete(
+        deployment_manifest, target_manifest, dry_run=True
+    )
+    deployer.service_deployer.delete(deployment_manifest, target_manifest, dry_run=True)
 
 
-test_deployer()
+def test_manifest_creator():
+    """Test manifest creator."""
+
+    manifest_creator = ManifestCreator()
+
+    manifest = manifest_creator.create_deployment(
+        name="test-agent",
+        namespace="default",
+        target_manifest=SchemasFactory.get_schema(deployment_example["kind"]).validate(
+            deployment_example
+        ),
+    )
+
+    print(manifest)
+
+
+def test_manifest_creator_and_deployer():
+    """Test manifest creator and deployer."""
+
+    secret_store = SecretStoreFactory.get_secret_store("vault")
+    resource_store = ResourceStoreFactory.get_resource_store()
+    deployer = DeployerFactory.get_deployer(
+        deployer_type="k8s",
+        secret_store=secret_store,
+    )
+    manifest_creator = ManifestCreator()
+    target_kind = "Agent"  # get from user input
+    target_name = "my-agent"  # get from user input
+    target_namespace = "default"  # get from user input
+    target_manifest = resource_store.get(
+        name=target_name, kind=target_kind, namespace=target_namespace
+    )
+    target_manifest = SchemasFactory.get_schema(deployment_example["kind"]).validate(
+        target_manifest
+    )
+
+    deployment_manifest = manifest_creator.create_deployment(
+        name="test-agent",
+        namespace="default",
+        target_manifest=target_manifest,
+    )
+
+    deployer.deployment_deployer.deploy(
+        deployment_manifest, target_manifest, dry_run=True
+    )
+    deployer.service_deployer.deploy(deployment_manifest, target_manifest, dry_run=True)
+
+    time.sleep(3)
+
+    deployer.deployment_deployer.delete(
+        deployment_manifest.metadata.name, deployment_manifest.namespace, dry_run=True
+    )
+    deployer.service_deployer.delete(
+        deployment_manifest.metadata.name, deployment_manifest.namespace, dry_run=True
+    )
+
+
+# test_deployer()
+# test_manifest_creator()
+test_manifest_creator_and_deployer()

@@ -24,28 +24,28 @@ class MongoResourceStore(ResourceStore):
         self.__dict__ = self._shared_state
 
         # Check env vars
-        required_vars = ["MONGO_USERNAME", "MONGO_PASSWORD"]
+        required_vars = ["RESOURCE_STORE_USERNAME", "RESOURCE_STORE_PASSWORD"]
         optional_vars = [
-            "MONGO_COLLECTION_NAME",
-            "MONGO_DB_NAME",
-            "MONGO_HOST",
-            "MONGO_PORT",
+            "RESOURCE_STORE_TABLE_NAME",
+            "RESOURCE_STORE_DB_NAME",
+            "RESOURCE_STORE_HOST",
+            "RESOURCE_STORE_PORT",
         ]
         check_env_vars(required_vars, optional_vars)
 
         # Initialize the client and db
         if not self._shared_state:
             self.client = client or MongoClient(
-                host=os.environ.get("MONGO_HOST", host),
-                port=int(os.environ.get("MONGO_PORT", port)),
-                username=os.environ.get("MONGO_USERNAME"),
-                password=os.environ.get("MONGO_PASSWORD"),
+                host=os.environ.get("RESOURCE_STORE_HOST", host),
+                port=int(os.environ.get("RESOURCE_STORE_PORT", port)),
+                username=os.environ.get("RESOURCE_STORE_USERNAME"),
+                password=os.environ.get("RESOURCE_STORE_PASSWORD"),
             )
             self.db = self.client[  # pylint: disable=invalid-name
-                os.environ.get("MONGO_DB_NAME", db_name)
+                os.environ.get("RESOURCE_STORE_DB_NAME", db_name)
             ]
             self.collection = self.db[
-                os.environ.get("MONGO_COLLECTION_NAME", collection_name)
+                os.environ.get("RESOURCE_STORE_TABLE_NAME", collection_name)
             ]
 
     def put(self, val: dict) -> None:

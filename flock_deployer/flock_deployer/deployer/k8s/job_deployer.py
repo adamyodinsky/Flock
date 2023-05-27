@@ -6,6 +6,7 @@ from flock_secrets_store import SecretStore
 from kubernetes import client, config
 
 from flock_deployer.deployer.base import BaseDeployer
+from flock_deployer.deployer.k8s.common import set_dry_run
 from flock_deployer.deployer.k8s.objects.job import K8sJob
 
 
@@ -54,8 +55,7 @@ class K8sJobDeployer(BaseDeployer):
     def delete(self, name, namespace, dry_run=None):
         """Delete a Job from Kubernetes"""
 
-        if dry_run is not None:
-            dry_run = "All"
+        dry_run = set_dry_run(dry_run)
 
         try:
             self._delete(name, namespace, dry_run)
@@ -67,8 +67,7 @@ class K8sJobDeployer(BaseDeployer):
     ):
         """Deploy a Job to Kubernetes"""
 
-        if dry_run is not None:
-            dry_run = "All"
+        dry_run = set_dry_run(dry_run)
 
         job = self._create_job_obj(manifest, target_manifest)
 
@@ -93,8 +92,7 @@ class K8sJobDeployer(BaseDeployer):
     ):
         """Create a Job in Kubernetes"""
 
-        if dry_run is not None:
-            dry_run = "All"
+        dry_run = set_dry_run(dry_run)
 
         job = self._create_job_obj(manifest, target_manifest)
 

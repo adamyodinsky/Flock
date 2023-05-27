@@ -21,7 +21,7 @@
     },
     "category": {
       "description": "The resource category",
-      "default": "tool",
+      "default": "other",
       "allOf": [
         {
           "$ref": "#/definitions/Category"

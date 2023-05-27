@@ -7,6 +7,7 @@ from flock_secrets_store import SecretStore
 from kubernetes import client, config
 
 from flock_deployer.deployer.base import BaseDeployer
+from flock_deployer.deployer.k8s.common import set_dry_run
 from flock_deployer.deployer.k8s.objects.service import K8sService
 
 
@@ -77,8 +78,7 @@ class K8sServiceDeployer(BaseDeployer):
     def deploy(self, manifest: DeploymentSchema, _, dry_run=None):
         """Deploy service and deployment to Kubernetes"""
 
-        if dry_run is not None:
-            dry_run = "All"
+        dry_run = set_dry_run(dry_run)
 
         service_obj = self._create_service_obj(manifest)
 
@@ -96,8 +96,7 @@ class K8sServiceDeployer(BaseDeployer):
     def delete(self, name: str, namespace: str, dry_run=None):
         """Delete a deployment from Kubernetes"""
 
-        if dry_run is not None:
-            dry_run = "All"
+        dry_run = set_dry_run(dry_run)
 
         try:
             self._delete(name, namespace, dry_run)
@@ -118,8 +117,7 @@ class K8sServiceDeployer(BaseDeployer):
     def update(self, manifest: DeploymentSchema, _, dry_run=None):
         """Update a service in Kubernetes"""
 
-        if dry_run is not None:
-            dry_run = "All"
+        dry_run = set_dry_run(dry_run)
 
         service_obj = self._create_service_obj(manifest)
 
@@ -137,8 +135,7 @@ class K8sServiceDeployer(BaseDeployer):
     def create(self, manifest: DeploymentSchema, _, dry_run=None):
         """Create a service in Kubernetes"""
 
-        if dry_run is not None:
-            dry_run = "All"
+        dry_run = set_dry_run(dry_run)
 
         deployment = self._create_service_obj(manifest)
 

@@ -4,13 +4,13 @@ import os
 import readline
 
 from dotenv import find_dotenv, load_dotenv
+
 from flock_common.env_checker import check_env_vars
 from flock_common.validation import validation_iterator
-from flock_resource_store import ResourceStoreFactory
-from flock_schemas import SchemasFactory
-
 from flock_models.builder import ResourceBuilder
 from flock_models.resources.embeddings_loader import EmbeddingsLoaderResource
+from flock_resource_store import ResourceStoreFactory
+from flock_schemas import SchemasFactory
 
 # Setup
 # pylint: disable=C0103

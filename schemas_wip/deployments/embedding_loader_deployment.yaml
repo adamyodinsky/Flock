@@ -14,11 +14,11 @@ spec:
     image_pull_policy: IfNotPresent
     image: embeddings-loader
     env:
-      - name: MONGO_USERNAME
+      - name: RESOURCE_STORE_USERNAME
         value: root
-      - name: MONGO_PASSWORD
+      - name: RESOURCE_STORE_PASSWORD
         value: password
-      - name: MONGO_HOST
+      - name: RESOURCE_STORE_HOST
         value: "192.168.1.162"
       - name: OPENAI_API_KEY
         valueFrom:

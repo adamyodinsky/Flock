@@ -39,9 +39,9 @@ class SchemasFactory:
         "LLMTool": LLMToolSchema,
         "LLMChat": LLMChatSchema,
         "Custom": CustomSchema,
-        "DeploymentSchema": DeploymentSchema,
-        "JobSchema": JobSchema,
-        "CronJobSchema": CronJobSchema,
+        "Job": JobSchema,
+        "CronJob": CronJobSchema,
+        "FlockDeployment": DeploymentSchema,
     }
 
     SCHEMAS_LIST = [
@@ -57,9 +57,9 @@ class SchemasFactory:
         "PromptTemplate",
         "LLMTool",
         "Custom",
-        "DeploymentSchema",
-        "JobSchema",
-        "CronJobSchema",
+        "JobS",
+        "CronJob",
+        "FlockDeployment",
     ]
 
     @staticmethod

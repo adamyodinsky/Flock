@@ -8,7 +8,7 @@
       "description": "The target resource to be deployed",
       "allOf": [
         {
-          "$ref": "#/definitions/JobTargetResource"
+          "$ref": "#/definitions/TargetResource"
         }
       ]
     },
@@ -17,9 +17,27 @@
       "description": "The container specs",
       "allOf": [
         {
-          "$ref": "#/definitions/JobContainer"
+          "$ref": "#/definitions/ContainerSpec"
         }
       ]
+    },
+    "backoff_limit": {
+      "title": "Backoff Limit",
+      "description": "The number of times the job will be retried before it is marked as failed",
+      "default": 6,
+      "type": "integer"
+    },
+    "completions": {
+      "title": "Completions",
+      "description": "The desired number of successfully finished pods the job should be run with",
+      "default": 1,
+      "type": "integer"
+    },
+    "parallelism": {
+      "title": "Parallelism",
+      "description": "The maximum desired number of pods the job should run at any given time",
+      "default": 1,
+      "type": "integer"
     }
   },
   "required": [
@@ -46,9 +64,9 @@
       ],
       "type": "string"
     },
-    "JobTargetResource": {
-      "title": "JobTargetResource",
-      "description": "Job target resource schema.",
+    "TargetResource": {
+      "title": "TargetResource",
+      "description": "Deployment target resource schema.",
       "type": "object",
       "properties": {
         "labels": {
@@ -81,7 +99,7 @@
         },
         "options": {
           "title": "Options",
-          "description": "Job target options",
+          "description": "Resource options",
           "default": {},
           "type": "object"
         },
@@ -123,9 +141,68 @@
       ],
       "additionalProperties": false
     },
-    "JobContainer": {
-      "title": "JobContainer",
-      "description": "Job spec schema.",
+    "ContainerPort": {
+      "title": "ContainerPort",
+      "description": "Container port schema.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "description": "The name of the port",
+          "maxLength": 15,
+          "type": "string"
+        },
+        "protocol": {
+          "title": "Protocol",
+          "description": "The protocol for the port",
+          "default": "tcp",
+          "enum": [
+            "tcp",
+            "udp",
+            "TCP",
+            "UDP"
+          ],
+          "type": "string"
+        },
+        "port": {
+          "title": "Port",
+          "description": "The port number",
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "VolumeMounts": {
+      "title": "VolumeMounts",
+      "description": "Volume mount schema.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "description": "The name of the volume mount",
+          "type": "string"
+        },
+        "mountPath": {
+          "title": "Mountpath",
+          "description": "The path where the volume should be mounted",
+          "type": "string"
+        },
+        "readOnly": {
+          "title": "Readonly",
+          "description": "Whether the volume should be mounted as read-only",
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "mountPath"
+      ],
+      "additionalProperties": false
+    },
+    "ContainerSpec": {
+      "title": "ContainerSpec",
+      "description": "Deployment spec schema.",
       "type": "object",
       "properties": {
         "image": {
@@ -135,11 +212,20 @@
         },
         "env": {
           "title": "Env",
-          "description": "Environment variables to be set for the Job",
+          "description": "Environment variables to be set for the deployment",
           "default": [],
           "type": "array",
           "items": {
             "$ref": "#/definitions/EnvironmentVariable"
+          }
+        },
+        "ports": {
+          "title": "Ports",
+          "description": "The ports to be exposed by the container",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContainerPort"
           }
         },
         "image_pull_policy": {
@@ -169,6 +255,15 @@
           "type": "array",
           "items": {
             "type": "string"
+          }
+        },
+        "volume_mounts": {
+          "title": "Volume Mounts",
+          "description": "The volume mounts to be mounted in the container",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VolumeMounts"
           }
         }
       },

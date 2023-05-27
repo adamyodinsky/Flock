@@ -2,13 +2,14 @@
 
 from flock_secrets_store import SecretStore
 
+from flock_deployer.deployer.base import BaseDeployers
 from flock_deployer.deployer.k8s.cron_job_deployer import K8sCronJobDeployer
 from flock_deployer.deployer.k8s.deployment_deployer import K8sDeploymentDeployer
 from flock_deployer.deployer.k8s.job_deployer import K8sJobDeployer
 from flock_deployer.deployer.k8s.service_deployer import K8sServiceDeployer
 
 
-class K8sDeployer:
+class K8sDeployer(BaseDeployers):
     """K8s deployer class for deploying services and deployments
 
     Args:

@@ -62,7 +62,7 @@ class EmbeddingsLoaderSchema(BaseFlockSchema):
 
     kind: Literal["EmbeddingsLoader"] = Field(..., description="The kind of the object")
     category: Category = Field(
-        default=Category.TOOL, description="The resource category"
+        default=Category.OTHER, description="The resource category"
     )
     spec: EmbeddingsLoaderSpec
 

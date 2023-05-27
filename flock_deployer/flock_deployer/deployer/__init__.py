@@ -2,6 +2,7 @@
 
 from flock_secrets_store import SecretStore
 
+from flock_deployer.deployer.base import BaseDeployers
 from flock_deployer.deployer.k8s.k8s_deployer import K8sDeployer
 
 
@@ -11,7 +12,9 @@ class DeployerFactory:
     DEPLOYERS = {"k8s": K8sDeployer}
 
     @staticmethod
-    def get_deployer(deployer_type: str, secret_store: SecretStore = NotImplemented):
+    def get_deployer(
+        deployer_type: str, secret_store: SecretStore = NotImplemented
+    ) -> BaseDeployers:
         """Factory function for creating a deployer.
 
         Args:

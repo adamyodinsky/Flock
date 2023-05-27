@@ -23,13 +23,12 @@ class K8sResource(metaclass=abc.ABCMeta):
         else:
             self.target_manifest = None
 
-        self.metadata = (
-            client.V1ObjectMeta(
-                name=manifest.metadata.name,
-                namespace=manifest.namespace,
-                labels=manifest.metadata.labels,
-            ),
+        self.metadata = client.V1ObjectMeta(
+            name=manifest.metadata.name,
+            namespace=manifest.namespace,
+            labels=manifest.metadata.labels,
         )
+
         self.namespace = manifest.namespace
         self.manifest = manifest
         self.rendered_manifest = None

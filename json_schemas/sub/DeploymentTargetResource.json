@@ -1,5 +1,5 @@
 {
-  "title": "DeploymentTargetResource",
+  "title": "TargetResource",
   "description": "Deployment target resource schema.",
   "type": "object",
   "properties": {
@@ -33,7 +33,7 @@
     },
     "options": {
       "title": "Options",
-      "description": "Deployment target options",
+      "description": "Resource options",
       "default": {},
       "type": "object"
     },
