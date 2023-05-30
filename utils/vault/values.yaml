@@ -471,9 +471,10 @@ server:
   # This is useful if you need to run a script to provision TLS certificates or
   # write out configuration files in a dynamic way.
   extraInitContainers:
-    - name: vault-init
-      image: your-registry/vault-init:1.0.0
-      imagePullPolicy: IfNotPresent
+    []
+    # - name: vault-init
+    #   image: vault-init
+    #   imagePullPolicy: IfNotPresent
 
   # shareProcessNamespace enables process namespace sharing between Vault and the extraContainers
   # This is useful if Vault must be signaled, e.g. to send a SIGHUP for a log rotation
@@ -739,7 +740,7 @@ server:
   # use dev mode for anything other than experimenting.
   # See https://www.vaultproject.io/docs/concepts/dev-server.html to know more
   dev:
-    enabled: false
+    enabled: true
 
     # Set VAULT_DEV_ROOT_TOKEN_ID value
     devRootToken: "root"

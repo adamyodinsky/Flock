@@ -59,14 +59,9 @@ delete-rabbitmq:
 	helm delete flock-queue
 
 apply-vault:
-	docker build -f utils/vault/Dockerfile -t vault-init .
-	helm install -f utils/vault/values.yaml flock-secret-store hashicorp/vault
+	helm upgrade --install -f utils/vault/values.yaml flock-secrets-store hashicorp/vault
+	# kubectl exec -it flock-secrets-store-vault-0 -- vault operator init
+	# kubectl exec -it flock-secrets-store-vault-0 -- vault operator unseal <key>
 
+apply-utils: apply-mongo apply-rabbitmq apply-vault
 
-# setup-vault:
-# 	kubectl exec -it vault-0 -- vault operator init -key-shares=1 -key-threshold=1 -format=json > cluster-keys.json
-# 	kubectl exec -it vault-0 -- vault operator unseal $(cat cluster-keys.json | jq -r ".unseal_keys_b64[]")
-# 	kubectl exec -it vault-0 -- vault login $(cat cluster-keys.json | jq -r ".root_token")
-# 	kubectl exec -it vault-0 -- vault secrets enable -path=secret kv-v2
-# 	kubectl exec -it vault-0 -- vault kv put secret/flock-configs \
-# 		flock-configs='{"mongo": {"host": "mongodb://mongo:27017"}, "rabbitmq": {"host": "amqp://guest:guest@flock-queue-rabbitmq:5672/"}}'
