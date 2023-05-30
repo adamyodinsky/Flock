@@ -4,6 +4,7 @@ import yaml
 from flock_resource_store import ResourceStoreFactory
 from flock_schemas import SchemasFactory
 from flock_schemas.deployment import DeploymentSchema
+from flock_schemas.job import JobSchema
 from flock_secrets_store import SecretStoreFactory
 
 from flock_deployer.deployer import DeployerFactory
@@ -70,6 +71,35 @@ def test_deployer():
     deployer.service_deployer.delete(deployment_manifest, target_manifest, dry_run=True)
 
 
+def test_job():
+    """Test deployer from a schema manifest file."""
+
+    # create deployer
+
+    secret_store = SecretStoreFactory.get_secret_store("vault")
+    resource_store = ResourceStoreFactory.get_resource_store()
+    deployer = DeployerFactory.get_deployer(
+        deployer_type="k8s",
+        secret_store=secret_store,
+    )
+
+    # load from yaml file
+    path = "../schemas_deployments/0/embeddings_loader_job.yaml"
+    with open(path, encoding="utf-8") as file:
+        job_data = yaml.safe_load(file)
+
+    job_manifest = JobSchema.validate(job_data)
+    target_manifest = resource_store.get(
+        name=job_manifest.spec.targetResource.name,
+        kind=job_manifest.spec.targetResource.kind,
+        namespace=job_manifest.spec.targetResource.namespace,  # type: ignore
+    )
+    target_schema_cls = SchemasFactory.get_schema(target_manifest["kind"])
+    target_manifest = target_schema_cls.validate(target_manifest)
+    deployer.job_deployer.deploy(job_manifest, target_manifest, dry_run=True)
+    deployer.job_deployer.delete(job_manifest, target_manifest, dry_run=True)
+
+
 def test_manifest_creator():
     """Test manifest creator."""
 
@@ -127,6 +157,7 @@ def test_manifest_creator_and_deployer():
     )
 
 
+test_job()
 # test_deployer()
 # test_manifest_creator()
-test_manifest_creator_and_deployer()
+# test_manifest_creator_and_deployer()

@@ -19,7 +19,7 @@ spec:
       - name: RESOURCE_STORE_PASSWORD
         value: password
       - name: RESOURCE_STORE_HOST
-        value: "192.168.1.162"
+        value: "flock-resource-store"
       - name: OPENAI_API_KEY
         valueFrom:
           secretKeyRef:

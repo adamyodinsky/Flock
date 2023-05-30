@@ -11,7 +11,8 @@ from flock_schemas.deployment import ContainerSpec, TargetResource
 class JobSpec(BaseModelConfig):
     """Job spec schema."""
 
-    targetResource: Optional[TargetResource] = Field(
+    targetResource: TargetResource = Field(
+        {},
         description="The target resource to be deployed",
     )
     container: ContainerSpec = Field(

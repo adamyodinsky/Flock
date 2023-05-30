@@ -44,7 +44,14 @@ def run_job(schema_path, schema_value, loader_type):
 
     # Check env vars
     required_vars = []
-    optional_vars = ["FLOCK_SCHEMA_PATH", "FLOCK_SCHEMA_VALUE", "FLOCK_LOADER_TYPE"]
+    optional_vars = [
+        "FLOCK_SCHEMA_PATH",
+        "FLOCK_SCHEMA_VALUE",
+        "FLOCK_LOADER_TYPE",
+        "ALLOWED_EXTENSIONS",
+        "DENY_EXTENSIONS",
+    ]
+
     load_dotenv(find_dotenv(os.environ.get("FLOCK_ENV_FILE", ".env")))
     check_env_vars(required_vars, optional_vars)
 

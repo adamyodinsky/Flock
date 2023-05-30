@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flock-resource-store
+  labels:
+    app: flock-resource-store
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flock-resource-store
+  template:
+    metadata:
+      labels:
+        app: flock-resource-store
+    spec:
+      containers:
+        - name: flock-mongo
+          image: mongo:5.0.17
+          envFrom:
+            - configMapRef:
+                name: flock-resource-store-configmap
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: resource-store-data
+              mountPath: /data/db
+      volumes:
+        - name: resource-store-data
+          persistentVolumeClaim:
+            claimName: resource-store-data-pvc
