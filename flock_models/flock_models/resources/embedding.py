@@ -12,9 +12,7 @@ from flock_models.resources.base import Resource, ToolResource
 class EmbeddingResource(Resource):
     """class for embedding resources."""
 
-    VENDORS = {
-        "OpenAIEmbeddings": OpenAIEmbeddingsLC,
-    }
+    VENDORS = {"OpenAIEmbeddings": OpenAIEmbeddingsLC}
 
     def __init__(
         self,
