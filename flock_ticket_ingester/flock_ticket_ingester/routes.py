@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import APIRouter, Depends, FastAPI, Response
 from flock_common.queue_client import QueueClient
 from trello import Card
@@ -40,14 +42,20 @@ def create_routes(
     ):
         """Handle Trello webhook data."""
 
+        logging.debug("Webhook received")
         card = req.action.get("data", {}).get("card", None)
+
         if card:
             full_card: Card = flock_trello.client.get_card(card.get("id", None))
 
             if is_todo_queue_eligible(full_card, todo_list_id):
-                queue_client.send(full_card._json_obj)
-                print(f"Sent card {full_card.id} to queue")
+                queue_client.produce(full_card._json_obj)
+                logging.info("Sent ticket %s to queue", full_card.id)
 
         return Response(status_code=200)
+
+    # @router.on_event("shutdown")
+    # async def shutdown_event():
+    #     queue_client.close()
 
     return router

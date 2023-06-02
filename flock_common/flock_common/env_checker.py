@@ -1,5 +1,6 @@
 """Check that all required environment variables are set"""
 
+import logging
 import os
 
 
@@ -16,9 +17,12 @@ def check_env_vars(required_vars, optional_vars=None):
 
     for var in required_vars:
         if var not in os.environ:
+            logging.error("Environment variable %s is not set", var)
             raise EnvVarNotSetError(var)
 
     if optional_vars:
         for var in optional_vars:
             if var not in os.environ:
-                print(f"Warning: Optional environment variable '{var}' is not set")
+                logging.warning(
+                    "Warning: Optional environment variable %s is not set", var
+                )
