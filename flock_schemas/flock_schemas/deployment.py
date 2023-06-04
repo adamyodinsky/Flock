@@ -108,15 +108,6 @@ class VolumePersistentVolumeClaim(BaseModel):
     claimName: str = Field(..., description="Name of the PersistentVolumeClaim to use.")
     readOnly: bool = Field(False, description="Whether the volume is read only.")
 
-    # @validator("claimName")
-    # def validate_claim_name(self, claim_name):
-    #     """Validate claim_name."""
-
-    #     if not claim_name:
-    #         raise ValueError("claimName cannot be an empty string")
-    #     # Here you can add further validation for claimName format if required.
-    #     return claim_name
-
 
 class VolumeSource(BaseModel):
     """Volume source schema."""
@@ -136,17 +127,6 @@ class Volume(BaseModel):
     volume_source: VolumeSource
     persistentVolumeClaim: Optional[PersistentVolumeClaim]
     secret: Optional[Secret]
-
-    # @root_validator
-    # def validate_name(self, values):
-    #     """Validate name."""
-
-    #     name = values.get("name")
-    #     if not name.islower():
-    #         raise ValueError("name must be all lower case")
-    #     if len(name) > 253:
-    #         raise ValueError("name must be 253 characters or less")
-    #     return values
 
 
 class ContainerSpec(BaseModelConfig):

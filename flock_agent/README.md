@@ -68,3 +68,29 @@ Test it with:
 ```bash
  curl -X POST -H "Content-Type: application/json" -d '{ "msg": "who is the president of USA?" }' localhost:8000/agent
 ```
+
+## Agent Handle tasks
+
+
+```pseudo-code
+
+while True:
+  ticket = db.quey(where ticket.list == todo)
+  if ticket:
+    if db.query(acquire_lock):
+      result = agent(task)
+      put result in done_queue
+  else:
+    ticket = with(watch stream for "insert" on collection "tickets" in the db):
+      if 5 minutes passed and nothing was not an event:
+        continue
+      
+    if agent.labels == ticket.labels:
+      if db.query(acquire_lock):
+      result = agent(task)
+      put result in done_queue
+```
+
+```
+done_queue -> task manager -> update trello -> update db
+```

@@ -176,8 +176,8 @@ files = [
 lazy-object-proxy = ">=1.4.0"
 typing-extensions = {version = ">=4.0.0", markers = "python_version < \"3.11\""}
 wrapt = [
-    {version = ">=1.14,<2", markers = "python_version >= \"3.11\""},
     {version = ">=1.11,<2", markers = "python_version < \"3.11\""},
+    {version = ">=1.14,<2", markers = "python_version >= \"3.11\""},
 ]
 
 [[package]]
@@ -687,9 +687,9 @@ openapi-spec-validator = ">=0.2.8,<=0.5.1"
 packaging = "*"
 prance = ">=0.18.2,<1.0"
 pydantic = [
-    {version = ">=1.10.0,<2.0.0", extras = ["email"], markers = "python_version >= \"3.11\" and python_version < \"4.0\""},
     {version = ">=1.5.1,<2.0.0", extras = ["email"], markers = "python_version < \"3.10\""},
     {version = ">=1.9.0,<2.0.0", extras = ["email"], markers = "python_version >= \"3.10\" and python_version < \"3.11\""},
+    {version = ">=1.10.0,<2.0.0", extras = ["email"], markers = "python_version >= \"3.11\" and python_version < \"4.0\""},
 ]
 PySnooper = ">=0.4.1,<2.0.0"
 toml = ">=0.10.0,<1.0.0"
@@ -988,6 +988,25 @@ pyyaml = "^6.0"
 [package.source]
 type = "directory"
 url = "../flock_schemas"
+
+[[package]]
+name = "flock-task-management-store"
+version = "0.1.0"
+description = ""
+category = "main"
+optional = false
+python-versions = "^3.9"
+files = []
+develop = true
+
+[package.dependencies]
+flock-common = {path = "../flock_common", develop = true}
+flock-schemas = {path = "../flock_schemas", develop = true}
+pymongo = "^4.3.3"
+
+[package.source]
+type = "directory"
+url = "../flock_task_management_store"
 
 [[package]]
 name = "frozenlist"
@@ -2280,9 +2299,9 @@ files = [
 
 [package.dependencies]
 numpy = [
+    {version = ">=1.20.3", markers = "python_version < \"3.10\""},
     {version = ">=1.21.0", markers = "python_version >= \"3.10\""},
     {version = ">=1.23.2", markers = "python_version >= \"3.11\""},
-    {version = ">=1.20.3", markers = "python_version < \"3.10\""},
 ]
 python-dateutil = ">=2.8.2"
 pytz = ">=2020.1"
@@ -2601,8 +2620,8 @@ files = [
 astroid = ">=2.15.4,<=2.17.0-dev0"
 colorama = {version = ">=0.4.5", markers = "sys_platform == \"win32\""}
 dill = [
-    {version = ">=0.3.6", markers = "python_version >= \"3.11\""},
     {version = ">=0.2", markers = "python_version < \"3.11\""},
+    {version = ">=0.3.6", markers = "python_version >= \"3.11\""},
 ]
 isort = ">=4.2.5,<6"
 mccabe = ">=0.6,<0.8"
@@ -4324,4 +4343,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "9a80647e55b3b48be12d814c7db77257ab3503ec7f6e520e511f37e8919c807a"
+content-hash = "8a47a226f1d0583dce3fbee99c944805eeaf83c1011707b7044992a3556b960a"

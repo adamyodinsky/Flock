@@ -8,7 +8,6 @@ packages = [{include = "flock_task_management_store"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-flock-common = {path = "../flock_common", develop = true}
 pymongo = "^4.3.3"
 flock-schemas = {path = "../flock_schemas", develop = true}
 
