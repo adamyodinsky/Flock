@@ -1,5 +1,6 @@
 """Flock Agent class"""
 import os
+import queue
 import threading
 from typing import cast
 
@@ -13,6 +14,9 @@ from flock_task_management_store.mongo import (
     TaskManagementStore,
 )
 from pydantic import ValidationError
+
+MINUTE = 60
+HOUR = 60 * MINUTE
 
 
 class FlockAgent:
@@ -33,6 +37,8 @@ class FlockAgent:
 
         self.queue_client = queue_client
         self.task_mgmt_store = task_mgmt_store
+        self.thread_mail_box = queue.Queue()
+
         try:
             self.resource_store = resource_store
             self.manifest = manifest
@@ -62,28 +68,35 @@ class FlockAgent:
 
         return response
 
-    def handle_task(self):
-        """
-        Handle the task
+    def _acquire_and_handle(self, ticket):
+        if self.task_mgmt_store.acquire_lock(ticket):
+            self.task_mgmt_store.tickets_table.update_one(
+                {"_id": ticket["id"]}, {"$set": {"idList": "in_progress"}}
+            )
+            result = self.agent.run(ticket)  # type: ignore
+            self.queue_client.produce(result)
 
+    def handle_tasks_loop(self):
+        """Handle tasks loop
+
+        This function is responsible for handling tasks from the task management store.
         """
 
         while True:
             ticket = self.task_mgmt_store.query({"idList": "todo"})
             if ticket:
-                if self.task_mgmt_store.acquire_lock(ticket):
-                    self.task_mgmt_store.tickets_table.update_one(
-                        {"_id": ticket["id"]}, {"$set": {"idList": "in_progress"}}
-                    )
-                    result = self.agent.run(ticket)  # type: ignore
-                    self.queue_client.produce(result)
+                self._acquire_and_handle(ticket)
             else:
                 thread = threading.Thread(
-                    target=self.task_mgmt_store.watch_insert_stream
+                    target=self.task_mgmt_store.watch_on_insert,
+                    args=(self.thread_mail_box,),
                 )
                 thread.start()
-                thread.join(timeout=60 * 60)
+                thread.join(timeout=5 * MINUTE)  # timeout for watch on insert
+                print("test")
+
+                if not self.thread_mail_box.empty():
+                    ticket = self.thread_mail_box.get()
                 if ticket:
-                    if self.task_mgmt_store.acquire_lock(ticket):
-                        result = self.agent.run(ticket)  # type: ignore
-                        self.queue_client.produce(result)
+                    self._acquire_and_handle(ticket)
+            ticket = None

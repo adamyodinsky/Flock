@@ -1,4 +1,5 @@
 import logging
+import queue
 from datetime import datetime, timedelta
 from typing import Optional
 
@@ -129,7 +130,7 @@ class MongoTaskManagementStore(TaskManagementStore):
 
         return self.tickets_table.find_one(query)
 
-    def watch_insert_stream(self):
+    def watch_on_insert(self, result_box: queue.Queue = None):
         """Watch for changes to tasks in store.
 
         Returns:
@@ -142,4 +143,6 @@ class MongoTaskManagementStore(TaskManagementStore):
             for insert_change in stream:
                 logging.debug("Change: %s", insert_change)
                 if insert_change.fullDocument["idList"] == "todo":
-                    return insert_change
+                    if result_box:
+                        result_box.put(insert_change.fullDocument)
+                    return insert_change.fullDocument
