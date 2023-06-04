@@ -1,0 +1,6 @@
+[submodule "Auto-GPT"]
+	path = Auto-GPT
+	url = https://github.com/Significant-Gravitas/Auto-GPT.git
+[submodule "developer"]
+	path = developer
+	url = https://github.com/smol-ai/developer.git
