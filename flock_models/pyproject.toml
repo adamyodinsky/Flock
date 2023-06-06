@@ -23,6 +23,8 @@ python-dotenv = "^1.0.0"
 wolframalpha = "^5.0.0"
 pdfminer-six = "^20221105"
 azure-core = "^1.26.4"
+beautifulsoup4 = "^4.12.2"
+pytest-playwright = "^0.3.3"
 
 
 [tool.poetry.group.dev.dependencies]

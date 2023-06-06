@@ -29,9 +29,9 @@ class AgentResource(Agent):
 
         memory = {}
 
-        if self.vendor.value == AgentType.CONVERSATIONAL_REACT_DESCRIPTION.value:
+        if self.vendor == AgentType.CONVERSATIONAL_REACT_DESCRIPTION.value:
             memory = {"memory": ConversationBufferMemory(memory_key="chat_history")}
-        elif self.vendor.value == AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION.value:
+        elif self.vendor == AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION.value:
             memory = {
                 "memory": ConversationBufferMemory(
                     memory_key="chat_history", return_messages=True
