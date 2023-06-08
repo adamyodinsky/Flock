@@ -5,8 +5,8 @@ from flock_resource_store import ResourceStoreFactory
 from flock_schemas import SchemasFactory
 from flock_schemas.deployment import DeploymentSchema
 from flock_schemas.job import JobSchema
-from flock_secrets_store import SecretStoreFactory
 
+from flock_common.secret_store import SecretStoreFactory
 from flock_deployer.deployer import DeployerFactory
 from flock_deployer.manifest_creator.creator import ManifestCreator
 

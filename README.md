@@ -23,7 +23,7 @@ should we introduce another component to the system? What are the pros and cons 
 
 1. flock_models -> flock_resources
 2. move flock_schemas under flock_resources
-   1. move schemas that are not resources out of the the schmeas project and into the relevant projects. like Ticket should be in task manager maybe. or task store. and deployment should be also in another place. maybe in deployer.
+   1. move schemas that are not resources out of the schemas project and into the relevant projects. like Ticket should be in task manager maybe. or task store. and deployment should be also in another place. maybe in deployer.
 3. move flock_resource_store under flock_resources
 4. move secret store under common. everyone that uses common will use the secret_store. as common should be used only be deployable projects. and using secrets in deployment is a very common thing. also using queues (in this system) and logging.
 5. rename flock_api_server to flock_builder

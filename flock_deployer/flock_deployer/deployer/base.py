@@ -3,7 +3,8 @@
 import abc
 
 from flock_schemas import BaseFlockSchema
-from flock_secrets_store import SecretStore
+
+from flock_common.secret_store import SecretStore
 
 
 class BaseDeployer(metaclass=abc.ABCMeta):

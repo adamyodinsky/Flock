@@ -3,9 +3,9 @@
 import time
 
 from flock_schemas.deployment import DeploymentSchema
-from flock_secrets_store import SecretStore
 from kubernetes import client, config
 
+from flock_common.secret_store import SecretStore
 from flock_deployer.deployer.base import BaseDeployer
 from flock_deployer.deployer.k8s.common import set_dry_run
 from flock_deployer.deployer.k8s.objects.service import K8sService

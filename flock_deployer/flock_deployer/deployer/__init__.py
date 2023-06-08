@@ -1,6 +1,7 @@
 """Module for creating deployers."""
 
-from flock_secrets_store import SecretStore
+
+from flock_common.secret_store import SecretStore
 
 from flock_deployer.deployer.base import BaseDeployers
 from flock_deployer.deployer.k8s.k8s_deployer import K8sDeployer

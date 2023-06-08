@@ -1,0 +1,40 @@
+"""LLM schema."""
+
+from enum import Enum
+from typing import Literal
+
+from pydantic import Field
+
+from schemas.base import BaseFlockSchema, BaseOptions, Category
+
+
+class LLMVendor(str, Enum):
+    """Enum for llm vendors."""
+
+    GPT4All = "GPT4All"
+
+
+class LLMSpec(BaseOptions):
+    """LLM spec."""
+
+    vendor: LLMVendor = Field(..., description="LLM vendor")
+
+
+class LLMSchema(BaseFlockSchema):
+    """LLM schema."""
+
+    kind: Literal["LLM"] = Field(..., description="The kind of the object")
+    category: Category = Field(
+        default=Category.MODEL, description="The resource category"
+    )
+    spec: LLMSpec
+
+
+export = {
+    "sub": {
+        "LLMSpec": LLMSpec,
+    },
+    "main": {
+        "LLM": LLMSchema,
+    },
+}

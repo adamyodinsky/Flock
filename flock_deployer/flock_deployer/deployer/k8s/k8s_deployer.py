@@ -1,7 +1,6 @@
 """K8s deployer class"""
 
-from flock_secrets_store import SecretStore
-
+from flock_common.secret_store import SecretStore
 from flock_deployer.deployer.base import BaseDeployers
 from flock_deployer.deployer.k8s.cron_job_deployer import K8sCronJobDeployer
 from flock_deployer.deployer.k8s.deployment_deployer import K8sDeploymentDeployer
