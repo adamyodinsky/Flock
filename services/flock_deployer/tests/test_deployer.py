@@ -49,7 +49,7 @@ def test_deployer():
     )
 
     # load from yaml file
-    path = "../schemas_deployments/0/agent_deployment.yaml"
+    path = "./assets/schemas/agent_deployment.yaml"
     with open(path, encoding="utf-8") as file:
         deployment_data = yaml.safe_load(file)
 
@@ -84,7 +84,7 @@ def test_job():
     )
 
     # load from yaml file
-    path = "../schemas_deployments/0/embeddings_loader_job.yaml"
+    path = "./assets/schemas/embeddings_loader_job.yaml"
     with open(path, encoding="utf-8") as file:
         job_data = yaml.safe_load(file)
 
