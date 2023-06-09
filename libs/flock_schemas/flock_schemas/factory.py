@@ -35,7 +35,7 @@ class SchemaFactory:
 
         return schemas_map
 
-    def get_schema(self, kind) -> Type[BaseFlockSchema]:
+    def get_schema(self, kind: str) -> Type[BaseFlockSchema]:
         """Get a schema instance."""
 
         result = self.schemas.get(kind, CustomSchema)

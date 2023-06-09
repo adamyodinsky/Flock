@@ -1,7 +1,7 @@
 """Base schema for all Flock objects."""
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, Dict, List, Literal, Optional, Mapping
 
 from pydantic import BaseModel, Extra, Field
 
@@ -72,7 +72,7 @@ class BaseDependency(BaseLabels):
     namespace: Optional[str] = Field(
         "default", description="The namespace of the object", max_length=63
     )
-    options: Optional[Dict[str, Any]] = Field({}, description="Resource options")
+    options: Optional[Mapping[str, Any]] = Field({}, description="Resource options")
 
 
 class BaseToolDependency(BaseDependency):
@@ -91,7 +91,7 @@ class BaseMetaData(BaseLabels, BaseAnnotations):
 class BaseOptions(BaseModelConfig):
     """Base options schema."""
 
-    options: Dict[str, Any] = Field({}, description="Resource options")
+    options: Mapping[str, Any] = Field({}, description="Resource options")
 
 
 class BaseSpec(BaseOptions):
