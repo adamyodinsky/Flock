@@ -15,7 +15,7 @@ class MongoResourceStore(ResourceStore):
         username: str = "root",
         password: str = "password",
         db_name: str = "flock_db",
-        collection_name: str = "flock_resources",
+        table_name: str = "flock_resources",
         host: str = "localhost",
         port: int = 27017,
         client: Optional[MongoClient] = None,
@@ -32,10 +32,10 @@ class MongoResourceStore(ResourceStore):
                 password=password,
             )
             self.db = self.client[db_name]
-            self.collection = self.db[collection_name]
+            self.table = self.db[table_name]
 
     def put(self, val: dict) -> None:
-        self.collection.update_one(
+        self.table.update_one(
             {
                 "namespace": val["namespace"],
                 "kind": val["kind"],
@@ -59,7 +59,7 @@ class MongoResourceStore(ResourceStore):
             kind=kind,
         )
 
-        result = self.collection.find_one(
+        result = self.table.find_one(
             filter=query_filter,
             projection={
                 "_id": False,
@@ -90,7 +90,7 @@ class MongoResourceStore(ResourceStore):
             filter_query["metadata.name"] = name
 
         result = (
-            self.collection.find(
+            self.table.find(
                 filter=filter_query,
                 projection={
                     "name": "$metadata.name",
@@ -121,7 +121,7 @@ class MongoResourceStore(ResourceStore):
             kind=kind,
         )
 
-        result = self.collection.delete_one(
+        result = self.table.delete_one(
             filter=query_filter,
         )
         return result
@@ -142,7 +142,7 @@ class MongoResourceStore(ResourceStore):
             kind=kind,
         )
 
-        result = self.collection.delete_many(
+        result = self.table.delete_many(
             filter=query_filter,
         )
         return result

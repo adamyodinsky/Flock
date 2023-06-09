@@ -7,8 +7,8 @@ from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI
 from flock_common import EnvVarNotSetError, check_env_vars
 from flock_common.queue_client import QueueClientFactory
-from flock_resource_store import ResourceStoreFactory
 from flock_task_management_store import TaskManagementStoreFactory
+from store import ResourceStoreFactory
 from uvicorn import run
 
 from flock_agent.agent import FlockAgent
@@ -57,7 +57,29 @@ def run_agent(schema_path, schema_value, host, port):
         "FLOCK_SCHEMA_VALUE",
         "FLOCK_AGENT_HOST",
         "FLOCK_AGENT_PORT",
-        "MAINFRAME_ADDR",
+        "FLOCK_MANAGEMENT_STORE_TYPE",
+        "MANAGEMENT_STORE_DB_NAME",
+        "MANAGEMENT_STORE_TICKET_TABLE_NAME",
+        "MANAGEMENT_STORE_HOST",
+        "MANAGEMENT_STORE_PORT",
+        "MANAGEMENT_STORE_USERNAME",
+        "MANAGEMENT_STORE_PASSWORD",
+        "FLOCK_RESOURCE_STORE_TYPE",
+        "RESOURCE_STORE_DB_NAME",
+        "RESOURCE_STORE_TABLE_NAME",
+        "RESOURCE_STORE_HOST",
+        "RESOURCE_STORE_PORT",
+        "RESOURCE_STORE_USERNAME",
+        "RESOURCE_STORE_PASSWORD",
+        "QUEUE_CLIENT",
+        "QUEUE_NAME",
+        "QUEUE_HOST",
+        "QUEUE_PORT",
+        "QUEUE_VHOST",
+        "QUEUE_USERNAME",
+        "QUEUE_PASSWORD",
+        "FLOCK_AGENT_HOST",
+        "FLOCK_AGENT_PORT",
     ]
     load_dotenv(find_dotenv(os.environ.get("FLOCK_ENV_FILE", ".env")))
     check_env_vars(required_vars, optional_vars)
@@ -76,14 +98,29 @@ def run_agent(schema_path, schema_value, host, port):
     else:
         raise click.UsageError("Either --schema-path or --schema-value is required.")
 
-    task_mgmt_store = TaskManagementStoreFactory.get_store(
-        os.environ.get("FLOCK_MANAGEMENT_STORE_TYPE", "mongo"),
+    task_management_store = TaskManagementStoreFactory.get_store(
+        store_type=os.environ.get("FLOCK_MANAGEMENT_STORE_TYPE", "mongo"),
         db_name=os.environ.get("MANAGEMENT_STORE_DB_NAME", "flock_db"),
-        collection_name=os.environ.get("MANAGEMENT_STORE_COLLECTION_NAME", "tickets"),
+        tickets_table_name=os.environ.get(
+            "MANAGEMENT_STORE_TICKET_TABLE_NAME", "tickets"
+        ),
+        locks_table_name=os.environ.get(
+            "MANAGEMENT_STORE_LOCKS_TABLE_NAME", "tickets_locks"
+        ),
         host=os.environ.get("MANAGEMENT_STORE_HOST", "localhost"),
         port=int(os.environ.get("MANAGEMENT_STORE_PORT", 27017)),
         username=os.environ.get("MANAGEMENT_STORE_USERNAME", "root"),
         password=os.environ.get("MANAGEMENT_STORE_PASSWORD", "password"),
+    )
+
+    resource_store = ResourceStoreFactory.get_resource_store(
+        store_type=os.environ.get("FLOCK_RESOURCE_STORE_TYPE", "mongo"),
+        db_name=os.environ.get("RESOURCE_STORE_DB_NAME", "flock_db"),
+        table_name=os.environ.get("RESOURCE_STORE_TABLE_NAME", "flock_resources"),
+        host=os.environ.get("RESOURCE_STORE_HOST", "localhost"),
+        port=int(os.environ.get("RESOURCE_STORE_PORT", 27017)),
+        username=os.environ.get("RESOURCE_STORE_USERNAME", "root"),
+        password=os.environ.get("RESOURCE_STORE_PASSWORD", "password"),
     )
 
     queue_client = QueueClientFactory.get_client(
@@ -99,9 +136,9 @@ def run_agent(schema_path, schema_value, host, port):
     # Initialize agent object with the configuration manifest
     flock_agent = FlockAgent(
         manifest=config_str,
-        resource_store=ResourceStoreFactory.get_resource_store(),
+        resource_store=resource_store,
         queue_client=queue_client,
-        db_client=task_mgmt_store,
+        task_mgmt_store=task_management_store,
     )
 
     # Create FastAPI app and include the agent routes

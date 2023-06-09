@@ -5,15 +5,15 @@ import threading
 from typing import cast
 
 import click
+from builder.resource_builder import ResourceBuilder
 from flock_common.queue_client import QueueClient
-from flock_models.builder.resource_builder import ResourceBuilder
-from flock_models.resources.base import Agent
-from flock_resource_store import ResourceStore
 from flock_task_management_store.mongo import (
     MongoTaskManagementStore,
     TaskManagementStore,
 )
 from pydantic import ValidationError
+from resources.base import Agent
+from store import ResourceStore
 
 MINUTE = 60
 HOUR = 60 * MINUTE
@@ -27,7 +27,7 @@ class FlockAgent:
         manifest: dict,
         resource_store: ResourceStore,
         queue_client: QueueClient,
-        task_mgmt_store: MongoTaskManagementStore,
+        task_mgmt_store: TaskManagementStore,
     ):
         """Initialize Flock Agent"""
 

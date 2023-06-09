@@ -29,13 +29,13 @@ class MongoTaskManagementStore(TaskManagementStore):
 
     def __init__(
         self,
-        db_name: str,
-        tickets_table_name: str,
-        locks_table_name: str,
+        db_name: str = "flock_db",
+        tickets_table_name: str = "tickets",
+        locks_table_name: str = "tickets_locks",
         host: str = "localhost",
         port: int = 27017,
-        username: Optional[str] = "",
-        password: Optional[str] = "",
+        username: str = "root",
+        password: str = "password",
         client: Optional[MongoClient] = None,
     ):
         # Implement the Borg design pattern

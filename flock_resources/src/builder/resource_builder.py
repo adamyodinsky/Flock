@@ -1,11 +1,7 @@
 """Resource builder."""
 
 
-import os
 from typing import List
-
-from dotenv import find_dotenv, load_dotenv
-from flock_common.env_checker import check_env_vars
 
 from resources import Resource, ResourceFactory
 from schemas import SchemaFactory
@@ -17,8 +13,6 @@ class ResourceBuilder:
 
     def __init__(self, resource_store: ResourceStore):
         """Initialize the class."""
-        load_dotenv(find_dotenv(os.environ.get("FLOCK_ENV_FILE", ".env")))
-        check_env_vars([], [])
         self.resource_store = resource_store
         self.resources = ResourceFactory().resources
         self.schema_factory = SchemaFactory()

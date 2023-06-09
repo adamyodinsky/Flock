@@ -23,6 +23,4 @@ def check_env_vars(required_vars, optional_vars=None):
     if optional_vars:
         for var in optional_vars:
             if var not in os.environ:
-                logging.warning(
-                    "Warning: Optional environment variable %s is not set", var
-                )
+                logging.info("Optional environment variable %s is not set", var)
