@@ -1,14 +1,20 @@
 """Main module for the Flock Embeddings Loader CLI"""
 
 import json
+import logging
 import os
 import sys
 
 import click
 from dotenv import find_dotenv, load_dotenv
 from flock_common import EnvVarNotSetError, check_env_vars
+from flock_common.logging import init_logging
 
 from flock_embeddings_loader.embeddings_loader import FlockEmbeddingsLoader
+
+init_logging(
+    destination=os.environ.get("LOG_DESTINATION", "stdout"),
+)
 
 
 @click.group()
@@ -29,7 +35,6 @@ def cli():
     help="Configuration manifest as a JSON string.",
     default=os.environ.get("FLOCK_SCHEMA_VALUE", None),
 )
-# scraped data or raw files
 @click.option(
     "--loader-type",
     help="Type of job to run.",
@@ -69,21 +74,18 @@ def run_job(schema_path, schema_value, loader_type):
     else:
         raise click.UsageError("Either --schema-path or --schema-value is required.")
 
-    # Initialize object with the configuration manifest
     flock_embeddings_loader = FlockEmbeddingsLoader(config_str)
 
-    # Run the embeddings loader job
-    click.echo("Ready. Running job...")
+    logging.info("Ready. Running job...")
 
     if loader_type == "scraped-data":
-        # Run the embeddings loader job
-        click.echo("Ready. Running job...")
+        logging.info("Loading scraped data to vectorstore...")
         flock_embeddings_loader.start_scraped__data_job()
     elif loader_type == "raw-files":
-        # Run the embeddings loader job
-        click.echo("Ready. Running job...")
+        logging.info("Loading raw files to vectorstore...")
         flock_embeddings_loader.start_raw_files_job()
     else:
+        logging.error("Error: Invalid loader type.")
         raise click.UsageError("Either --loader-type is required.")
 
 

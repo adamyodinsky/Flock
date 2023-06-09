@@ -1,16 +1,8 @@
 ##### Flock Base Stage #####
 FROM flock-python-base as flock-base-stage
 
-COPY flock_common $PYSETUP_PATH/flock_common
-COPY flock_schemas $PYSETUP_PATH/flock_schemas
-COPY flock_models $PYSETUP_PATH/flock_models
-COPY flock_resource_store $PYSETUP_PATH/flock_resource_store
-COPY flock_api_server $PYSETUP_PATH/flock_api_server
-COPY flock_deployer $PYSETUP_PATH/flock_deployer
-
-COPY flock_webscraper $PYSETUP_PATH/flock_webscraper
-COPY flock_agent $PYSETUP_PATH/flock_agent
-COPY flock_embeddings_loader $PYSETUP_PATH/flock_embeddings_loader
+COPY libs $PYSETUP_PATH/libs
+COPY services $PYSETUP_PATH/services
 
 ##### Flock Base Agent #####
 FROM flock-base-stage as agent-base-stage

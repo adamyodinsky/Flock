@@ -10,7 +10,7 @@ packages = [{include = "flock_embeddings_loader"}]
 python = "^3.9"
 click = "^8.1.3"
 python-dotenv = "^1.0.0"
-flock-resources = {path = "../flock_resources", develop = true}
+flock-resources = {path = "../../libs/flock_resources", develop = true}
 
 
 [build-system]

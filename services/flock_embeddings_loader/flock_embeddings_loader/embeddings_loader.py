@@ -1,12 +1,13 @@
 """Embeddings Loader class"""
 
+import logging
 from typing import cast
 
 import click
-from flock_models.builder.resource_builder import ResourceBuilder
-from flock_models.resources.embeddings_loader import EmbeddingsLoaderResource
-from flock_resource_store import ResourceStoreFactory
+from builder.resource_builder import ResourceBuilder
 from pydantic import ValidationError
+from resources.embeddings_loader import EmbeddingsLoaderResource
+from store import ResourceStoreFactory
 
 
 class FlockEmbeddingsLoader:
@@ -24,10 +25,14 @@ class FlockEmbeddingsLoader:
                 self.builder.build_resource(manifest=self.manifest),
             )
         except ValidationError as error:
+            logging.error("Invalid configuration manifest %s", str(error))
             raise click.ClickException(
                 f"Invalid configuration manifest: {str(error)}"
             ) from error
         except Exception as error:
+            logging.error(
+                "Error while initializing embeddings loader job %s", str(error)
+            )
             raise click.ClickException(
                 f"Error while initializing embeddings loader job: {str(error)}"
             ) from error
@@ -36,16 +41,22 @@ class FlockEmbeddingsLoader:
         """Start the embeddings loader job"""
 
         try:
-            print("Loading scraped data to vectorstore...")
+            logging.info("Loading scraped data to vectorstore...")
             self.embeddings_loader.load_scraped_data_to_vectorstore()
         except Exception as error:  # pylint: disable=broad-except
-            print(f"Error: {error}")
+            logging.error("Error while loading scraped data to vectorstore %s", error)
+            raise click.ClickException(
+                f"Error while loading scraped data to vectorstore: {error}"
+            ) from error
 
     def start_raw_files_job(self):
         """Start the embeddings loader job"""
 
         try:
-            print("Loading files to vectorstore...")
+            logging.info("Loading raw files to vectorstore...")
             self.embeddings_loader.load_files_to_vectorstore()
         except Exception as error:  # pylint: disable=broad-except
-            print(f"Error: {error}")
+            logging.error("Error while loading raw files to vectorstore %s", error)
+            raise click.ClickException(
+                f"Error while loading raw files to vectorstore: {error}"
+            ) from error
