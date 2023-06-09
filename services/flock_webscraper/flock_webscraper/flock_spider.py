@@ -1,5 +1,6 @@
 """Flock Spider"""
 
+import logging
 import os
 import re
 import sys
@@ -9,6 +10,11 @@ from dotenv import find_dotenv, load_dotenv
 from parsel import Selector
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
+
+logger = logging.getLogger("scrapy")
+logger.setLevel(
+    os.environ.get("LOG_LEVEL", "INFO").upper()
+)  # Set log level to INFO by default
 
 
 class EnvVarNotSetError(Exception):
@@ -29,7 +35,9 @@ def check_env_vars(required_vars, optional_vars=None):
     if optional_vars:
         for var in optional_vars:
             if var not in os.environ:
-                print(f"Warning: Optional environment variable '{var}' is not set")
+                logging.info(
+                    "Warning: Optional environment variable '%s' is not set", var
+                )
 
 
 class FlockSpider(CrawlSpider):

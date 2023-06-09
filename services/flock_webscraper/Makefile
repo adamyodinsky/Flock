@@ -20,6 +20,7 @@ test:
 	RULE_SCRAPER_DENY_EXTENSIONS="" \
 	SCRAPER_OUTPUT_DIR="${PWD}/.spider_output" \
 	SCRAPER_FEED_EXPORT_BATCH_ITEM_COUNT=10 \
+	LOG_LEVEL=INFO \
 	poetry run scrapy runspider flock_webscraper/flock_spider.py
 
 docker-test-build:
