@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=../../json_schemas/main/PromptTemplateSchema.json
+---
+apiVersion: flock/v1
+kind: PromptTemplate
+namespace: default
+metadata:
+  name: my-prompt-template
+  description: prompt template
+  labels:
+    app: my_app
+spec:
+  vendor: PromptTemplate
+  options:
+    input_variables: ["objective"]
+    template: |
+      "You are a planner who is an expert at coming up with a todo list for a given objective. Come up with a todo list for this objective: {objective}"

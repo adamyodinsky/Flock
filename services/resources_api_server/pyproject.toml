@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "flock-api-server"
+version = "0.0.1"
+description = ""
+authors = ["Adam Yodinsky <27074934+adamyodinsky@users.noreply.github.com>"]
+readme = "README.md"
+include = ["server"]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.12"
+fastapi = {extras = ["all"], version = "^0.95.1"}
+pydantic = "^1.10.7"
+flock-schemas = {path = "../flock_schemas", develop = true}
+flock-resource-store = {path = "../flock_resource_store", develop = true}
+flock-models = {path = "../flock_models", develop = true}
+flock-common = {path = "../flock_common", develop = true}
+python-dotenv = "^1.0.0"
+
+
+[tool.poetry.group.dev.dependencies]
+pylint = "^2.17.3"
+pytest = "^7.3.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

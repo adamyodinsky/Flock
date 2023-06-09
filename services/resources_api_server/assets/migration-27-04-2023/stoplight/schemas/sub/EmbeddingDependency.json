@@ -1,0 +1,56 @@
+{
+  "title": "EmbeddingDependency",
+  "x-stoplight": {
+    "id": "o9ynjdop9ddp0"
+  },
+  "description": "Embedding dependency schema.",
+  "type": "object",
+  "properties": {
+    "labels": {
+      "title": "Labels",
+      "description": "Labels are useful for filtering and finding objects",
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "x-stoplight": {
+          "id": "wwpeabzsl1mlg"
+        }
+      },
+      "x-stoplight": {
+        "id": "65jajikgpu2us"
+      }
+    },
+    "name": {
+      "title": "Name",
+      "description": "Name of the dependency",
+      "type": "string",
+      "x-stoplight": {
+        "id": "rqz69e1p14f4t"
+      }
+    },
+    "kind": {
+      "title": "Kind",
+      "default": "Embedding",
+      "const": "Embedding",
+      "type": "string",
+      "x-stoplight": {
+        "id": "3me92xhqvs4po"
+      }
+    },
+    "namespace": {
+      "title": "Namespace",
+      "description": "The namespace of the object",
+      "default": "default",
+      "maxLength": 63,
+      "type": "string",
+      "x-stoplight": {
+        "id": "p471twnuwzkdl"
+      }
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "additionalProperties": false,
+  "x-internal": true
+}

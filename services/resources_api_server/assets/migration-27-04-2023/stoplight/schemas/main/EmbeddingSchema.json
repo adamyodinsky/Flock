@@ -1,0 +1,190 @@
+{
+  "title": "EmbeddingSchema",
+  "x-stoplight": {
+    "id": "h5pphsh1yvr5w"
+  },
+  "description": "Embedding schema.",
+  "type": "object",
+  "properties": {
+    "namespace": {
+      "title": "Namespace",
+      "description": "The namespace of the object",
+      "maxLength": 63,
+      "type": "string",
+      "x-stoplight": {
+        "id": "m9o1ctp5hf5sy"
+      }
+    },
+    "apiVersion": {
+      "title": "Apiversion",
+      "description": "API version",
+      "enum": [
+        "flock/v1"
+      ],
+      "type": "string",
+      "x-stoplight": {
+        "id": "0e2lxivzbjtwv"
+      }
+    },
+    "kind": {
+      "title": "Kind",
+      "description": "The kind of the object",
+      "enum": [
+        "Embedding"
+      ],
+      "type": "string",
+      "x-stoplight": {
+        "id": "a1poczbjjbp5l"
+      }
+    },
+    "metadata": {
+      "$ref": "#/definitions/BaseMetaData",
+      "x-stoplight": {
+        "id": "fwgs1nlc82kmp"
+      }
+    },
+    "created_at": {
+      "title": "Created At",
+      "description": "Creation timestamp",
+      "type": "string",
+      "format": "date-time",
+      "x-stoplight": {
+        "id": "s1v1ku84er3fk"
+      }
+    },
+    "updated_at": {
+      "title": "Updated At",
+      "description": "Last update timestamp",
+      "type": "string",
+      "format": "date-time",
+      "x-stoplight": {
+        "id": "lvchehr0e1cv3"
+      }
+    },
+    "spec": {
+      "$ref": "#/definitions/EmbeddingSpec",
+      "x-stoplight": {
+        "id": "r40h3k6qc62ur"
+      }
+    }
+  },
+  "required": [
+    "namespace",
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "BaseMetaData": {
+      "title": "BaseMetaData",
+      "description": "Base metadata schema.",
+      "type": "object",
+      "properties": {
+        "annotations": {
+          "title": "Annotations",
+          "description": "Annotations are useful for storing additional information",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "g1xytzzswn1xt"
+            }
+          },
+          "x-stoplight": {
+            "id": "ucosgsq47lmi7"
+          }
+        },
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "9ev40fyb8dsl6"
+            }
+          },
+          "x-stoplight": {
+            "id": "ctlbzo4hjum86"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the object",
+          "maxLength": 63,
+          "type": "string",
+          "x-stoplight": {
+            "id": "utnx14cov7s0e"
+          }
+        },
+        "description": {
+          "title": "Description",
+          "description": "Description",
+          "maxLength": 255,
+          "type": "string",
+          "x-stoplight": {
+            "id": "ylxf1vr1exc8f"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "description"
+      ],
+      "additionalProperties": false,
+      "x-stoplight": {
+        "id": "4ftuk7lw8ps1q"
+      }
+    },
+    "EmbeddingVendor": {
+      "title": "EmbeddingVendor",
+      "description": "Enum for embedding vendors.",
+      "enum": [
+        "OpenAIEmbeddings"
+      ],
+      "type": "string",
+      "x-stoplight": {
+        "id": "0egflybxg4m05"
+      }
+    },
+    "EmbeddingSpec": {
+      "title": "EmbeddingSpec",
+      "description": "Embedding spec.",
+      "type": "object",
+      "properties": {
+        "options": {
+          "title": "Options",
+          "description": "Embedding options",
+          "type": "object",
+          "x-stoplight": {
+            "id": "z23tx7hzpe0tr"
+          }
+        },
+        "vendor": {
+          "description": "Embedding vendor",
+          "allOf": [
+            {
+              "$ref": "#/definitions/EmbeddingVendor",
+              "x-stoplight": {
+                "id": "i2ci1d7aaqfmb"
+              }
+            }
+          ],
+          "x-stoplight": {
+            "id": "sekob386gvqab"
+          }
+        }
+      },
+      "required": [
+        "vendor"
+      ],
+      "additionalProperties": false,
+      "x-stoplight": {
+        "id": "p8oywdabb8ggf"
+      }
+    }
+  },
+  "x-internal": true
+}

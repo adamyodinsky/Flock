@@ -1,0 +1,488 @@
+openapi: 3.1.0
+x-stoplight:
+  id: vh9sm56gb8oax
+info:
+  title: Flock
+  version: 0.0.1
+  contact:
+    name: Adam yodinsky
+    email: adam.yodinsky@gmail.com
+servers:
+  - url: 'http://localhost:3000'
+    description: Flock
+paths:
+  '/resource/{namespace}/{kind}/{name}':
+    get:
+      summary: Get Resource
+      tags: []
+      responses:
+        '200':
+          $ref: '#/components/responses/ResourceFetched'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      operationId: get-resource
+      x-internal: true
+      description: Get a resource
+    post:
+      summary: Create Resource
+      operationId: post-resource
+      x-internal: true
+      description: Creates a resource
+      requestBody:
+        $ref: '#/components/requestBodies/Resource'
+      responses:
+        '201':
+          $ref: '#/components/responses/ResourceCreated'
+        '202':
+          $ref: '#/components/responses/ResourceAccepted'
+        '400':
+          $ref: '#/components/responses/ResourceBadRequest'
+        '409':
+          $ref: '#/components/responses/ResourceAlreadyExists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      summary: Update Resource
+      operationId: put-resource
+      x-internal: true
+      description: Create or update a resource
+      requestBody:
+        $ref: '#/components/requestBodies/Resource'
+      responses:
+        '201':
+          $ref: '#/components/responses/ResourceCreated'
+        '202':
+          $ref: '#/components/responses/ResourceAccepted'
+        '204':
+          $ref: '#/components/responses/ResourceUpdated'
+        '400':
+          $ref: '#/components/responses/ResourceBadRequest'
+        '409':
+          $ref: '#/components/responses/ResourceAlreadyExists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    parameters:
+      - schema:
+          type: string
+        name: namespace
+        in: path
+        required: true
+        description: Namespace of resource
+      - schema:
+          type: string
+          enum:
+            - Embedding
+            - LLM
+            - VectorStore
+            - VectorStoreQATool
+            - Agent
+            - SearchTool
+            - Splitter
+        name: kind
+        in: path
+        required: true
+        description: Kind of resource
+      - schema:
+          type: string
+        name: name
+        in: path
+        required: true
+        description: Name of resource
+components:
+  requestBodies:
+    Resource:
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: ./models/Embedding.json
+              - $ref: ./models/Agent.json
+              - $ref: ./models/SearchTool.json
+              - $ref: ./models/Splitter.json
+              - $ref: ./models/VectorStore.json
+              - $ref: ./models/VectorStoreQATool.json
+              - $ref: ./models/LLM.json
+  responses:
+    ResourceBadRequest:
+      description: Resource Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                status: error
+                code: 400
+                message: Invalid input provided.
+                details:
+                  - The 'name' field is required.
+                  - The 'description' field is required.
+            properties:
+              status:
+                type: string
+                enum:
+                  - error
+              code:
+                type: integer
+                enum:
+                  - 400
+              message:
+                type: string
+                default: Invalid input provided
+                example: Invalid input provided
+              details:
+                type: array
+                items:
+                  type: string
+          examples:
+            Example 1:
+              value:
+                status: error
+                code: 400
+                message: Invalid input provided
+                details:
+                  - The 'name' field is required.
+                  - The 'description' field is required.
+    ResourceCreated:
+      description: Resource Created
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                status: success
+                data:
+                  id: 124
+                  name: New Resource
+                  description: This is a new resource.
+                message: Resource created successfully.
+            properties:
+              status:
+                type: string
+                default: OK
+                enum:
+                  - OK
+                example: OK
+              code:
+                type: integer
+                enum:
+                  - 201
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  description:
+                    type: string
+              message:
+                type: string
+                default: Resource created successfully
+                example: Resource created successfully
+          examples:
+            Example 1:
+              value:
+                status: OK
+                data:
+                  id: 124
+                  name: New Resource
+                  description: This is a new resource.
+                message: Resource created successfully
+                code: 201
+    ResourceUpdated:
+      description: Resource Updated
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                status: OK
+                data:
+                  id: 123
+                  name: Updated Resource
+                  description: This is an updated resource.
+                message: Resource updated successfully.
+            properties:
+              status:
+                type: string
+                enum:
+                  - OK
+              code:
+                type: integer
+                enum:
+                  - 204
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  description:
+                    type: string
+              message:
+                type: string
+                example: Resource updated successfully
+                default: Resource updated successfully
+          examples:
+            Example 1:
+              value:
+                status: OK
+                data:
+                  id: 123
+                  name: Updated Resource
+                  description: This is an updated resource.
+                message: Resource updated successfully
+                code: 204
+    ResourceAlreadyExists:
+      description: Resource Already Exists
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                status: error
+                code: 409
+                message: Resource already exists.
+                details:
+                  - A resource with the same unique property already exists.
+            properties:
+              status:
+                type: string
+                enum:
+                  - error
+              code:
+                type: integer
+                enum:
+                  - 409
+              message:
+                type: string
+                default: A resource with the same unique property already exists
+                example: A resource with the same unique property already exists
+              details:
+                type: array
+                items:
+                  type: string
+          examples:
+            Example 1:
+              value:
+                status: error
+                code: 409
+                message: A resource with the same unique property already exists
+                details:
+                  - A resource with the same unique property already exists.
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                status: error
+                code: 500
+                message: Internal server error.
+                details:
+                  - An unexpected error occurred on the server.
+            properties:
+              status:
+                type: string
+                enum:
+                  - error
+              code:
+                type: integer
+                enum:
+                  - 500
+              message:
+                type: string
+                default: Internal Server Error
+                example: Internal server error
+              details:
+                type: array
+                items:
+                  type: string
+          examples:
+            Example 1:
+              value:
+                status: error
+                code: 500
+                message: Internal Server Error
+                details:
+                  - An unexpected error occurred on the server.
+    ResourceNotFound:
+      description: Resource Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                status: error
+                code: 404
+                message: Resource not found.
+                details:
+                  - The resource with the specified ID could not be found.
+            properties:
+              status:
+                type: string
+                enum:
+                  - error
+              code:
+                type: integer
+                enum:
+                  - 404
+              message:
+                type: string
+                default: Resource not found
+                example: Resource not found
+              details:
+                type: array
+                items:
+                  type: string
+                  example: The resource could not be found
+                  default: The resource could not be found
+          examples:
+            Example 1:
+              value:
+                status: error
+                code: 404
+                message: Resource not found
+                details:
+                  - The resource could not be found.
+    ResourceAccepted:
+      description: Resource Accepted
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                status: success
+                data:
+                  id: 123
+                  name: Updated Resource
+                  description: This is an updated resource.
+                message: Resource updated successfully.
+            properties:
+              status:
+                type: string
+                enum:
+                  - OK
+              code:
+                type: integer
+                enum:
+                  - 202
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  description:
+                    type: string
+                    example: Resource accepted
+                    default: Resource accepted
+              message:
+                type: string
+                default: Resource update request has been accepted and is being processed
+                example: Resource update request has been accepted and is being processed
+          examples:
+            Example 1:
+              value:
+                status: OK
+                data:
+                  id: 0
+                  name: string
+                  description: Resource accepted
+                message: Resource update request has been accepted and is being processed
+                code: 202
+        application/xml:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                status: OK
+                code: 202
+                data:
+                  id: 123
+                  name: Accepted Resource
+                  description: This is an updated resource.
+                message: Resource updated successfully.
+            properties:
+              status:
+                type: string
+                enum:
+                  - OK
+              code:
+                type: integer
+                enum:
+                  - 202
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  description:
+                    type: string
+                    example: Resource accepted
+              message:
+                type: string
+                default: Resource update request has been accepted and is being processed
+                example: Resource update request has been accepted and is being processed
+          examples:
+            Example 1:
+              value:
+                status: OK
+                code: 202
+                data:
+                  id: 0
+                  name: string
+                  description: Resource accepted
+                message: Resource update request has been accepted and is being processed
+    ResourceFetched:
+      description: Resource Fetched
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              Example 1:
+                status: success
+                data:
+                  - id: 1
+                    name: Resource 1
+                    description: This is resource 1.
+                message: Resources retrieved successfully.
+            properties:
+              status:
+                type: string
+                enum:
+                  - OK
+              message:
+                type: string
+                default: Resources retrieved successfully
+                example: Resources retrieved successfully
+              code:
+                type: integer
+                enum:
+                  - 200
+              data:
+                oneOf:
+                  - $ref: ./models/Agent.json
+                  - $ref: ./models/Embedding.json
+                  - $ref: ./models/LLM.json
+                  - $ref: ./models/SearchTool.json
+                  - $ref: ./models/Splitter.json
+                  - $ref: ./models/VectorStore.json
+                  - $ref: ./models/VectorStoreQATool.json
+          examples: {}
+x-internal: true

@@ -1,0 +1,214 @@
+{
+  "title": "BaseSpec",
+  "x-stoplight": {
+    "id": "lmlfjg5hks29h"
+  },
+  "description": "Base spec schema.",
+  "type": "object",
+  "properties": {
+    "options": {
+      "title": "Options",
+      "description": "Resource options",
+      "default": {},
+      "type": "object",
+      "x-stoplight": {
+        "id": "q1mm7gcpla504"
+      }
+    },
+    "vendor": {
+      "title": "Vendor",
+      "description": "The resource class",
+      "type": "string",
+      "x-stoplight": {
+        "id": "em70xjmmx77uu"
+      }
+    },
+    "dependencies": {
+      "title": "Dependencies",
+      "description": "Dependencies for the object",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BaseDependency",
+        "x-stoplight": {
+          "id": "lx2pkiaa5pugn"
+        }
+      },
+      "x-stoplight": {
+        "id": "qmxg1t3oiyz1k"
+      }
+    },
+    "tools": {
+      "title": "Tools",
+      "description": "Tools for the object",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BaseToolDependency",
+        "x-stoplight": {
+          "id": "jyeou2ywcpjp5"
+        }
+      },
+      "x-stoplight": {
+        "id": "wkxu3t2b2us8m"
+      }
+    }
+  },
+  "required": [
+    "vendor"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "Kind": {
+      "title": "Kind",
+      "description": "Enum for all kinds of resources.",
+      "enum": [
+        "Embedding",
+        "VectorStore",
+        "VectorStoreQATool",
+        "LLM",
+        "LoadTool",
+        "Splitter",
+        "Agent",
+        "PromptTemplate",
+        "LLMTool",
+        "Custom"
+      ],
+      "type": "string",
+      "x-stoplight": {
+        "id": "kelj28gg2622k"
+      }
+    },
+    "BaseDependency": {
+      "title": "BaseDependency",
+      "description": "Base dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "uoz1nmej1n74g"
+            }
+          },
+          "x-stoplight": {
+            "id": "ba3flp0t0dgan"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string",
+          "x-stoplight": {
+            "id": "y6uq244kpmh4t"
+          }
+        },
+        "kind": {
+          "description": "Kind of the dependency",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Kind",
+              "x-stoplight": {
+                "id": "bwaog2od8vxb0"
+              }
+            }
+          ],
+          "x-stoplight": {
+            "id": "va35jn280v58x"
+          }
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string",
+          "x-stoplight": {
+            "id": "fe8jjcge620ka"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "x-stoplight": {
+        "id": "32juli3zz6usp"
+      }
+    },
+    "BaseToolDependency": {
+      "title": "BaseToolDependency",
+      "description": "Base tool dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "x-stoplight": {
+              "id": "gbk0v9fkmulat"
+            }
+          },
+          "x-stoplight": {
+            "id": "cqrrk94g8rz3v"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string",
+          "x-stoplight": {
+            "id": "z2ozlwxx1mgb5"
+          }
+        },
+        "kind": {
+          "description": "Kind of the dependency",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Kind",
+              "x-stoplight": {
+                "id": "m2ksd24bc2xlv"
+              }
+            }
+          ],
+          "x-stoplight": {
+            "id": "taln3n1x0xwfc"
+          }
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string",
+          "x-stoplight": {
+            "id": "ge4j3eid0szx3"
+          }
+        },
+        "description": {
+          "title": "Description",
+          "description": "Tool description",
+          "type": "string",
+          "x-stoplight": {
+            "id": "kga2zharqa6eh"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "x-stoplight": {
+        "id": "5sqs3hhiv7v10"
+      }
+    }
+  },
+  "x-internal": true
+}

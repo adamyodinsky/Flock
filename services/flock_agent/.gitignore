@@ -1,0 +1,9 @@
+.vscode
+dist
+__pycache__
+.pytest_cache
+.venv
+.pipenv
+.env
+.documentation*
+```
