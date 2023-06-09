@@ -2,11 +2,11 @@ import time
 
 import yaml
 from flock_common.secret_store import SecretStoreFactory
-from schemas import SchemaFactory
-from store import ResourceStoreFactory
+from flock_resource_store import ResourceStoreFactory
 
 from flock_deployer.deployer import DeployerFactory
 from flock_deployer.manifest_creator.creator import ManifestCreator
+from flock_deployer.schemas.base import BaseFlockSchema
 from flock_deployer.schemas.deployment import DeploymentSchema
 from flock_deployer.schemas.job import JobSchema
 
@@ -59,8 +59,8 @@ def test_deployer():
         kind=deployment_manifest.spec.targetResource.kind,
         namespace=deployment_manifest.spec.targetResource.namespace,  # type: ignore
     )
-    schema_cls = SchemaFactory.get_schema(target_manifest["kind"])
-    target_manifest = schema_cls.validate(target_manifest)
+
+    target_manifest = BaseFlockSchema.validate(target_manifest)
     deployer.deployment_deployer.deploy(
         deployment_manifest, target_manifest, dry_run=True
     )
@@ -94,8 +94,7 @@ def test_job():
         kind=job_manifest.spec.targetResource.kind,
         namespace=job_manifest.spec.targetResource.namespace,  # type: ignore
     )
-    target_schema_cls = SchemaFactory.get_schema(target_manifest["kind"])
-    target_manifest = target_schema_cls.validate(target_manifest)
+    target_manifest = BaseFlockSchema.validate(target_manifest)
     deployer.job_deployer.deploy(job_manifest, target_manifest, dry_run=True)
     deployer.job_deployer.delete(job_manifest, target_manifest, dry_run=True)
 
@@ -104,13 +103,11 @@ def test_manifest_creator():
     """Test manifest creator."""
 
     manifest_creator = ManifestCreator()
-
+    target_manifest = BaseFlockSchema.validate(deployment_example)
     manifest = manifest_creator.create_deployment(
         name="test-agent",
         namespace="default",
-        target_manifest=SchemaFactory.get_schema(deployment_example["kind"]).validate(
-            deployment_example
-        ),
+        target_manifest=target_manifest,
     )
 
     print(manifest)
@@ -132,10 +129,7 @@ def test_manifest_creator_and_deployer():
     target_manifest = resource_store.get(
         name=target_name, kind=target_kind, namespace=target_namespace
     )
-    target_manifest = SchemaFactory.get_schema(deployment_example["kind"]).validate(
-        target_manifest
-    )
-
+    target_manifest = BaseFlockSchema.validate(target_manifest)
     deployment_manifest = manifest_creator.create_deployment(
         name="test-agent",
         namespace="default",

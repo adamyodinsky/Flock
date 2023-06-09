@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from flock_common import EnvVarNotSetError, check_env_vars
 from flock_common.queue_client import QueueClientFactory
 from flock_task_management_store import TaskManagementStoreFactory
-from store import ResourceStoreFactory
+from flock_resource_store import ResourceStoreFactory
 from uvicorn import run
 
 from flock_agent.agent import FlockAgent

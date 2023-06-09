@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Body, Depends, HTTPException
-from flock_schemas.deployment import DeploymentSchema
 from pydantic import ValidationError
 
 from flock_deployer.deployer.base import BaseDeployer
 from flock_deployer.schemas import ResourceCreated
+from flock_deployer.schemas.deployment import DeploymentSchema
 
 
 def get_router(deployer: BaseDeployer) -> APIRouter:

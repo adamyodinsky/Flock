@@ -2,8 +2,9 @@
 
 import abc
 
-from flock_schemas import BaseFlockSchema, SchemasFactory
 from kubernetes import client
+
+from flock_deployer.schemas.base import BaseFlockSchema
 
 
 class K8sResource(metaclass=abc.ABCMeta):
@@ -17,9 +18,7 @@ class K8sResource(metaclass=abc.ABCMeta):
                 **target_manifest.spec.options,
                 **manifest.spec.targetResource.options,
             }
-            self.target_manifest = SchemasFactory.get_schema(
-                target_manifest.kind
-            ).validate(target_manifest)
+            self.target_manifest = target_manifest
         else:
             self.target_manifest = None
 

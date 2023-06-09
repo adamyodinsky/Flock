@@ -4,10 +4,10 @@ import logging
 from typing import cast
 
 import click
-from builder.resource_builder import ResourceBuilder
+from flock_builder.resource_builder import ResourceBuilder
 from pydantic import ValidationError
 from resources.embeddings_loader import EmbeddingsLoaderResource
-from store import ResourceStoreFactory
+from flock_resource_store import ResourceStoreFactory
 
 
 class FlockEmbeddingsLoader:

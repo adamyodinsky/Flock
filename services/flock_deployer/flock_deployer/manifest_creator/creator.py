@@ -1,10 +1,9 @@
 """Manifest creator. creation of full flock deployments/job/cronjob manifests from small amount of data input"""
 from typing import List
 
-from flock_resource_store import ResourceStore
-from flock_schemas import SchemasFactory
-from flock_schemas.base import BaseFlockSchema
-from flock_schemas.deployment import (
+from flock_deployer.manifest_creator.base import BaseManifestCreator
+from flock_deployer.schemas.base import BaseFlockSchema
+from flock_deployer.schemas.deployment import (
     ContainerPort,
     ContainerSpec,
     DeploymentSchema,
@@ -12,9 +11,7 @@ from flock_schemas.deployment import (
     EnvironmentVariable,
     TargetResource,
 )
-from flock_schemas.job import BaseMetaData, CronJobSchema, JobSchema
-
-from flock_deployer.manifest_creator.base import BaseManifestCreator
+from flock_deployer.schemas.job import BaseMetaData, CronJobSchema, JobSchema
 
 
 class ManifestCreator(BaseManifestCreator):

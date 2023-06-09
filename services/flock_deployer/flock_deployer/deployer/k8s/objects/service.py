@@ -1,7 +1,7 @@
-from flock_schemas.deployment import DeploymentSchema
 from kubernetes import client
 
 from flock_deployer.deployer.k8s.objects.base import K8sResource
+from flock_deployer.schemas.deployment import DeploymentSchema
 
 
 class K8sService(K8sResource):

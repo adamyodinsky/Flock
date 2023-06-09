@@ -121,7 +121,7 @@ class MongoTaskManagementStore(TaskManagementStore):
     # with(watch stream for "insert" on collection "tickets" in the db):
 
     def query(self, query):
-        """Query tasks from store.
+        """Query tasks from flock_resource_store.
 
 
         Returns:

@@ -5,7 +5,7 @@ import threading
 from typing import cast
 
 import click
-from builder.resource_builder import ResourceBuilder
+from flock_builder.resource_builder import ResourceBuilder
 from flock_common.queue_client import QueueClient
 from flock_task_management_store.mongo import (
     MongoTaskManagementStore,
@@ -13,7 +13,7 @@ from flock_task_management_store.mongo import (
 )
 from pydantic import ValidationError
 from resources.base import Agent
-from store import ResourceStore
+from flock_resource_store import ResourceStore
 
 MINUTE = 60
 HOUR = 60 * MINUTE

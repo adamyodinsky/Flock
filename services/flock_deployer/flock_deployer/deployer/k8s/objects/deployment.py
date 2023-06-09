@@ -1,11 +1,11 @@
 """Kubernetes Deployment controller."""
 
-from flock_schemas import BaseFlockSchema
-from flock_schemas.deployment import DeploymentSchema
 from kubernetes import client
 
 from flock_deployer.deployer.k8s.objects.base import K8sResource
 from flock_deployer.deployer.k8s.objects.pod_template import FlockPodTemplateSpec
+from flock_deployer.schemas.base import BaseFlockSchema
+from flock_deployer.schemas.deployment import DeploymentSchema
 
 
 class K8sDeployment(K8sResource):

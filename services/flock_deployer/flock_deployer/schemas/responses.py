@@ -4,8 +4,9 @@ from __future__ import annotations
 
 from typing import Literal
 
-from flock_schemas.deployment import DeploymentSchema
 from pydantic import BaseModel, Field
+
+from flock_deployer.schemas.deployment import DeploymentSchema
 
 
 class ResourceCreated(BaseModel):

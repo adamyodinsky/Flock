@@ -1,5 +1,5 @@
 ##### Flock Base Agent #####
-FROM flock-base-stage as agent-base-stage
+FROM flock-python-base as agent-base-stage
 
 ENV FASTAPI_ENV=production
 

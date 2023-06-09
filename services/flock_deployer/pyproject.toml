@@ -11,10 +11,6 @@ python = "^3.10"
 kubernetes = "^26.1.0"
 fastapi = {extras = ["all"], version = "^0.95.1"}
 flock-common = {path = "../../libs/flock_common", develop = true}
-flock-resources = {path = "../../libs/flock_resources", develop = true}
-
-
-
 
 [build-system]
 requires = ["poetry-core"]

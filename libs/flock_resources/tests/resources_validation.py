@@ -5,10 +5,10 @@ import readline
 
 from flock_common.validation import validation_iterator
 
-from builder import ResourceBuilder
-from resources.embeddings_loader import EmbeddingsLoaderResource
-from schemas import SchemaFactory
-from store import ResourceStoreFactory
+from flock_builder import ResourceBuilder
+from flock_resources.embeddings_loader import EmbeddingsLoaderResource
+from flock_schemas import SchemaFactory
+from flock_resource_store import ResourceStoreFactory
 
 # Setup
 # pylint: disable=C0103

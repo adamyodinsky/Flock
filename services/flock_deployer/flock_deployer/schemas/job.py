@@ -4,8 +4,8 @@ from typing import Literal, Optional
 
 from pydantic import Field
 
-from schemas.base import BaseMetaData, BaseModelConfig, Category
-from schemas.deployment import ContainerSpec, TargetResource
+from flock_schemas.base import BaseMetaData, BaseModelConfig, Category
+from flock_schemas.deployment import ContainerSpec, TargetResource
 
 
 class JobSpec(BaseModelConfig):

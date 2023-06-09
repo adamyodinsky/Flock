@@ -6,8 +6,8 @@ from langchain.docstore import InMemoryDocstore
 from langchain.embeddings.base import Embeddings
 from langchain.experimental import BabyAGI
 from langchain.vectorstores import FAISS
-from resources.base import CustomResource, Resource, ToolResource
-from schemas import CustomSchema, Kind
+from flock_resources.base import CustomResource, Resource, ToolResource
+from flock_schemas import CustomSchema, Kind
 
 
 class BabyAGIAgent(CustomResource):
