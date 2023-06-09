@@ -1,0 +1,32 @@
+##### Flock Base Agent #####
+FROM flock-base-stage as agent-base-stage
+
+ENV FASTAPI_ENV=production
+
+COPY ./libs $PYSETUP_PATH/libs
+COPY ./services/flock_agent $PYSETUP_PATH/services/flock_agent
+
+WORKDIR $PYSETUP_PATH/services/flock_agent
+
+RUN poetry install --only main
+
+
+##### Flock Agent Stage #####
+FROM python:3.10.10-slim as agent-stage
+
+ENV PYSETUP_PATH="/opt/pysetup"
+
+COPY --from=agent-base-stage $PYSETUP_PATH/libs $PYSETUP_PATH/libs
+
+COPY --from=agent-base-stage $PYSETUP_PATH/services/flock_agent/.venv $PYSETUP_PATH/services/flock_agent/.venv
+COPY --from=agent-base-stage $PYSETUP_PATH/services/flock_agent/flock_agent $PYSETUP_PATH/services/flock_agent/flock_agent
+
+WORKDIR $PYSETUP_PATH/services/flock_agent
+
+ENV VIRTUAL_ENV="${PYSETUP_PATH}/services/flock_agent/.venv"
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+EXPOSE 8080
+ENTRYPOINT ["python", "flock_agent/main.py" ]
+CMD [ "run-agent" ]
+
