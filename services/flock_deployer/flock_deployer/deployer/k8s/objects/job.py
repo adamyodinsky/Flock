@@ -1,11 +1,11 @@
 """Kubernetes Job controller."""
 
 
+from flock_schemas.base import BaseFlockSchema
 from kubernetes import client
 
 from flock_deployer.deployer.k8s.objects.base import K8sResource
 from flock_deployer.deployer.k8s.objects.pod_template import FlockPodTemplateSpec
-from flock_deployer.schemas.base import BaseFlockSchema
 from flock_deployer.schemas.job import CronJobSchema, JobSchema
 
 

@@ -79,7 +79,7 @@ class ManifestCreator(BaseManifestCreator):
                 description=target_manifest.metadata.description,
                 labels=target_manifest.metadata.labels,
             ),
-            spec=JobSpec(
+            spec=DeploymentSpec(
                 targetResource=TargetResource(  # type: ignore
                     kind=target_manifest.kind,
                     name=target_manifest.metadata.name,
@@ -88,30 +88,21 @@ class ManifestCreator(BaseManifestCreator):
                     # options=target_manifest.spec.options,
                     # TODO: i have no idea why description and options must be included here by pylance if it's optional in the schema
                 ),
-                completions=1,
-                parallelism=1,
-                template=PodTemplateSpec(
-                    spec=PodSpec(
-                        containers=[
-                            ContainerSpec(
-                                image=self.fetch_image(target_manifest.kind),
-                                image_pull_policy="IfNotPresent",
-                                ports=[
-                                    ContainerPort(
-                                        name="http",
-                                        port=8080,
-                                        protocol="TCP",
-                                    )
-                                ],
-                                env=self.fetch_env_vars(target_manifest),
-                            ),
-                        ],
-                        restart_policy="Never",
-                    ),
+                replicas=1,
+                container=ContainerSpec(
+                    image=self.fetch_image(target_manifest.kind),
+                    image_pull_policy="IfNotPresent",
+                    ports=[
+                        ContainerPort(
+                            name="http",
+                            port=8080,
+                            protocol="TCP",
+                        )
+                    ],
+                    env=self.fetch_env_vars(target_manifest),
                 ),
             ),
         )
-
         return manifest
 
     def fetch_image(self, target_kind: str):

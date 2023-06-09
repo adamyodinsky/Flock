@@ -2,9 +2,8 @@
 
 import abc
 
+from flock_schemas.base import BaseFlockSchema
 from kubernetes import client
-
-from flock_deployer.schemas.base import BaseFlockSchema
 
 
 class K8sResource(metaclass=abc.ABCMeta):

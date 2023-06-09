@@ -3,14 +3,13 @@
 
 from typing import Any, Dict, List, Literal, Optional, Union
 
-from pydantic import BaseModel, Field
-
-from flock_deployer.schemas.base import (
+from flock_schemas.base import (
     BaseMetaData,
     BaseModelConfig,
     BaseToolDependency,
     Category,
 )
+from pydantic import BaseModel, Field
 
 
 class ContainerPort(BaseModelConfig):

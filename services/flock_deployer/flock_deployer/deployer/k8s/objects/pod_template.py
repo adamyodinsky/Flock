@@ -1,7 +1,7 @@
 """Kubernetes PodTemplateSpec object."""
+from flock_schemas.base import BaseFlockSchema
 from kubernetes import client
 
-from flock_deployer.schemas.base import BaseFlockSchema
 from flock_deployer.schemas.deployment import (
     ContainerSpec,
     Volume,

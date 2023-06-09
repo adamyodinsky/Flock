@@ -2,10 +2,10 @@
 
 from typing import Literal, Optional
 
+from flock_schemas.base import BaseMetaData, BaseModelConfig, Category
 from pydantic import Field
 
-from flock_schemas.base import BaseMetaData, BaseModelConfig, Category
-from flock_schemas.deployment import ContainerSpec, TargetResource
+from flock_deployer.schemas.deployment import ContainerSpec, TargetResource
 
 
 class JobSpec(BaseModelConfig):

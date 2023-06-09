@@ -1,12 +1,12 @@
 """Module for deploying CronJobs to Kubernetes"""
 
 from flock_common.secret_store import SecretStore
+from flock_schemas.base import BaseFlockSchema
 from kubernetes import client, config
 
 from flock_deployer.deployer.base import BaseDeployer
 from flock_deployer.deployer.k8s.common import set_dry_run
 from flock_deployer.deployer.k8s.objects.job import K8sCronJob
-from flock_deployer.schemas.base import BaseFlockSchema
 from flock_deployer.schemas.job import CronJobSchema
 
 
