@@ -809,6 +809,23 @@ type = "directory"
 url = "../../libs/flock_common"
 
 [[package]]
+name = "flock-resource-store"
+version = "0.1.0"
+description = ""
+category = "main"
+optional = false
+python-versions = "^3.9"
+files = []
+develop = true
+
+[package.dependencies]
+pymongo = "^4.3.3"
+
+[package.source]
+type = "directory"
+url = "../../libs/flock_resource_store"
+
+[[package]]
 name = "flock-resources"
 version = "0.0.1"
 description = ""
@@ -824,13 +841,14 @@ beautifulsoup4 = "^4.12.2"
 chromadb = "^0.3.21"
 faiss-cpu = "^1.7.3"
 flock-common = {path = "../../libs/flock_common"}
+flock-resource-store = {path = "../flock_resource_store", develop = true}
+flock-schemas = {path = "../flock_schemas", develop = true}
 google-search-results = "^2.4.2"
 langchain = "^0.0.191"
 odmantic = "^0.9.2"
 openai = "^0.27.4"
 pdfminer-six = "^20221105"
 pydantic = "^1.10.7"
-pymongo = "^4.3.3"
 pytest-playwright = "^0.3.3"
 pyyaml = "^6.0"
 tiktoken = "^0.3.3"
@@ -839,6 +857,24 @@ wolframalpha = "^5.0.0"
 [package.source]
 type = "directory"
 url = "../../libs/flock_resources"
+
+[[package]]
+name = "flock-schemas"
+version = "0.1.0"
+description = ""
+category = "main"
+optional = false
+python-versions = "^3.9"
+files = []
+develop = true
+
+[package.dependencies]
+flock-common = {path = "../flock_common", develop = true}
+pydantic = "^1.10.9"
+
+[package.source]
+type = "directory"
+url = "../../libs/flock_schemas"
 
 [[package]]
 name = "frozenlist"
@@ -3116,4 +3152,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "0321908777b5ed12d641bb31bdfa58baf73a1dd4509b9c9923c0b85e18368f49"
+content-hash = "0469c2342e21b4d95eb88be23a8e4dd2050ad0241d758e1acaee95f3dbdbeead"

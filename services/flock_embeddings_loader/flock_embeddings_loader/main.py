@@ -45,7 +45,7 @@ def run_job(schema_path, schema_value, loader_type):
     """Run embeddings loader job."""
 
     config_str = ""
-    click.echo("Initializing...")
+    logging.info("Starting Flock Embeddings Loader...")
 
     # Check env vars
     required_vars = []
@@ -67,7 +67,7 @@ def run_job(schema_path, schema_value, loader_type):
                 config_str = f.read()
                 config_str = json.loads(config_str)
         else:
-            print(f"Error: File {schema_path} not found.")
+            logging.fatal("Error: Schema file not found.")
             sys.exit(1)
     elif schema_value:
         config_str = json.loads(schema_value)

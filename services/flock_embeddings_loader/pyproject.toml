@@ -11,6 +11,7 @@ python = "^3.9"
 click = "^8.1.3"
 python-dotenv = "^1.0.0"
 flock-resources = {path = "../../libs/flock_resources", develop = true}
+flock-resource-store = {path = "../../libs/flock_resource_store", develop = true}
 
 
 [build-system]

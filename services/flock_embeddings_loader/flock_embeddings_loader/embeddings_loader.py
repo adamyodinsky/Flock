@@ -5,9 +5,9 @@ from typing import cast
 
 import click
 from flock_builder.resource_builder import ResourceBuilder
-from pydantic import ValidationError
-from resources.embeddings_loader import EmbeddingsLoaderResource
 from flock_resource_store import ResourceStoreFactory
+from flock_resources.embeddings_loader import EmbeddingsLoaderResource
+from pydantic import ValidationError
 
 
 class FlockEmbeddingsLoader:
