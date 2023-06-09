@@ -1,8 +1,9 @@
 """Manifest creator. creation of full flock deployments/job/cronjob manifests from small amount of data input"""
 from typing import List
 
+from flock_schemas.base import BaseFlockSchema
+
 from flock_deployer.manifest_creator.base import BaseManifestCreator
-from flock_deployer.schemas.base import BaseFlockSchema
 from flock_deployer.schemas.deployment import (
     ContainerPort,
     ContainerSpec,
@@ -55,6 +56,58 @@ class ManifestCreator(BaseManifestCreator):
                         )
                     ],
                     env=self.fetch_env_vars(target_manifest),
+                ),
+            ),
+        )
+
+        return manifest
+
+    def create_job(
+        self,
+        name,
+        namespace,
+        target_manifest: BaseFlockSchema,
+    ) -> JobSchema:
+        """Create job manifest"""
+
+        manifest = JobSchema(
+            apiVersion="flock/v1",
+            kind="FlockJob",
+            namespace=namespace,
+            metadata=BaseMetaData(
+                name=name,
+                description=target_manifest.metadata.description,
+                labels=target_manifest.metadata.labels,
+            ),
+            spec=JobSpec(
+                targetResource=TargetResource(  # type: ignore
+                    kind=target_manifest.kind,
+                    name=target_manifest.metadata.name,
+                    namespace=target_manifest.namespace,
+                    # description=target_manifest.metadata.description,
+                    # options=target_manifest.spec.options,
+                    # TODO: i have no idea why description and options must be included here by pylance if it's optional in the schema
+                ),
+                completions=1,
+                parallelism=1,
+                template=PodTemplateSpec(
+                    spec=PodSpec(
+                        containers=[
+                            ContainerSpec(
+                                image=self.fetch_image(target_manifest.kind),
+                                image_pull_policy="IfNotPresent",
+                                ports=[
+                                    ContainerPort(
+                                        name="http",
+                                        port=8080,
+                                        protocol="TCP",
+                                    )
+                                ],
+                                env=self.fetch_env_vars(target_manifest),
+                            ),
+                        ],
+                        restart_policy="Never",
+                    ),
                 ),
             ),
         )

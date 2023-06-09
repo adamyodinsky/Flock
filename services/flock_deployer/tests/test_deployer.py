@@ -3,10 +3,10 @@ import time
 import yaml
 from flock_common.secret_store import SecretStoreFactory
 from flock_resource_store import ResourceStoreFactory
+from flock_schemas.base import BaseFlockSchema
 
 from flock_deployer.deployer import DeployerFactory
 from flock_deployer.manifest_creator.creator import ManifestCreator
-from flock_deployer.schemas.base import BaseFlockSchema
 from flock_deployer.schemas.deployment import DeploymentSchema
 from flock_deployer.schemas.job import JobSchema
 
