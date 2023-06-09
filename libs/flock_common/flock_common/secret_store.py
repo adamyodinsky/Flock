@@ -76,3 +76,15 @@ class VaultSecretStore(SecretStore):
         except VaultError as error:
             print(f"Error fetching secret: {error}")
             return None
+
+
+class SecretStoreFactory:
+    """Factory class for secret stores."""
+
+    @staticmethod
+    def get_secret_store(secret_store_type="vault"):
+        """Return a secret store."""
+        if secret_store_type == "vault":
+            return VaultSecretStore()
+        else:
+            raise ValueError(f"Secret store type {secret_store_type} not supported.")

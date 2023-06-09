@@ -12,11 +12,11 @@ docker-base-build:
 	docker build -f Dockerfile.python.base -t flock-python-base   .
 
 docker-agent-build:
-	docker build -f Dockerfile.flock --target agent-stage -t flock-agent .
+	docker build -f Dockerfile.agent -t flock-agent .
 	minikube image load flock-agent
 
 docker-embeddings-loader-build:
-	docker build -f Dockerfile.flock --target embeddings-loader-stage -t flock-embeddings-loader .
+	docker build -f Dockerfile.embeddings_loader -t flock-embeddings-loader .
 	minikube image load flock-embeddings-loader
 
 docker-agent-run:

@@ -1,14 +1,14 @@
 import time
 
 import yaml
-from flock_resource_store import ResourceStoreFactory
-from flock_schemas import SchemasFactory
-from flock_schemas.deployment import DeploymentSchema
-from flock_schemas.job import JobSchema
-
 from flock_common.secret_store import SecretStoreFactory
+from schemas import SchemaFactory
+from store import ResourceStoreFactory
+
 from flock_deployer.deployer import DeployerFactory
 from flock_deployer.manifest_creator.creator import ManifestCreator
+from flock_deployer.schemas.deployment import DeploymentSchema
+from flock_deployer.schemas.job import JobSchema
 
 deployment_example = {
     "apiVersion": "flock/v1",
@@ -59,7 +59,7 @@ def test_deployer():
         kind=deployment_manifest.spec.targetResource.kind,
         namespace=deployment_manifest.spec.targetResource.namespace,  # type: ignore
     )
-    schema_cls = SchemasFactory.get_schema(target_manifest["kind"])
+    schema_cls = SchemaFactory.get_schema(target_manifest["kind"])
     target_manifest = schema_cls.validate(target_manifest)
     deployer.deployment_deployer.deploy(
         deployment_manifest, target_manifest, dry_run=True
@@ -94,7 +94,7 @@ def test_job():
         kind=job_manifest.spec.targetResource.kind,
         namespace=job_manifest.spec.targetResource.namespace,  # type: ignore
     )
-    target_schema_cls = SchemasFactory.get_schema(target_manifest["kind"])
+    target_schema_cls = SchemaFactory.get_schema(target_manifest["kind"])
     target_manifest = target_schema_cls.validate(target_manifest)
     deployer.job_deployer.deploy(job_manifest, target_manifest, dry_run=True)
     deployer.job_deployer.delete(job_manifest, target_manifest, dry_run=True)
@@ -108,7 +108,7 @@ def test_manifest_creator():
     manifest = manifest_creator.create_deployment(
         name="test-agent",
         namespace="default",
-        target_manifest=SchemasFactory.get_schema(deployment_example["kind"]).validate(
+        target_manifest=SchemaFactory.get_schema(deployment_example["kind"]).validate(
             deployment_example
         ),
     )
@@ -132,7 +132,7 @@ def test_manifest_creator_and_deployer():
     target_manifest = resource_store.get(
         name=target_name, kind=target_kind, namespace=target_namespace
     )
-    target_manifest = SchemasFactory.get_schema(deployment_example["kind"]).validate(
+    target_manifest = SchemaFactory.get_schema(deployment_example["kind"]).validate(
         target_manifest
     )
 
