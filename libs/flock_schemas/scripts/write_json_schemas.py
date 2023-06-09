@@ -3,9 +3,9 @@
 import json
 import os
 
-from flock_schemas import SchemasFactory
+from flock_schemas import SchemaFactory
 
-PATH = "../json_schemas/"
+PATH = "../../assets/json_schemas/"
 
 if not os.path.exists(PATH):
     os.makedirs(PATH)
@@ -27,8 +27,8 @@ def write_schemas(schemas, sub_path: str):  # pylint: disable=missing-function-d
 def run_script():
     """Main function."""
 
-    sub_schemas_map, main_schemas_map = SchemasFactory.load_schemas()
-    write_schemas(sub_schemas_map, "sub")
+    schema_factory = SchemaFactory()
+    main_schemas_map = schema_factory.load_schemas()
     write_schemas(main_schemas_map, "main")
 
 

@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import sys
 
@@ -6,13 +7,18 @@ import click
 from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI
 from flock_common import EnvVarNotSetError, check_env_vars
+from flock_common.logging import init_logging
 from flock_common.queue_client import QueueClientFactory
-from flock_task_management_store import TaskManagementStoreFactory
 from flock_resource_store import ResourceStoreFactory
+from flock_task_management_store import TaskManagementStoreFactory
 from uvicorn import run
 
 from flock_agent.agent import FlockAgent
 from flock_agent.routes import create_agent_routes
+
+init_logging(
+    destination=os.environ.get("FLOCK_LOG_DESTINATION", "stdout"),
+)
 
 
 @click.group()
@@ -48,7 +54,7 @@ def run_agent(schema_path, schema_value, host, port):
     """Run the agent as a server."""
 
     config_str = ""
-    click.echo("Initializing...")
+    logging.info("Initializing Flock Agent...")
 
     # Check env vars
     required_vars = []
@@ -80,6 +86,8 @@ def run_agent(schema_path, schema_value, host, port):
         "QUEUE_PASSWORD",
         "FLOCK_AGENT_HOST",
         "FLOCK_AGENT_PORT",
+        "LOG_FILE",
+        "LOG_LEVEL",
     ]
     load_dotenv(find_dotenv(os.environ.get("FLOCK_ENV_FILE", ".env")))
     check_env_vars(required_vars, optional_vars)
@@ -91,11 +99,12 @@ def run_agent(schema_path, schema_value, host, port):
                 config_str = f.read()
                 config_str = json.loads(config_str)
         else:
-            print(f"Error: File {schema_path} not found.")
+            logging.fatal("File %s does not exist.", schema_path)
             sys.exit(1)
     elif schema_value:
         config_str = json.loads(schema_value)
     else:
+        logging.fatal("Either --schema-path or --schema-value is required.")
         raise click.UsageError("Either --schema-path or --schema-value is required.")
 
     task_management_store = TaskManagementStoreFactory.get_store(
@@ -150,9 +159,14 @@ def run_agent(schema_path, schema_value, host, port):
     port = int(os.environ.get("FLOCK_AGENT_PORT", port))
 
     # Spin up the API server
-    click.echo(f"Ready. Waiting for requests on {host}:{port}...")
-    click.echo(f"/agent (POST) (http://{host}:{port}/agent")
-    click.echo(f"/agent_ws (WebSocket) (ws://{host}:{port}/agent_ws)")
+    logging.info("Ready. Waiting for requests on %s:%s...", host, port)
+    logging.info("Available routes:")
+    logging.info(f"/ (GET) (http://{host}:{port}/)")
+    logging.info(f"/docs (GET) (http://{host}:{port}/docs)")
+    logging.info(f"/redoc (GET) (http://{host}:{port}/redoc)")
+    logging.info(f"/openapi.json (GET) (http://{host}:{port}/openapi.json)")
+    logging.info(f"/agent (POST) (http://{host}:{port}/agent")
+    logging.info(f"/agent_ws (WebSocket) (ws://{host}:{port}/agent_ws)")
     run(app, host=host, port=port, log_level="warning")
 
 

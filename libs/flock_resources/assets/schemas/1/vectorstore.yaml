@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../../json_schemas/main/VectorStoreSchema.json
+# yaml-language-server: $schema=../../../json_schemas/main/VectorStoreSchema.json
 ---
 apiVersion: flock/v1
 kind: VectorStore

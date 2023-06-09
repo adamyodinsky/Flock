@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../../json_schemas/main/LLMToolSchema.json
+# yaml-language-server: $schema=../../../json_schemas/main/LLMToolSchema.json
 ---
 apiVersion: flock/v1
 kind: LLMTool

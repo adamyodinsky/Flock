@@ -1,4 +1,5 @@
 """Flock Agent class"""
+import logging
 import os
 import queue
 import threading
@@ -7,13 +8,13 @@ from typing import cast
 import click
 from flock_builder.resource_builder import ResourceBuilder
 from flock_common.queue_client import QueueClient
+from flock_resource_store import ResourceStore
+from flock_resources.base import Agent
 from flock_task_management_store.mongo import (
     MongoTaskManagementStore,
     TaskManagementStore,
 )
 from pydantic import ValidationError
-from resources.base import Agent
-from flock_resource_store import ResourceStore
 
 MINUTE = 60
 HOUR = 60 * MINUTE
@@ -47,10 +48,12 @@ class FlockAgent:
                 Agent, self.builder.build_resource(manifest=self.manifest)
             )
         except ValidationError as error:
+            logging.error(f"Invalid configuration manifest: {str(error)}")
             raise click.ClickException(
                 f"Invalid configuration manifest: {str(error)}"
             ) from error
         except Exception as error:
+            logging.error(f"Error while initializing agent: {str(error)}")
             raise click.ClickException(
                 f"Error while initializing agent: {str(error)}"
             ) from error
@@ -64,7 +67,7 @@ class FlockAgent:
             response = self.agent.run(message)  # type: ignore
         except Exception as error:  # pylint: disable=broad-except
             response = f"Sorry, i'm experiencing an error.\n\nError:{str(error)}"
-            print(f"Error: {error}")
+            logging.error(f"Error while running agent: {str(error)}")
 
         return response
 
@@ -93,7 +96,6 @@ class FlockAgent:
                 )
                 thread.start()
                 thread.join(timeout=5 * MINUTE)  # timeout for watch on insert
-                print("test")
 
                 if not self.thread_mail_box.empty():
                     ticket = self.thread_mail_box.get()

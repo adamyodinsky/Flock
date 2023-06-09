@@ -1,55 +1,123 @@
 {
-  "title": "EmbeddingsLoaderSpec",
-  "description": "EmbeddingsLoader spec.",
+  "title": "EmbeddingsLoaderSchema",
+  "description": "EmbeddingsLoader schema.",
   "type": "object",
   "properties": {
-    "options": {
-      "title": "Options",
-      "description": "Options for the embeddings loader",
-      "allOf": [
-        {
-          "$ref": "#/definitions/EmbeddingsLoaderOptions"
-        }
-      ]
-    },
-    "vendor": {
-      "title": "Vendor",
-      "default": "v1",
+    "apiVersion": {
+      "title": "Apiversion",
+      "description": "API version",
+      "enum": [
+        "flock/v1"
+      ],
       "type": "string"
     },
-    "dependencies": {
-      "title": "Dependencies",
-      "description": "dependencies",
-      "type": "array",
-      "minItems": 3,
-      "maxItems": 3,
-      "items": [
+    "kind": {
+      "title": "Kind",
+      "description": "The kind of the object",
+      "enum": [
+        "EmbeddingsLoader"
+      ],
+      "type": "string"
+    },
+    "category": {
+      "description": "The resource category",
+      "default": "other",
+      "allOf": [
         {
-          "$ref": "#/definitions/SplitterDependency"
-        },
-        {
-          "$ref": "#/definitions/EmbeddingDependency"
-        },
-        {
-          "$ref": "#/definitions/VectorStoreDependency"
+          "$ref": "#/definitions/Category"
         }
       ]
     },
-    "tools": {
-      "title": "Tools",
-      "description": "Tools for the object",
-      "default": [],
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/BaseToolDependency"
-      }
+    "namespace": {
+      "title": "Namespace",
+      "description": "The namespace of the object",
+      "maxLength": 63,
+      "type": "string"
+    },
+    "metadata": {
+      "$ref": "#/definitions/BaseMetaData"
+    },
+    "created_at": {
+      "title": "Created At",
+      "description": "Creation timestamp",
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "title": "Updated At",
+      "description": "Last update timestamp",
+      "type": "string",
+      "format": "date-time"
+    },
+    "spec": {
+      "$ref": "#/definitions/EmbeddingsLoaderSpec"
     }
   },
   "required": [
-    "dependencies"
+    "apiVersion",
+    "kind",
+    "namespace",
+    "metadata",
+    "spec"
   ],
   "additionalProperties": false,
   "definitions": {
+    "Category": {
+      "title": "Category",
+      "description": "Enum for all categories of resources.",
+      "enum": [
+        "other",
+        "tool",
+        "scraper",
+        "model",
+        "agent",
+        "deployment",
+        "job",
+        "cronjob",
+        "statefulset"
+      ],
+      "type": "string"
+    },
+    "BaseMetaData": {
+      "title": "BaseMetaData",
+      "description": "Base metadata schema.",
+      "type": "object",
+      "properties": {
+        "annotations": {
+          "title": "Annotations",
+          "description": "Annotations are useful for storing additional information",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the object",
+          "maxLength": 63,
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "description": "Description",
+          "maxLength": 255,
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "description"
+      ],
+      "additionalProperties": false
+    },
     "EmbeddingsLoaderOptions": {
       "title": "EmbeddingsLoaderOptions",
       "description": "Options schema.",
@@ -284,6 +352,58 @@
       "required": [
         "name",
         "kind"
+      ],
+      "additionalProperties": false
+    },
+    "EmbeddingsLoaderSpec": {
+      "title": "EmbeddingsLoaderSpec",
+      "description": "EmbeddingsLoader spec.",
+      "type": "object",
+      "properties": {
+        "options": {
+          "title": "Options",
+          "description": "Options for the embeddings loader",
+          "allOf": [
+            {
+              "$ref": "#/definitions/EmbeddingsLoaderOptions"
+            }
+          ]
+        },
+        "vendor": {
+          "title": "Vendor",
+          "default": "v1",
+          "type": "string"
+        },
+        "dependencies": {
+          "title": "Dependencies",
+          "description": "dependencies",
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": [
+            {
+              "$ref": "#/definitions/SplitterDependency"
+            },
+            {
+              "$ref": "#/definitions/EmbeddingDependency"
+            },
+            {
+              "$ref": "#/definitions/VectorStoreDependency"
+            }
+          ]
+        },
+        "tools": {
+          "title": "Tools",
+          "description": "Tools for the object",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BaseToolDependency"
+          }
+        }
+      },
+      "required": [
+        "dependencies"
       ],
       "additionalProperties": false
     }
