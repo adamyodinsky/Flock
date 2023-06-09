@@ -1,0 +1,29 @@
+##### Flock Base EmbeddingsLoader #####
+FROM flock-python-base as embeddings-loader-base-stage
+
+COPY ./libs $PYSETUP_PATH/libs
+COPY ./services/flock_embeddings_loader $PYSETUP_PATH/services/flock_embeddings_loader
+
+WORKDIR $PYSETUP_PATH/services/flock_embeddings_loader
+
+RUN poetry install --only main
+
+
+##### Flock EmbeddingsLoader Stage #####
+FROM python:3.10.10-slim as embeddings-loader-stage
+
+ENV PYSETUP_PATH="/opt/pysetup"
+
+COPY --from=embeddings-loader-base-stage $PYSETUP_PATH/libs $PYSETUP_PATH/libs
+
+COPY --from=embeddings-loader-base-stage $PYSETUP_PATH/services/flock_embeddings_loader/.venv $PYSETUP_PATH/services/flock_embeddings_loader/.venv
+COPY --from=embeddings-loader-base-stage $PYSETUP_PATH/services/flock_embeddings_loader/flock_embeddings_loader $PYSETUP_PATH/services/flock_embeddings_loader/flock_embeddings_loader
+
+WORKDIR $PYSETUP_PATH/flock_embeddings_loader
+
+
+ENV VIRTUAL_ENV="${PYSETUP_PATH}/services/flock_embedings_loader/.venv"
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+ENTRYPOINT ["python", "flock_embeddings_loader/main.py" ]
+CMD [ "run-job" ]

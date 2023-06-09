@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=../../json_schemas/main/LoadToolSchema.json
+---
+apiVersion: flock/v1
+kind: LoadTool
+namespace: default
+metadata:
+  name: my-google-search-gpt4
+  description: Reliable source for current events and facts beyond 2021.
+  labels:
+    app: my_app
+spec:
+  vendor: serpapi
+  options:
+    verbose: true
+  dependencies:
+    - kind: LLMChat
+      name: my-openai-llm-gpt4
+      namespace: default
