@@ -10,30 +10,9 @@ from flock_deployer.manifest_creator.creator import ManifestCreator
 from flock_deployer.schemas.deployment import DeploymentSchema
 from flock_deployer.schemas.job import JobSchema
 
-manifest_creator_target_manifest = {
-    "apiVersion": "flock/v1",
-    "kind": "Agent",
-    "namespace": "default",
-    "metadata": {
-        "name": "my-agent",
-        "description": "A Q&A agent for internal projects",
-        "labels": {"app": "my_app"},
-    },
-    "spec": {
-        "vendor": "conversational-react-description",
-        "options": {"verbose": True},
-        "dependencies": [
-            {"kind": "LLMChat", "name": "my-openai-llm-gpt4", "namespace": "default"}
-        ],
-        "tools": [
-            {
-                "kind": "LoadTool",
-                "name": "my-google-search-gpt4",
-                "namespace": "default",
-            }
-        ],
-    },
-}
+schema_factory = SchemaFactory()
+resource_store = ResourceStoreFactory.get_resource_store()
+DRY_RUN = False
 
 
 def setup_deployer():
@@ -42,11 +21,6 @@ def setup_deployer():
         deployer_type="k8s",
         secret_store=secret_store,
     )
-
-
-schema_factory = SchemaFactory()
-resource_store = ResourceStoreFactory.get_resource_store()
-DRY_RUN = False
 
 
 def load_and_validate_schema(schema_class, yaml_path):

@@ -19,15 +19,17 @@ spec:
         protocol: TCP
     env:
       - name: RESOURCE_STORE_USERNAME
-        valueFrom:
-          secretKeyRef:
-            name: mysecret
-            key: mongo-username
+        value: root
+        # valueFrom:
+        #   secretKeyRef:
+        #     name: mysecret
+        #     key: mongo-username
       - name: RESOURCE_STORE_PASSWORD
-        valueFrom:
-          secretKeyRef:
-            name: mysecret
-            key: mongo-password
+        value: password
+        # valueFrom:
+        #   secretKeyRef:
+        #     name: mysecret
+        #     key: mongo-password
       - name: FLOCK_AGENT_PORT
         value: "8080"
       - name: FLOCK_AGENT_HOST
