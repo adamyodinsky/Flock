@@ -5,7 +5,7 @@ FROM python:3.9 AS builder
 WORKDIR /app
 
 # Copy your Scrapy project files into the container
-COPY ./flock_webscraper .
+COPY ./services/flock_webscraper .
 
 
 # Install Scrapy and any other dependencies using pip

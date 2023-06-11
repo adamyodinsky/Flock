@@ -11,19 +11,26 @@ help:
 docker-base-build:
 	docker build -f Dockerfile.python.base -t flock-python-base   .
 
+
 docker-agent-build:
 	docker build -f Dockerfile.agent -t flock-agent .
-	minikube image load flock-agent
-
-docker-embeddings-loader-build:
-	docker build -f Dockerfile.embeddings_loader -t flock-embeddings-loader .
-	minikube image load flock-embeddings-loader
 
 docker-agent-run:
 	docker run flock-agent
+	
+
+docker-embeddings-loader-build:
+	docker build -f Dockerfile.embeddings_loader -t flock-embeddings-loader .	
 
 docker-embeddings-loader-run:
 	docker run flock-embeddings-loader
+
+
+docker-webscraper-build:
+	docker build -f Dockerfile.webscraper -t flock-webscraper .
+	
+docker-webscraper-run:
+	docker run flock-webscraper
 
 
 minikube-start:
@@ -40,7 +47,8 @@ minikube-start:
 load-images:
 	minikube image load flock-agent
 	minikube image load flock-embeddings-loader
-	minikube image load vault-init
+	minikube image load flock-webscraper
+	
 
 # 27017:30200 # mongo
 # 8200:30201 # vault
@@ -50,22 +58,22 @@ load-images:
 
 
 apply-mongo:
-	kubectl apply -f utils/mongoDB/k8s
+	kubectl apply -f infra/mongoDB/k8s
 
 apply-rabbitmq:
-	helm upgrade --install -f utils/rabbitMQ/values.yaml flock-queue bitnami/rabbitmq
+	helm upgrade --install -f infra/rabbitMQ/values.yaml flock-queue bitnami/rabbitmq
 
 delete-rabbitmq:
 	helm delete flock-queue
 
 apply-vault:
-	helm upgrade --install -f utils/vault/values.yaml flock-secrets-store hashicorp/vault
+	helm upgrade --install -f infra/vault/values.yaml flock-secrets-store hashicorp/vault
 	# kubectl exec -it flock-secrets-store-vault-0 -- vault operator init
 	# kubectl exec -it flock-secrets-store-vault-0 -- vault operator unseal <key>
 
-apply-utils: apply-mongo apply-rabbitmq apply-vault
+apply-infra: apply-mongo apply-rabbitmq apply-vault
 
 load-secret:
 	kubectl apply -f infra/secret.yaml
 
-minikube-start-full: minikube-start load-images load-secret apply-utils 
+setup-all: docker-base-build docker-agent-build docker-embeddings-loader-build docker-webscraper-build load-images load-secret apply-infra

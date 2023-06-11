@@ -18,6 +18,9 @@ RUN apt-get update  && apt-get upgrade -y \
   curl \
   build-essential
 
+
 # Install Poetry - respects $POETRY_VERSION & $POETRY_HOME
 ENV POETRY_VERSION=1.4.1
 RUN curl -sSL https://install.python-poetry.org | python3 -
+RUN pip install --upgrade pip
+RUN pip install virtualenv

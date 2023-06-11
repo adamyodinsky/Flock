@@ -14,9 +14,9 @@ fastapi = {extras = ["all"], version = "^0.95.1"}
 websockets = "^11.0.2"
 pymongo = "^4.3.3"
 python-dotenv = "^1.0.0"
-flock-task-management-store = {path = "../../libs/flock_task_management_store", develop = true}
-flock-common = {path = "../../libs/flock_common", develop = true}
-flock-resources = {path = "../../libs/flock_resources", develop = true}
+flock-task-management-store = {path = "../../libs/flock_task_management_store"}
+flock-common = {path = "../../libs/flock_common"}
+flock-resources = {path = "../../libs/flock_resources"}
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"

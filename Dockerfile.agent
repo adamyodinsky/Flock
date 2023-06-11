@@ -8,7 +8,9 @@ COPY ./services/flock_agent $PYSETUP_PATH/services/flock_agent
 
 WORKDIR $PYSETUP_PATH/services/flock_agent
 
-RUN poetry install --only main
+# RUN poetry install --only main
+RUN python -m venv .venv
+RUN .venv/bin/pip install --use-pep517 . 
 
 
 ##### Flock Agent Stage #####
