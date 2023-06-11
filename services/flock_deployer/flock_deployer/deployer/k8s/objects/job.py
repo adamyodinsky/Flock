@@ -5,7 +5,7 @@ from flock_schemas.base import BaseFlockSchema
 from kubernetes import client
 
 from flock_deployer.deployer.k8s.objects.base import K8sResource
-from flock_deployer.deployer.k8s.objects.pod_template import FlockPodTemplateSpec
+from flock_deployer.deployer.k8s.objects.pod_template import FlockPodTemplate
 from flock_deployer.schemas.job import CronJobSchema, JobSchema
 
 
@@ -14,18 +14,18 @@ class K8sJob(K8sResource):
 
     def __init__(self, manifest: JobSchema, target_manifest: BaseFlockSchema):
         super().__init__(manifest, target_manifest)
+        pod_template = client.V1JobSpec(
+            template=FlockPodTemplate(manifest, target_manifest).pod_template_spec,
+            backoff_limit=manifest.spec.backoff_limit,
+            completions=manifest.spec.completions,
+            parallelism=manifest.spec.parallelism,
+        )
+        pod_template.template.spec.restart_policy = manifest.spec.restart_policy
         self.rendered_manifest = client.V1Job(
             api_version="batch/v1",
             kind="Job",
             metadata=self.metadata,
-            spec=client.V1JobSpec(
-                template=FlockPodTemplateSpec(
-                    manifest, target_manifest
-                ).pod_template_spec,
-                backoff_limit=manifest.spec.backoff_limit,
-                completions=manifest.spec.completions,
-                parallelism=manifest.spec.parallelism,
-            ),
+            spec=pod_template,
         )
 
     def create(self):
@@ -49,7 +49,7 @@ class K8sCronJob(K8sResource):
                 schedule=manifest.spec.schedule,
                 job_template=client.V1JobTemplateSpec(
                     spec=client.V1JobSpec(
-                        template=FlockPodTemplateSpec(
+                        template=FlockPodTemplate(
                             manifest, target_manifest
                         ).pod_template_spec,
                         backoff_limit=manifest.spec.backoff_limit,

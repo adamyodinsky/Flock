@@ -27,6 +27,7 @@ class K8sJobDeployer(BaseDeployer):
 
         return job
 
+    # TODO: delete does not work on jobs, have a bug in the code https://github.com/kubernetes-client/python/issues/1350
     def _delete(self, name, namespace, dry_run=None):
         """Delete a Job in Kubernetes"""
 

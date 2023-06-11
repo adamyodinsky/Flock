@@ -11,7 +11,7 @@ from flock_deployer.schemas.deployment import (
 )
 
 
-class FlockPodTemplateSpec:
+class FlockPodTemplate:
     """Kubernetes PodTemplateSpec object."""
 
     def __init__(self, manifest, target_manifest: BaseFlockSchema) -> None:

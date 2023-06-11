@@ -37,7 +37,7 @@ deployment_example = {
 }
 
 
-def test_deployer():
+def test_deployer(dry_run: bool = True):
     """Test deployer from a schema manifest file."""
 
     # create deployer
@@ -50,7 +50,7 @@ def test_deployer():
     )
 
     # load from yaml file
-    path = "../schemas_deployments/0/agent_deployment.yaml"
+    path = "./assets/schemas/agent_deployment.yaml"
     with open(path, encoding="utf-8") as file:
         deployment_data = yaml.safe_load(file)
 
@@ -63,16 +63,20 @@ def test_deployer():
     schema_cls = schema_factory.get_schema(target_manifest["kind"])
     target_manifest = schema_cls.validate(target_manifest)
     deployer.deployment_deployer.deploy(
-        deployment_manifest, target_manifest, dry_run=True
+        deployment_manifest, target_manifest, dry_run=dry_run
     )
-    deployer.service_deployer.deploy(deployment_manifest, target_manifest, dry_run=True)
+    deployer.service_deployer.deploy(
+        deployment_manifest, target_manifest, dry_run=dry_run
+    )
     deployer.deployment_deployer.delete(
-        deployment_manifest, target_manifest, dry_run=True
+        deployment_manifest, target_manifest, dry_run=dry_run
     )
-    deployer.service_deployer.delete(deployment_manifest, target_manifest, dry_run=True)
+    deployer.service_deployer.delete(
+        deployment_manifest, target_manifest, dry_run=dry_run
+    )
 
 
-def test_job():
+def test_job(dry_run: bool = True):
     """Test deployer from a schema manifest file."""
 
     # create deployer
@@ -97,8 +101,8 @@ def test_job():
     )
     target_schema_cls = schema_factory.get_schema(target_manifest["kind"])
     target_manifest = target_schema_cls.validate(target_manifest)
-    deployer.job_deployer.deploy(job_manifest, target_manifest, dry_run=True)
-    deployer.job_deployer.delete(job_manifest, target_manifest, dry_run=True)
+    deployer.job_deployer.deploy(job_manifest, target_manifest, dry_run=dry_run)
+    # deployer.job_deployer.delete(job_manifest, target_manifest, dry_run=True)
 
 
 def test_manifest_creator():
@@ -117,7 +121,7 @@ def test_manifest_creator():
     print(manifest)
 
 
-def test_manifest_creator_and_deployer():
+def test_manifest_creator_and_deployer(dry_run: bool = True):
     """Test manifest creator and deployer."""
 
     secret_store = SecretStoreFactory.get_secret_store("vault")
@@ -144,21 +148,29 @@ def test_manifest_creator_and_deployer():
     )
 
     deployer.deployment_deployer.deploy(
-        deployment_manifest, target_manifest, dry_run=True
+        deployment_manifest, target_manifest, dry_run=dry_run
     )
-    deployer.service_deployer.deploy(deployment_manifest, target_manifest, dry_run=True)
+    deployer.service_deployer.deploy(
+        deployment_manifest, target_manifest, dry_run=dry_run
+    )
 
     time.sleep(3)
 
     deployer.deployment_deployer.delete(
-        deployment_manifest.metadata.name, deployment_manifest.namespace, dry_run=True
+        deployment_manifest.metadata.name,
+        deployment_manifest.namespace,
+        dry_run=dry_run,
     )
     deployer.service_deployer.delete(
-        deployment_manifest.metadata.name, deployment_manifest.namespace, dry_run=True
+        deployment_manifest.metadata.name,
+        deployment_manifest.namespace,
+        dry_run=dry_run,
     )
 
 
-test_job()
-# test_deployer()
+DRY_RUN = False
+
+# test_job(DRY_RUN)
+test_deployer(DRY_RUN)
 # test_manifest_creator()
-# test_manifest_creator_and_deployer()
+# test_manifest_creator_and_deployer(DRY_RUN)
