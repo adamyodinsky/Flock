@@ -33,7 +33,11 @@ spec:
       - name: FLOCK_AGENT_HOST
         value: "0.0.0.0"
       - name: RESOURCE_STORE_HOST
-        value: "192.168.1.162"
+        value: "flock-resource-store"
+      - name: QUEUE_HOST
+        value: "flock-queue-rabbitmq"
+      - name: MANAGEMENT_STORE_HOST
+        value: "flock-resource-store"
       - name: OPENAI_API_KEY
         valueFrom:
           secretKeyRef:

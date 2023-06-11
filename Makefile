@@ -65,3 +65,7 @@ apply-vault:
 
 apply-utils: apply-mongo apply-rabbitmq apply-vault
 
+load-secret:
+	kubectl apply -f infra/secret.yaml
+
+minikube-start-full: minikube-start load-images load-secret apply-utils 

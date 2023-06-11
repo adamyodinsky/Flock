@@ -10,8 +10,7 @@ from flock_deployer.manifest_creator.creator import ManifestCreator
 from flock_deployer.schemas.deployment import DeploymentSchema
 from flock_deployer.schemas.job import JobSchema
 
-schema_factory = SchemaFactory()
-deployment_example = {
+manifest_creator_target_manifest = {
     "apiVersion": "flock/v1",
     "kind": "Agent",
     "namespace": "default",
@@ -36,8 +35,26 @@ deployment_example = {
     },
 }
 
+schema_factory = SchemaFactory()
 
-def test_deployer(dry_run: bool = True):
+
+def test_manifest_creator():
+    """Test manifest creator."""
+
+    manifest_creator = ManifestCreator()
+
+    manifest = manifest_creator.create_deployment(
+        name="test-agent",
+        namespace="default",
+        target_manifest=schema_factory.get_schema(
+            manifest_creator_target_manifest["kind"]
+        ).validate(manifest_creator_target_manifest),
+    )
+
+    print(manifest)
+
+
+def test_deployment(dry_run: bool = True):
     """Test deployer from a schema manifest file."""
 
     # create deployer
@@ -69,10 +86,14 @@ def test_deployer(dry_run: bool = True):
         deployment_manifest, target_manifest, dry_run=dry_run
     )
     deployer.deployment_deployer.delete(
-        deployment_manifest, target_manifest, dry_run=dry_run
+        name=deployment_manifest.metadata.name,
+        namespace=deployment_manifest.namespace,
+        dry_run=dry_run,
     )
     deployer.service_deployer.delete(
-        deployment_manifest, target_manifest, dry_run=dry_run
+        name=deployment_manifest.metadata.name,
+        namespace=deployment_manifest.namespace,
+        dry_run=dry_run,
     )
 
 
@@ -102,23 +123,9 @@ def test_job(dry_run: bool = True):
     target_schema_cls = schema_factory.get_schema(target_manifest["kind"])
     target_manifest = target_schema_cls.validate(target_manifest)
     deployer.job_deployer.deploy(job_manifest, target_manifest, dry_run=dry_run)
-    # deployer.job_deployer.delete(job_manifest, target_manifest, dry_run=True)
-
-
-def test_manifest_creator():
-    """Test manifest creator."""
-
-    manifest_creator = ManifestCreator()
-
-    manifest = manifest_creator.create_deployment(
-        name="test-agent",
-        namespace="default",
-        target_manifest=schema_factory.get_schema(deployment_example["kind"]).validate(
-            deployment_example
-        ),
+    deployer.job_deployer.delete(
+        name=job_manifest.metadata.name, namespace=job_manifest.namespace, dry_run=True
     )
-
-    print(manifest)
 
 
 def test_manifest_creator_and_deployer(dry_run: bool = True):
@@ -137,9 +144,9 @@ def test_manifest_creator_and_deployer(dry_run: bool = True):
     target_manifest = resource_store.get(
         name=target_name, kind=target_kind, namespace=target_namespace
     )
-    target_manifest = schema_factory.get_schema(deployment_example["kind"]).validate(
-        target_manifest
-    )
+    target_manifest = schema_factory.get_schema(
+        manifest_creator_target_manifest["kind"]
+    ).validate(target_manifest)
 
     deployment_manifest = manifest_creator.create_deployment(
         name="test-agent",
@@ -170,7 +177,7 @@ def test_manifest_creator_and_deployer(dry_run: bool = True):
 
 DRY_RUN = False
 
-# test_job(DRY_RUN)
-test_deployer(DRY_RUN)
-# test_manifest_creator()
-# test_manifest_creator_and_deployer(DRY_RUN)
+test_manifest_creator()
+test_job(DRY_RUN)
+test_deployment(DRY_RUN)
+# test_manifest_creator_and_deployer_deployment(DRY_RUN)
