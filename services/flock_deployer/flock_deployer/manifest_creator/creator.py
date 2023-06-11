@@ -12,7 +12,7 @@ from flock_deployer.schemas.deployment import (
     EnvironmentVariable,
     TargetResource,
 )
-from flock_deployer.schemas.job import BaseMetaData, CronJobSchema, JobSchema
+from flock_deployer.schemas.job import BaseMetaData, CronJobSchema, JobSchema, JobSpec
 
 
 class ManifestCreator(BaseManifestCreator):
@@ -79,7 +79,7 @@ class ManifestCreator(BaseManifestCreator):
                 description=target_manifest.metadata.description,
                 labels=target_manifest.metadata.labels,
             ),
-            spec=DeploymentSpec(
+            spec=JobSpec(
                 targetResource=TargetResource(  # type: ignore
                     kind=target_manifest.kind,
                     name=target_manifest.metadata.name,
@@ -88,7 +88,6 @@ class ManifestCreator(BaseManifestCreator):
                     # options=target_manifest.spec.options,
                     # TODO: i have no idea why description and options must be included here by pylance if it's optional in the schema
                 ),
-                replicas=1,
                 container=ContainerSpec(
                     image=self.fetch_image(target_manifest.kind),
                     image_pull_policy="IfNotPresent",
@@ -114,7 +113,7 @@ class ManifestCreator(BaseManifestCreator):
         if target_kind == "EmbeddingsLoader":
             return "flock-embeddings-loader:latest"
         if target_kind == "WebScraper":
-            return "flock-web-scraper:latest"
+            return "flock-webscraper:latest"
 
         raise NotImplementedError
 

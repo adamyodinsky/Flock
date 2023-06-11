@@ -53,7 +53,7 @@ class FlockAgent:
                 f"Invalid configuration manifest: {str(error)}"
             ) from error
         except Exception as error:
-            logging.error(f"Error while initializing agent: {str(error)}")
+            logging.error(f"Error while initializing agent: {error}")
             raise click.ClickException(
                 f"Error while initializing agent: {str(error)}"
             ) from error

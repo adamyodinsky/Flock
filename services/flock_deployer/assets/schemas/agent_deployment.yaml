@@ -5,7 +5,7 @@ kind: FlockDeployment
 namespace: default
 category: deployment
 metadata:
-  name: my-agent-deployment
+  name: my-agent
   description: A Q&A chat agent server
   labels:
     app: my_app

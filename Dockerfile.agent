@@ -29,6 +29,6 @@ ENV VIRTUAL_ENV="${PYSETUP_PATH}/services/flock_agent/.venv"
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 EXPOSE 8080
-ENTRYPOINT ["python", "flock_agent/main.py" ]
+ENTRYPOINT ["python", "services/flock_agent/main.py" ]
 CMD [ "run-agent" ]
 

@@ -107,6 +107,7 @@ def run_agent(schema_path, schema_value, host, port):
         logging.fatal("Either --schema-path or --schema-value is required.")
         raise click.UsageError("Either --schema-path or --schema-value is required.")
 
+
     task_management_store = TaskManagementStoreFactory.get_store(
         store_type=os.environ.get("FLOCK_MANAGEMENT_STORE_TYPE", "mongo"),
         db_name=os.environ.get("MANAGEMENT_STORE_DB_NAME", "flock_db"),
@@ -121,6 +122,7 @@ def run_agent(schema_path, schema_value, host, port):
         username=os.environ.get("MANAGEMENT_STORE_USERNAME", "root"),
         password=os.environ.get("MANAGEMENT_STORE_PASSWORD", "password"),
     )
+    
 
     resource_store = ResourceStoreFactory.get_resource_store(
         store_type=os.environ.get("FLOCK_RESOURCE_STORE_TYPE", "mongo"),

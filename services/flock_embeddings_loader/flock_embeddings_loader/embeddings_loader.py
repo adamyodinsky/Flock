@@ -5,7 +5,7 @@ from typing import cast
 
 import click
 from flock_builder.resource_builder import ResourceBuilder
-from flock_resource_store import ResourceStoreFactory
+from flock_resource_store import ResourceStore
 from flock_resources.embeddings_loader import EmbeddingsLoaderResource
 from pydantic import ValidationError
 
@@ -13,11 +13,11 @@ from pydantic import ValidationError
 class FlockEmbeddingsLoader:
     """Flock Embeddings class"""
 
-    def __init__(self, manifest: dict):
+    def __init__(self, manifest: dict, resource_store: ResourceStore):
         """Initialize the Embeddings Loader"""
 
         try:
-            self.resource_store = ResourceStoreFactory.get_resource_store()
+            self.resource_store = resource_store
             self.manifest = manifest
             self.builder = ResourceBuilder(resource_store=self.resource_store)
             self.embeddings_loader: EmbeddingsLoaderResource = cast(

@@ -5,14 +5,14 @@ kind: FlockJob
 namespace: default
 category: job
 metadata:
-  name: embeddings-loader-deployment
+  name: embeddings-loader
   description: embedding loader - load embedding data to a vector store
   labels:
     app: my_app
 spec:
   container:
     image_pull_policy: IfNotPresent
-    image: embeddings-loader
+    image: flock-embeddings-loader
     env:
       - name: RESOURCE_STORE_USERNAME
         value: root
@@ -20,6 +20,12 @@ spec:
         value: password
       - name: RESOURCE_STORE_HOST
         value: "flock-resource-store"
+      - name: QUEUE_HOST
+        value: "flock-queue-rabbitmq"
+      - name: MANAGEMENT_STORE_HOST
+        value: "flock-resource-store"
+      - name: FLOCK_LOADER_TYPE
+        value: "scraped-data"
       - name: OPENAI_API_KEY
         valueFrom:
           secretKeyRef:
