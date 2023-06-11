@@ -1,6 +1,7 @@
 from typing import Optional
 
 from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
 
 from flock_resource_store.base import ResourceStore
 

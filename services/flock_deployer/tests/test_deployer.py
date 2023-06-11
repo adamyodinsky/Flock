@@ -128,26 +128,26 @@ def main():
         JobSchema,
     )
     deployer.job_deployer.delete(
-        name="my-embedding-data-loader", namespace="default", dry_run=DRY_RUN
+        name="embeddings-loader", namespace="default", dry_run=DRY_RUN
     )
 
-    # # Deploy Deployment
-    # test_deployer(
-    #     deployer.deployment_deployer,
-    #     "./assets/schemas/agent_deployment.yaml",
-    #     DeploymentSchema,
-    # )
-    # test_deployer(
-    #     deployer.service_deployer,
-    #     "./assets/schemas/agent_deployment.yaml",
-    #     DeploymentSchema,
-    # )
-    # deployer.deployment_deployer.delete(
-    #     name="my-agent", namespace="default", dry_run=DRY_RUN
-    # )
-    # deployer.service_deployer.delete(
-    #     name="my-agent", namespace="default", dry_run=DRY_RUN
-    # )
+    # Deploy Deployment
+    test_deployer(
+        deployer.deployment_deployer,
+        "./assets/schemas/agent_deployment.yaml",
+        DeploymentSchema,
+    )
+    test_deployer(
+        deployer.service_deployer,
+        "./assets/schemas/agent_deployment.yaml",
+        DeploymentSchema,
+    )
+    deployer.deployment_deployer.delete(
+        name="my-agent", namespace="default", dry_run=DRY_RUN
+    )
+    deployer.service_deployer.delete(
+        name="my-agent", namespace="default", dry_run=DRY_RUN
+    )
 
     # # Manifest creator deployment
     # test_manifest_creator_and_deployer(

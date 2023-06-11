@@ -35,9 +35,11 @@ spec:
       - name: RESOURCE_STORE_HOST
         value: "flock-resource-store"
       - name: QUEUE_HOST
-        value: "flock-queue-rabbitmq"
+        value: "flock-queue-rabbitmq-headless"
       - name: MANAGEMENT_STORE_HOST
         value: "flock-resource-store"
+      - name: LOG_LEVEL
+        value: "DEBUG"
       - name: OPENAI_API_KEY
         valueFrom:
           secretKeyRef:
