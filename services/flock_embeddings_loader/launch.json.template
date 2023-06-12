@@ -1,0 +1,22 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "run-job (raw-files)",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/flock_embeddings_loader/main.py",
+      "console": "internalConsole",
+      "justMyCode": true,
+      "args": ["run-job"],
+      "env": {
+        "FLOCK_SCHEMA_PATH": "tests/test.json",
+        "FLOCK_LOADER_TYPE": "raw-files",
+        "OPENAI_API_KEY": ""
+      }
+    }
+  ]
+}
