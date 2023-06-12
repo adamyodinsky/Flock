@@ -11,3 +11,6 @@ lint:
 build:
 	@echo "Building Package\n"
 	@poetry build
+
+write-json-schemas:
+	@poetry run python scripts/write_json_schemas.py

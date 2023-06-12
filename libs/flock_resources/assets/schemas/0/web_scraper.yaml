@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=../../../../../assets/json_schemas/main/CustomSchema.json
+---
+apiVersion: flock/v1
+kind: WebScraper
+namespace: default
+metadata:
+  name: my-web-scraper
+  description: web-scraper
+  labels:
+    app: my_app
+spec:
+  vendor: WebScraper

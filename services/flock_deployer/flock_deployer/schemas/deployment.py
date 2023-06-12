@@ -93,14 +93,6 @@ class VolumeHostPath(BaseModel):
     path: str = Field(..., description="Path of the directory on the host.")
     type: str = Field(None, description="Type for HostPath volume.")
 
-    # @validator("path")
-    # def validate_path(self, path):
-    #     """Validate path."""
-    #     if not path:
-    #         raise ValueError("path cannot be an empty string")
-    #     # Here you can add further validation for path format if required.
-    #     return path
-
 
 class VolumePersistentVolumeClaim(BaseModel):
     """PersistentVolumeClaim schema."""
@@ -164,6 +156,8 @@ class ContainerSpec(BaseModelConfig):
 
 class TargetResource(BaseToolDependency):
     """Deployment target resource schema."""
+
+    kind: str = Field(..., description="Kind of the target resource")
 
 
 class DeploymentSpec(BaseModelConfig):

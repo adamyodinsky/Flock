@@ -1,6 +1,6 @@
 {
-  "title": "DeploymentSchema",
-  "description": "Deployment schema.",
+  "title": "CronJobSchema",
+  "description": "CronJob schema.",
   "type": "object",
   "properties": {
     "apiVersion": {
@@ -24,7 +24,7 @@
       "title": "Kind",
       "description": "The kind of the object",
       "enum": [
-        "FlockDeployment"
+        "FlockCronJob"
       ],
       "type": "string"
     },
@@ -43,7 +43,7 @@
       "description": "The spec of the object",
       "allOf": [
         {
-          "$ref": "#/definitions/DeploymentSpec"
+          "$ref": "#/definitions/CronJobSpec"
         }
       ]
     }
@@ -97,25 +97,6 @@
       ],
       "additionalProperties": false
     },
-    "Kind": {
-      "title": "Kind",
-      "description": "Enum for all kinds of resources.",
-      "enum": [
-        "Embedding",
-        "VectorStore",
-        "VectorStoreQATool",
-        "LLM",
-        "LLMChat",
-        "LoadTool",
-        "Splitter",
-        "Agent",
-        "PromptTemplate",
-        "LLMTool",
-        "EmbeddingsLoader",
-        "Custom"
-      ],
-      "type": "string"
-    },
     "TargetResource": {
       "title": "TargetResource",
       "description": "Deployment target resource schema.",
@@ -135,12 +116,9 @@
           "type": "string"
         },
         "kind": {
-          "description": "Kind of the dependency",
-          "allOf": [
-            {
-              "$ref": "#/definitions/Kind"
-            }
-          ]
+          "title": "Kind",
+          "description": "Kind of the target resource",
+          "type": "string"
         },
         "namespace": {
           "title": "Namespace",
@@ -456,9 +434,9 @@
         "volume_source"
       ]
     },
-    "DeploymentSpec": {
-      "title": "DeploymentSpec",
-      "description": "Deployment spec schema.",
+    "CronJobSpec": {
+      "title": "CronJobSpec",
+      "description": "CronJob spec schema.",
       "type": "object",
       "properties": {
         "targetResource": {
@@ -471,12 +449,6 @@
             }
           ]
         },
-        "replicas": {
-          "title": "Replicas",
-          "description": "The number of replicas to be deployed",
-          "default": 1,
-          "type": "integer"
-        },
         "container": {
           "title": "Container",
           "description": "The container specs",
@@ -486,6 +458,24 @@
             }
           ]
         },
+        "backoff_limit": {
+          "title": "Backoff Limit",
+          "description": "The number of times the job will be retried before it is marked as failed",
+          "default": 6,
+          "type": "integer"
+        },
+        "completions": {
+          "title": "Completions",
+          "description": "The desired number of successfully finished pods the job should be run with",
+          "default": 1,
+          "type": "integer"
+        },
+        "parallelism": {
+          "title": "Parallelism",
+          "description": "The maximum desired number of pods the job should run at any given time",
+          "default": 1,
+          "type": "integer"
+        },
         "volumes": {
           "title": "Volumes",
           "description": "The volumes to be mounted in the container",
@@ -494,10 +484,26 @@
           "items": {
             "$ref": "#/definitions/Volume"
           }
+        },
+        "restart_policy": {
+          "title": "Restart Policy",
+          "description": "The restart policy of the container",
+          "default": "Never",
+          "enum": [
+            "Never",
+            "OnFailure"
+          ],
+          "type": "string"
+        },
+        "schedule": {
+          "title": "Schedule",
+          "description": "The cron schedule",
+          "type": "string"
         }
       },
       "required": [
-        "container"
+        "container",
+        "schedule"
       ],
       "additionalProperties": false
     }

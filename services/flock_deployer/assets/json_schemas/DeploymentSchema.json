@@ -1,6 +1,6 @@
 {
-  "title": "JobSchema",
-  "description": "Job schema.",
+  "title": "DeploymentSchema",
+  "description": "Deployment schema.",
   "type": "object",
   "properties": {
     "apiVersion": {
@@ -24,17 +24,14 @@
       "title": "Kind",
       "description": "The kind of the object",
       "enum": [
-        "FlockJob"
+        "FlockDeployment"
       ],
       "type": "string"
     },
     "category": {
-      "default": "job",
-      "allOf": [
-        {
-          "$ref": "#/definitions/Category"
-        }
-      ]
+      "title": "Category",
+      "default": "deployment",
+      "type": "string"
     },
     "namespace": {
       "title": "Namespace",
@@ -46,7 +43,7 @@
       "description": "The spec of the object",
       "allOf": [
         {
-          "$ref": "#/definitions/JobSpec"
+          "$ref": "#/definitions/DeploymentSpec"
         }
       ]
     }
@@ -100,41 +97,6 @@
       ],
       "additionalProperties": false
     },
-    "Category": {
-      "title": "Category",
-      "description": "Enum for all categories of resources.",
-      "enum": [
-        "other",
-        "tool",
-        "scraper",
-        "model",
-        "agent",
-        "deployment",
-        "job",
-        "cronjob",
-        "statefulset"
-      ],
-      "type": "string"
-    },
-    "Kind": {
-      "title": "Kind",
-      "description": "Enum for all kinds of resources.",
-      "enum": [
-        "Embedding",
-        "VectorStore",
-        "VectorStoreQATool",
-        "LLM",
-        "LLMChat",
-        "LoadTool",
-        "Splitter",
-        "Agent",
-        "PromptTemplate",
-        "LLMTool",
-        "EmbeddingsLoader",
-        "Custom"
-      ],
-      "type": "string"
-    },
     "TargetResource": {
       "title": "TargetResource",
       "description": "Deployment target resource schema.",
@@ -154,12 +116,9 @@
           "type": "string"
         },
         "kind": {
-          "description": "Kind of the dependency",
-          "allOf": [
-            {
-              "$ref": "#/definitions/Kind"
-            }
-          ]
+          "title": "Kind",
+          "description": "Kind of the target resource",
+          "type": "string"
         },
         "namespace": {
           "title": "Namespace",
@@ -343,19 +302,158 @@
       ],
       "additionalProperties": false
     },
-    "JobSpec": {
-      "title": "JobSpec",
-      "description": "Job spec schema.",
+    "VolumeEmptyDir": {
+      "title": "VolumeEmptyDir",
+      "description": "EmptyDir volume schema.",
+      "type": "object",
+      "properties": {
+        "medium": {
+          "title": "Medium",
+          "description": "What type of storage medium should back this directory.",
+          "default": "",
+          "enum": [
+            "",
+            "Memory",
+            "HugePages"
+          ],
+          "type": "string"
+        },
+        "sizeLimit": {
+          "title": "Sizelimit",
+          "description": "Total amount of local storage required for this EmptyDir volume.",
+          "type": "string"
+        }
+      }
+    },
+    "VolumeHostPath": {
+      "title": "VolumeHostPath",
+      "description": "HostPath volume schema.",
+      "type": "object",
+      "properties": {
+        "path": {
+          "title": "Path",
+          "description": "Path of the directory on the host.",
+          "type": "string"
+        },
+        "type": {
+          "title": "Type",
+          "description": "Type for HostPath volume.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path"
+      ]
+    },
+    "VolumePersistentVolumeClaim": {
+      "title": "VolumePersistentVolumeClaim",
+      "description": "PersistentVolumeClaim schema.",
+      "type": "object",
+      "properties": {
+        "claimName": {
+          "title": "Claimname",
+          "description": "Name of the PersistentVolumeClaim to use.",
+          "type": "string"
+        },
+        "readOnly": {
+          "title": "Readonly",
+          "description": "Whether the volume is read only.",
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "claimName"
+      ]
+    },
+    "VolumeSource": {
+      "title": "VolumeSource",
+      "description": "Volume source schema.",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/VolumeEmptyDir"
+        },
+        {
+          "$ref": "#/definitions/VolumeHostPath"
+        },
+        {
+          "$ref": "#/definitions/VolumePersistentVolumeClaim"
+        }
+      ]
+    },
+    "PersistentVolumeClaim": {
+      "title": "PersistentVolumeClaim",
+      "description": "PersistentVolumeClaim schema.",
+      "type": "object",
+      "properties": {
+        "claimName": {
+          "title": "Claimname",
+          "type": "string"
+        }
+      },
+      "required": [
+        "claimName"
+      ]
+    },
+    "Secret": {
+      "title": "Secret",
+      "description": "Secret schema.",
+      "type": "object",
+      "properties": {
+        "secretName": {
+          "title": "Secretname",
+          "type": "string"
+        }
+      },
+      "required": [
+        "secretName"
+      ]
+    },
+    "Volume": {
+      "title": "Volume",
+      "description": "Volume schema.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "description": "Volume name. Must be a DNS_LABEL and unique within the pod.",
+          "type": "string"
+        },
+        "volume_source": {
+          "$ref": "#/definitions/VolumeSource"
+        },
+        "persistentVolumeClaim": {
+          "$ref": "#/definitions/PersistentVolumeClaim"
+        },
+        "secret": {
+          "$ref": "#/definitions/Secret"
+        }
+      },
+      "required": [
+        "name",
+        "volume_source"
+      ]
+    },
+    "DeploymentSpec": {
+      "title": "DeploymentSpec",
+      "description": "Deployment spec schema.",
       "type": "object",
       "properties": {
         "targetResource": {
           "title": "Targetresource",
           "description": "The target resource to be deployed",
+          "default": {},
           "allOf": [
             {
               "$ref": "#/definitions/TargetResource"
             }
           ]
+        },
+        "replicas": {
+          "title": "Replicas",
+          "description": "The number of replicas to be deployed",
+          "default": 1,
+          "type": "integer"
         },
         "container": {
           "title": "Container",
@@ -366,23 +464,14 @@
             }
           ]
         },
-        "backoff_limit": {
-          "title": "Backoff Limit",
-          "description": "The number of times the job will be retried before it is marked as failed",
-          "default": 6,
-          "type": "integer"
-        },
-        "completions": {
-          "title": "Completions",
-          "description": "The desired number of successfully finished pods the job should be run with",
-          "default": 1,
-          "type": "integer"
-        },
-        "parallelism": {
-          "title": "Parallelism",
-          "description": "The maximum desired number of pods the job should run at any given time",
-          "default": 1,
-          "type": "integer"
+        "volumes": {
+          "title": "Volumes",
+          "description": "The volumes to be mounted in the container",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Volume"
+          }
         }
       },
       "required": [
