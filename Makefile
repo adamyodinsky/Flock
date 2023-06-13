@@ -61,12 +61,16 @@ apply-mongo:
 	kubectl apply -f infra/mongoDB/k8s
 
 apply-rabbitmq:
+	helm repo add bitnami https://charts.bitnami.com/bitnami
+	helm repo update
 	helm upgrade --install -f infra/rabbitMQ/values.yaml flock-queue bitnami/rabbitmq
 
 delete-rabbitmq:
 	helm delete flock-queue
 
 apply-vault:
+	helm repo add hashicorp https://helm.releases.hashicorp.com
+	helm repo update
 	helm upgrade --install -f infra/vault/values.yaml flock-secrets-store hashicorp/vault
 	# kubectl exec -it flock-secrets-store-vault-0 -- vault operator init
 	# kubectl exec -it flock-secrets-store-vault-0 -- vault operator unseal <key>
