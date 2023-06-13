@@ -69,7 +69,7 @@ class BaseDependency(BaseLabels):
 
     name: str = Field(..., description="Name of the dependency")
     kind: Kind = Field(..., description="Kind of the dependency")
-    namespace: Optional[str] = Field(
+    namespace: str = Field(
         "default", description="The namespace of the object", max_length=63
     )
     options: Dict[str, Any] = Field({}, description="Resource options")

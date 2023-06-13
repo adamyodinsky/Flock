@@ -3,6 +3,7 @@
 import time
 
 from flock_common.secret_store import SecretStore
+from flock_resource_store.base import ResourceStore
 from flock_schemas.base import BaseFlockSchema
 from kubernetes import client, config
 
@@ -15,9 +16,9 @@ from flock_deployer.schemas.deployment import DeploymentSchema
 class K8sDeploymentDeployer(BaseDeployer):
     """Abstract class for a deployer"""
 
-    def __init__(self, secret_store: SecretStore = NotImplemented):
+    def __init__(self):
         """Initialize the deployer"""
-        super().__init__(secret_store)
+
         config.load_kube_config()
         self.client = client.AppsV1Api()
 

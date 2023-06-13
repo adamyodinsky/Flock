@@ -1,6 +1,7 @@
 """Module for deploying CronJobs to Kubernetes"""
 
 from flock_common.secret_store import SecretStore
+from flock_resource_store.base import ResourceStore
 from flock_schemas.base import BaseFlockSchema
 from kubernetes import client, config
 
@@ -13,9 +14,9 @@ from flock_deployer.schemas.job import CronJobSchema
 class K8sCronJobDeployer(BaseDeployer):
     """Class for deploying CronJobs"""
 
-    def __init__(self, secret_store: SecretStore = NotImplemented):
+    def __init__(self):
         """Initialize the deployer"""
-        super().__init__(secret_store)
+
         config.load_kube_config()
         self.client = client.BatchV1Api()
 

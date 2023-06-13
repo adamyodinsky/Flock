@@ -123,21 +123,21 @@ def main():
         name="my-agent", namespace="default", dry_run=DRY_RUN
     )
 
-    # # Manifest creator deployment
-    # test_manifest_creator_and_deployer(
-    #     "Agent", "my-agent", "default", manifest_creator_deployment
-    # )
-    # deployer.deployment_deployer.delete(
-    #     name="my-agent", namespace="default", dry_run=DRY_RUN
-    # )
+    # Manifest creator deployment
+    test_manifest_creator_and_deployer(
+        "Agent", "my-agent", "default", manifest_creator_deployment
+    )
+    deployer.deployment_deployer.delete(
+        name="my-agent", namespace="default", dry_run=DRY_RUN
+    )
 
-    # # Manifest creator job
-    # test_manifest_creator_and_deployer(
-    #     "EmbeddingsLoader", " my-embedding-data-loader", "default", manifest_creator_job
-    # )
-    # deployer.job_deployer.delete(
-    #     name="my-embedding-data-loader", namespace="default", dry_run=DRY_RUN
-    # )
+    # Manifest creator job
+    test_manifest_creator_and_deployer(
+        "EmbeddingsLoader", " my-embedding-data-loader", "default", manifest_creator_job
+    )
+    deployer.job_deployer.delete(
+        name="my-embedding-data-loader", namespace="default", dry_run=DRY_RUN
+    )
 
 
 if __name__ == "__main__":
