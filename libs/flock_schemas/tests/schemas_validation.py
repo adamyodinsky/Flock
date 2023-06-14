@@ -19,4 +19,4 @@ def validate_schema(data: Dict[str, Any]):
     schema_instance = schema.validate(data)
 
 
-validation_iterator("../../assets/schemas/resources", validate_schema)
+validation_iterator("../../assets/schemas/", validate_schema)

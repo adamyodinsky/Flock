@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../../../json_schemas/main/EmbeddingSchema.json
+# yaml-language-server: $schema=../../json_schemas/main/Embedding.json
 ---
 apiVersion: flock/v1
 kind: Embedding

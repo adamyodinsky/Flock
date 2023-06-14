@@ -1,0 +1,278 @@
+{
+  "title": "BaseFlockSchema",
+  "description": "Base schema for all Flock objects.",
+  "type": "object",
+  "properties": {
+    "apiVersion": {
+      "title": "Apiversion",
+      "description": "API version",
+      "enum": [
+        "flock/v1"
+      ],
+      "type": "string"
+    },
+    "kind": {
+      "description": "Kind of the object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Kind"
+        }
+      ]
+    },
+    "category": {
+      "description": "The resource category",
+      "default": "other",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Category"
+        }
+      ]
+    },
+    "namespace": {
+      "title": "Namespace",
+      "description": "The namespace of the object",
+      "maxLength": 63,
+      "type": "string"
+    },
+    "metadata": {
+      "$ref": "#/definitions/BaseMetaData"
+    },
+    "created_at": {
+      "title": "Created At",
+      "description": "Creation timestamp",
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "title": "Updated At",
+      "description": "Last update timestamp",
+      "type": "string",
+      "format": "date-time"
+    },
+    "spec": {
+      "$ref": "#/definitions/BaseSpec"
+    }
+  },
+  "required": [
+    "apiVersion",
+    "kind",
+    "namespace",
+    "metadata",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "Kind": {
+      "title": "Kind",
+      "description": "Enum for all kinds of resources.",
+      "enum": [
+        "Embedding",
+        "VectorStore",
+        "VectorStoreQATool",
+        "LLM",
+        "LLMChat",
+        "LoadTool",
+        "Splitter",
+        "Agent",
+        "PromptTemplate",
+        "LLMTool",
+        "EmbeddingsLoader",
+        "Custom"
+      ],
+      "type": "string"
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Enum for all categories of resources.",
+      "enum": [
+        "other",
+        "tool",
+        "scraper",
+        "model",
+        "agent",
+        "deployment",
+        "job",
+        "cronjob",
+        "statefulset"
+      ],
+      "type": "string"
+    },
+    "BaseMetaData": {
+      "title": "BaseMetaData",
+      "description": "Base metadata schema.",
+      "type": "object",
+      "properties": {
+        "annotations": {
+          "title": "Annotations",
+          "description": "Annotations are useful for storing additional information",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the object",
+          "maxLength": 63,
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "description": "Description",
+          "maxLength": 255,
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "description"
+      ],
+      "additionalProperties": false
+    },
+    "BaseDependency": {
+      "title": "BaseDependency",
+      "description": "Base dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind of the dependency",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Kind"
+            }
+          ]
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string"
+        },
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object"
+        }
+      },
+      "required": [
+        "name",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "BaseToolDependency": {
+      "title": "BaseToolDependency",
+      "description": "Base tool dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind of the dependency",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Kind"
+            }
+          ]
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string"
+        },
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object"
+        },
+        "description": {
+          "title": "Description",
+          "description": "Tool description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "BaseSpec": {
+      "title": "BaseSpec",
+      "description": "Base spec schema.",
+      "type": "object",
+      "properties": {
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object"
+        },
+        "vendor": {
+          "title": "Vendor",
+          "description": "The resource class",
+          "type": "string"
+        },
+        "dependencies": {
+          "title": "Dependencies",
+          "description": "Dependencies for the object",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BaseDependency"
+          }
+        },
+        "tools": {
+          "title": "Tools",
+          "description": "Tools for the object",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BaseToolDependency"
+          }
+        }
+      },
+      "required": [
+        "vendor"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

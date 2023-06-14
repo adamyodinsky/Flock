@@ -16,10 +16,12 @@ from flock_deployer.schemas.deployment import (
     DeploymentSchema,
     DeploymentSpec,
     EnvironmentVariable,
+    PersistentVolumeClaim,
     TargetResource,
+    Volume,
+    VolumeMount,
 )
-from flock_deployer.schemas.job import BaseMetaData, CronJobSchema, JobSchema, JobSpec
-from flock_deployer.schemas.request import DeploymentRequest
+from flock_deployer.schemas.job import BaseMetaData, JobSchema, JobSpec
 
 
 class BaseDeployer(metaclass=abc.ABCMeta):
@@ -110,8 +112,21 @@ class BaseDeployers(metaclass=abc.ABCMeta):
                     # options=target_manifest.spec.options,
                     # TODO: i have no idea why description and options must be included here by pylance if it's optional in the schema
                 ),
+                volumes=[
+                    Volume(
+                        name="flock-data",
+                        persistentVolumeClaim=PersistentVolumeClaim(claimName="flock"),
+                    )
+                ],
                 replicas=1,
                 container=ContainerSpec(
+                    volume_mounts=[
+                        VolumeMount(
+                            name="flock-data",
+                            mountPath="/flock-data",
+                            readOnly=False,
+                        )
+                    ],
                     image=self.fetch_image(target_manifest.kind),
                     image_pull_policy="IfNotPresent",
                     ports=[

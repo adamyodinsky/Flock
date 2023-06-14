@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../../../json_schemas/main/PromptTemplateSchema.json
+# yaml-language-server: $schema=../../json_schemas/main/PromptTemplate.json
 ---
 apiVersion: flock/v1
 kind: PromptTemplate

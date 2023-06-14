@@ -1,5 +1,4 @@
-# yaml-language-server: $schema=../../../../../../json_schemas/main/EmbeddingsLoaderSchema.json
-
+# yaml-language-server: $schema=../../json_schemas/main/EmbeddingsLoader.json
 ---
 apiVersion: flock/v1
 kind: EmbeddingsLoader
@@ -20,5 +19,5 @@ spec:
       name: my-openai-embedding
       namespace: default
     - kind: VectorStore
-      name: documentation_vectorstore
+      name: meta_reports
       namespace: default

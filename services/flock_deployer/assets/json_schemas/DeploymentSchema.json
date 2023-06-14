@@ -202,8 +202,8 @@
       },
       "additionalProperties": false
     },
-    "VolumeMounts": {
-      "title": "VolumeMounts",
+    "VolumeMount": {
+      "title": "VolumeMount",
       "description": "Volume mount schema.",
       "type": "object",
       "properties": {
@@ -293,7 +293,7 @@
           "default": [],
           "type": "array",
           "items": {
-            "$ref": "#/definitions/VolumeMounts"
+            "$ref": "#/definitions/VolumeMount"
           }
         }
       },
@@ -301,85 +301,6 @@
         "image"
       ],
       "additionalProperties": false
-    },
-    "VolumeEmptyDir": {
-      "title": "VolumeEmptyDir",
-      "description": "EmptyDir volume schema.",
-      "type": "object",
-      "properties": {
-        "medium": {
-          "title": "Medium",
-          "description": "What type of storage medium should back this directory.",
-          "default": "",
-          "enum": [
-            "",
-            "Memory",
-            "HugePages"
-          ],
-          "type": "string"
-        },
-        "sizeLimit": {
-          "title": "Sizelimit",
-          "description": "Total amount of local storage required for this EmptyDir volume.",
-          "type": "string"
-        }
-      }
-    },
-    "VolumeHostPath": {
-      "title": "VolumeHostPath",
-      "description": "HostPath volume schema.",
-      "type": "object",
-      "properties": {
-        "path": {
-          "title": "Path",
-          "description": "Path of the directory on the host.",
-          "type": "string"
-        },
-        "type": {
-          "title": "Type",
-          "description": "Type for HostPath volume.",
-          "type": "string"
-        }
-      },
-      "required": [
-        "path"
-      ]
-    },
-    "VolumePersistentVolumeClaim": {
-      "title": "VolumePersistentVolumeClaim",
-      "description": "PersistentVolumeClaim schema.",
-      "type": "object",
-      "properties": {
-        "claimName": {
-          "title": "Claimname",
-          "description": "Name of the PersistentVolumeClaim to use.",
-          "type": "string"
-        },
-        "readOnly": {
-          "title": "Readonly",
-          "description": "Whether the volume is read only.",
-          "default": false,
-          "type": "boolean"
-        }
-      },
-      "required": [
-        "claimName"
-      ]
-    },
-    "VolumeSource": {
-      "title": "VolumeSource",
-      "description": "Volume source schema.",
-      "anyOf": [
-        {
-          "$ref": "#/definitions/VolumeEmptyDir"
-        },
-        {
-          "$ref": "#/definitions/VolumeHostPath"
-        },
-        {
-          "$ref": "#/definitions/VolumePersistentVolumeClaim"
-        }
-      ]
     },
     "PersistentVolumeClaim": {
       "title": "PersistentVolumeClaim",
@@ -419,9 +340,6 @@
           "description": "Volume name. Must be a DNS_LABEL and unique within the pod.",
           "type": "string"
         },
-        "volume_source": {
-          "$ref": "#/definitions/VolumeSource"
-        },
         "persistentVolumeClaim": {
           "$ref": "#/definitions/PersistentVolumeClaim"
         },
@@ -430,8 +348,7 @@
         }
       },
       "required": [
-        "name",
-        "volume_source"
+        "name"
       ]
     },
     "DeploymentSpec": {

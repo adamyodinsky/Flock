@@ -46,7 +46,7 @@ class EnvironmentVariable(BaseModelConfig):
     )
 
 
-class VolumeMounts(BaseModelConfig):
+class VolumeMount(BaseModelConfig):
     """Volume mount schema."""
 
     name: str = Field(
@@ -98,7 +98,9 @@ class VolumePersistentVolumeClaim(BaseModel):
     """PersistentVolumeClaim schema."""
 
     claimName: str = Field(..., description="Name of the PersistentVolumeClaim to use.")
-    readOnly: bool = Field(False, description="Whether the volume is read only.")
+    readOnly: Optional[bool] = Field(
+        False, description="Whether the volume is read only."
+    )
 
 
 class VolumeSource(BaseModel):
@@ -116,9 +118,9 @@ class Volume(BaseModel):
     name: str = Field(
         ..., description="Volume name. Must be a DNS_LABEL and unique within the pod."
     )
-    volume_source: VolumeSource
-    persistentVolumeClaim: Optional[PersistentVolumeClaim]
-    secret: Optional[Secret]
+    # volume_source: VolumeSource
+    persistentVolumeClaim: Optional[PersistentVolumeClaim] = None
+    secret: Optional[Secret] = None
 
 
 class ContainerSpec(BaseModelConfig):
@@ -148,7 +150,7 @@ class ContainerSpec(BaseModelConfig):
         default=[],
         description="The command to be executed in the container",
     )
-    volume_mounts: List[VolumeMounts] = Field(
+    volume_mounts: List[VolumeMount] = Field(
         default=[],
         description="The volume mounts to be mounted in the container",
     )

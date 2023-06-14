@@ -14,6 +14,13 @@ spec:
     image_pull_policy: IfNotPresent
     image: flock-embeddings-loader
     env:
+      # BASE_META_SOURCE
+      # ALLOWED_EXTENSIONS
+      # DENY_EXTENSIONS
+      - name: SOURCE_DIRECTORY
+        value: "/flock-data/embeddings/pre_processed"
+      - name: ARCHIVE_PATH
+        value: "/flock-data/embeddings/processed"
       - name: RESOURCE_STORE_USERNAME
         value: root
       - name: RESOURCE_STORE_PASSWORD
