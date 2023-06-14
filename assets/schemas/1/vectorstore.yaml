@@ -11,7 +11,7 @@ metadata:
 spec:
   vendor: Chroma
   options:
-    persist_directory: "/flock-data/vectorstores/"
+    persist_directory: "/flock-data/vectorstore/meta_reports"
     collection_name: "documentation"
   dependencies:
     - kind: Embedding

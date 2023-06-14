@@ -89,6 +89,37 @@ class BaseDeployers(metaclass=abc.ABCMeta):
         target_manifest = schema_cls(**target_manifest)
         return target_manifest
 
+    def _get_target_resource(self, target_manifest: BaseFlockSchema) -> TargetResource:
+        return TargetResource(  # type: ignore
+            kind=target_manifest.kind,
+            name=target_manifest.metadata.name,
+            namespace=target_manifest.namespace,
+            # description=target_manifest.metadata.description,
+            # options=target_manifest.spec.options,
+            # TODO: i have no idea why description and options must be included here by pylance if it's optional in the schema
+        )
+
+    def _get_container_spec(self, target_manifest) -> ContainerSpec:
+        return ContainerSpec(
+            volume_mounts=[
+                VolumeMount(
+                    name="flock-data",
+                    mountPath="/flock-data",
+                    readOnly=False,
+                )
+            ],
+            image=self.fetch_image(target_manifest.kind),
+            image_pull_policy="IfNotPresent",
+            ports=[
+                ContainerPort(
+                    name="http",
+                    port=8080,
+                    protocol="TCP",
+                )
+            ],
+            env=self.fetch_env_vars(target_manifest),
+        )
+
     def create_deployment_schema(
         self, name, namespace, target_manifest: BaseFlockSchema
     ) -> DeploymentSchema:
@@ -104,14 +135,7 @@ class BaseDeployers(metaclass=abc.ABCMeta):
                 labels=target_manifest.metadata.labels,
             ),
             spec=DeploymentSpec(
-                targetResource=TargetResource(  # type: ignore
-                    kind=target_manifest.kind,
-                    name=target_manifest.metadata.name,
-                    namespace=target_manifest.namespace,
-                    # description=target_manifest.metadata.description,
-                    # options=target_manifest.spec.options,
-                    # TODO: i have no idea why description and options must be included here by pylance if it's optional in the schema
-                ),
+                targetResource=self._get_target_resource(target_manifest),
                 volumes=[
                     Volume(
                         name="flock-data",
@@ -119,25 +143,7 @@ class BaseDeployers(metaclass=abc.ABCMeta):
                     )
                 ],
                 replicas=1,
-                container=ContainerSpec(
-                    volume_mounts=[
-                        VolumeMount(
-                            name="flock-data",
-                            mountPath="/flock-data",
-                            readOnly=False,
-                        )
-                    ],
-                    image=self.fetch_image(target_manifest.kind),
-                    image_pull_policy="IfNotPresent",
-                    ports=[
-                        ContainerPort(
-                            name="http",
-                            port=8080,
-                            protocol="TCP",
-                        )
-                    ],
-                    env=self.fetch_env_vars(target_manifest),
-                ),
+                container=self._get_container_spec(target_manifest),
             ),
         )
 
@@ -158,26 +164,9 @@ class BaseDeployers(metaclass=abc.ABCMeta):
                 labels=target_manifest.metadata.labels,
             ),
             spec=JobSpec(
-                targetResource=TargetResource(  # type: ignore
-                    kind=target_manifest.kind,
-                    name=target_manifest.metadata.name,
-                    namespace=target_manifest.namespace,
-                    # description=target_manifest.metadata.description,
-                    # options=target_manifest.spec.options,
-                    # TODO: i have no idea why description and options must be included here by pylance if it's optional in the schema
-                ),
-                container=ContainerSpec(
-                    image=self.fetch_image(target_manifest.kind),
-                    image_pull_policy="IfNotPresent",
-                    ports=[
-                        ContainerPort(
-                            name="http",
-                            port=8080,
-                            protocol="TCP",
-                        )
-                    ],
-                    env=self.fetch_env_vars(target_manifest),
-                ),
+                targetResource=self._get_target_resource(target_manifest),
+                container=self._get_container_spec(target_manifest),
+                restart_policy="Never",
             ),
         )
         return job_manifest
@@ -203,13 +192,13 @@ class BaseDeployers(metaclass=abc.ABCMeta):
         result = []
 
         if target_kind == "Agent":
-            result = self.get_vars()
+            result = self.get_vars(target_manifest)
         if target_kind == "EmbeddingsLoader":
-            result = self.get_vars()
+            result = self.get_vars(target_manifest)
 
         return result
 
-    def get_vars(self) -> List[EnvironmentVariable]:
+    def get_vars(self, target_manifest: BaseFlockSchema) -> List[EnvironmentVariable]:
         return [
             EnvironmentVariable(  # type: ignore
                 name="RESOURCE_STORE_HOST",
@@ -238,6 +227,14 @@ class BaseDeployers(metaclass=abc.ABCMeta):
             EnvironmentVariable(  # type: ignore
                 name="FLOCK_AGENT_PORT",
                 value="8080",
+            ),
+            EnvironmentVariable(  # type: ignore
+                name="SOURCE_DIRECTORY",
+                value=f"/flock-data/embeddings/pre_processed/{target_manifest.metadata.name}",
+            ),
+            EnvironmentVariable(  # type: ignore
+                name="ARCHIVE_PATH",
+                value=f"/flock-data/embeddings/processed/{target_manifest.metadata.name}",
             ),
             EnvironmentVariable(  # type: ignore
                 name="OPENAI_API_KEY",
