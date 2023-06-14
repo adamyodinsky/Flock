@@ -58,8 +58,8 @@ class BaseDeployers(metaclass=abc.ABCMeta):
         self.resource_store = resource_store
         self.schema_factory = SchemaFactory()
         self.schema_creators_map = {
-            "Agent": self.create_deployment_schema,
-            "EmbeddingsLoader": self.create_job_schema,
+            "FlockDeployment": self.create_deployment_schema,
+            "FlockJob": self.create_job_schema,
         }
 
         self.service_deployer: BaseDeployer

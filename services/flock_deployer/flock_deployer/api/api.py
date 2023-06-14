@@ -8,9 +8,9 @@ from pydantic import ValidationError
 
 from flock_deployer.deployer import DeployerFactory
 from flock_deployer.deployer.base import BaseDeployers
-from flock_deployer.schemas import ResourceCreated
+from flock_deployer.schemas import ResourceCreated, ResourceDeleted
 from flock_deployer.schemas.deployment import DeploymentSchema
-from flock_deployer.schemas.request import DeploymentRequest
+from flock_deployer.schemas.request import DeleteRequest, DeploymentRequest
 
 resource_store = ResourceStoreFactory.get_resource_store(
     store_type=os.environ.get("FLOCK_RESOURCE_STORE_TYPE", "mongo"),
@@ -66,7 +66,7 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
                 kind=data.resource_kind,
             )
 
-            creator = deployers.get_creator(data.resource_kind)
+            creator = deployers.get_creator(data.deployment_kind)
             deployment_schema: DeploymentSchema = creator(
                 data.deployment_name, data.deployment_namespace, target_manifest
             )
@@ -105,5 +105,56 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
             ) from error
 
         return ResourceCreated(data=deployment_schema)
+
+    @router.post("/delete")
+    async def delete(
+        data: DeleteRequest = Body(..., description=""),
+        deployers: BaseDeployers = Depends(lambda: deployers),
+    ) -> ResourceDeleted:
+        """Delete
+
+        Delete a resource from the target cluster.
+
+        Args:
+            data (DeleteRequest): Delete request
+            deployers (BaseDeployers): Deployers
+
+        Raises:
+            HTTPException: Failed to build resource
+            HTTPException: Failed to store resource
+
+        Returns:
+            ResourceDeleted: Resource deleted
+        """
+
+        try:
+            if data.resource_kind == "Agent":
+                deployers.service_deployer.delete(
+                    name=data.deployment_name,
+                    namespace=data.deployment_namespace,
+                    dry_run=False,
+                )
+                deployers.deployment_deployer.delete(
+                    name=data.deployment_name,
+                    namespace=data.deployment_namespace,
+                    dry_run=False,
+                )
+            else:
+                deployers.job_deployer.delete(
+                    name=data.deployment_name,
+                    namespace=data.deployment_namespace,
+                    dry_run=False,
+                )
+
+        except Exception as error:  # pylint: disable=broad-except
+            raise HTTPException(
+                status_code=500,
+                detail=[
+                    "Failed to store resource",
+                    str(error),
+                ],
+            ) from error
+
+        return ResourceDeleted()
 
     return router

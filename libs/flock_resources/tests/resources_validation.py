@@ -62,12 +62,12 @@ def single_test(file_path, prompt):
 def run_build_tests():
     """Run all tests"""
     validation_iterator(
-        dir_path="assets/schemas",
+        dir_path="../../assets/schemas",
         validation_function=test_building_resource,
     )
 
     embeddings_loader: EmbeddingsLoaderResource = test_building_resource(  # type: ignore
-        resource_store.load_file("assets/schemas/2/embeddings_loader.yaml")
+        resource_store.load_file("../../assets/schemas/2/embeddings_loader.yaml")
     )
 
     embeddings_loader.load_files_to_vectorstore()

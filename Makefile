@@ -35,13 +35,16 @@ docker-webscraper-run:
 
 minikube-start:
 	minikube start \
-	--ports=127.0.0.1:443:443 \
-	--ports=127.0.0.1:80:80 \
 	--ports=127.0.0.1:27017:30200  \
 	--ports=127.0.0.1:8200:30201  \
 	--ports=127.0.0.1:5672:30202	\
 	--ports=127.0.0.1:25672:30203  \
-	--ports=127.0.0.1:15672:30204  
+	--ports=127.0.0.1:15672:30204 \
+	--cpus 4 --memory 6144
+	@sleep 5
+	minikube addons enable metrics-server 
+
+
 
 
 load-images:
@@ -77,7 +80,10 @@ apply-vault:
 
 apply-infra: apply-mongo apply-rabbitmq apply-vault
 
-load-secret:
+apply-secret:
 	kubectl apply -f infra/secret.yaml
 
-setup-all: docker-base-build docker-agent-build docker-embeddings-loader-build docker-webscraper-build load-images load-secret apply-infra
+apply-pvc:
+	kubectl apply -f infra/pvc.yaml
+
+setup-all: docker-base-build docker-agent-build docker-embeddings-loader-build docker-webscraper-build load-images apply-secret apply-pvc apply-infra

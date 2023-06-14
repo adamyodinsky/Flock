@@ -1,26 +1,31 @@
 """ Test """
 
+import os
+
 import yaml
 from flock_common.secret_store import SecretStoreFactory
 from flock_resource_store import ResourceStoreFactory
 from flock_schemas.factory import SchemaFactory
 
 from flock_deployer.deployer import DeployerFactory
-from flock_deployer.manifest_creator.creator import ManifestCreator
 from flock_deployer.schemas.deployment import DeploymentSchema
 from flock_deployer.schemas.job import JobSchema
 
-schema_factory = SchemaFactory()
 resource_store = ResourceStoreFactory.get_resource_store()
-DRY_RUN = False
+secret_store = SecretStoreFactory.get_secret_store("vault")
 
 
-def setup_deployer():
-    secret_store = SecretStoreFactory.get_secret_store("vault")
+def setup_deployers():
     return DeployerFactory.get_deployer(
-        deployer_type="k8s",
+        deployer_type=os.environ.get("FLOCK_DEPLOYER_TYPE", "k8s"),
         secret_store=secret_store,
+        resource_store=resource_store,
     )
+
+
+schema_factory = SchemaFactory()
+deployers = setup_deployers()
+DRY_RUN = False
 
 
 def load_and_validate_schema(schema_class, yaml_path):
@@ -34,25 +39,25 @@ def process_manifest(deployer, data, target_manifest, dry_run):
 
 
 def test_deployer(deployer, yaml_path, schema_cls, dry_run=DRY_RUN):
-    data = load_and_validate_schema(schema_cls, yaml_path)
-    target_manifest = resource_store.get(
-        name=data.spec.targetResource.name,
-        kind=data.spec.targetResource.kind,
-        namespace=data.spec.targetResource.namespace,
+    deployment_manifest = load_and_validate_schema(schema_cls, yaml_path)
+    resource_manifest = resource_store.get(
+        name=deployment_manifest.spec.targetResource.name,
+        kind=deployment_manifest.spec.targetResource.kind,
+        namespace=deployment_manifest.spec.targetResource.namespace,
     )
-    target_schema_cls = schema_factory.get_schema(target_manifest["kind"])
-    target_manifest = target_schema_cls.validate(target_manifest)
+    target_schema_cls = schema_factory.get_schema(resource_manifest["kind"])
+    target_manifest = target_schema_cls.validate(resource_manifest)
 
-    process_manifest(deployer, data, target_manifest, dry_run)
+    process_manifest(deployer, deployment_manifest, target_manifest, dry_run)
 
 
 def test_manifest_creator(
-    target_name, target_namespace, target_kind, creator_function
+    target_name, target_namespace, target_kind, deployment_kind
 ) -> tuple:
     target_manifest = resource_store.get(
         name=target_name, kind=target_kind, namespace=target_namespace
     )
-    deployment_manifest = creator_function(
+    deployment_manifest = deployers.get_creator(deployment_kind)(
         name=target_name,
         namespace=target_namespace,
         target_manifest=schema_factory.get_schema(target_kind).validate(
@@ -60,20 +65,6 @@ def test_manifest_creator(
         ),
     )
     return target_manifest, deployment_manifest
-
-
-def test_manifest_creator_and_deployer(
-    target_kind, target_name, target_namespace, creator_function, dry_run=DRY_RUN
-):
-    target_manifest, deployment_manifest = creator_function(
-        target_name, target_namespace, target_kind
-    )
-
-    deployer = setup_deployer()
-
-    process_manifest(
-        deployer.deployment_deployer, deployment_manifest, target_manifest, dry_run
-    )
 
 
 def delete(target_name, target_namespace, deployer, dry_run=DRY_RUN):
@@ -84,59 +75,40 @@ def delete(target_name, target_namespace, deployer, dry_run=DRY_RUN):
     )
 
 
+# TODO: fix this tests, match to the refactored code
 def main():
-    deployer = setup_deployer()
-    manifest_creator = ManifestCreator()
-    manifest_creator_deployment = manifest_creator.create_deployment
-    manifest_creator_job = manifest_creator.create_job
-
-    test_manifest_creator("my-agent", "default", "Agent", manifest_creator_deployment)
+    test_manifest_creator("my-agent", "default", "Agent", "FlockDeployment")
     test_manifest_creator(
-        "my-embedding-data-loader", "default", "EmbeddingsLoader", manifest_creator_job
+        "my-embedding-data-loader", "default", "EmbeddingsLoader", "FlockJob"
     )
+    test_manifest_creator("my-web-scraper", "default", "WebScraper")
 
     # Deploy Job
     test_deployer(
-        deployer.job_deployer,
+        deployers.job_deployer,
         "./assets/schemas/embeddings_loader_job.yaml",
         JobSchema,
     )
-    deployer.job_deployer.delete(
+    deployers.job_deployer.delete(
         name="embeddings-loader", namespace="default", dry_run=DRY_RUN
     )
 
     # Deploy Deployment
     test_deployer(
-        deployer.deployment_deployer,
+        deployers.deployment_deployer,
         "./assets/schemas/agent_deployment.yaml",
         DeploymentSchema,
     )
     test_deployer(
-        deployer.service_deployer,
+        deployers.service_deployer,
         "./assets/schemas/agent_deployment.yaml",
         DeploymentSchema,
     )
-    deployer.deployment_deployer.delete(
+    deployers.deployment_deployer.delete(
         name="my-agent", namespace="default", dry_run=DRY_RUN
     )
-    deployer.service_deployer.delete(
+    deployers.service_deployer.delete(
         name="my-agent", namespace="default", dry_run=DRY_RUN
-    )
-
-    # Manifest creator deployment
-    test_manifest_creator_and_deployer(
-        "Agent", "my-agent", "default", manifest_creator_deployment
-    )
-    deployer.deployment_deployer.delete(
-        name="my-agent", namespace="default", dry_run=DRY_RUN
-    )
-
-    # Manifest creator job
-    test_manifest_creator_and_deployer(
-        "EmbeddingsLoader", " my-embedding-data-loader", "default", manifest_creator_job
-    )
-    deployer.job_deployer.delete(
-        name="my-embedding-data-loader", namespace="default", dry_run=DRY_RUN
     )
 
 
