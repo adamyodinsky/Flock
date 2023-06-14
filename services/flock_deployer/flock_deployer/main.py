@@ -13,8 +13,8 @@ from flock_deployer.deployer import DeployerFactory
 
 load_dotenv(find_dotenv(os.environ.get("FLOCK_ENV_FILE", ".env")))
 
-required_vars = ["FLOCK_DEPLOYER_TYPE"]
-optional_vars = []
+required_vars = []
+optional_vars = ["FLOCK_DEPLOYER_TYPE"]
 check_env_vars(required_vars, optional_vars)
 
 app = FastAPI(

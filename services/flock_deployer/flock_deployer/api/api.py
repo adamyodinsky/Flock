@@ -1,36 +1,12 @@
-import os
+import logging
 
 from fastapi import APIRouter, Body, Depends, HTTPException
-from flock_common.secret_store import SecretStoreFactory
-from flock_resource_store import ResourceStoreFactory
-from flock_schemas.factory import SchemaFactory
 from pydantic import ValidationError
 
-from flock_deployer.deployer import DeployerFactory
 from flock_deployer.deployer.base import BaseDeployers
 from flock_deployer.schemas import ResourceCreated, ResourceDeleted
 from flock_deployer.schemas.deployment import DeploymentSchema
 from flock_deployer.schemas.request import DeleteRequest, DeploymentRequest
-
-resource_store = ResourceStoreFactory.get_resource_store(
-    store_type=os.environ.get("FLOCK_RESOURCE_STORE_TYPE", "mongo"),
-    db_name=os.environ.get("RESOURCE_STORE_DB_NAME", "flock_db"),
-    table_name=os.environ.get("RESOURCE_STORE_TABLE_NAME", "flock_resources"),
-    host=os.environ.get("RESOURCE_STORE_HOST", "localhost"),
-    port=int(os.environ.get("RESOURCE_STORE_PORT", 27017)),
-    username=os.environ.get("RESOURCE_STORE_USERNAME", "root"),
-    password=os.environ.get("RESOURCE_STORE_PASSWORD", "password"),
-)
-
-schema_factory = SchemaFactory()
-
-
-secret_store = SecretStoreFactory.get_secret_store("vault")
-deployer = DeployerFactory.get_deployer(
-    deployer_type="k8s",
-    secret_store=secret_store,
-    resource_store=resource_store,
-)
 
 
 def get_router(deployers: BaseDeployers) -> APIRouter:
@@ -58,7 +34,7 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
         Returns:
             ResourceCreated: Resource created
         """
-
+        logging.info("Creating resource objects%s", data.resource_name)
         try:
             target_manifest = deployers.get_target_manifest(
                 name=data.resource_name,
@@ -82,6 +58,7 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
                 detail=["Failed to build resource", str(error)],
             ) from error
 
+        logging.info("Deploying resource %s", data.resource_name)
         try:
             if data.resource_kind == "Agent":
                 deployers.service_deployer.deploy(
@@ -127,6 +104,7 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
             ResourceDeleted: Resource deleted
         """
 
+        logging.info("Deleting resource %s", data.deployment_name)
         try:
             if data.resource_kind == "Agent":
                 deployers.service_deployer.delete(
