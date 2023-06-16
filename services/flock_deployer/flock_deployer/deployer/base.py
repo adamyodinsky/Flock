@@ -6,6 +6,10 @@ import logging
 from typing import List
 
 from flock_common.secret_store import SecretStore
+from flock_resource_store.base import ResourceStore
+from flock_schemas.base import BaseFlockSchema
+from flock_schemas.factory import SchemaFactory
+
 from flock_deployer.schemas.deployment import (
     ContainerPort,
     ContainerSpec,
@@ -18,9 +22,6 @@ from flock_deployer.schemas.deployment import (
     VolumeMount,
 )
 from flock_deployer.schemas.job import BaseMetaData, JobSchema, JobSpec
-from flock_resource_store.base import ResourceStore
-from flock_schemas.base import BaseFlockSchema
-from flock_schemas.factory import SchemaFactory
 
 
 class BaseDeployer(metaclass=abc.ABCMeta):
@@ -239,18 +240,19 @@ class BaseDeployers(metaclass=abc.ABCMeta):
             ),
             EnvironmentVariable(  # type: ignore
                 name="SOURCE_DIR",
-                value=f"/flock-data/embeddings/pre_processed/{target_manifest.metadata.name}",
+                value="/flock-data/embeddings/pre_processed",
             ),
             EnvironmentVariable(  # type: ignore
-                name="SCRAPER_OUTPUT_DIR", value="/flock-data/embeddings/pre_processed"
+                name="SCRAPER_OUTPUT_DIR",
+                value="/flock-data/embeddings/pre_processed",
             ),
             EnvironmentVariable(  # type: ignore
                 name="ARCHIVE_DIR",
-                value=f"/flock-data/embeddings/processed/{target_manifest.metadata.name}",
+                value="/flock-data/embeddings/processed",
             ),
             EnvironmentVariable(  # type: ignore
                 name="SCRAPER_NAME",
-                value="books",
+                value=target_manifest.metadata.name,
             ),
             EnvironmentVariable(  # type: ignore
                 name="OPENAI_API_KEY",
