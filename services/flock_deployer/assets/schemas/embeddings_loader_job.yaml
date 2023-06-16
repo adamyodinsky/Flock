@@ -25,9 +25,9 @@ spec:
       # BASE_META_SOURCE
       # ALLOWED_EXTENSIONS
       # DENY_EXTENSIONS
-      - name: SOURCE_DIRECTORY
+      - name: SOURCE_DIR
         value: "/flock-data/embeddings/pre_processed"
-      - name: ARCHIVE_PATH
+      - name: ARCHIVE_DIR
         value: "/flock-data/embeddings/processed"
       - name: RESOURCE_STORE_USERNAME
         value: root

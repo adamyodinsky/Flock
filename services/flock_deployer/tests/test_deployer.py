@@ -38,8 +38,7 @@ def process_manifest(deployer, data, target_manifest, dry_run):
     deployer.deploy(data, target_manifest, dry_run=dry_run)
 
 
-def test_deployer(deployer, yaml_path, schema_cls, dry_run=DRY_RUN):
-    deployment_manifest = load_and_validate_schema(schema_cls, yaml_path)
+def test_deployer(deployer, deployment_manifest, dry_run=DRY_RUN):
     resource_manifest = resource_store.get(
         name=deployment_manifest.spec.targetResource.name,
         kind=deployment_manifest.spec.targetResource.kind,
@@ -77,42 +76,63 @@ def delete(target_name, target_namespace, deployer, dry_run=DRY_RUN):
 
 # TODO: fix this tests, match to the refactored code
 def main():
-    test_manifest_creator("my-agent", "default", "Agent", "FlockDeployment")
-    test_manifest_creator(
+    # deployment_manifest = load_and_validate_schema(
+    #     JobSchema, "./assets/schemas/web_scraper_job.yaml"
+    # )
+    # test_deployer(deployers.job_deployer, deployment_manifest)
+
+    # deployment_manifest = load_and_validate_schema(
+    #     JobSchema, "./assets/schemas/embeddings_loader_job.yaml"
+    # )
+    # test_deployer(deployers.job_deployer, deployment_manifest)
+
+    # deployers.job_deployer.delete(
+    #     name="web-scraper", namespace="default", dry_run=DRY_RUN
+    # )
+    # deployers.job_deployer.delete(
+    #     name="embeddings-loader", namespace="default", dry_run=DRY_RUN
+    # )
+
+    # # Deploy Deployment
+    # deployment_manifest = load_and_validate_schema(
+    #     DeploymentSchema,
+    #     "./assets/schemas/agent_deployment.yaml",
+    # )
+    # test_deployer(
+    #     deployers.deployment_deployer,
+    #     deployment_manifest,
+    # )
+
+    # test_deployer(deployers.service_deployer, deployment_manifest)
+    # deployers.deployment_deployer.delete(
+    #     name="my-agent", namespace="default", dry_run=DRY_RUN
+    # )
+    # deployers.service_deployer.delete(
+    #     name="my-agent", namespace="default", dry_run=DRY_RUN
+    # )
+
+    # Deploy Job with manifest creators
+    _, deployment_manifest = test_manifest_creator(
+        "my-web-scraper", "default", "WebScraper", "FlockJob"
+    )
+    test_deployer(deployers.job_deployer, deployment_manifest)
+    deployers.job_deployer.delete(
+        name="my-web-scraper", namespace="default", dry_run=DRY_RUN
+    )
+
+    _, deployment_manifest = test_manifest_creator(
         "my-embedding-data-loader", "default", "EmbeddingsLoader", "FlockJob"
     )
-    test_manifest_creator("my-web-scraper", "default", "WebScraper", "FlockJob")
-
-    # Deploy Job
-    test_deployer(
-        deployers.job_deployer,
-        "./assets/schemas/web_scraper_job.yaml",
-        JobSchema,
-    )
-    test_deployer(
-        deployers.job_deployer,
-        "./assets/schemas/embeddings_loader_job.yaml",
-        JobSchema,
-    )
-
+    test_deployer(deployers.job_deployer, deployment_manifest)
     deployers.job_deployer.delete(
-        name="web-scraper", namespace="default", dry_run=DRY_RUN
-    )
-    deployers.job_deployer.delete(
-        name="embeddings-loader", namespace="default", dry_run=DRY_RUN
+        name="my-embedding-data-loader", namespace="default", dry_run=DRY_RUN
     )
 
-    # Deploy Deployment
-    test_deployer(
-        deployers.deployment_deployer,
-        "./assets/schemas/agent_deployment.yaml",
-        DeploymentSchema,
+    _, deployment_manifest = test_manifest_creator(
+        "my-agent", "default", "Agent", "FlockDeployment"
     )
-    test_deployer(
-        deployers.service_deployer,
-        "./assets/schemas/agent_deployment.yaml",
-        DeploymentSchema,
-    )
+    test_deployer(deployers.deployment_deployer, deployment_manifest)
+
     deployers.deployment_deployer.delete(
         name="my-agent", namespace="default", dry_run=DRY_RUN
     )

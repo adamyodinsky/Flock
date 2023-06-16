@@ -199,49 +199,6 @@
       ],
       "additionalProperties": false
     },
-    "EmbeddingDependency": {
-      "title": "EmbeddingDependency",
-      "description": "Embedding dependency schema.",
-      "type": "object",
-      "properties": {
-        "labels": {
-          "title": "Labels",
-          "description": "Labels are useful for filtering and finding objects",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "name": {
-          "title": "Name",
-          "description": "Name of the dependency",
-          "type": "string"
-        },
-        "kind": {
-          "title": "Kind",
-          "default": "Embedding",
-          "const": "Embedding",
-          "type": "string"
-        },
-        "namespace": {
-          "title": "Namespace",
-          "description": "The namespace of the object",
-          "default": "default",
-          "maxLength": 63,
-          "type": "string"
-        },
-        "options": {
-          "title": "Options",
-          "description": "Resource options",
-          "default": {},
-          "type": "object"
-        }
-      },
-      "required": [
-        "name"
-      ],
-      "additionalProperties": false
-    },
     "VectorStoreDependency": {
       "title": "VectorStoreDependency",
       "description": "Store dependency schema.",
@@ -300,6 +257,7 @@
         "PromptTemplate",
         "LLMTool",
         "EmbeddingsLoader",
+        "WebScraper",
         "Custom"
       ],
       "type": "string"
@@ -378,14 +336,11 @@
           "title": "Dependencies",
           "description": "dependencies",
           "type": "array",
-          "minItems": 3,
-          "maxItems": 3,
+          "minItems": 2,
+          "maxItems": 2,
           "items": [
             {
               "$ref": "#/definitions/SplitterDependency"
-            },
-            {
-              "$ref": "#/definitions/EmbeddingDependency"
             },
             {
               "$ref": "#/definitions/VectorStoreDependency"

@@ -7,11 +7,7 @@ from typing import Literal, Optional
 from pydantic import Field
 
 from flock_schemas.base import BaseFlockSchema, BaseModelConfig, BaseSpec, Category
-from flock_schemas.dependencies import (
-    EmbeddingDependency,
-    SplitterDependency,
-    VectorStoreDependency,
-)
+from flock_schemas.dependencies import SplitterDependency, VectorStoreDependency
 
 
 def home_dir():
@@ -47,9 +43,9 @@ class EmbeddingsLoaderSpec(BaseSpec):
     """EmbeddingsLoader spec."""
 
     vendor: Optional[str] = Field(default="v1", description="")
-    dependencies: tuple[
-        SplitterDependency, EmbeddingDependency, VectorStoreDependency
-    ] = Field(..., description="dependencies")
+    dependencies: tuple[SplitterDependency, VectorStoreDependency] = Field(
+        ..., description="dependencies"
+    )
 
     options: EmbeddingsLoaderOptions = Field(
         default_factory=EmbeddingsLoaderOptions,

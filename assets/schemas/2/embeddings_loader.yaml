@@ -15,9 +15,6 @@ spec:
     - kind: Splitter
       name: my-splitter
       namespace: default
-    - kind: Embedding
-      name: my-openai-embedding
-      namespace: default
     - kind: VectorStore
       name: books
       namespace: default

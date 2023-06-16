@@ -34,8 +34,6 @@ spec:
         value: ""
       - name: SCRAPER_FEED_EXPORT_BATCH_ITEM_COUNT
         value: "10"
-      - name: FLOCK_LOADER_TYPE
-        value: "scraped-data"
       - name: SCRAPER_OUTPUT_DIR
         value: "/flock-data/embeddings/pre_processed"
   targetResource:

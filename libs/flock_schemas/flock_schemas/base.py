@@ -20,6 +20,7 @@ class Kind(str, Enum):
     PromptTemplate = "PromptTemplate"
     LLMTool = "LLMTool"
     EmbeddingsLoader = "EmbeddingsLoader"
+    WebScraper = "WebScraper"
     Custom = "Custom"
 
 

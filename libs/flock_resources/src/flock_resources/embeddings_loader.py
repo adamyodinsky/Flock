@@ -4,14 +4,15 @@ import json
 import os
 from typing import Dict, List, Optional
 
-from flock_resources.base import Resource, ToolResource
-from flock_resources.embedding import EmbeddingResource
-from flock_resources.splitter import SplitterResource
-from flock_resources.vectorstore import VectorStoreResource
 from flock_schemas.base import Kind
 from flock_schemas.embeddings_loader import EmbeddingsLoaderSchema
 from langchain.docstore.document import Document
 from langchain.document_loaders import CSVLoader, PDFMinerLoader, TextLoader
+
+from flock_resources.base import Resource, ToolResource
+from flock_resources.embedding import EmbeddingResource
+from flock_resources.splitter import SplitterResource
+from flock_resources.vectorstore import VectorStoreResource
 
 
 class EmbeddingsLoaderResource(Resource):
@@ -37,13 +38,12 @@ class EmbeddingsLoaderResource(Resource):
     ) -> None:
         super().__init__(manifest, dependencies, tools)
 
-        self.source_directory = (
-            os.environ.get("SOURCE_DIRECTORY", None)
-            or manifest.spec.options.source_directory
+        self.base_source_dir = (
+            os.environ.get("SOURCE_DIR", None) or manifest.spec.options.source_directory
         )
 
-        self.archive_path = (
-            os.environ.get("ARCHIVE_PATH", None) or manifest.spec.options.archive_path
+        self.base_archive_dir = (
+            os.environ.get("ARCHIVE_DIR", None) or manifest.spec.options.archive_path
         )
 
         self.base_meta_source = (
@@ -72,8 +72,14 @@ class EmbeddingsLoaderResource(Resource):
             self.deny_extensions = []
 
         self.splitter: SplitterResource = self.dependencies.get(Kind.Splitter)  # type: ignore
-        self.embedding: EmbeddingResource = self.dependencies.get(Kind.Embedding)  # type: ignore
         self.vectorstore: VectorStoreResource = self.dependencies.get(Kind.VectorStore)  # type: ignore
+        self.embedding: EmbeddingResource = self.vectorstore.embedding  # type: ignore
+        self.source_dir = (
+            f"{self.base_source_dir}/{self.vectorstore.manifest.metadata.name}"
+        )
+        self.archive_dir = (
+            f"{self.base_archive_dir}/{self.vectorstore.manifest.metadata.name}"
+        )
 
     def _list_files_recursive(self, folder: str):
         """List all files in a folder recursively."""
@@ -174,17 +180,19 @@ class EmbeddingsLoaderResource(Resource):
     def load_scraped_data_to_vectorstore(self):
         """Load scraped data to vectorstore."""
 
-        if not os.path.exists(self.source_directory):
-            os.makedirs(self.source_directory)
+        source_dir = self.source_dir + "/scraped_data"
+        if not os.path.exists(source_dir):
+            os.makedirs(source_dir)
 
-        if not os.path.exists(self.archive_path):
-            os.makedirs(self.archive_path)
+        archive_dir = self.archive_dir + "/scraped_data"
+        if not os.path.exists(archive_dir):
+            os.makedirs(archive_dir)
 
-        files = self._get_files_list(self.source_directory)
+        files = self._get_files_list(source_dir)
 
         for file in files:
             print(f"Loading {file} to vectorstore...")
-            json_obj = self._load_json(f"{self.source_directory}/{file}")
+            json_obj = self._load_json(f"{source_dir}/{file}")
 
             for page in json_obj:
                 document = [
@@ -198,18 +206,20 @@ class EmbeddingsLoaderResource(Resource):
 
             # move file to archive
             print(f"Moving {file} to archive...")
-            os.rename(f"{self.source_directory}/{file}", f"{self.archive_path}/{file}")
+            os.rename(f"{source_dir}/{file}", f"{archive_dir}/{file}")
 
     def load_files_to_vectorstore(self):
         """Load plain text data to vectorstore."""
 
-        if not os.path.exists(self.source_directory):
-            os.makedirs(self.source_directory)
+        source_dir = self.source_dir + "/raw_data"
+        if not os.path.exists(source_dir):
+            os.makedirs(source_dir)
 
-        if not os.path.exists(self.archive_path):
-            os.makedirs(self.archive_path)
+        archive_dir = self.archive_dir + "/raw_data"
+        if not os.path.exists(archive_dir):
+            os.makedirs(archive_dir)
 
-        files = self._list_files_recursive(self.source_directory)
+        files = self._list_files_recursive(source_dir)
 
         files = self._filter_files_by_allowed_extensions(files)
         files = self._filter_files_by_deny_extensions(files)
@@ -217,14 +227,14 @@ class EmbeddingsLoaderResource(Resource):
         for file in files:
             print(f"Adding {file} to the vectorstore.")
 
-            document = self.load_single_document(f"{self.source_directory}/{file}")
+            document = self.load_single_document(f"{source_dir}/{file}")
             document = self.splitter.resource.split_documents([document])
             self.vectorstore.resource.add_documents(document)
 
             print(f"Moving {file} to archive...")
             os.rename(
-                f"{self.source_directory}/{file}",
-                f"{self.archive_path}/{os.path.basename(file)}",
+                f"{source_dir}/{file}",
+                f"{archive_dir}/{os.path.basename(file)}",
             )
 
 

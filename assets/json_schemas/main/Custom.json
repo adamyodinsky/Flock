@@ -130,6 +130,7 @@
         "PromptTemplate",
         "LLMTool",
         "EmbeddingsLoader",
+        "WebScraper",
         "Custom"
       ],
       "type": "string"
