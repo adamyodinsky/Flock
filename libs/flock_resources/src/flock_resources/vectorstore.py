@@ -28,16 +28,14 @@ class VectorStoreResource(Resource):
     ):
         super().__init__(manifest, dependencies, tools, dry_run)
         self.vendor_cls: VectorStoreLC = cast(VectorStoreLC, self.VENDORS[self.vendor])
-        self.embedding: EmbeddingsLC = EmbeddingsLC, self.dependencies[Kind.Embedding].resource  # type: ignore
-        self.embedding_function: self.embedding.embed_query
+        self.embedding: EmbeddingsLC = self.dependencies[Kind.Embedding].resource
 
         if self.dry_run:
             if "persist_directory" in self.options:  # type: ignore
                 del self.options["persist_directory"]  # type: ignore
 
         self.resource = self.vendor_cls(  # type: ignore
-            **self.options,
-            embedding_function=,
+            **self.options, embedding_function=self.embedding
         )
 
 

@@ -11,6 +11,6 @@ metadata:
 spec:
   vendor: WebScraper
   dependencies:
-    - name: books
+    - kind: VectorStore
+      name: books
       namespace: default
-      kind: VectorStore
