@@ -95,7 +95,7 @@ class FlockSpider(CrawlSpider):
 
     # Overrides default settings, usually in the settings.py file
     custom_settings = {
-        "FEED_URI": f"{output_dir}/%(name)s/%(batch_id)s.json",
+        "FEED_URI": f"{output_dir}/%(name)s/scraped_data/%(batch_id)s.json",
         "DOWNLOAD_DELAY": os.environ.get("SCRAPER_DOWNLOAD_DELAY", 1),
         "FEED_EXPORT_ENCODING": os.environ.get("SCRAPER_FEED_EXPORT_ENCODING", "utf-8"),
         "FEED_FORMAT": os.environ.get("SCRAPER_FEED_FORMAT", "json"),
