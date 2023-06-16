@@ -4,15 +4,14 @@ import json
 import os
 from typing import Dict, List, Optional
 
-from langchain.docstore.document import Document
-from langchain.document_loaders import CSVLoader, PDFMinerLoader, TextLoader
-
 from flock_resources.base import Resource, ToolResource
 from flock_resources.embedding import EmbeddingResource
 from flock_resources.splitter import SplitterResource
 from flock_resources.vectorstore import VectorStoreResource
 from flock_schemas.base import Kind
 from flock_schemas.embeddings_loader import EmbeddingsLoaderSchema
+from langchain.docstore.document import Document
+from langchain.document_loaders import CSVLoader, PDFMinerLoader, TextLoader
 
 
 class EmbeddingsLoaderResource(Resource):
@@ -34,6 +33,7 @@ class EmbeddingsLoaderResource(Resource):
         manifest: EmbeddingsLoaderSchema,
         dependencies: Optional[Dict[str, Resource]],
         tools: Optional[List[ToolResource]] = None,
+        dry_run: bool = False,
     ) -> None:
         super().__init__(manifest, dependencies, tools)
 

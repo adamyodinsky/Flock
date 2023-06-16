@@ -19,6 +19,7 @@ class EmbeddingResource(Resource):
         manifest: EmbeddingSchema,
         dependencies: Optional[Dict[str, Resource]],
         tools: Optional[List[ToolResource]] = None,
+        dry_run: bool = False,
     ):
         super().__init__(manifest, dependencies, tools)
         self.vendor_cls = self.VENDORS[self.vendor]

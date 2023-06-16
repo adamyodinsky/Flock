@@ -4,11 +4,11 @@ import os
 import readline
 
 from flock_common.validation import validation_iterator
+from flock_resource_store import ResourceStoreFactory
+from flock_schemas import SchemaFactory
 
 from flock_builder import ResourceBuilder
 from flock_resources.embeddings_loader import EmbeddingsLoaderResource
-from flock_schemas import SchemaFactory
-from flock_resource_store import ResourceStoreFactory
 
 # Setup
 # pylint: disable=C0103
@@ -44,7 +44,7 @@ def test_building_resource(manifest):
     schema_instance = schema_cls.validate(manifest)
 
     # test building resource
-    resource = resource_builder.build_resource(manifest)
+    resource = resource_builder.build_resource(manifest, dry_run=True)
 
     return resource
 

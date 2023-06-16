@@ -78,7 +78,6 @@ class FlockSpider(CrawlSpider):
     name = os.environ.get("SCRAPER_NAME", "flock_spider")
     start_urls = os.environ.get("SCRAPER_START_URLS", "").split()
     output_dir = os.environ.get("SCRAPER_OUTPUT_DIR", "output")
-    print("hello")
 
     # Arguments for LinkExtractor Rule
     allowed_domains = os.environ.get("RULE_SCRAPER_ALLOWED_DOMAINS", "").split()

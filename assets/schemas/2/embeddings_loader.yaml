@@ -5,8 +5,8 @@ kind: EmbeddingsLoader
 namespace: default
 category: other
 metadata:
-  name: my-embedding-data-loader
-  description: Embedding Data Loader that can load embedding data
+  name: meta
+  description: Embedding Data Loader that can load embedding data to vector store
   labels:
     app: my_app
 spec:
@@ -19,5 +19,5 @@ spec:
       name: my-openai-embedding
       namespace: default
     - kind: VectorStore
-      name: meta_reports
+      name: books
       namespace: default

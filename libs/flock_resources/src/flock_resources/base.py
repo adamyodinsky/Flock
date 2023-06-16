@@ -3,12 +3,11 @@
 
 from typing import Any, List, Optional, cast
 
-from langchain.agents import Tool as ToolWarperLC
-
 from flock_schemas.agent import AgentSchema
 from flock_schemas.base import BaseFlockSchema
 from flock_schemas.base import BaseOptions as BaseOptionsSchema
 from flock_schemas.custom import CustomSchema
+from langchain.agents import Tool as ToolWarperLC
 
 
 class Resource:
@@ -33,6 +32,7 @@ class Resource:
         manifest: BaseFlockSchema,
         dependencies: Optional[dict[str, Any]] = None,
         tools: Optional[List[Any]] = None,
+        dry_run: bool = False,
     ):
         if dependencies is None:
             dependencies = {}
@@ -45,6 +45,7 @@ class Resource:
         self.dependencies: dict[str, Any] = dependencies
         self.options: BaseOptionsSchema = cast(BaseOptionsSchema, manifest.spec.options)
         self.resource = None
+        self.dry_run = dry_run
 
 
 class ToolResource(Resource):
@@ -59,8 +60,9 @@ class ToolResource(Resource):
         self,
         manifest: BaseFlockSchema,
         dependencies: Optional[dict[str, Resource]] = None,
+        dry_run: bool = False,
     ):
-        super().__init__(manifest, dependencies)
+        super().__init__(manifest, dependencies, dry_run=dry_run)
 
         if getattr(manifest.metadata.annotations, "name", False):
             self.name: str = manifest.metadata.annotations["name"]
@@ -81,11 +83,13 @@ class Agent(Resource):
         manifest: AgentSchema,
         dependencies: Optional[dict[str, Resource]] = None,
         tools: Optional[List[ToolResource]] = None,
+        dry_run: bool = False,
     ):
         super().__init__(
             manifest=manifest,
             dependencies=dependencies,
             tools=tools,
+            dry_run=dry_run,
         )
 
         if getattr(manifest.metadata.annotations, "name", False):
@@ -116,11 +120,13 @@ class CustomResource(Resource):
         manifest: CustomSchema,
         dependencies: Optional[dict[str, Resource]] = None,
         tools: Optional[List[ToolResource]] = None,
+        dry_run: bool = False,
     ):
         super().__init__(
             manifest=manifest,
             dependencies=dependencies,
             tools=tools,
+            dry_run=dry_run,
         )
 
         if tools is None:

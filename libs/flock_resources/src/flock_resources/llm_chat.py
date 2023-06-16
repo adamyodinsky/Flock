@@ -28,6 +28,7 @@ class LLMChatResource(Resource):
         manifest: LLMChatSchema,
         dependencies: Optional[dict[str, Resource]] = None,
         tools: Optional[List[ToolResource]] = None,
+        dry_run: bool = False,
     ):
         super().__init__(manifest, dependencies, tools)
         self.vendor_cls: BaseLanguageModel = cast(

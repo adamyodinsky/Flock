@@ -309,12 +309,14 @@
       "properties": {
         "claimName": {
           "title": "Claimname",
+          "description": "Name of the PersistentVolumeClaim to use.",
           "type": "string"
         }
       },
       "required": [
         "claimName"
-      ]
+      ],
+      "additionalProperties": false
     },
     "Secret": {
       "title": "Secret",
@@ -328,7 +330,8 @@
       },
       "required": [
         "secretName"
-      ]
+      ],
+      "additionalProperties": false
     },
     "Volume": {
       "title": "Volume",
@@ -341,15 +344,29 @@
           "type": "string"
         },
         "persistentVolumeClaim": {
-          "$ref": "#/definitions/PersistentVolumeClaim"
+          "title": "Persistentvolumeclaim",
+          "description": "PersistentVolumeClaim volume source.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PersistentVolumeClaim"
+            }
+          ]
         },
         "secret": {
           "$ref": "#/definitions/Secret"
+        },
+        "readOnly": {
+          "title": "Readonly",
+          "description": "Whether the volume is read only.",
+          "default": false,
+          "type": "boolean"
         }
       },
       "required": [
-        "name"
-      ]
+        "name",
+        "persistentVolumeClaim"
+      ],
+      "additionalProperties": false
     },
     "CronJobSpec": {
       "title": "CronJobSpec",

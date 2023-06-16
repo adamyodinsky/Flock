@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../../../../assets/json_schemas/main/JobSchema.json
+# yaml-language-server: $schema=../json_schemas/JobSchema.json
 ---
 apiVersion: flock/v1
 kind: FlockJob
@@ -10,7 +10,15 @@ metadata:
   labels:
     app: my_app
 spec:
+  volumes:
+    - name: flock-data
+      persistentVolumeClaim:
+        claimName: flock
   container:
+    volume_mounts:
+      - name: flock-data
+        mountPath: /flock-data
+        readOnly: false
     image_pull_policy: IfNotPresent
     image: flock-embeddings-loader
     env:

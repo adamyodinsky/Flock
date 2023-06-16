@@ -25,6 +25,7 @@ class SplitterResource(Resource):
         manifest: SplitterSchema,
         dependencies: Optional[Dict[str, Resource]],
         tools: Optional[List[ToolResource]] = None,
+        dry_run: bool = False,
     ):
         super().__init__(manifest)
         self.vendor_cls: TextSplitter = self.VENDORS[self.vendor]

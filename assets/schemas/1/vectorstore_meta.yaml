@@ -12,7 +12,7 @@ spec:
   vendor: Chroma
   options:
     persist_directory: "/flock-data/vectorstore/meta_reports"
-    collection_name: "documentation"
+    collection_name: "meta_reports"
   dependencies:
     - kind: Embedding
       name: my-openai-embedding

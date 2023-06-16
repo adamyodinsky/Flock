@@ -139,6 +139,7 @@ class BaseDeployers(metaclass=abc.ABCMeta):
                 volumes=[
                     Volume(
                         name="flock-data",
+                        readOnly=False,
                         persistentVolumeClaim=PersistentVolumeClaim(claimName="flock"),
                     )
                 ],
@@ -167,6 +168,12 @@ class BaseDeployers(metaclass=abc.ABCMeta):
                 targetResource=self._get_target_resource(target_manifest),
                 container=self._get_container_spec(target_manifest),
                 restart_policy="Never",
+                volumes=[
+                    Volume(
+                        name="flock-data",
+                        persistentVolumeClaim=PersistentVolumeClaim(claimName="flock"),
+                    )
+                ],
             ),
         )
         return job_manifest
@@ -230,6 +237,10 @@ class BaseDeployers(metaclass=abc.ABCMeta):
             ),
             EnvironmentVariable(  # type: ignore
                 name="SOURCE_DIRECTORY",
+                value=f"/flock-data/embeddings/pre_processed/{target_manifest.metadata.name}",
+            ),
+            EnvironmentVariable(  # type: ignore
+                name="SCRAPER_OUTPUT_DIR",
                 value=f"/flock-data/embeddings/pre_processed/{target_manifest.metadata.name}",
             ),
             EnvironmentVariable(  # type: ignore

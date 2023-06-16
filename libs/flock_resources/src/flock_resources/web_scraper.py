@@ -13,6 +13,7 @@ class WebScraperResource(Resource):
         manifest: CustomSchema,
         dependencies: Optional[Dict[str, Resource]],
         tools: Optional[List[ToolResource]] = None,
+        dry_run: bool = False,
     ):
         self.resource = None
 

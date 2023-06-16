@@ -30,7 +30,17 @@ docker-webscraper-build:
 	docker build -f Dockerfile.webscraper -t flock-webscraper .
 	
 docker-webscraper-run:
-	docker run flock-webscraper
+	docker run --rm \
+	-e SCRAPER_NAME="test_spider" \
+	-e SCRAPER_START_URLS="http://books.toscrape.com/catalogue/category/books/romance_8/index.html" \
+	-e RULE_SCRAPER_ALLOWED_DOMAINS="books.toscrape.com" \
+	-e RULE_SCRAPER_ALLOW="/catalogue/category/books/romance_8 /catalogue/category/books/philosophy_7" \
+	-e RULE_SCRAPER_DENY_EXTENSIONS="" \
+	-e SCRAPER_OUTPUT_DIR="/app/spider_output" \
+	-e SCRAPER_FEED_EXPORT_BATCH_ITEM_COUNT=10 \
+	--name flock_webscraper_test \
+	-v ${PWD}/.spider_output:/app/spider_output \
+	flock-webscraper
 
 
 minikube-start:

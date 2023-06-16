@@ -20,6 +20,7 @@ class BabyAGIAgent(CustomResource):
         manifest: CustomSchema,
         dependencies: Optional[Dict[str, Resource]],
         tools: Optional[List[ToolResource]],
+        dry_run: bool = False,
     ):
         super().__init__(manifest, dependencies, tools)
 

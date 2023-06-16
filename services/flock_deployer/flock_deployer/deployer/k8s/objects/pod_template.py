@@ -2,12 +2,9 @@
 from flock_schemas.base import BaseFlockSchema
 from kubernetes import client
 
-from flock_deployer.schemas.deployment import (
+from flock_deployer.schemas.deployment import (  # VolumeEmptyDir,; VolumeHostPath,; VolumePersistentVolumeClaim,
     ContainerSpec,
     Volume,
-    VolumeEmptyDir,
-    VolumeHostPath,
-    VolumePersistentVolumeClaim,
 )
 
 
@@ -76,30 +73,30 @@ class FlockPodTemplate:
     def volume_source_to_k8s(self, volume: Volume):
         """Convert a volume source to a Kubernetes volume source."""
 
-        source = volume.volume_source.__root__
-        if isinstance(source, VolumeEmptyDir):
-            return {
-                "name": volume.name,
-                "empty_dir": client.V1EmptyDirVolumeSource(
-                    medium=source.medium,
-                    size_limit=source.sizeLimit,
-                ),
-            }
-        elif isinstance(source, VolumeHostPath):
-            return {
-                "name": volume.name,
-                "host_path": client.V1HostPathVolumeSource(
-                    path=source.path,
-                    type=source.type,
-                ),
-            }
-        elif isinstance(source, VolumePersistentVolumeClaim):
-            return {
-                "name": volume.name,
-                "persistent_volume_claim": client.V1PersistentVolumeClaimVolumeSource(
-                    claim_name=source.claimName,
-                    read_only=source.readOnly,
-                ),
-            }
-        else:
-            raise ValueError(f"Unsupported volume source type: {type(source).__name__}")
+        # source = volume.volume_source.__root__
+        # if isinstance(source, VolumeEmptyDir):
+        #     return {
+        #         "name": volume.name,
+        #         "empty_dir": client.V1EmptyDirVolumeSource(
+        #             medium=source.medium,
+        #             size_limit=source.sizeLimit,
+        #         ),
+        #     }
+        # elif isinstance(source, VolumeHostPath):
+        #     return {
+        #         "name": volume.name,
+        #         "host_path": client.V1HostPathVolumeSource(
+        #             path=source.path,
+        #             type=source.type,
+        #         ),
+        #     }
+        # elif isinstance(source, VolumePersistentVolumeClaim):
+        return {
+            "name": volume.name,
+            "persistent_volume_claim": client.V1PersistentVolumeClaimVolumeSource(
+                claim_name=volume.persistentVolumeClaim.claimName,
+                read_only=volume.readOnly,
+            ),
+        }
+        # else:
+        #     raise ValueError(f"Unsupported volume source type: {type(source).__name__}")

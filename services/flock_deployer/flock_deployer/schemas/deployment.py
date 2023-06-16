@@ -63,19 +63,19 @@ class VolumeMount(BaseModelConfig):
     )
 
 
-class PersistentVolumeClaim(BaseModel):
+class PersistentVolumeClaim(BaseModelConfig):
     """PersistentVolumeClaim schema."""
 
-    claimName: str
+    claimName: str = Field(..., description="Name of the PersistentVolumeClaim to use.")
 
 
-class Secret(BaseModel):
+class Secret(BaseModelConfig):
     """Secret schema."""
 
     secretName: str
 
 
-class VolumeEmptyDir(BaseModel):
+class VolumeEmptyDir(BaseModelConfig):
     """EmptyDir volume schema."""
 
     medium: Literal["", "Memory", "HugePages"] = Field(
@@ -87,40 +87,34 @@ class VolumeEmptyDir(BaseModel):
     )
 
 
-class VolumeHostPath(BaseModel):
+class VolumeHostPath(BaseModelConfig):
     """HostPath volume schema."""
 
     path: str = Field(..., description="Path of the directory on the host.")
     type: str = Field(None, description="Type for HostPath volume.")
 
 
-class VolumePersistentVolumeClaim(BaseModel):
-    """PersistentVolumeClaim schema."""
-
-    claimName: str = Field(..., description="Name of the PersistentVolumeClaim to use.")
-    readOnly: Optional[bool] = Field(
-        False, description="Whether the volume is read only."
-    )
-
-
-class VolumeSource(BaseModel):
+class VolumeSource(BaseModelConfig):
     """Volume source schema."""
 
     class Config:
         extra = "allow"
 
-    __root__: Union[VolumeEmptyDir, VolumeHostPath, VolumePersistentVolumeClaim]
+    __root__: Union[VolumeEmptyDir, VolumeHostPath, PersistentVolumeClaim]
 
 
-class Volume(BaseModel):
+class Volume(BaseModelConfig):
     """Volume schema."""
 
     name: str = Field(
         ..., description="Volume name. Must be a DNS_LABEL and unique within the pod."
     )
-    # volume_source: VolumeSource
-    persistentVolumeClaim: Optional[PersistentVolumeClaim] = None
+    # volume_source: VolumeSource = Field(..., description="Volume source specification.")
+    persistentVolumeClaim: PersistentVolumeClaim = Field(
+        ..., description="PersistentVolumeClaim volume source."
+    )
     secret: Optional[Secret] = None
+    readOnly: bool = Field(False, description="Whether the volume is read only.")
 
 
 class ContainerSpec(BaseModelConfig):

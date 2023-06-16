@@ -10,12 +10,20 @@ metadata:
   labels:
     app: my_app
 spec:
+  volumes:
+    - name: flock-data
+      persistentVolumeClaim:
+        claimName: flock
   container:
+    volume_mounts:
+      - name: flock-data
+        mountPath: /flock-data
+        readOnly: false
     image_pull_policy: IfNotPresent
     image: flock-webscraper
     env:
       - name: SCRAPER_NAME
-        value: "test_spider"
+        value: "books"
       - name: SCRAPER_START_URLS
         value: "http://books.toscrape.com/catalogue/category/books/romance_8/index.html"
       - name: RULE_SCRAPER_ALLOWED_DOMAINS
@@ -24,13 +32,15 @@ spec:
         value: "/catalogue/category/books/romance_8 /catalogue/category/books/philosophy_7"
       - name: RULE_SCRAPER_DENY_EXTENSIONS
         value: ""
-      - name: SCRAPER_OUTPUT_DIR
-        value: "/app/spider_output"
       - name: SCRAPER_FEED_EXPORT_BATCH_ITEM_COUNT
         value: "10"
+      - name: FLOCK_LOADER_TYPE
+        value: "scraped-data"
+      - name: SCRAPER_OUTPUT_DIR
+        value: "/flock-data/embeddings/pre_processed"
   targetResource:
     kind: WebScraper
-    name: my-embedding-data-loader
+    name: my-web-scraper
     namespace: default
     labels:
       app: my_app

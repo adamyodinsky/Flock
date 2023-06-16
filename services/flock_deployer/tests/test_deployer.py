@@ -81,13 +81,22 @@ def main():
     test_manifest_creator(
         "my-embedding-data-loader", "default", "EmbeddingsLoader", "FlockJob"
     )
-    test_manifest_creator("my-web-scraper", "default", "WebScraper")
+    test_manifest_creator("my-web-scraper", "default", "WebScraper", "FlockJob")
 
     # Deploy Job
     test_deployer(
         deployers.job_deployer,
+        "./assets/schemas/web_scraper_job.yaml",
+        JobSchema,
+    )
+    test_deployer(
+        deployers.job_deployer,
         "./assets/schemas/embeddings_loader_job.yaml",
         JobSchema,
+    )
+
+    deployers.job_deployer.delete(
+        name="web-scraper", namespace="default", dry_run=DRY_RUN
     )
     deployers.job_deployer.delete(
         name="embeddings-loader", namespace="default", dry_run=DRY_RUN

@@ -3,6 +3,8 @@
 from typing import Dict, List, Optional, cast
 
 import faiss
+from flock_schemas.base import Kind
+from flock_schemas.vectorstore import VectorStoreSchema
 from langchain.docstore import InMemoryDocstore
 from langchain.embeddings.base import Embeddings as EmbeddingsLC
 from langchain.vectorstores import FAISS
@@ -10,8 +12,6 @@ from langchain.vectorstores.base import VectorStore as VectorStoreLC
 from langchain.vectorstores.chroma import Chroma as ChromaLC
 
 from flock_resources.base import Resource, ToolResource
-from flock_schemas.vectorstore import VectorStoreSchema
-from flock_schemas.base import Kind
 
 
 class VectorStoreResource(Resource):
@@ -24,12 +24,17 @@ class VectorStoreResource(Resource):
         manifest: VectorStoreSchema,
         dependencies: Optional[Dict[str, Resource]],
         tools: Optional[List[ToolResource]] = None,
+        dry_run: bool = False,
     ):
-        super().__init__(manifest, dependencies, tools)
+        super().__init__(manifest, dependencies, tools, dry_run)
         self.vendor_cls: VectorStoreLC = cast(VectorStoreLC, self.VENDORS[self.vendor])
         self.embedding_function: EmbeddingsLC = cast(
             EmbeddingsLC, self.dependencies[Kind.Embedding].resource
         )
+
+        if self.dry_run:
+            if "persist_directory" in self.options:  # type: ignore
+                del self.options["persist_directory"]  # type: ignore
 
         self.resource = self.vendor_cls(  # type: ignore
             **self.options,
@@ -48,6 +53,7 @@ class InMemVectorStoreResource(Resource):
         manifest: VectorStoreSchema,
         dependencies: Optional[Dict[str, Resource]],
         tools: Optional[List[ToolResource]] = None,
+        dry_run: bool = False,
     ):
         super().__init__(manifest, dependencies, tools)
         self.vendor_cls: VectorStoreLC = cast(VectorStoreLC, self.VENDORS[self.vendor])

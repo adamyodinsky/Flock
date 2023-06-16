@@ -20,6 +20,7 @@ class BrowserToolResource(ToolResource):
         manifest: BaseFlockSchema,
         dependencies: Optional[Dict[str, Resource]],
         tools: Optional[List[ToolResource]] = None,
+        dry_run: bool = False,
     ):
         super().__init__(manifest, dependencies)
 
