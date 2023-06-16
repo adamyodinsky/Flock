@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=../../json_schemas/main/WebScraper.json
+---
+apiVersion: flock/v1
+kind: WebScraper
+namespace: default
+metadata:
+  name: my-web-scraper
+  description: web-scraper
+  labels:
+    app: my_app
+spec:
+  vendor: WebScraper
+  dependencies:
+    - name: books
+      namespace: default
+      kind: VectorStore
