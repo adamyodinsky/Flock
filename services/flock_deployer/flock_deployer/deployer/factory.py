@@ -3,7 +3,7 @@
 
 from flock_common.secret_store import SecretStore
 from flock_resource_store.base import ResourceStore
-
+from flock_deployer.config_store import ConfigStore
 from flock_deployer.deployer.base import BaseDeployers
 from flock_deployer.deployer.k8s.k8s_deployers import K8sDeployers
 
@@ -17,7 +17,8 @@ class DeployerFactory:
     def get_deployer(
         deployer_type: str,
         resource_store: ResourceStore,
-        secret_store: SecretStore = NotImplemented,
+        secret_store: SecretStore,
+        config_store: ConfigStore,
     ) -> BaseDeployers:
         """Factory function for creating a deployer.
 
@@ -37,7 +38,7 @@ class DeployerFactory:
 
         if deployer_type in DeployerFactory.DEPLOYERS:
             return DeployerFactory.DEPLOYERS[deployer_type](
-                resource_store, secret_store
+                resource_store, secret_store, config_store
             )
 
         valid_options = ", ".join(DeployerFactory.DEPLOYERS.keys())

@@ -1,0 +1,8 @@
+---
+apiVersion: flock/v1
+kind: DeploymentConfigSchema
+metadata:
+  name: example
+  description: example
+spec:
+  env: {}

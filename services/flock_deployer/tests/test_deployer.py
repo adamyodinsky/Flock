@@ -8,11 +8,15 @@ from flock_resource_store import ResourceStoreFactory
 from flock_schemas.factory import SchemaFactory
 
 from flock_deployer.deployer import DeployerFactory
+from flock_deployer.config_store import ConfigStoreFactory
 from flock_deployer.schemas.deployment import DeploymentSchema
 from flock_deployer.schemas.job import JobSchema
+from flock_deployer.schemas.config import DeploymentConfigSchema
+
 
 resource_store = ResourceStoreFactory.get_resource_store()
 secret_store = SecretStoreFactory.get_secret_store("vault")
+config_store = ConfigStoreFactory.get_store("mongo")
 
 
 def setup_deployers():
@@ -20,6 +24,7 @@ def setup_deployers():
         deployer_type=os.environ.get("FLOCK_DEPLOYER_TYPE", "k8s"),
         secret_store=secret_store,
         resource_store=resource_store,
+        config_store=config_store,
     )
 
 
@@ -51,7 +56,7 @@ def test_deployer(deployer, deployment_manifest, dry_run=DRY_RUN):
 
 
 def test_manifest_creator(
-    target_name, target_namespace, target_kind, deployment_kind
+    target_name, target_namespace, target_kind, deployment_kind, config
 ) -> tuple:
     target_manifest = resource_store.get(
         name=target_name, kind=target_kind, namespace=target_namespace
@@ -62,6 +67,7 @@ def test_manifest_creator(
         target_manifest=schema_factory.get_schema(target_kind).validate(
             target_manifest
         ),
+        config=config,
     )
     return target_manifest, deployment_manifest
 
@@ -76,6 +82,18 @@ def delete(target_name, target_namespace, deployer, dry_run=DRY_RUN):
 
 # TODO: fix this tests, match to the refactored code
 def main():
+    global_config = deployers.config_store.load_file(
+        "./assets/schemas/global_config.yaml"
+    )
+    global_config = DeploymentConfigSchema.validate(**global_config)
+    deployers.config_store.put(global_config.dict())
+
+    example_config = deployers.config_store.load_file(
+        "./assets/schemas/example_config.yaml"
+    )
+    example_config = DeploymentConfigSchema.validate(**example_config)
+    deployers.config_store.put(example_config.dict())
+
     # deployment_manifest = load_and_validate_schema(
     #     JobSchema, "./assets/schemas/web_scraper_job.yaml"
     # )
@@ -113,17 +131,17 @@ def main():
 
     # Deploy Job with manifest creators
     _, deployment_manifest = test_manifest_creator(
-        "my-web-scraper", "default", "WebScraper", "FlockJob"
+        "my-web-scraper", "default", "WebScraper", "FlockJob", example_config
     )
     test_deployer(deployers.job_deployer, deployment_manifest)
 
     _, deployment_manifest = test_manifest_creator(
-        "embeddings-loader", "default", "EmbeddingsLoader", "FlockJob"
+        "embeddings-loader", "default", "EmbeddingsLoader", "FlockJob", example_config
     )
     test_deployer(deployers.job_deployer, deployment_manifest)
 
     _, deployment_manifest = test_manifest_creator(
-        "my-agent", "default", "Agent", "FlockDeployment"
+        "my-agent", "default", "Agent", "FlockDeployment", example_config
     )
     test_deployer(deployers.deployment_deployer, deployment_manifest)
 
