@@ -36,6 +36,10 @@ class SchemaStore(metaclass=abc.ABCMeta):
     ):
         """Delete a resource"""
 
+    @abc.abstractmethod
+    def get_kinds(self):
+        """Get all the kinds of schemas in the store as a list"""
+
     @staticmethod
     def load_file(path, file_type="yaml") -> dict:
         """Load a resource from the store."""

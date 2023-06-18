@@ -109,6 +109,11 @@ class MongoSchemaStore(SchemaStore):
         )
         return result
 
+    def get_kinds(self):
+        """Get all the kinds of schemas in the store as a list"""
+        kinds = self.table.distinct("kind")
+        return kinds
+
     @staticmethod
     def create_filter(
         kind: str = "",
