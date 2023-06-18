@@ -12,8 +12,9 @@ from flock_resource_store.base import ResourceStore
 from flock_schemas.base import BaseFlockSchema
 from flock_schemas.factory import SchemaFactory
 
-from flock_deployer.config_store import ConfigStore, ConfigStoreFactory
-from flock_deployer.schemas.
+from flock_deployer.config_store import ConfigStore
+from flock_deployer.schemas.config import DeploymentConfigSchema
+
 from flock_deployer.schemas.deployment import (
     ContainerPort,
     ContainerSpec,
@@ -58,10 +59,12 @@ class BaseDeployers(metaclass=abc.ABCMeta):
         self,
         resource_store: ResourceStore,
         secret_store: SecretStore,
+        config_store: ConfigStore,
     ) -> None:
         """Initialize the deployer"""
         self.secret_store: SecretStore = secret_store
         self.resource_store = resource_store
+        self.config_store = config_store
         self.schema_factory = SchemaFactory()
         self.schema_creators_map = {
             "FlockDeployment": self.create_deployment_schema,
@@ -110,7 +113,9 @@ class BaseDeployers(metaclass=abc.ABCMeta):
             # TODO: i have no idea why description and options must be included here by pylance if it's optional in the schema
         )
 
-    def _get_container_spec(self, target_manifest) -> ContainerSpec:
+    def _get_container_spec(
+        self, target_manifest: BaseFlockSchema, config: DeploymentConfigSchema
+    ) -> ContainerSpec:
         return ContainerSpec(
             volume_mounts=[
                 VolumeMount(
@@ -128,11 +133,48 @@ class BaseDeployers(metaclass=abc.ABCMeta):
                     protocol="TCP",
                 )
             ],
-            env=self.fetch_env_vars(target_manifest),
+            env=self.env_vars(target_manifest, config),
         )
 
+    def _merge_config_with_global_defaults(
+        self, config: DeploymentConfigSchema, target_kind: str
+    ) -> DeploymentConfigSchema:
+        """Merge the config with the default global config
+        Give precedence to the config passed in
+        """
+
+        # Get names of environment variables from the passed-in config
+        existing_env_names = {env.name for env in config.env}
+
+        # Define a helper function to merge environment variables
+        def merge_envs(source_config):
+            if source_config:
+                source_config = DeploymentConfigSchema(**source_config)
+                # Only add env variables that are not already in the existing config
+                config.env.extend(
+                    env
+                    for env in source_config.env
+                    if env.name not in existing_env_names
+                )
+
+        # Merge global config
+        global_config = self.config_store.get(name="global")
+        merge_envs(global_config)
+
+        # Merge kind-specific global config
+        kind_global_config = self.config_store.get(
+            name=f"{target_kind}._global".lower()
+        )
+        merge_envs(kind_global_config)
+
+        return config
+
     def create_deployment_schema(
-        self, name, namespace, target_manifest: BaseFlockSchema
+        self,
+        name,
+        namespace,
+        target_manifest: BaseFlockSchema,
+        config: DeploymentConfigSchema,
     ) -> DeploymentSchema:
         """Create deployment manifest"""
 
@@ -155,14 +197,18 @@ class BaseDeployers(metaclass=abc.ABCMeta):
                     )
                 ],
                 replicas=1,
-                container=self._get_container_spec(target_manifest),
+                container=self._get_container_spec(target_manifest, config),
             ),
         )
 
         return deployment_manifest
 
     def create_job_schema(
-        self, name, namespace, target_manifest: BaseFlockSchema
+        self,
+        name,
+        namespace,
+        target_manifest: BaseFlockSchema,
+        config: DeploymentConfigSchema,
     ) -> JobSchema:
         """Create job manifest"""
 
@@ -177,7 +223,7 @@ class BaseDeployers(metaclass=abc.ABCMeta):
             ),
             spec=JobSpec(
                 targetResource=self._get_target_resource(target_manifest),
-                container=self._get_container_spec(target_manifest),
+                container=self._get_container_spec(target_manifest, config),
                 restart_policy="Never",
                 volumes=[
                     Volume(
@@ -203,88 +249,23 @@ class BaseDeployers(metaclass=abc.ABCMeta):
 
         raise NotImplementedError
 
-    def fetch_env_vars(
-        self, target_manifest: BaseFlockSchema
+    def env_vars(
+        self, target_manifest: BaseFlockSchema, config: DeploymentConfigSchema
     ) -> List[EnvironmentVariable]:
         """Fetch env vars dynamically"""
         target_kind = target_manifest.kind
+        env_addition = []
         result = []
 
-        if target_kind == "Agent":
-            result = self.get_vars(target_manifest)
-        if target_kind == "EmbeddingsLoader":
-            result = self.get_vars(target_manifest)
+        # TODO: find a way to get rid of this hack
         if target_kind == "WebScraper":
-            env_addition = EnvironmentVariable(  # type: ignore
-                name="SCRAPER_NAME",
-                value=target_manifest.spec.dependencies[0].name,
+            env_addition.append(
+                EnvironmentVariable(
+                    name="SCRAPER_NAME",
+                    value=target_manifest.spec.dependencies[0].name,  # type: ignore
+                )
             )
-            result = self.get_vars(target_manifest) + [env_addition]
+        result = config.env + env_addition
+        result = self._merge_config_with_global_defaults(config, target_kind).env
 
         return result
-
-    def get_vars(self, target_manifest: BaseFlockSchema) -> List[EnvironmentVariable]:
-        return [
-            EnvironmentVariable(  # type: ignore
-                name="RESOURCE_STORE_HOST",
-                value="flock-resource-store",
-            ),
-            EnvironmentVariable(  # type: ignore
-                name="RESOURCE_STORE_USERNAME",
-                value="root",
-            ),
-            EnvironmentVariable(  # type: ignore
-                name="RESOURCE_STORE_PASSWORD",
-                value="password",
-            ),
-            EnvironmentVariable(  # type: ignore
-                name="QUEUE_HOST",
-                value="flock-queue-rabbitmq-headless",
-            ),
-            EnvironmentVariable(  # type: ignore
-                name="MANAGEMENT_STORE_HOST",
-                value="flock-resource-store",
-            ),
-            EnvironmentVariable(  # type: ignore
-                name="FLOCK_AGENT_HOST",
-                value="0.0.0.0",
-            ),
-            EnvironmentVariable(  # type: ignore
-                name="FLOCK_AGENT_PORT",
-                value="8080",
-            ),
-            EnvironmentVariable(  # type: ignore
-                name="SOURCE_DIR",
-                value="/flock-data/embeddings/pre_processed",
-            ),
-            EnvironmentVariable(  # type: ignore
-                name="SCRAPER_OUTPUT_DIR",
-                value="/flock-data/embeddings/pre_processed",
-            ),
-            EnvironmentVariable(  # type: ignore
-                name="ARCHIVE_DIR",
-                value="/flock-data/embeddings/processed",
-            ),
-            EnvironmentVariable(  # type: ignore
-                name="OPENAI_API_KEY",
-                valueFrom={
-                    "secretKeyRef": {
-                        "name": "mysecret",
-                        "key": "openai-token",
-                    }
-                },
-            ),
-            EnvironmentVariable(  # type: ignore
-                name="SERPAPI_API_KEY",
-                valueFrom={
-                    "secretKeyRef": {
-                        "name": "mysecret",
-                        "key": "serpapi-token",
-                    }
-                },
-            ),
-            EnvironmentVariable(  # type: ignore
-                name="FLOCK_LOADER_TYPE",
-                value="scraped-data",
-            ),
-        ]

@@ -6,7 +6,7 @@ import yaml
 
 
 class ConfigStore(metaclass=abc.ABCMeta):
-    """Abstract base class for resource stores."""
+    """Abstract base class for config stores."""
 
     @abc.abstractmethod
     def put(self, val: dict) -> None:

@@ -1,4 +1,0 @@
-[MASTER]
-extension-pkg-whitelist=pydantic
-disable=missing-function-docstring
-disable=missing-module-docstring

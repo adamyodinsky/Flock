@@ -74,5 +74,7 @@ class CronJobSchema(JobSchema):
 
 export = {
     "sub": {},
-    "main": {},
+    "main": {
+        "Job": JobSchema,
+    },
 }

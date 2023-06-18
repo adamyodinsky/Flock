@@ -3,7 +3,7 @@
 import json
 import os
 
-from flock_deployer.schemas import CronJobSchema, DeploymentSchema, JobSchema
+from flock_deployer.schemas.factory import DeploymentSchemaFactory
 
 PATH = "./assets/json_schemas/"
 
@@ -26,13 +26,9 @@ def write_schemas(schemas):  # pylint: disable=missing-function-docstring
 
 def run_script():
     """Main function."""
-
-    main_schemas_map = {
-        "DeploymentSchema": DeploymentSchema,
-        "JobSchema": JobSchema,
-        "CronJobSchema": CronJobSchema,
-    }
-    write_schemas(main_schemas_map)
+    deployment_schema_factory = DeploymentSchemaFactory()
+    schemas = deployment_schema_factory.schemas
+    write_schemas(schemas)
 
 
 if __name__ == "__main__":

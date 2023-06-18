@@ -36,3 +36,11 @@ class ResourceDeleted(BaseModel):
 
 ResourceCreated.update_forward_refs()
 ResourceDeleted.update_forward_refs()
+
+export = {
+    "sub": {},
+    "main": {
+        "ResourceCreated": ResourceCreated,
+        "ResourceDeleted": ResourceDeleted,
+    },
+}

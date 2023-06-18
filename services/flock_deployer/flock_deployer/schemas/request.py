@@ -28,3 +28,12 @@ DeploymentRequest.update_forward_refs()
 
 
 DeploymentRequest.update_forward_refs()
+
+
+export = {
+    "sub": {},
+    "main": {
+        "DeploymentRequest": DeploymentRequest,
+        "DeleteRequest": DeleteRequest,
+    },
+}

@@ -199,5 +199,7 @@ class DeploymentSchema(BaseModelConfig):
 
 export = {
     "sub": {},
-    "main": {},
+    "main": {
+        "Deployment": DeploymentSchema,
+    },
 }

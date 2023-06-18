@@ -13,8 +13,19 @@ class Metadata(BaseModelConfig):
     description: str
 
 
-class DeploymentConfig(BaseModelConfig):
+class DeploymentConfigSchema(BaseModelConfig):
     apiVersion: str
-    kind: Literal["DeploymentConfig"]  # = Field(..., description="Kind of the object")
-    metadata: BaseMetaData  # = Field(..., description="Metadata for the object")
+    kind: Literal["DeploymentConfigSchema"] = Field(
+        ..., description="Kind of the object"
+    )
+    metadata: BaseMetaData = Field(..., description="Metadata for the object")
     env: list[EnvironmentVariable] = []
+    image: str = Field("", description="Image to be deployed")
+
+
+export = {
+    "sub": {},
+    "main": {
+        "DeploymentConfig": DeploymentConfigSchema,
+    },
+}

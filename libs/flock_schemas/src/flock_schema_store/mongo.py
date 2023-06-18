@@ -36,10 +36,7 @@ class MongoSchemaStore(SchemaStore):
 
     def put(self, val: dict) -> None:
         self.table.update_one(
-            {
-                "kind": val["kind"],
-                "metadata.name": val["metadata"]["name"],
-            },
+            {"kind": val["kind"]},
             {"$set": val},
             upsert=True,
         )
@@ -69,19 +66,7 @@ class MongoSchemaStore(SchemaStore):
 
         skip_count = (page - 1) * page_size
 
-        result = (
-            self.table.find(
-                filter={},
-                projection={
-                    "name": "$metadata.name",
-                    "description": "$metadata.description",
-                    "kind": True,
-                    "category": True,
-                },
-            )
-            .skip(skip_count)
-            .limit(page_size)
-        )
+        result = self.table.find(filter={}).skip(skip_count).limit(page_size)
         return result
 
     def delete(
@@ -104,9 +89,7 @@ class MongoSchemaStore(SchemaStore):
     ):
         """Delete a resource"""
 
-        result = self.table.delete_many(
-            filter={},
-        )
+        result = self.table.delete_many(filter={})
         return result
 
     def get_kinds(self):
@@ -120,7 +103,7 @@ class MongoSchemaStore(SchemaStore):
     ) -> dict:
         """Create a filter query"""
 
-        filter_query = {}
+        filter_query = dict()
         if kind:
             filter_query["kind"] = kind
 
