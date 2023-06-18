@@ -116,17 +116,11 @@ def main():
         "my-web-scraper", "default", "WebScraper", "FlockJob"
     )
     test_deployer(deployers.job_deployer, deployment_manifest)
-    deployers.job_deployer.delete(
-        name="my-web-scraper", namespace="default", dry_run=DRY_RUN
-    )
 
     _, deployment_manifest = test_manifest_creator(
-        "my-embedding-data-loader", "default", "EmbeddingsLoader", "FlockJob"
+        "embeddings-loader", "default", "EmbeddingsLoader", "FlockJob"
     )
     test_deployer(deployers.job_deployer, deployment_manifest)
-    deployers.job_deployer.delete(
-        name="my-embedding-data-loader", namespace="default", dry_run=DRY_RUN
-    )
 
     _, deployment_manifest = test_manifest_creator(
         "my-agent", "default", "Agent", "FlockDeployment"

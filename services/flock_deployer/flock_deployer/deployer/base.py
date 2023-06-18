@@ -3,6 +3,8 @@
 
 import abc
 import logging
+import random
+import string
 from typing import List
 
 from flock_common.secret_store import SecretStore
@@ -68,6 +70,13 @@ class BaseDeployers(metaclass=abc.ABCMeta):
         self.deployment_deployer: BaseDeployer
         self.cron_job_deployer: BaseDeployer
         self.job_deployer: BaseDeployer
+
+    def _random_suffix(self, s, length):
+        # Generate a random string of the given length
+        suffix = "".join(random.choices(string.ascii_letters + string.digits, k=length))
+
+        # Append the random string to the input string
+        return f"{s}-{suffix}".lower()
 
     def get_creator(self, kind):
         """Get the creator for a kind"""
@@ -160,7 +169,7 @@ class BaseDeployers(metaclass=abc.ABCMeta):
             kind="FlockJob",
             namespace=namespace,
             metadata=BaseMetaData(
-                name=name,
+                name=self._random_suffix(name, 5),
                 description=target_manifest.metadata.description,
                 labels=target_manifest.metadata.labels,
             ),
@@ -204,7 +213,11 @@ class BaseDeployers(metaclass=abc.ABCMeta):
         if target_kind == "EmbeddingsLoader":
             result = self.get_vars(target_manifest)
         if target_kind == "WebScraper":
-            result = self.get_vars(target_manifest)
+            env_addition = EnvironmentVariable(  # type: ignore
+                name="SCRAPER_NAME",
+                value=target_manifest.spec.dependencies[0].name,
+            )
+            result = self.get_vars(target_manifest) + [env_addition]
 
         return result
 
@@ -249,10 +262,6 @@ class BaseDeployers(metaclass=abc.ABCMeta):
             EnvironmentVariable(  # type: ignore
                 name="ARCHIVE_DIR",
                 value="/flock-data/embeddings/processed",
-            ),
-            EnvironmentVariable(  # type: ignore
-                name="SCRAPER_NAME",
-                value=target_manifest.metadata.name,
             ),
             EnvironmentVariable(  # type: ignore
                 name="OPENAI_API_KEY",

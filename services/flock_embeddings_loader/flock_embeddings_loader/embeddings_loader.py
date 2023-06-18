@@ -37,7 +37,7 @@ class FlockEmbeddingsLoader:
                 f"Error while initializing embeddings loader job: {str(error)}"
             ) from error
 
-    def start_scraped__data_job(self):
+    def start_scraped_data_job(self):
         """Start the embeddings loader job"""
 
         try:

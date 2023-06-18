@@ -9,9 +9,8 @@ import click
 from dotenv import find_dotenv, load_dotenv
 from flock_common import EnvVarNotSetError, check_env_vars
 from flock_common.logging import init_logging
-from flock_resource_store import ResourceStoreFactory
-
 from flock_embeddings_loader.embeddings_loader import FlockEmbeddingsLoader
+from flock_resource_store import ResourceStoreFactory
 
 init_logging(
     destination=os.environ.get("LOG_DESTINATION", "stdout"),
@@ -98,7 +97,7 @@ def run_job(schema_path, schema_value, loader_type):
 
     if loader_type == "scraped-data":
         logging.info("Loading scraped data to vectorstore...")
-        flock_embeddings_loader.start_scraped__data_job()
+        flock_embeddings_loader.start_scraped_data_job()
     elif loader_type == "raw-files":
         logging.info("Loading raw files to vectorstore...")
         flock_embeddings_loader.start_raw_files_job()

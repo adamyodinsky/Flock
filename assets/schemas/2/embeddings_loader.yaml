@@ -5,7 +5,7 @@ kind: EmbeddingsLoader
 namespace: default
 category: other
 metadata:
-  name: meta
+  name: embeddings-loader
   description: Embedding Data Loader that can load embedding data to vector store
   labels:
     app: my_app

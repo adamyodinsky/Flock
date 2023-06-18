@@ -54,20 +54,26 @@ minikube-start:
 	@sleep 5
 	minikube addons enable metrics-server 
 
-
-
-
-load-images:
-	minikube image load flock-agent
-	minikube image load flock-embeddings-loader
-	minikube image load flock-webscraper
-	
-
 # 27017:30200 # mongo
 # 8200:30201 # vault
 # 5672:30202 # rabbitMQ ampq
 # 25672:30203 # rabbitMQ dist
 # 15672:30204 # rabbitMQ manager
+
+
+load-webscraper:
+	minikube image unload flock-webscraper
+	minikube image load flock-webscraper
+
+load-agent:
+	minikube image unload flock-agent
+	minikube image load flock-agent
+
+load-embeddings-loader:
+	minikube image unload flock-embeddings-loader
+	minikube image load flock-embeddings-loader
+
+load-images: load-webscraper load-agent load-embeddings-loader
 
 
 apply-mongo:
