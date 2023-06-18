@@ -4,12 +4,16 @@ version = "0.1.0"
 description = ""
 authors = ["Adam Yodinsky <27074934+adamyodinsky@users.noreply.github.com>"]
 readme = "README.md"
-packages = [{include = "flock_schemas"}]
+packages = [
+  {include = "flock_schemas", from = "src"},
+  {include = "flock_schema_store", from = "src"}
+  ]
 
 [tool.poetry.dependencies]
 python = "^3.9"
 pydantic = "^1.10.9"
 flock-common = {path = "../flock_common", develop = true}
+pymongo = "^4.3.3"
 
 
 [tool.poetry.group.dev.dependencies]

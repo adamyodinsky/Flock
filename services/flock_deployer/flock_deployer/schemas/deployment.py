@@ -30,20 +30,29 @@ class ContainerPort(BaseModelConfig):
     )
 
 
+class SecretKeyRef(BaseModelConfig):
+    name: str
+    key: str
+
+
 class EnvironmentVariable(BaseModelConfig):
     """Environment variable schema."""
 
-    name: str = Field(
-        ...,
-        description="The name of the environment variable",
-    )
-    value: Optional[str] = Field(
-        description="The value of the environment variable",
-    )
+    name: str
+    value: Optional[str] = None
+    valueFrom: Optional[SecretKeyRef] = None
 
-    valueFrom: Optional[Dict[str, Any]] = Field(
-        description="The value of the environment variable",
-    )
+    # name: str = Field(
+    #     ...,
+    #     description="The name of the environment variable",
+    # )
+    # value: Optional[str] = Field(
+    #     description="The value of the environment variable",
+    # )
+
+    # valueFrom: Optional[Dict[str, Any]] = Field(
+    #     description="The value of the environment variable",
+    # )
 
 
 class VolumeMount(BaseModelConfig):

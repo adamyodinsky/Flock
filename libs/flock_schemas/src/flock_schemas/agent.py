@@ -5,7 +5,12 @@ from typing import List, Literal, Union
 
 from pydantic import Field
 
-from flock_schemas.base import BaseFlockSchema, BaseOptions, BaseToolDependency, Category
+from flock_schemas.base import (
+    BaseFlockSchema,
+    BaseOptions,
+    BaseToolDependency,
+    Category,
+)
 from flock_schemas.dependencies import LLMChatDependency, LLMDependency
 
 

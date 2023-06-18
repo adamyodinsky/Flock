@@ -12,6 +12,8 @@ from flock_resource_store.base import ResourceStore
 from flock_schemas.base import BaseFlockSchema
 from flock_schemas.factory import SchemaFactory
 
+from flock_deployer.config_store import ConfigStore, ConfigStoreFactory
+from flock_deployer.schemas.
 from flock_deployer.schemas.deployment import (
     ContainerPort,
     ContainerSpec,

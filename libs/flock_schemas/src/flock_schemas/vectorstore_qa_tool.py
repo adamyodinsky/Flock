@@ -6,7 +6,11 @@ from typing import Dict, Literal, Optional, Union
 from pydantic import Field
 
 from flock_schemas.base import BaseFlockSchema, BaseOptions, Category
-from flock_schemas.dependencies import LLMChatDependency, LLMDependency, VectorStoreDependency
+from flock_schemas.dependencies import (
+    LLMChatDependency,
+    LLMDependency,
+    VectorStoreDependency,
+)
 
 
 class VectorStoreQAToolVendor(str, Enum):
