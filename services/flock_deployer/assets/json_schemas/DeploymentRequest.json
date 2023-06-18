@@ -1,0 +1,39 @@
+{
+  "title": "DeploymentRequest",
+  "description": "Resource created successfully",
+  "type": "object",
+  "properties": {
+    "deployment_name": {
+      "title": "Deployment Name",
+      "type": "string"
+    },
+    "deployment_namespace": {
+      "title": "Deployment Namespace",
+      "type": "string"
+    },
+    "deployment_kind": {
+      "title": "Deployment Kind",
+      "type": "string"
+    },
+    "resource_name": {
+      "title": "Resource Name",
+      "type": "string"
+    },
+    "resource_namespace": {
+      "title": "Resource Namespace",
+      "type": "string"
+    },
+    "resource_kind": {
+      "title": "Resource Kind",
+      "type": "string"
+    }
+  },
+  "required": [
+    "deployment_name",
+    "deployment_namespace",
+    "deployment_kind",
+    "resource_name",
+    "resource_namespace",
+    "resource_kind"
+  ]
+}

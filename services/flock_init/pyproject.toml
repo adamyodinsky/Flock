@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "flock-init"
+version = "0.1.0"
+description = ""
+authors = ["adam.promo@gmail.com <27074934+adamyodinsky@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "flock_init"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+flock-config-store = {path = "../../libs/flock_config_store", develop = true}
+flock-common = {path = "../../libs/flock_common", develop = true}
+flock-resource-store = {path = "../../libs/flock_resource_store", develop = true}
+flock-resources = {path = "../../libs/flock_resources", develop = true}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

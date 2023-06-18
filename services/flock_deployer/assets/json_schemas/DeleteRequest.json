@@ -1,0 +1,24 @@
+{
+  "title": "DeleteRequest",
+  "description": "Resource created successfully",
+  "type": "object",
+  "properties": {
+    "deployment_name": {
+      "title": "Deployment Name",
+      "type": "string"
+    },
+    "deployment_namespace": {
+      "title": "Deployment Namespace",
+      "type": "string"
+    },
+    "resource_kind": {
+      "title": "Resource Kind",
+      "type": "string"
+    }
+  },
+  "required": [
+    "deployment_name",
+    "deployment_namespace",
+    "resource_kind"
+  ]
+}
