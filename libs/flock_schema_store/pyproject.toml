@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "flock-schema-store"
+version = "0.1.0"
+description = ""
+authors = ["adam.promo@gmail.com <27074934+adamyodinsky@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "flock_schema_store"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pymongo = "^4.3.3"
+flock-schemas = {path = "../flock_schemas", develop = true}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
