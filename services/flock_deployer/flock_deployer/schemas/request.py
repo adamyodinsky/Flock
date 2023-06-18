@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pydantic import BaseModel
+from flock_deployer.schemas.config import DeploymentConfigSchema
 
 
 class DeploymentRequest(BaseModel):
@@ -14,6 +15,13 @@ class DeploymentRequest(BaseModel):
     resource_name: str
     resource_namespace: str
     resource_kind: str
+    config: DeploymentConfigSchema
+
+
+class ConfigRequest(BaseModel):
+    """Resource created successfully"""
+
+    config: DeploymentConfigSchema
 
 
 class DeleteRequest(BaseModel):

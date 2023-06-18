@@ -6,7 +6,11 @@ from pydantic import ValidationError
 from flock_deployer.deployer.base import BaseDeployers
 from flock_deployer.schemas import ResourceCreated, ResourceDeleted
 from flock_deployer.schemas.deployment import DeploymentSchema
-from flock_deployer.schemas.request import DeleteRequest, DeploymentRequest
+from flock_deployer.schemas.request import (
+    DeleteRequest,
+    DeploymentRequest,
+    ConfigRequest,
+)
 
 
 def get_router(deployers: BaseDeployers) -> APIRouter:
@@ -14,7 +18,7 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
 
     router = APIRouter()
 
-    @router.post("/deploy")
+    @router.post("/deployment")
     async def deploy(
         data: DeploymentRequest = Body(..., description=""),
         deployers: BaseDeployers = Depends(lambda: deployers),
@@ -44,7 +48,10 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
 
             creator = deployers.get_creator(data.deployment_kind)
             deployment_schema: DeploymentSchema = creator(
-                data.deployment_name, data.deployment_namespace, target_manifest
+                data.deployment_name,
+                data.deployment_namespace,
+                target_manifest,
+                data.config,
             )
 
         except ValidationError as error:
@@ -83,8 +90,8 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
 
         return ResourceCreated(data=deployment_schema)
 
-    @router.post("/delete")
-    async def delete(
+    @router.delete("/deployment")
+    async def deployment(
         data: DeleteRequest = Body(..., description=""),
         deployers: BaseDeployers = Depends(lambda: deployers),
     ) -> ResourceDeleted:
@@ -134,5 +141,92 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
             ) from error
 
         return ResourceDeleted()
+
+    @router.put("/config")
+    async def create_config(
+        data: ConfigRequest = Body(..., description=""),
+        deployers: BaseDeployers = Depends(lambda: deployers),
+    ):
+        """
+        Create config
+
+        Args:
+            data (ConfigRequest): Config request
+            deployers (BaseDeployers): Deployers
+
+        Raises:
+            HTTPException: Failed to store config
+
+        Returns:
+            ResourceCreated: Resource created
+        """
+        try:
+            deployers.config_store.put(data.config.dict())
+        except Exception as error:  # pylint: disable=broad-except
+            raise HTTPException(
+                status_code=500,
+                detail=[
+                    "Failed to store config",
+                    str(error),
+                ],
+            ) from error
+
+    @router.get("/config/{name}")
+    async def get_config(
+        name: str,
+        deployers: BaseDeployers = Depends(lambda: deployers),
+    ):
+        """
+        Get config
+
+        Args:
+            name (str): Config name
+            deployers (BaseDeployers): Deployers
+
+        Raises:
+            HTTPException: Failed to get config
+
+        Returns:
+            Config: Config
+        """
+        try:
+            return deployers.config_store.get(name=name)
+        except Exception as error:
+            raise HTTPException(
+                status_code=500,
+                detail=[
+                    "Failed to get config",
+                    str(error),
+                ],
+            ) from error
+
+    @router.delete("/config/{name}")
+    async def delete_config(
+        name: str,
+        deployers: BaseDeployers = Depends(lambda: deployers),
+    ):
+        """
+        Delete config
+
+        Args:
+            name (str): Config name
+            deployers (BaseDeployers): Deployers
+
+        Raises:
+            HTTPException: Failed to delete config
+
+        Returns:
+            Config: Config
+        """
+        try:
+            deployers.config_store.delete(name=name)
+        except Exception as error:
+            raise HTTPException(
+                status_code=500,
+                detail=[
+                    "Failed to delete config",
+                    str(error),
+                ],
+            ) from error
 
     return router

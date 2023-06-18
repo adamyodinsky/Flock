@@ -108,8 +108,8 @@ class BaseDeployers(metaclass=abc.ABCMeta):
             kind=target_manifest.kind,
             name=target_manifest.metadata.name,
             namespace=target_manifest.namespace,
-            # description=target_manifest.metadata.description,
-            # options=target_manifest.spec.options,
+            description=target_manifest.metadata.description,
+            options=target_manifest.spec.options,
             # TODO: i have no idea why description and options must be included here by pylance if it's optional in the schema
         )
 
@@ -124,6 +124,7 @@ class BaseDeployers(metaclass=abc.ABCMeta):
                     readOnly=False,
                 )
             ],
+            # TODO: fetch image from global config
             image=self.fetch_image(target_manifest.kind),
             image_pull_policy="IfNotPresent",
             ports=[

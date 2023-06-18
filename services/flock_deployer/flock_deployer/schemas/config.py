@@ -14,7 +14,9 @@ class Metadata(BaseModelConfig):
 
 
 class DeploymentConfigSchema(BaseModelConfig):
-    apiVersion: str
+    apiVersion: Literal["flock/v1"] = Field(
+        ..., description="API version of the object"
+    )
     kind: Literal["DeploymentConfigSchema"] = Field(
         ..., description="Kind of the object"
     )
