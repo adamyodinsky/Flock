@@ -1,9 +1,10 @@
-from typing import Literal, Optional
+from typing import Literal, Union
 
 from flock_deployer.schemas.deployment import (
     BaseMetaData,
     BaseModelConfig,
-    EnvironmentVariable,
+    EnvVar,
+    EnvFrom,
 )
 from pydantic import Field
 
@@ -21,7 +22,7 @@ class DeploymentConfigSchema(BaseModelConfig):
         ..., description="Kind of the object"
     )
     metadata: BaseMetaData = Field(..., description="Metadata for the object")
-    env: list[EnvironmentVariable] = []
+    env: list[Union[EnvVar, EnvFrom]] = []
     image: str = Field("", description="Image to be deployed")
 
 

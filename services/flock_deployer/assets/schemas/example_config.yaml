@@ -1,8 +1,8 @@
+# yaml-language-server: $schema=../json_schemas/DeploymentConfig.json
 ---
 apiVersion: flock/v1
 kind: DeploymentConfigSchema
 metadata:
   name: example
-  description: example
-spec:
-  env: {}
+  description: example config
+env: []

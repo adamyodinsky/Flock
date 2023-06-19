@@ -1,5 +1,6 @@
 """Resource for vectorstore."""
 
+import logging
 from typing import Dict, List, Optional, cast
 
 import faiss
@@ -12,6 +13,7 @@ from langchain.vectorstores.base import VectorStore as VectorStoreLC
 from langchain.vectorstores.chroma import Chroma as ChromaLC
 
 from flock_resources.base import Resource, ToolResource
+from flock_resources.embedding import EmbeddingResource
 
 
 class VectorStoreResource(Resource):
@@ -26,17 +28,21 @@ class VectorStoreResource(Resource):
         tools: Optional[List[ToolResource]] = None,
         dry_run: bool = False,
     ):
+        logging.debug(f"Initializing vectorstore resource: {manifest.metadata.name}")
         super().__init__(manifest, dependencies, tools, dry_run)
         self.vendor_cls: VectorStoreLC = cast(VectorStoreLC, self.VENDORS[self.vendor])
-        self.embedding: EmbeddingsLC = self.dependencies[Kind.Embedding].resource
+        self.embedding: EmbeddingResource = self.dependencies[Kind.Embedding]
 
         if self.dry_run:
             if "persist_directory" in self.options:  # type: ignore
                 del self.options["persist_directory"]  # type: ignore
 
         self.resource = self.vendor_cls(  # type: ignore
-            **self.options, embedding_function=self.embedding
+            **self.options, embedding_function=self.embedding.resource
         )
+        logging.debug(f"Initialized vectorstore resource: {manifest.metadata.name}")
+        logging.debug(f"Vectorstore options: {self.options}")
+        logging.debug(f"Vectorstore embedding: {self.embedding.manifest.metadata.name}")
 
 
 class InMemVectorStoreResource(Resource):
@@ -52,6 +58,9 @@ class InMemVectorStoreResource(Resource):
         tools: Optional[List[ToolResource]] = None,
         dry_run: bool = False,
     ):
+        logging.debug(
+            f"Initializing vectorstore in memory resource: {manifest.metadata.name}"
+        )
         super().__init__(manifest, dependencies, tools)
         self.vendor_cls: VectorStoreLC = cast(VectorStoreLC, self.VENDORS[self.vendor])
         self.embedding_function: EmbeddingsLC = cast(
@@ -69,6 +78,12 @@ class InMemVectorStoreResource(Resource):
 
         self.resource = vectorstore
         self.memory = vectorstore.as_retriever()
+
+        logging.debug(
+            f"Initialized vectorstore in memory resource: {manifest.metadata.name}"
+        )
+        logging.debug(f"Vectorstore options: {self.options}")
+        logging.debug(f"Vectorstore embedding: {self.embedding_function}")
 
 
 export = {

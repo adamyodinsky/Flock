@@ -2,8 +2,9 @@
 
 from typing import List, Literal, Optional
 
+from croniter import croniter
 from flock_schemas.base import BaseMetaData, BaseModelConfig
-from pydantic import Field
+from pydantic import Field, validator
 
 from flock_deployer.schemas.deployment import (
     ContainerSpec,
@@ -25,7 +26,7 @@ class JobSpec(BaseModelConfig):
         description="The container specs",
     )
     backoff_limit: Optional[int] = Field(
-        default=6,
+        default=0,
         description="The number of times the job will be retried before it is marked as failed",
     )
     completions: Optional[int] = Field(
@@ -53,6 +54,12 @@ class CronJobSpec(JobSpec):
         ...,
         description="The cron schedule",
     )
+
+    @validator("schedule")
+    def validate_cron(cls, v):
+        if not croniter.is_valid(v):
+            raise ValueError("Invalid cron expression")
+        return v
 
 
 class JobSchema(DeploymentSchema):

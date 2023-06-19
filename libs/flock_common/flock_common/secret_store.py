@@ -10,7 +10,7 @@ from hvac.exceptions import InvalidPath, VaultError
 class SecretStore(metaclass=abc.ABCMeta):
     """Abstract base class for entity stores."""
 
-    def __init__(self, url="", token="", app_name="flock") -> None:
+    def __init__(self, host="", token="", app_name="flock") -> None:
         """Initialize the secret store."""
         self.app_name = app_name
 
@@ -26,14 +26,14 @@ class SecretStore(metaclass=abc.ABCMeta):
 class VaultSecretStore(SecretStore):
     """A class for storing and retrieving secrets from Vault."""
 
-    def __init__(self, url="http://localhost:8200", token="root", app_name="flock"):
+    def __init__(self, host="http://localhost:8200", token="root", app_name="flock"):
         """Initialize the Vault secret store."""
-        super().__init__(app_name=app_name, url=url, token=token)
-        self.url = os.environ.get("VAULT_URL", url)
-        self.token = os.environ.get("VAULT_TOKEN", token)
+        super().__init__(app_name=app_name, host=host, token=token)
+        self.host = host
+        self.token = token
 
         super().__init__(app_name)
-        self.client = hvac.Client(url=url, token=token)
+        self.client = hvac.Client(url=host, token=token)
 
     def check_secret_engine_enabled(self, path):
         """Check if the secret engine is enabled at the given path."""
@@ -82,9 +82,9 @@ class SecretStoreFactory:
     """Factory class for secret stores."""
 
     @staticmethod
-    def get_secret_store(secret_store_type="vault"):
+    def get_secret_store(secret_store_type="vault", **kwargs):
         """Return a secret store."""
         if secret_store_type == "vault":
-            return VaultSecretStore()
+            return VaultSecretStore(**kwargs)
         else:
             raise ValueError(f"Secret store type {secret_store_type} not supported.")

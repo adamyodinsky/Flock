@@ -5,6 +5,10 @@
   "properties": {
     "apiVersion": {
       "title": "Apiversion",
+      "description": "API version of the object",
+      "enum": [
+        "flock/v1"
+      ],
       "type": "string"
     },
     "kind": {
@@ -29,7 +33,14 @@
       "default": [],
       "type": "array",
       "items": {
-        "$ref": "#/definitions/EnvironmentVariable"
+        "anyOf": [
+          {
+            "$ref": "#/definitions/EnvVar"
+          },
+          {
+            "$ref": "#/definitions/EnvFrom"
+          }
+        ]
       }
     },
     "image": {
@@ -86,9 +97,29 @@
       ],
       "additionalProperties": false
     },
-    "SecretKeyRef": {
-      "title": "SecretKeyRef",
-      "description": "Base model config.",
+    "EnvVar": {
+      "title": "EnvVar",
+      "description": "Environment variable schema.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "SecretKeyRefValue": {
+      "title": "SecretKeyRefValue",
+      "description": "Environment variable schema.",
       "type": "object",
       "properties": {
         "name": {
@@ -106,17 +137,27 @@
       ],
       "additionalProperties": false
     },
-    "EnvironmentVariable": {
-      "title": "EnvironmentVariable",
-      "description": "Environment variable schema.",
+    "SecretKeyRef": {
+      "title": "SecretKeyRef",
+      "description": "Base model config.",
+      "type": "object",
+      "properties": {
+        "secretKeyRef": {
+          "$ref": "#/definitions/SecretKeyRefValue"
+        }
+      },
+      "required": [
+        "secretKeyRef"
+      ],
+      "additionalProperties": false
+    },
+    "EnvFrom": {
+      "title": "EnvFrom",
+      "description": "Base model config.",
       "type": "object",
       "properties": {
         "name": {
           "title": "Name",
-          "type": "string"
-        },
-        "value": {
-          "title": "Value",
           "type": "string"
         },
         "valueFrom": {
@@ -124,7 +165,8 @@
         }
       },
       "required": [
-        "name"
+        "name",
+        "valueFrom"
       ],
       "additionalProperties": false
     }

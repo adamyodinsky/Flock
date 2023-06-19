@@ -1,6 +1,7 @@
 """Module for loading embeddings to vectorstore."""
 
 import json
+import logging
 import os
 from typing import Dict, List, Optional
 
@@ -37,6 +38,10 @@ class EmbeddingsLoaderResource(Resource):
         dry_run: bool = False,
     ) -> None:
         super().__init__(manifest, dependencies, tools)
+
+        logging.info(
+            f"Initializing embeddings loader resource: {manifest.metadata.name}"
+        )
 
         self.base_source_dir = (
             os.environ.get("SOURCE_DIR", None) or manifest.spec.options.source_directory
@@ -80,6 +85,15 @@ class EmbeddingsLoaderResource(Resource):
         self.archive_dir = (
             f"{self.base_archive_dir}/{self.vectorstore.manifest.metadata.name}"
         )
+
+        logging.info(f"Source directory: {self.source_dir}")
+        logging.info(f"Archive directory: {self.archive_dir}")
+        logging.info(f"Base meta source: {self.base_meta_source}")
+        logging.info(f"Allowed extensions: {self.allowed_extensions}")
+        logging.info(f"Deny extensions: {self.deny_extensions}")
+        logging.info(f"Splitter: {self.splitter.manifest.metadata.name}")
+        logging.info(f"Vectorstore: {self.vectorstore.manifest.metadata.name}")
+        logging.info(f"Embedding: {self.embedding.manifest.metadata.name}")
 
     def _list_files_recursive(self, folder: str):
         """List all files in a folder recursively."""
@@ -135,7 +149,7 @@ class EmbeddingsLoaderResource(Resource):
             with open(file=file_name, mode="r", encoding="utf-8") as file:
                 json_obj = json.load(file)
         except Exception as error:
-            print(f"Error: {error}")
+            logging.error(f"Error while loading json file: {error}")
 
         return json_obj
 
@@ -188,10 +202,12 @@ class EmbeddingsLoaderResource(Resource):
         if not os.path.exists(archive_dir):
             os.makedirs(archive_dir)
 
+        logging.info(f"Loading scraped data from {source_dir} to vectorstore...")
+
         files = self._get_files_list(source_dir)
 
         for file in files:
-            print(f"Loading {file} to vectorstore...")
+            logging.info(f"Loading {file} to vectorstore...")
             json_obj = self._load_json(f"{source_dir}/{file}")
 
             for page in json_obj:
@@ -202,10 +218,9 @@ class EmbeddingsLoaderResource(Resource):
                 ]
                 document = self.splitter.resource.split_documents(document)
                 self.vectorstore.resource.add_documents(document)
-                print(f"Added {page['url']} to the vectorstore.")
+                logging.debug(f"Added {page['url']} to the vectorstore.")
 
-            # move file to archive
-            print(f"Moving {file} to archive...")
+            logging.info(f"Moving {file} to archive {archive_dir}")
             os.rename(f"{source_dir}/{file}", f"{archive_dir}/{file}")
 
     def load_files_to_vectorstore(self):
@@ -225,13 +240,13 @@ class EmbeddingsLoaderResource(Resource):
         files = self._filter_files_by_deny_extensions(files)
 
         for file in files:
-            print(f"Adding {file} to the vectorstore.")
+            logging.info(f"Adding {file} to the vectorstore.")
 
             document = self.load_single_document(f"{source_dir}/{file}")
             document = self.splitter.resource.split_documents([document])
             self.vectorstore.resource.add_documents(document)
 
-            print(f"Moving {file} to archive...")
+            logging.info(f"Moving {file} to archive {archive_dir}")
             os.rename(
                 f"{source_dir}/{file}",
                 f"{archive_dir}/{os.path.basename(file)}",

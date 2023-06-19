@@ -30,29 +30,27 @@ class ContainerPort(BaseModelConfig):
     )
 
 
-class SecretKeyRef(BaseModelConfig):
+class EnvVar(BaseModelConfig):
+    """Environment variable schema."""
+
+    name: str
+    value: str
+
+
+class SecretKeyRefValue(BaseModelConfig):
+    """Environment variable schema."""
+
     name: str
     key: str
 
 
-class EnvironmentVariable(BaseModelConfig):
-    """Environment variable schema."""
+class SecretKeyRef(BaseModelConfig):
+    secretKeyRef: SecretKeyRefValue
 
+
+class EnvFrom(BaseModelConfig):
     name: str
-    value: Optional[str] = None
-    valueFrom: Optional[SecretKeyRef] = None
-
-    # name: str = Field(
-    #     ...,
-    #     description="The name of the environment variable",
-    # )
-    # value: Optional[str] = Field(
-    #     description="The value of the environment variable",
-    # )
-
-    # valueFrom: Optional[Dict[str, Any]] = Field(
-    #     description="The value of the environment variable",
-    # )
+    valueFrom: SecretKeyRef
 
 
 class VolumeMount(BaseModelConfig):
@@ -133,7 +131,7 @@ class ContainerSpec(BaseModelConfig):
         ...,
         description="The container image to be deployed",
     )
-    env: List[EnvironmentVariable] = Field(
+    env: List[Union[EnvVar, EnvFrom]] = Field(
         default=[],
         description="Environment variables to be set for the deployment",
     )
@@ -183,6 +181,10 @@ class DeploymentSpec(BaseModelConfig):
     volumes: List[Volume] = Field(
         default=[],
         description="The volumes to be mounted in the container",
+    )
+    restart_policy: Literal["Always"] = Field(
+        "Always",
+        description="The restart policy of the container",
     )
 
 

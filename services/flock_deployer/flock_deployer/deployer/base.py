@@ -5,7 +5,7 @@ import abc
 import logging
 import random
 import string
-from typing import List
+from typing import Callable, List, Union
 
 from flock_common.secret_store import SecretStore
 from flock_resource_store.base import ResourceStore
@@ -14,13 +14,13 @@ from flock_schemas.factory import SchemaFactory
 
 from flock_deployer.config_store import ConfigStore
 from flock_deployer.schemas.config import DeploymentConfigSchema
-
 from flock_deployer.schemas.deployment import (
     ContainerPort,
     ContainerSpec,
     DeploymentSchema,
     DeploymentSpec,
-    EnvironmentVariable,
+    EnvFrom,
+    EnvVar,
     PersistentVolumeClaim,
     TargetResource,
     Volume,
@@ -83,8 +83,26 @@ class BaseDeployers(metaclass=abc.ABCMeta):
         # Append the random string to the input string
         return f"{s}-{suffix}".lower()
 
-    def get_creator(self, kind):
-        """Get the creator for a kind"""
+    def get_creator(
+        self, kind
+    ) -> Callable[..., Union[DeploymentSchema, JobSchema],]:
+        """
+        Get the creator for a deployment or a job
+
+        Args:
+            kind (str): The kind of the deployment or job
+
+        Raises:
+            ValueError: If the creator is not found
+
+        Returns:
+            Callable[..., Union[DeploymentSchema, JobSchema]]: The creator
+            expects the following keyword arguments:
+                name (str): The name of the deployment or job
+                namespace (str): The namespace of the deployment or job
+                target_manifest (BaseFlockSchema): The target manifest
+                config (DeploymentConfigSchema): The deployment config
+        """
 
         creator = self.schema_creators_map.get(kind, None)
         if not creator:
@@ -163,9 +181,7 @@ class BaseDeployers(metaclass=abc.ABCMeta):
         merge_envs(global_config)
 
         # Merge kind-specific global config
-        kind_global_config = self.config_store.get(
-            name=f"{target_kind}._global".lower()
-        )
+        kind_global_config = self.config_store.get(name=f"{target_kind}_global".lower())
         merge_envs(kind_global_config)
 
         return config
@@ -252,16 +268,16 @@ class BaseDeployers(metaclass=abc.ABCMeta):
 
     def env_vars(
         self, target_manifest: BaseFlockSchema, config: DeploymentConfigSchema
-    ) -> List[EnvironmentVariable]:
+    ) -> List[Union[EnvVar, EnvFrom]]:
         """Fetch env vars dynamically"""
         target_kind = target_manifest.kind
-        env_addition = []
-        result = []
+        env_addition: List[Union[EnvVar, EnvFrom]] = []
+        result: List[Union[EnvVar, EnvFrom]] = []
 
         # TODO: find a way to get rid of this hack
         if target_kind == "WebScraper":
             env_addition.append(
-                EnvironmentVariable(
+                EnvVar(
                     name="SCRAPER_NAME",
                     value=target_manifest.spec.dependencies[0].name,  # type: ignore
                 )

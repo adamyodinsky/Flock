@@ -1,13 +1,14 @@
 """Resource for vectorstore."""
 
+import logging
 from typing import Dict, List, Optional
 
+from flock_schemas.agent import AgentSchema
+from flock_schemas.base import Kind
 from langchain.agents import AgentType, initialize_agent
 from langchain.memory import ConversationBufferMemory
 
 from flock_resources.base import Agent, Resource, ToolResource
-from flock_schemas.agent import AgentSchema
-from flock_schemas.base import Kind
 
 
 class AgentResource(Agent):
@@ -26,8 +27,8 @@ class AgentResource(Agent):
         tools: Optional[List[ToolResource]] = None,
         dry_run: bool = False,
     ):
+        logging.debug(f"Initializing agent resource: {manifest.metadata.name}")
         super().__init__(manifest, dependencies, tools)
-
         memory = {}
 
         if self.vendor == AgentType.CONVERSATIONAL_REACT_DESCRIPTION.value:
@@ -39,11 +40,11 @@ class AgentResource(Agent):
                 )
             }
         llm = self.dependencies.get(Kind.LLM) or self.dependencies.get(Kind.LLMChat)
-        self.llm = llm.resource
+        self.llm = llm
 
         self.resource = initialize_agent(
             tools=self.agent_tools,
-            llm=self.llm,
+            llm=self.llm.resource,
             agent=self.vendor,
             **self.options,  # type: ignore
             **memory,
@@ -51,6 +52,10 @@ class AgentResource(Agent):
 
         self.run = self.resource.run
         self.arun = self.resource.arun
+
+        logging.debug(f"Initialized agent resource: {manifest.metadata.name}")
+        logging.debug(f"Agent options: {self.options}")
+        logging.debug(f"Agent llm: {self.llm.manifest.metadata.name}")
 
 
 export = {

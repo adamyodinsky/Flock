@@ -1,9 +1,6 @@
 """Kubernetes Job controller."""
 
 
-import random
-import string
-
 from flock_schemas.base import BaseFlockSchema
 from kubernetes import client
 
@@ -17,20 +14,19 @@ class K8sJob(K8sResource):
 
     def __init__(self, manifest: JobSchema, target_manifest: BaseFlockSchema):
         super().__init__(manifest, target_manifest)
-        pod_template = client.V1JobSpec(
+        job_template = client.V1JobSpec(
             template=FlockPodTemplate(manifest, target_manifest).pod_template_spec,
             backoff_limit=manifest.spec.backoff_limit,
             completions=manifest.spec.completions,
             parallelism=manifest.spec.parallelism,
         )
-        # add random suffix to job name
 
-        pod_template.template.spec.restart_policy = manifest.spec.restart_policy
+        job_template.template.spec.restart_policy = manifest.spec.restart_policy
         self.rendered_manifest = client.V1Job(
             api_version="batch/v1",
             kind="Job",
             metadata=self.metadata,
-            spec=pod_template,
+            spec=job_template,
         )
 
     def create(self):

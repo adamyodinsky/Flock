@@ -1,40 +1,33 @@
+# yaml-language-server: $schema=../json_schemas/DeploymentConfig.json
 ---
 apiVersion: flock/v1
 kind: DeploymentConfigSchema
 metadata:
   name: global
   description: global default configuration
-spec:
-  env:
-    - name: RESOURCE_STORE_HOST
-      value: flock-resource-store
-    - name: RESOURCE_STORE_USERNAME
-      value: root
-    - name: RESOURCE_STORE_PASSWORD
-      value: password
-    - name: QUEUE_HOST
-      value: flock-queue-rabbitmq-headless
-    - name: MANAGEMENT_STORE_HOST
-      value: flock-resource-store
-    - name: FLOCK_AGENT_HOST
-      value: 0.0.0.0
-    - name: FLOCK_AGENT_PORT
-      value: 8080
-    - name: SOURCE_DIR
-      value: /flock-data/embeddings/pre_processed
-    - name: SCRAPER_OUTPUT_DIR
-      value: /flock-data/embeddings/pre_processed
-    - name: ARCHIVE_DIR
-      value: /flock-data/embeddings/processed
-    - name: OPENAI_API_KEY
-      valueFrom:
-        secretKeyRef:
-          name: mysecret
-          key: openai-token
-    - name: SERPAPI_API_KEY
-      valueFrom:
-        secretKeyRef:
-          name: mysecret
-          key: serpapi-token
-    - name: FLOCK_LOADER_TYPE
-      value: scraped-data
+env:
+  - name: RESOURCE_STORE_HOST
+    value: flock-resource-store
+  - name: RESOURCE_STORE_USERNAME
+    value: root
+  - name: RESOURCE_STORE_PASSWORD
+    value: password
+  - name: QUEUE_HOST
+    value: flock-queue-rabbitmq-headless
+  - name: MANAGEMENT_STORE_HOST
+    value: flock-resource-store
+  - name: OPENAI_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: mysecret
+        key: openai-token
+  - name: SERPAPI_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: mysecret
+        key: serpapi-token
+  - name: WOLFRAM_ALPHA_APPID
+    valueFrom:
+      secretKeyRef:
+        name: mysecret
+        key: wolfram-app-id

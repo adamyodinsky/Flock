@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../json_schemas/JobSchema.json
+# yaml-language-server: $schema=../json_schemas/Job.json
 ---
 apiVersion: flock/v1
 kind: FlockJob
