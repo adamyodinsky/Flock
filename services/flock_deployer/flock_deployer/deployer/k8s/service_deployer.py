@@ -1,6 +1,7 @@
 """Base class for a deployer"""
 
 import logging
+import os
 import time
 
 from kubernetes import client, config
@@ -18,7 +19,14 @@ class K8sServiceDeployer(BaseDeployer):
         self,
     ) -> None:
         """Initialize the deployer"""
-        config.load_incluster_config()
+
+        if os.environ.get("LOCAL", ""):
+            config.load_kube_config()
+            logging.debug("Using local kube config")
+        else:
+            config.load_incluster_config()
+            logging.debug("Using in-cluster kube config")
+
         self.client = client.CoreV1Api()
 
     def _create_service_obj(self, manifest: DeploymentSchema) -> K8sService:

@@ -23,13 +23,14 @@ docker-embeddings-loader-build:
 docker-webscraper-build:
 	docker build -f Dockerfile.webscraper -t flock-webscraper .
 
+docker-build-all: docker-base-build docker-agent-build docker-embeddings-loader-build docker-webscraper-build docker-deployer-build
 
 
 docker-deployer-run:
 	docker run --rm flock-deployer
 
 docker-agent-run:
-	docker run --rm flock-agent
+	docker run --rm -e LOCAL=true flock-deployer
 
 docker-embeddings-loader-run:
 	docker run --rm flock-embeddings-loader
@@ -55,6 +56,7 @@ minikube-start:
 	--ports=127.0.0.1:5672:30202	\
 	--ports=127.0.0.1:25672:30203  \
 	--ports=127.0.0.1:15672:30204 \
+	--ports=127.0.0.1:9000:30205 \
 	--cpus 4 --memory 6144
 	@sleep 5
 	minikube addons enable metrics-server 
@@ -107,12 +109,12 @@ apply-vault:
 	# kubectl exec -it flock-secrets-store-vault-0 -- vault operator init
 	# kubectl exec -it flock-secrets-store-vault-0 -- vault operator unseal <key>
 
-apply-infra: aooky-secret apply-pvc apply-mongo apply-rabbitmq apply-vault apply-deployer
-
 apply-secret:
 	kubectl apply -f infra/secret.yaml
 
 apply-pvc:
 	kubectl apply -f infra/pvc.yaml
 
-setup-all: docker-base-build docker-agent-build docker-embeddings-loader-build docker-webscraper-build docker-deployer-build load-images apply-secret apply-pvc apply-infra
+apply-infra: apply-secret apply-pvc apply-mongo apply-rabbitmq apply-vault apply-deployer
+
+setup-all: docker-build-all load-images apply-infra

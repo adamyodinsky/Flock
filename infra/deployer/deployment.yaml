@@ -5,6 +5,7 @@ metadata:
   labels:
     app: flock-deployer
 spec:
+  serviceAccountName: deployer-sa
   replicas: 1
   selector:
     matchLabels:
@@ -18,7 +19,7 @@ spec:
         - name: flock-deployer
           image: flock-deployer
           ports:
-            - containerPort: 8080
+            - containerPort: 9000
           resources:
             limits:
               cpu: 100m

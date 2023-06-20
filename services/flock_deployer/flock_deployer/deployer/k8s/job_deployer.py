@@ -2,6 +2,7 @@
 
 
 import logging
+import os
 
 from flock_schemas.base import BaseFlockSchema
 from kubernetes import client, config
@@ -18,7 +19,13 @@ class K8sJobDeployer(BaseDeployer):
     def __init__(self):
         """Initialize the deployer"""
 
-        config.load_incluster_config()
+        if os.environ.get("LOCAL", ""):
+            config.load_kube_config()
+            logging.debug("Using local kube config")
+        else:
+            config.load_incluster_config()
+            logging.debug("Using in-cluster kube config")
+
         self.client = client.BatchV1Api()
 
     def _create_job_obj(

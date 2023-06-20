@@ -1,6 +1,7 @@
 """Base class for a deployer"""
 
 import logging
+import os
 import time
 
 from flock_schemas.base import BaseFlockSchema
@@ -18,7 +19,12 @@ class K8sDeploymentDeployer(BaseDeployer):
     def __init__(self):
         """Initialize the deployer"""
 
-        config.load_incluster_config()
+        if os.environ.get("LOCAL", ""):
+            config.load_kube_config()
+            logging.debug("Using local kube config")
+        else:
+            config.load_incluster_config()
+            logging.debug("Using in-cluster kube config")
         self.client = client.AppsV1Api()
 
     def _create_deployment_obj(
