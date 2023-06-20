@@ -1,12 +1,13 @@
 from typing import Literal, Union
 
+from pydantic import Field
+
 from flock_deployer.schemas.deployment import (
     BaseMetaData,
     BaseModelConfig,
-    EnvVar,
     EnvFrom,
+    EnvVar,
 )
-from pydantic import Field
 
 
 class Metadata(BaseModelConfig):

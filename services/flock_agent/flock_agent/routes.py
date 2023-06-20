@@ -6,7 +6,6 @@ import time
 from typing import Union
 
 from fastapi import APIRouter, Depends, WebSocket
-
 from flock_agent.agent import FlockAgent
 from flock_agent.models import (
     AgentRequest,
@@ -27,6 +26,13 @@ async def shut_down(timeout: int = 5):
 
 def create_agent_routes(agent):
     """Create routes for the agent."""
+
+    @router.get("/health")
+    @router.head("/health")
+    @router.get("/")
+    @router.head("/")
+    async def health_endpoint():
+        return {"status": "ok"}
 
     @router.post("/agent")
     async def agent_endpoint(

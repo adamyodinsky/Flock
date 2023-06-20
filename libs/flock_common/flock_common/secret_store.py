@@ -82,9 +82,9 @@ class SecretStoreFactory:
     """Factory class for secret stores."""
 
     @staticmethod
-    def get_secret_store(secret_store_type="vault", **kwargs):
+    def get_secret_store(store_type="vault", **kwargs):
         """Return a secret store."""
-        if secret_store_type == "vault":
+        if store_type == "vault":
             return VaultSecretStore(**kwargs)
         else:
-            raise ValueError(f"Secret store type {secret_store_type} not supported.")
+            raise ValueError(f"Secret store type {store_type} not supported.")

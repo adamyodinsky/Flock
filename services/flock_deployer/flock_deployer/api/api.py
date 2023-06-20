@@ -16,7 +16,18 @@ from flock_deployer.schemas.request import (
 def get_router(deployers: BaseDeployers) -> APIRouter:
     """Get API router"""
 
+    logging.info("Creating API router")
     router = APIRouter()
+
+    @router.get("/health")
+    @router.get("/")
+    async def health_endpoint():
+        """Health endpoint
+
+        Returns:
+            dict: Health status
+        """
+        return {"status": "ok"}
 
     @router.post("/deployment")
     async def deploy(

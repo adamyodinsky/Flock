@@ -6,15 +6,14 @@ import sys
 import click
 from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI
+from flock_agent.agent import FlockAgent
+from flock_agent.routes import create_agent_routes
 from flock_common import EnvVarNotSetError, check_env_vars
 from flock_common.logging import init_logging
 from flock_common.queue_client import QueueClientFactory
 from flock_resource_store import ResourceStoreFactory
 from flock_task_management_store import TaskManagementStoreFactory
 from uvicorn import run
-
-from flock_agent.agent import FlockAgent
-from flock_agent.routes import create_agent_routes
 
 init_logging(
     destination=os.environ.get("FLOCK_LOG_DESTINATION", "stdout"),
@@ -107,7 +106,6 @@ def run_agent(schema_path, schema_value, host, port):
         logging.fatal("Either --schema-path or --schema-value is required.")
         raise click.UsageError("Either --schema-path or --schema-value is required.")
 
-
     task_management_store = TaskManagementStoreFactory.get_store(
         store_type=os.environ.get("FLOCK_MANAGEMENT_STORE_TYPE", "mongo"),
         db_name=os.environ.get("MANAGEMENT_STORE_DB_NAME", "flock_db"),
@@ -122,7 +120,6 @@ def run_agent(schema_path, schema_value, host, port):
         username=os.environ.get("MANAGEMENT_STORE_USERNAME", "root"),
         password=os.environ.get("MANAGEMENT_STORE_PASSWORD", "password"),
     )
-    
 
     resource_store = ResourceStoreFactory.get_resource_store(
         store_type=os.environ.get("FLOCK_RESOURCE_STORE_TYPE", "mongo"),
@@ -153,23 +150,25 @@ def run_agent(schema_path, schema_value, host, port):
     )
 
     # Create FastAPI app and include the agent routes
-    app = FastAPI()
-    routes = create_agent_routes(flock_agent)
-    app.include_router(routes)
+    app = FastAPI(
+        title="Flock Agent",
+        description="A Flock Agent is a server that can be used to run Flock tasks.",
+        version="0.0.1",
+    )
+    router = create_agent_routes(flock_agent)
+    app.include_router(router)
 
     host = os.environ.get("FLOCK_AGENT_HOST", host)
     port = int(os.environ.get("FLOCK_AGENT_PORT", port))
 
     # Spin up the API server
-    logging.info("Ready. Waiting for requests on %s:%s...", host, port)
-    logging.info("Available routes:")
-    logging.info(f"/ (GET) (http://{host}:{port}/)")
-    logging.info(f"/docs (GET) (http://{host}:{port}/docs)")
-    logging.info(f"/redoc (GET) (http://{host}:{port}/redoc)")
-    logging.info(f"/openapi.json (GET) (http://{host}:{port}/openapi.json)")
-    logging.info(f"/agent (POST) (http://{host}:{port}/agent")
-    logging.info(f"/agent_ws (WebSocket) (ws://{host}:{port}/agent_ws)")
-    run(app, host=host, port=port, log_level="warning")
+    logging.info("Starting Flock Agent on %s:%s", host, port)
+    logging.info("/docs (GET) (http://%s:%s/docs)", host, port)
+    logging.info("/redoc (GET) (http://%s:%s/redoc)", host, port)
+    logging.info("/openapi.json (GET) (http://%s:%s/openapi.json)", host, port)
+    for route in router.routes:
+        logging.info("%s (%s)", route.path, route.methods)  # type: ignore
+    run(app, host=host, port=port, log_level=os.environ.get("LOG_LEVEL", "info"))
 
 
 cli.add_command(run_agent)
@@ -178,5 +177,5 @@ if __name__ == "__main__":
     try:
         cli()
     except EnvVarNotSetError as e:
-        print(str(e))
+        logging.error(str(e))
         sys.exit(1)

@@ -52,7 +52,7 @@ class BaseAnnotations(BaseModelConfig):
     """Base annotations schema."""
 
     annotations: Dict[str, str] = Field(
-        default=None,
+        default={},
         description="Annotations are useful for storing additional information",
     )
 
@@ -61,7 +61,7 @@ class BaseLabels(BaseModelConfig):
     """Base labels schema."""
 
     labels: Optional[Dict[str, str]] = Field(
-        default=None, description="Labels are useful for filtering and finding objects"
+        default={}, description="Labels are useful for filtering and finding objects"
     )
 
 
