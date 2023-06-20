@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flock-deployer
+  labels:
+    app: flock-deployer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flock-deployer
+  template:
+    metadata:
+      labels:
+        app: flock-deployer
+    spec:
+      containers:
+        - name: flock-deployer
+          image: flock-deployer
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
