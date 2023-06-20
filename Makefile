@@ -11,23 +11,28 @@ help:
 docker-base-build:
 	docker build -f Dockerfile.python.base -t flock-python-base   .
 
+docker-deployer-build:
+	docker build -f Dockerfile.deployer -t flock-deployer .
 
 docker-agent-build:
 	docker build -f Dockerfile.agent -t flock-agent .
 
-docker-agent-run:
-	docker run flock-agent
-	
-
 docker-embeddings-loader-build:
 	docker build -f Dockerfile.embeddings_loader -t flock-embeddings-loader .	
 
-docker-embeddings-loader-run:
-	docker run flock-embeddings-loader
-
-
 docker-webscraper-build:
 	docker build -f Dockerfile.webscraper -t flock-webscraper .
+
+
+
+docker-deployer-run:
+	docker run --rm flock-deployer
+
+docker-agent-run:
+	docker run --rm flock-agent
+
+docker-embeddings-loader-run:
+	docker run --rm flock-embeddings-loader
 	
 docker-webscraper-run:
 	docker run --rm \
@@ -73,7 +78,11 @@ load-embeddings-loader:
 	minikube image unload flock-embeddings-loader
 	minikube image load flock-embeddings-loader
 
-load-images: load-webscraper load-agent load-embeddings-loader
+load-deployer:
+	minikube image unload flock-deployer
+	minikube image load flock-deployer
+
+load-images: load-webscraper load-agent load-embeddings-loader load-deployer
 
 
 apply-mongo:
@@ -102,4 +111,4 @@ apply-secret:
 apply-pvc:
 	kubectl apply -f infra/pvc.yaml
 
-setup-all: docker-base-build docker-agent-build docker-embeddings-loader-build docker-webscraper-build load-images apply-secret apply-pvc apply-infra
+setup-all: docker-base-build docker-agent-build docker-embeddings-loader-build docker-webscraper-build docker-deployer-build load-images apply-secret apply-pvc apply-infra
