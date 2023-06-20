@@ -50,23 +50,28 @@ class K8sDeploymentDeployer(BaseDeployer):
     def _delete(self, name, namespace, dry_run=None):
         """Delete a deployment in Kubernetes"""
 
-        api_response = self.client.delete_namespaced_deployment(
-            name=name,
-            namespace=namespace,
-            body=client.V1DeleteOptions(
-                propagation_policy="Foreground",
-                grace_period_seconds=0,
-                dry_run=[dry_run] if dry_run else None,
-            ),
-            dry_run=dry_run,
-        )
-
-        logging.info(
-            "Deployment %s %s deleted status=%s",
-            namespace,
-            name,
-            api_response.status,  # type: ignore
-        )
+        try:
+            api_response = self.client.delete_namespaced_deployment(
+                name=name,
+                namespace=namespace,
+                body=client.V1DeleteOptions(
+                    propagation_policy="Foreground",
+                    grace_period_seconds=0,
+                    dry_run=[dry_run] if dry_run else None,
+                ),
+                dry_run=dry_run,
+            )
+            logging.info(
+                "Deployment %s %s deleted status=%s",
+                namespace,
+                name,
+                api_response.status,  # type: ignore
+            )
+        except client.ApiException as error:
+            if error.status == 404:
+                logging.info("Deployment %s not found, skipping", name)
+            else:
+                raise error
 
     def _create(self, deployment: K8sDeployment, dry_run=None):
         """Create a deployment in Kubernetes"""
@@ -113,6 +118,7 @@ class K8sDeploymentDeployer(BaseDeployer):
             logging.error(
                 "Failed to delete deployment %s %s: %s", namespace, name, error
             )
+            raise error
 
     def update(
         self, manifest: DeploymentSchema, target_manifest: BaseFlockSchema, dry_run=None
@@ -146,12 +152,24 @@ class K8sDeploymentDeployer(BaseDeployer):
             try:
                 self._update(deployment, dry_run)
             except client.ApiException as error:
-                print(f"Failed to update deployment: {error}")
+                logging.error(
+                    "Failed to update deployment %s %s: %s",
+                    manifest.namespace,
+                    manifest.metadata.name,
+                    error,
+                )
+                raise error
         else:
             try:
                 self._create(deployment, dry_run)
             except client.ApiException as error:
-                print(f"Failed to create deployment: {error}")
+                logging.error(
+                    "Failed to create deployment %s %s: %s",
+                    manifest.namespace,
+                    manifest.metadata.name,
+                    error,
+                )
+                raise error
 
     def exists(self, name: str, namespace: str):
         """Check if a deployment exists"""
@@ -162,7 +180,7 @@ class K8sDeploymentDeployer(BaseDeployer):
         except client.ApiException as error:
             if error.status == 404:
                 return False
-            raise
+            raise error
 
     def create(
         self, manifest: DeploymentSchema, target_manifest: BaseFlockSchema, dry_run=None
@@ -176,4 +194,10 @@ class K8sDeploymentDeployer(BaseDeployer):
         try:
             self._create(deployment, dry_run)
         except client.ApiException as error:
-            print(f"Failed to create deployment: {error}")
+            logging.error(
+                "Failed to create deployment %s %s: %s",
+                manifest.namespace,
+                manifest.metadata.name,
+                error,
+            )
+            raise error

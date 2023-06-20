@@ -39,18 +39,24 @@ class K8sCronJobDeployer(BaseDeployer):
         """Delete a CronJob in Kubernetes"""
 
         logging.debug("Deleting CronJob %s in namespace %s", name, namespace)
-        response = self.client.delete_namespaced_cron_job(
-            name=name,
-            namespace=namespace,
-            body=client.V1DeleteOptions(
-                propagation_policy="Foreground",
-                grace_period_seconds=0,
-                dry_run=[dry_run] if dry_run else None,
-            ),
-            dry_run=dry_run,
-        )
-        logging.info("CronJob deleted")
-        logging.info(response.status)  # type: ignore
+        try:
+            response = self.client.delete_namespaced_cron_job(
+                name=name,
+                namespace=namespace,
+                body=client.V1DeleteOptions(
+                    propagation_policy="Foreground",
+                    grace_period_seconds=0,
+                    dry_run=[dry_run] if dry_run else None,
+                ),
+                dry_run=dry_run,
+            )
+            logging.info("CronJob deleted")
+            logging.info(response.status)  # type: ignore
+        except client.ApiException as error:
+            if error.status == 404:
+                logging.info("CronJob %s not found, skipping", name)
+            else:
+                raise error
 
     def _update(self, cronjob: K8sCronJob, dry_run=None):
         """Update a CronJob in Kubernetes"""
@@ -98,6 +104,7 @@ class K8sCronJobDeployer(BaseDeployer):
         except client.ApiException as error:
             logging.error("Failed to delete CronJob: %s %s", name, namespace)
             logging.error(error)
+            raise error
 
     def deploy(
         self, manifest: CronJobSchema, target_manifest: BaseFlockSchema, dry_run=None
@@ -119,6 +126,7 @@ class K8sCronJobDeployer(BaseDeployer):
                 self._update(cronjob, dry_run)
             except client.ApiException as error:
                 logging.error("Failed to update CronJob: %s", error)
+                raise error
         else:
             try:
                 self._create(cronjob, dry_run)
@@ -129,6 +137,7 @@ class K8sCronJobDeployer(BaseDeployer):
                     manifest.namespace,
                 )
                 logging.error(error)
+                raise error
 
     def exists(self, name: str, namespace: str):
         """Check if a CronJob exists"""
@@ -140,7 +149,7 @@ class K8sCronJobDeployer(BaseDeployer):
         except client.ApiException as error:
             if error.status == 404:
                 return False
-            raise
+            raise error
 
     def create(
         self, manifest: CronJobSchema, target_manifest: BaseFlockSchema, dry_run=None
@@ -160,6 +169,7 @@ class K8sCronJobDeployer(BaseDeployer):
                 manifest.namespace,
             )
             logging.error(error)
+            raise error
 
     def update(
         self, manifest: CronJobSchema, target_manifest: BaseFlockSchema, dry_run=None
@@ -179,3 +189,4 @@ class K8sCronJobDeployer(BaseDeployer):
                 manifest.namespace,
             )
             logging.error(error)
+            raise error

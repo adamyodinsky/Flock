@@ -1,6 +1,7 @@
 from typing import Optional
 
 from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
 
 from .base import ConfigStore
 
@@ -33,6 +34,15 @@ class MongoConfigStore(ConfigStore):
             )
             self.db = self.client[db_name]
             self.table = self.db[table_name]
+
+    def health_check(self) -> bool:
+        """Check if the store is healthy."""
+
+        try:
+            self.client.admin.command("ismaster")
+            return True
+        except ConnectionFailure:
+            return False
 
     def put(self, val: dict) -> None:
         self.table.update_one(

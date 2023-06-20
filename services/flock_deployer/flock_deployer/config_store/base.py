@@ -9,6 +9,10 @@ class ConfigStore(metaclass=abc.ABCMeta):
     """Abstract base class for config stores."""
 
     @abc.abstractmethod
+    def health_check(self) -> bool:
+        """Check if the store is healthy."""
+
+    @abc.abstractmethod
     def put(self, val: dict) -> None:
         """Save a resource to the store."""
 

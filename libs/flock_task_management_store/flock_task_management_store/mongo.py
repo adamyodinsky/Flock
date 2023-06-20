@@ -4,11 +4,9 @@ from datetime import datetime, timedelta
 from typing import Optional
 
 import pymongo
-
-# from flock_schemas.card import Ticket
-from pymongo import MongoClient
-
 from flock_task_management_store.base import TaskManagementStore
+from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
 
 
 class MongoTaskManagementStore(TaskManagementStore):
@@ -63,6 +61,15 @@ class MongoTaskManagementStore(TaskManagementStore):
                 host,
                 port,
             )
+
+    def health_check(self) -> bool:
+        """Check if the resource store is healthy."""
+
+        try:
+            self.client.admin.command("ismaster")
+            return True
+        except ConnectionFailure:
+            return False
 
     def save_ticket(self, ticket):
         """Save task to store, only if it doesn't exist. If it exists, do nothing.

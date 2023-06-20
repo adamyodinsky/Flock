@@ -4,12 +4,17 @@ from fastapi import APIRouter, Body, Depends, HTTPException
 from pydantic import ValidationError
 
 from flock_deployer.deployer.base import BaseDeployers
-from flock_deployer.schemas import ResourceCreated, ResourceDeleted
-from flock_deployer.schemas.deployment import DeploymentSchema
+from flock_deployer.schemas import DeploymentConfigSchema, DeploymentSchema
 from flock_deployer.schemas.request import (
     ConfigRequest,
     DeleteRequest,
     DeploymentRequest,
+)
+from flock_deployer.schemas.response import (
+    ConfigCreated,
+    HealthResponse,
+    ResourceCreated,
+    ResourceDeleted,
 )
 
 
@@ -21,16 +26,39 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
 
     @router.get("/health")
     @router.get("/")
-    async def health_endpoint():
+    async def health_endpoint(
+        deployers: BaseDeployers = Depends(lambda: deployers),
+    ) -> HealthResponse:
         """Health endpoint
+
+        Check the health of the deployer.
+
+        Args:
+
 
         Returns:
             dict: Health status
-        """
-        return {"status": "ok"}
 
-    @router.post("/deployment")
-    async def deploy(
+        """
+
+        logging.info("Checking health")
+        resource_store_health = deployers.resource_store.health_check()
+        secret_store_health = deployers.secret_store.health_check()
+        config_store_health = deployers.config_store.health_check()
+
+        return HealthResponse(
+            status="OK"
+            if all([resource_store_health, secret_store_health, config_store_health])
+            else "ERROR",
+            stores={
+                "resource_store": "OK" if resource_store_health else "ERROR",
+                "secret_store": "OK" if secret_store_health else "ERROR",
+                "config_store": "OK" if config_store_health else "ERROR",
+            },
+        )
+
+    @router.put("/deployment")
+    async def put_deployment(
         data: DeploymentRequest = Body(..., description=""),
         deployers: BaseDeployers = Depends(lambda: deployers),
     ) -> ResourceCreated:
@@ -49,7 +77,7 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
         Returns:
             ResourceCreated: Resource created
         """
-        logging.info("Creating resource objects%s", data.resource_name)
+        logging.info("Creating resource object %s", data.resource_name)
         try:
             target_manifest = deployers.get_target_manifest(
                 name=data.resource_name,
@@ -58,11 +86,13 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
             )
 
             creator = deployers.get_creator(data.deployment_kind)
-            deployment_schema: DeploymentSchema = creator(
-                data.deployment_name,
-                data.deployment_namespace,
-                target_manifest,
-                data.config,
+
+            deployment_schema = creator(
+                name=data.deployment_name,
+                namespace=data.deployment_namespace,
+                target_manifest=target_manifest,
+                config=data.config,
+                schedule=data.schedule,
             )
 
         except ValidationError as error:
@@ -80,17 +110,27 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
 
         logging.info("Deploying resource %s", data.resource_name)
         try:
-            if data.resource_kind == "Agent":
-                deployers.service_deployer.deploy(
-                    deployment_schema, target_manifest, dry_run=False
-                )
-                deployers.deployment_deployer.deploy(
-                    deployment_schema, target_manifest, dry_run=False
-                )
-            else:
-                deployers.job_deployer.deploy(
-                    deployment_schema, target_manifest, dry_run=False
-                )
+            match data.deployment_kind:
+                case "FlockDeployment":
+                    deployers.service_deployer.deploy(
+                        deployment_schema, target_manifest, dry_run=data.dry_run
+                    )
+                    deployers.deployment_deployer.deploy(
+                        deployment_schema, target_manifest, dry_run=data.dry_run
+                    )
+                case "FlockJob":
+                    deployers.job_deployer.deploy(
+                        deployment_schema, target_manifest, dry_run=data.dry_run
+                    )
+                case "FlockCronJob":
+                    deployers.cronjob_deployer.deploy(
+                        deployment_schema, target_manifest, dry_run=data.dry_run
+                    )
+                case _:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=["Failed to store resource", "Invalid deployment kind"],
+                    )
 
         except Exception as error:  # pylint: disable=broad-except
             logging.error("Failed to store resource %s", data.resource_name)
@@ -105,7 +145,7 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
         return ResourceCreated(data=deployment_schema)
 
     @router.delete("/deployment")
-    async def deployment(
+    async def delete_deployment(
         data: DeleteRequest = Body(..., description=""),
         deployers: BaseDeployers = Depends(lambda: deployers),
     ) -> ResourceDeleted:
@@ -127,23 +167,30 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
 
         logging.info("Deleting resource %s", data.deployment_name)
         try:
-            if data.resource_kind == "Agent":
-                deployers.service_deployer.delete(
-                    name=data.deployment_name,
-                    namespace=data.deployment_namespace,
-                    dry_run=False,
-                )
-                deployers.deployment_deployer.delete(
-                    name=data.deployment_name,
-                    namespace=data.deployment_namespace,
-                    dry_run=False,
-                )
-            else:
-                deployers.job_deployer.delete(
-                    name=data.deployment_name,
-                    namespace=data.deployment_namespace,
-                    dry_run=False,
-                )
+            match data.deployment_kind:
+                case "FlockDeployment":
+                    deployers.service_deployer.delete(
+                        name=data.deployment_name,
+                        namespace=data.deployment_namespace,
+                        dry_run=data.dry_run,
+                    )
+                    deployers.deployment_deployer.delete(
+                        name=data.deployment_name,
+                        namespace=data.deployment_namespace,
+                        dry_run=data.dry_run,
+                    )
+                case "FlockJob":
+                    deployers.job_deployer.delete(
+                        name=data.deployment_name,
+                        namespace=data.deployment_namespace,
+                        dry_run=data.dry_run,
+                    )
+                case "FlockCronJob":
+                    deployers.cronjob_deployer.delete(
+                        name=data.deployment_name,
+                        namespace=data.deployment_namespace,
+                        dry_run=data.dry_run,
+                    )
 
         except Exception as error:  # pylint: disable=broad-except
             logging.error("Failed to store resource %s", data.deployment_name)
@@ -161,7 +208,7 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
     async def create_config(
         data: ConfigRequest = Body(..., description=""),
         deployers: BaseDeployers = Depends(lambda: deployers),
-    ):
+    ) -> ConfigCreated:
         """
         Create config
 
@@ -188,11 +235,13 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
                 ],
             ) from error
 
+        return ConfigCreated(data=data.config)
+
     @router.get("/config/{name}")
     async def get_config(
         name: str,
         deployers: BaseDeployers = Depends(lambda: deployers),
-    ):
+    ) -> DeploymentConfigSchema:
         """
         Get config
 
@@ -209,7 +258,9 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
 
         logging.info("Getting config %s", name)
         try:
-            return deployers.config_store.get(name=name)
+            config = deployers.config_store.get(name=name)
+            config = DeploymentConfigSchema.validate(config)
+            return config
         except Exception as error:
             logging.error("Failed to get config %s", name)
             raise HTTPException(
@@ -224,7 +275,7 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
     async def delete_config(
         name: str,
         deployers: BaseDeployers = Depends(lambda: deployers),
-    ):
+    ) -> ResourceDeleted:
         """
         Delete config
 
@@ -241,6 +292,7 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
         logging.info("Deleting config %s", name)
         try:
             deployers.config_store.delete(name=name)
+            return ResourceDeleted()
         except Exception as error:
             logging.error("Failed to delete config %s", name)
             raise HTTPException(

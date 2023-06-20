@@ -1,6 +1,7 @@
 """ Test """
 
 import os
+import time
 
 import yaml
 from flock_common import init_logging
@@ -14,7 +15,10 @@ from flock_deployer.schemas.config import DeploymentConfigSchema
 from flock_deployer.schemas.deployment import DeploymentSchema
 from flock_deployer.schemas.job import CronJobSchema, JobSchema
 
+SLEEP_TIME = 6
+DRY_RUN = os.environ.get("DRY_RUN", True)
 init_logging(level="INFO")
+
 resource_store = ResourceStoreFactory.get_resource_store()
 secret_store = SecretStoreFactory.get_secret_store("vault")
 config_store = ConfigStoreFactory.get_store("mongo")
@@ -31,7 +35,6 @@ def setup_deployers():
 
 schema_factory = SchemaFactory()
 deployers = setup_deployers()
-DRY_RUN = False
 
 
 def load_and_validate_schema(schema_class, yaml_path):
@@ -40,11 +43,11 @@ def load_and_validate_schema(schema_class, yaml_path):
     return schema_class.validate(data)
 
 
-def process_manifest(deployer, deployment_manifest, target_manifest, dry_run):
-    deployer.deploy(deployment_manifest, target_manifest, dry_run=dry_run)
+def process_manifest(deployer, deployment_manifest, target_manifest):
+    deployer.deploy(deployment_manifest, target_manifest, dry_run=DRY_RUN)
 
 
-def test_deployer(deployer, deployment_manifest, dry_run=DRY_RUN):
+def deploy(deployer, deployment_manifest):
     resource_manifest = resource_store.get(
         name=deployment_manifest.spec.targetResource.name,
         kind=deployment_manifest.spec.targetResource.kind,
@@ -53,10 +56,10 @@ def test_deployer(deployer, deployment_manifest, dry_run=DRY_RUN):
     target_schema_cls = schema_factory.get_schema(resource_manifest["kind"])
     target_manifest = target_schema_cls.validate(resource_manifest)
 
-    process_manifest(deployer, deployment_manifest, target_manifest, dry_run)
+    process_manifest(deployer, deployment_manifest, target_manifest)
 
 
-def test_manifest_creator(
+def create_manifest(
     target_name, target_namespace, target_kind, deployment_kind, config
 ) -> tuple:
     """
@@ -76,6 +79,11 @@ def test_manifest_creator(
         name=target_name, kind=target_kind, namespace=target_namespace
     )
     creator_func = deployers.get_creator(deployment_kind)
+
+    extra_args = {}
+    if deployment_kind == "FlockCronJob":
+        extra_args["schedule"] = "0 0 * * 0"
+
     deployment_manifest = creator_func(
         name=target_name,
         namespace=target_namespace,
@@ -83,19 +91,20 @@ def test_manifest_creator(
             target_manifest
         ),
         config=config,
+        **extra_args,
     )
     return target_manifest, deployment_manifest
 
 
-def delete(target_name, target_namespace, deployer, dry_run=DRY_RUN):
+def delete(target_name, target_namespace, deployer):
     deployer.delete(
         name=target_name,
         namespace=target_namespace,
-        dry_run=dry_run,
+        dry_run=DRY_RUN,
     )
 
 
-def main():
+def test_integration():
     # Deploy Global Config
     global_config = deployers.config_store.load_file(
         "./assets/schemas/configs/global_config.yaml"
@@ -129,96 +138,147 @@ def main():
     deployers.config_store.put(example_config.dict())
 
     # Deploy WebScraper
+    print("Deploying WebScraper Job")
     deployment_manifest = load_and_validate_schema(
         JobSchema, "./assets/schemas/webscraper_job.yaml"
     )
-    # test_deployer(deployers.job_deployer, deployment_manifest)
-    # deployers.job_deployer.delete(
-    #     name=deployment_manifest.metadata.name,
-    #     namespace=deployment_manifest.namespace,
-    #     dry_run=DRY_RUN,
-    # )
+    deploy(deployers.job_deployer, deployment_manifest)
+
+    if not DRY_RUN:
+        time.sleep(SLEEP_TIME)
+        print("Deleting WebScraper Job")
+        deployers.job_deployer.delete(
+            name=deployment_manifest.metadata.name,
+            namespace=deployment_manifest.namespace,
+            dry_run=DRY_RUN,
+        )
 
     # Deploy WebSCraper CronJob
+    print("Deploying WebScraper CronJob")
     deployment_manifest = load_and_validate_schema(
         CronJobSchema, "./assets/schemas/webscraper_cronjob.yaml"
     )
-    test_deployer(deployers.cronjob_deployer, deployment_manifest)
-    deployers.cronjob_deployer.delete(
-        name=deployment_manifest.metadata.name,
-        namespace=deployment_manifest.namespace,
-        dry_run=DRY_RUN,
-    )
+    deploy(deployers.cronjob_deployer, deployment_manifest)
+
+    if not DRY_RUN:
+        time.sleep(SLEEP_TIME)
+        print("Deleting WebScraper CronJob")
+        deployers.cronjob_deployer.delete(
+            name=deployment_manifest.metadata.name,
+            namespace=deployment_manifest.namespace,
+            dry_run=DRY_RUN,
+        )
 
     # Deploy EmbeddingsLoader
+    print("Deploying EmbeddingsLoader Job")
     deployment_manifest = load_and_validate_schema(
         JobSchema, "./assets/schemas/embeddingsloader_job.yaml"
     )
-    # test_deployer(deployers.job_deployer, deployment_manifest)
-    # deployers.job_deployer.delete(
-    #     name=deployment_manifest.metadata.name,
-    #     namespace=deployment_manifest.namespace,
-    #     dry_run=DRY_RUN,
-    # )
+    deploy(deployers.job_deployer, deployment_manifest)
+
+    if not DRY_RUN:
+        time.sleep(SLEEP_TIME)
+        print("Deleting EmbeddingsLoader Job")
+        deployers.job_deployer.delete(
+            name=deployment_manifest.metadata.name,
+            namespace=deployment_manifest.namespace,
+            dry_run=DRY_RUN,
+        )
 
     # Deploy Agent
+    print("Deploying Agent Deployment and Service")
     deployment_manifest = load_and_validate_schema(
         DeploymentSchema,
         "./assets/schemas/agent_deployment.yaml",
     )
-    # test_deployer(
-    #     deployers.deployment_deployer,
-    #     deployment_manifest,
-    # )
+    deploy(
+        deployers.deployment_deployer,
+        deployment_manifest,
+    )
 
-    # test_deployer(deployers.service_deployer, deployment_manifest)
-    # deployers.deployment_deployer.delete(
-    #     name=deployment_manifest.metadata.name, namespace="default", dry_run=DRY_RUN
-    # )
-    # deployers.service_deployer.delete(
-    #     name=deployment_manifest.metadata.name, namespace="default", dry_run=DRY_RUN
-    # )
+    deploy(deployers.service_deployer, deployment_manifest)
+
+    if not DRY_RUN:
+        time.sleep(SLEEP_TIME)
+        print("Deleting Agent Deployment and Service")
+        deployers.deployment_deployer.delete(
+            name=deployment_manifest.metadata.name, namespace="default", dry_run=DRY_RUN
+        )
+        deployers.service_deployer.delete(
+            name=deployment_manifest.metadata.name, namespace="default", dry_run=DRY_RUN
+        )
 
     # Deploy WebScraper with manifest creators
-    _, deployment_manifest = test_manifest_creator(
+    print("\n######## Manifest Creators to Deployers Test ##########\n")
+
+    print("Deploying WebScraper Job")
+    _, deployment_manifest = create_manifest(
         "my-web-scraper", "default", "WebScraper", "FlockJob", example_config
     )
-    test_deployer(deployers.job_deployer, deployment_manifest)
-    deployers.job_deployer.delete(
-        name=deployment_manifest.metadata.name,
-        namespace=deployment_manifest.namespace,
-        dry_run=DRY_RUN,
-    )
+    deploy(deployers.job_deployer, deployment_manifest)
 
-    # Deploy EmbeddingsLoader with manifest creators
-    _, deployment_manifest = test_manifest_creator(
+    if not DRY_RUN:
+        time.sleep(SLEEP_TIME)
+        print("Deleting WebScraper Job")
+        deployers.job_deployer.delete(
+            name=deployment_manifest.metadata.name,
+            namespace=deployment_manifest.namespace,
+            dry_run=DRY_RUN,
+        )
+
+    print("Deploying WebScraper CronJob")
+    _, deployment_manifest = create_manifest(
+        "my-web-scraper", "default", "WebScraper", "FlockCronJob", example_config
+    )
+    deploy(deployers.cronjob_deployer, deployment_manifest)
+
+    if not DRY_RUN:
+        time.sleep(SLEEP_TIME)
+        print("Deleting WebScraper CronJob")
+        deployers.cronjob_deployer.delete(
+            name=deployment_manifest.metadata.name,
+            namespace=deployment_manifest.namespace,
+            dry_run=DRY_RUN,
+        )
+
+    print("Deploying EmbeddingsLoader Job")
+    _, deployment_manifest = create_manifest(
         "embeddings-loader", "default", "EmbeddingsLoader", "FlockJob", example_config
     )
-    test_deployer(deployers.job_deployer, deployment_manifest)
-    deployers.job_deployer.delete(
-        name=deployment_manifest.metadata.name,
-        namespace=deployment_manifest.namespace,
-        dry_run=DRY_RUN,
-    )
+    deploy(deployers.job_deployer, deployment_manifest)
 
-    # Deploy Agent with manifest creators
-    _, deployment_manifest = test_manifest_creator(
+    if not DRY_RUN:
+        time.sleep(SLEEP_TIME)
+        print("Deleting EmbeddingsLoader Job")
+        deployers.job_deployer.delete(
+            name=deployment_manifest.metadata.name,
+            namespace=deployment_manifest.namespace,
+            dry_run=DRY_RUN,
+        )
+
+    print("Deploying Agent Deployment and Service")
+    _, deployment_manifest = create_manifest(
         "my-agent", "default", "Agent", "FlockDeployment", example_config
     )
-    test_deployer(deployers.deployment_deployer, deployment_manifest)
-    test_deployer(deployers.service_deployer, deployment_manifest)
+    deploy(deployers.deployment_deployer, deployment_manifest)
+    deploy(deployers.service_deployer, deployment_manifest)
 
-    deployers.deployment_deployer.delete(
-        name=deployment_manifest.metadata.name,
-        namespace=deployment_manifest.namespace,
-        dry_run=DRY_RUN,
-    )
-    deployers.service_deployer.delete(
-        name=deployment_manifest.metadata.name,
-        namespace=deployment_manifest.namespace,
-        dry_run=DRY_RUN,
-    )
+    if not DRY_RUN:
+        time.sleep(SLEEP_TIME)
+        print("Deleting Agent Deployment and Service")
+        deployers.deployment_deployer.delete(
+            name=deployment_manifest.metadata.name,
+            namespace=deployment_manifest.namespace,
+            dry_run=DRY_RUN,
+        )
+        deployers.service_deployer.delete(
+            name=deployment_manifest.metadata.name,
+            namespace=deployment_manifest.namespace,
+            dry_run=DRY_RUN,
+        )
+
+    deployers.config_store.delete("example")
 
 
 if __name__ == "__main__":
-    main()
+    test_integration()

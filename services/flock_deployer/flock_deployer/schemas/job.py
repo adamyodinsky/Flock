@@ -51,7 +51,7 @@ class CronJobSpec(JobSpec):
     """CronJob spec schema."""
 
     schedule: str = Field(
-        ...,
+        "0 0 * * 0",
         description="The cron schedule",
     )
 

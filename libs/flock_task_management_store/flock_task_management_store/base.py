@@ -22,6 +22,10 @@ class TaskManagementStore(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
+    def health_check(self) -> bool:
+        """Check if the resource store is healthy."""
+
+    @abc.abstractmethod
     def save_ticket(self, ticket):
         """Save task to store, only if it doesn't exist. If it exists, do nothing.
 

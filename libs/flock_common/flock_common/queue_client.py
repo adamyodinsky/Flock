@@ -24,6 +24,10 @@ class QueueClient(ABC):
     def close(self):
         pass
 
+    @abstractmethod
+    def health_check(self) -> bool:
+        """Check if the store is healthy."""
+
 
 class RabbitMQClient(QueueClient):
     """RabbitMQ queue client"""
@@ -58,6 +62,14 @@ class RabbitMQClient(QueueClient):
             self.username,
             self.queue_name,
         )
+
+    def health_check(self) -> bool:
+        """Check if the store is healthy."""
+        try:
+            self.channel.queue_declare(queue=self.queue_name)
+            return True
+        except pika.exceptions.AMQPConnectionError:
+            return False
 
     def connect(self):
         credentials = pika.PlainCredentials(self.username, self.password)

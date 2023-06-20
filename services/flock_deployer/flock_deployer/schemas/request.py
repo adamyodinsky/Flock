@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pydantic import BaseModel
+
 from flock_deployer.schemas.config import DeploymentConfigSchema
 
 
@@ -15,7 +16,9 @@ class DeploymentRequest(BaseModel):
     resource_name: str
     resource_namespace: str
     resource_kind: str
+    schedule: str = "0 0 * * 0"
     config: DeploymentConfigSchema
+    dry_run: bool = False
 
 
 class ConfigRequest(BaseModel):
@@ -29,7 +32,8 @@ class DeleteRequest(BaseModel):
 
     deployment_name: str
     deployment_namespace: str
-    resource_kind: str
+    deployment_kind: str = ""
+    dry_run: bool = False
 
 
 DeploymentRequest.update_forward_refs()

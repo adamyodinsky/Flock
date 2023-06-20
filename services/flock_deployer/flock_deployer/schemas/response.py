@@ -2,11 +2,23 @@
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Literal, Union
 
 from pydantic import BaseModel, Field
 
-from flock_deployer.schemas.deployment import DeploymentSchema
+from flock_deployer.schemas import (
+    CronJobSchema,
+    DeploymentConfigSchema,
+    DeploymentSchema,
+    JobSchema,
+)
+
+
+class HealthResponse(BaseModel):
+    """Health response"""
+
+    status: Literal["OK", "ERROR"]
+    stores: dict[str, Literal["OK", "ERROR"]]
 
 
 class ResourceCreated(BaseModel):
@@ -19,7 +31,9 @@ class ResourceCreated(BaseModel):
         default="Success", description="Status of the response"
     )
     code: Literal[200] = Field(default=200, description="HTTP status codes")
-    data: DeploymentSchema = Field(..., description="Data of the response")
+    data: Union[DeploymentSchema, CronJobSchema, JobSchema] = Field(
+        ..., description="Data of the response"
+    )
 
 
 class ResourceDeleted(BaseModel):
@@ -32,6 +46,19 @@ class ResourceDeleted(BaseModel):
         default="Success", description="Status of the response"
     )
     code: Literal[200] = Field(default=200, description="HTTP status codes")
+
+
+class ConfigCreated(BaseModel):
+    """Resource created successfully"""
+
+    message: Literal["Created successfully"] = Field(
+        default="Created successfully", description="Message of the response"
+    )
+    status: Literal["Success"] = Field(
+        default="Success", description="Status of the response"
+    )
+    code: Literal[200] = Field(default=200, description="HTTP status codes")
+    data: DeploymentConfigSchema = Field(..., description="Data of the response")
 
 
 ResourceCreated.update_forward_refs()

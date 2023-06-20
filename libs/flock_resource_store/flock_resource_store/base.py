@@ -54,6 +54,10 @@ class ResourceStore(metaclass=abc.ABCMeta):
     ):
         """Delete a resource"""
 
+    @abc.abstractmethod
+    def health_check(self) -> bool:
+        """Check if the resource store is healthy."""
+
     @staticmethod
     def load_file(path, file_type="yaml") -> dict:
         """Load a resource from the store."""

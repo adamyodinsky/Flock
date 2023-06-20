@@ -26,7 +26,13 @@ from flock_deployer.schemas.deployment import (
     Volume,
     VolumeMount,
 )
-from flock_deployer.schemas.job import BaseMetaData, JobSchema, JobSpec
+from flock_deployer.schemas.job import (
+    BaseMetaData,
+    CronJobSchema,
+    CronJobSpec,
+    JobSchema,
+    JobSpec,
+)
 
 
 class BaseDeployer(metaclass=abc.ABCMeta):
@@ -69,6 +75,7 @@ class BaseDeployers(metaclass=abc.ABCMeta):
         self.schema_creators_map = {
             "FlockDeployment": self.create_deployment_schema,
             "FlockJob": self.create_job_schema,
+            "FlockCronJob": self.create_cronjob_schema,
         }
 
         self.service_deployer: BaseDeployer
@@ -85,7 +92,7 @@ class BaseDeployers(metaclass=abc.ABCMeta):
 
     def get_creator(
         self, kind
-    ) -> Callable[..., Union[DeploymentSchema, JobSchema],]:
+    ) -> Callable[..., Union[DeploymentSchema, JobSchema, CronJobSchema]]:
         """
         Get the creator for a deployment or a job
 
@@ -192,6 +199,7 @@ class BaseDeployers(metaclass=abc.ABCMeta):
         namespace,
         target_manifest: BaseFlockSchema,
         config: DeploymentConfigSchema,
+        **kwargs,
     ) -> DeploymentSchema:
         """Create deployment manifest"""
 
@@ -227,6 +235,7 @@ class BaseDeployers(metaclass=abc.ABCMeta):
         namespace,
         target_manifest: BaseFlockSchema,
         config: DeploymentConfigSchema,
+        **kwargs,
     ) -> JobSchema:
         """Create job manifest"""
 
@@ -240,6 +249,41 @@ class BaseDeployers(metaclass=abc.ABCMeta):
                 labels=target_manifest.metadata.labels,
             ),
             spec=JobSpec(
+                targetResource=self._get_target_resource(target_manifest),
+                container=self._get_container_spec(target_manifest, config),
+                restart_policy="Never",
+                volumes=[
+                    Volume(
+                        name="flock-data",
+                        persistentVolumeClaim=PersistentVolumeClaim(claimName="flock"),
+                        readOnly=False,
+                    )
+                ],
+            ),
+        )
+        return job_manifest
+
+    def create_cronjob_schema(
+        self,
+        name,
+        namespace,
+        target_manifest: BaseFlockSchema,
+        config: DeploymentConfigSchema,
+        **kwargs,
+    ) -> JobSchema:
+        """Create job manifest"""
+
+        job_manifest = CronJobSchema(
+            apiVersion="flock/v1",
+            kind="FlockCronJob",
+            namespace=namespace,
+            metadata=BaseMetaData(
+                name=self._random_suffix(name, 5),
+                description=target_manifest.metadata.description,
+                labels=target_manifest.metadata.labels,
+            ),
+            spec=CronJobSpec(
+                schedule=kwargs["schedule"],
                 targetResource=self._get_target_resource(target_manifest),
                 container=self._get_container_spec(target_manifest, config),
                 restart_policy="Never",

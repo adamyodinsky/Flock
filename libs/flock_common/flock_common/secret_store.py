@@ -22,6 +22,10 @@ class SecretStore(metaclass=abc.ABCMeta):
     def get(self, path, secret_name):
         """Get a secret by key."""
 
+    @abc.abstractmethod
+    def health_check(self) -> bool:
+        """Check if the store is healthy."""
+
 
 class VaultSecretStore(SecretStore):
     """A class for storing and retrieving secrets from Vault."""
@@ -34,6 +38,13 @@ class VaultSecretStore(SecretStore):
 
         super().__init__(app_name)
         self.client = hvac.Client(url=host, token=token)
+
+    def health_check(self) -> bool:
+        """Check if the Vault secret store is healthy."""
+        try:
+            return self.client.is_authenticated()
+        except Exception:
+            return False
 
     def check_secret_engine_enabled(self, path):
         """Check if the secret engine is enabled at the given path."""
