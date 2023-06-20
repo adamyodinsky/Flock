@@ -1,0 +1,499 @@
+{
+  "title": "CronJobSchema",
+  "description": "CronJob schema.",
+  "type": "object",
+  "properties": {
+    "apiVersion": {
+      "title": "Apiversion",
+      "description": "API version",
+      "enum": [
+        "flock/v1"
+      ],
+      "type": "string"
+    },
+    "metadata": {
+      "title": "Metadata",
+      "description": "The metadata of the object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BaseMetaData"
+        }
+      ]
+    },
+    "kind": {
+      "title": "Kind",
+      "description": "The kind of the object",
+      "enum": [
+        "FlockCronJob"
+      ],
+      "type": "string"
+    },
+    "category": {
+      "title": "Category",
+      "default": "deployment",
+      "type": "string"
+    },
+    "namespace": {
+      "title": "Namespace",
+      "description": "The namespace of the object",
+      "type": "string"
+    },
+    "spec": {
+      "title": "Spec",
+      "description": "The spec of the object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CronJobSpec"
+        }
+      ]
+    }
+  },
+  "required": [
+    "apiVersion",
+    "metadata",
+    "kind",
+    "namespace",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "BaseMetaData": {
+      "title": "BaseMetaData",
+      "description": "Base metadata schema.",
+      "type": "object",
+      "properties": {
+        "annotations": {
+          "title": "Annotations",
+          "description": "Annotations are useful for storing additional information",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the object",
+          "maxLength": 63,
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "description": "Description",
+          "maxLength": 255,
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "description"
+      ],
+      "additionalProperties": false
+    },
+    "TargetResource": {
+      "title": "TargetResource",
+      "description": "Deployment target resource schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string"
+        },
+        "kind": {
+          "title": "Kind",
+          "description": "Kind of the target resource",
+          "type": "string"
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string"
+        },
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object"
+        },
+        "description": {
+          "title": "Description",
+          "description": "Tool description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "EnvVar": {
+      "title": "EnvVar",
+      "description": "Environment variable schema.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "SecretKeyRefValue": {
+      "title": "SecretKeyRefValue",
+      "description": "Environment variable schema.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "key": {
+          "title": "Key",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "key"
+      ],
+      "additionalProperties": false
+    },
+    "SecretKeyRef": {
+      "title": "SecretKeyRef",
+      "description": "Base model config.",
+      "type": "object",
+      "properties": {
+        "secretKeyRef": {
+          "$ref": "#/definitions/SecretKeyRefValue"
+        }
+      },
+      "required": [
+        "secretKeyRef"
+      ],
+      "additionalProperties": false
+    },
+    "EnvFrom": {
+      "title": "EnvFrom",
+      "description": "Base model config.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "valueFrom": {
+          "$ref": "#/definitions/SecretKeyRef"
+        }
+      },
+      "required": [
+        "name",
+        "valueFrom"
+      ],
+      "additionalProperties": false
+    },
+    "ContainerPort": {
+      "title": "ContainerPort",
+      "description": "Container port schema.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "description": "The name of the port",
+          "maxLength": 15,
+          "type": "string"
+        },
+        "protocol": {
+          "title": "Protocol",
+          "description": "The protocol for the port",
+          "default": "tcp",
+          "enum": [
+            "tcp",
+            "udp",
+            "TCP",
+            "UDP"
+          ],
+          "type": "string"
+        },
+        "port": {
+          "title": "Port",
+          "description": "The port number",
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "VolumeMount": {
+      "title": "VolumeMount",
+      "description": "Volume mount schema.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "description": "The name of the volume mount",
+          "type": "string"
+        },
+        "mountPath": {
+          "title": "Mountpath",
+          "description": "The path where the volume should be mounted",
+          "type": "string"
+        },
+        "readOnly": {
+          "title": "Readonly",
+          "description": "Whether the volume should be mounted as read-only",
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "mountPath"
+      ],
+      "additionalProperties": false
+    },
+    "ContainerSpec": {
+      "title": "ContainerSpec",
+      "description": "Deployment spec schema.",
+      "type": "object",
+      "properties": {
+        "image": {
+          "title": "Image",
+          "description": "The container image to be deployed",
+          "type": "string"
+        },
+        "env": {
+          "title": "Env",
+          "description": "Environment variables to be set for the deployment",
+          "default": [],
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/EnvVar"
+              },
+              {
+                "$ref": "#/definitions/EnvFrom"
+              }
+            ]
+          }
+        },
+        "ports": {
+          "title": "Ports",
+          "description": "The ports to be exposed by the container",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContainerPort"
+          }
+        },
+        "image_pull_policy": {
+          "title": "Image Pull Policy",
+          "description": "The image pull policy",
+          "default": "IfNotPresent",
+          "enum": [
+            "Always",
+            "Never",
+            "IfNotPresent"
+          ],
+          "type": "string"
+        },
+        "args": {
+          "title": "Args",
+          "description": "The arguments to be passed to the container",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "command": {
+          "title": "Command",
+          "description": "The command to be executed in the container",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "volume_mounts": {
+          "title": "Volume Mounts",
+          "description": "The volume mounts to be mounted in the container",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VolumeMount"
+          }
+        }
+      },
+      "required": [
+        "image"
+      ],
+      "additionalProperties": false
+    },
+    "PersistentVolumeClaim": {
+      "title": "PersistentVolumeClaim",
+      "description": "PersistentVolumeClaim schema.",
+      "type": "object",
+      "properties": {
+        "claimName": {
+          "title": "Claimname",
+          "description": "Name of the PersistentVolumeClaim to use.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "claimName"
+      ],
+      "additionalProperties": false
+    },
+    "Secret": {
+      "title": "Secret",
+      "description": "Secret schema.",
+      "type": "object",
+      "properties": {
+        "secretName": {
+          "title": "Secretname",
+          "type": "string"
+        }
+      },
+      "required": [
+        "secretName"
+      ],
+      "additionalProperties": false
+    },
+    "Volume": {
+      "title": "Volume",
+      "description": "Volume schema.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "description": "Volume name. Must be a DNS_LABEL and unique within the pod.",
+          "type": "string"
+        },
+        "persistentVolumeClaim": {
+          "title": "Persistentvolumeclaim",
+          "description": "PersistentVolumeClaim volume source.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/PersistentVolumeClaim"
+            }
+          ]
+        },
+        "secret": {
+          "$ref": "#/definitions/Secret"
+        },
+        "readOnly": {
+          "title": "Readonly",
+          "description": "Whether the volume is read only.",
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "persistentVolumeClaim"
+      ],
+      "additionalProperties": false
+    },
+    "CronJobSpec": {
+      "title": "CronJobSpec",
+      "description": "CronJob spec schema.",
+      "type": "object",
+      "properties": {
+        "targetResource": {
+          "title": "Targetresource",
+          "description": "The target resource to be deployed",
+          "default": {},
+          "allOf": [
+            {
+              "$ref": "#/definitions/TargetResource"
+            }
+          ]
+        },
+        "container": {
+          "title": "Container",
+          "description": "The container specs",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ContainerSpec"
+            }
+          ]
+        },
+        "backoff_limit": {
+          "title": "Backoff Limit",
+          "description": "The number of times the job will be retried before it is marked as failed",
+          "default": 0,
+          "type": "integer"
+        },
+        "completions": {
+          "title": "Completions",
+          "description": "The desired number of successfully finished pods the job should be run with",
+          "default": 1,
+          "type": "integer"
+        },
+        "parallelism": {
+          "title": "Parallelism",
+          "description": "The maximum desired number of pods the job should run at any given time",
+          "default": 1,
+          "type": "integer"
+        },
+        "volumes": {
+          "title": "Volumes",
+          "description": "The volumes to be mounted in the container",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Volume"
+          }
+        },
+        "restart_policy": {
+          "title": "Restart Policy",
+          "description": "The restart policy of the container",
+          "default": "Never",
+          "enum": [
+            "Never",
+            "OnFailure"
+          ],
+          "type": "string"
+        },
+        "schedule": {
+          "title": "Schedule",
+          "description": "The cron schedule",
+          "type": "string"
+        }
+      },
+      "required": [
+        "container",
+        "schedule"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

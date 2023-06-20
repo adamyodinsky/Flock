@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=../json_schemas/DeploymentConfig.json
+---
+apiVersion: flock/v1
+kind: DeploymentConfigSchema
+metadata:
+  name: agent_global
+  description: agent default global config
+env:
+  - name: RESOURCE_STORE_HOST
+    value: "flock-resource-store"
+  - name: RESOURCE_STORE_USERNAME
+    value: root
+    # valueFrom:
+    #   secretKeyRef:
+    #     name: mysecret
+    #     key: mongo-username
+  - name: RESOURCE_STORE_PASSWORD
+    value: password
+    # valueFrom:
+    #   secretKeyRef:
+    #     name: mysecret
+    #     key: mongo-password
+  - name: FLOCK_AGENT_PORT
+    value: "8080"
+  - name: FLOCK_AGENT_HOST
+    value: "0.0.0.0"
+  - name: QUEUE_HOST
+    value: "flock-queue-rabbitmq-headless"
+  - name: MANAGEMENT_STORE_HOST
+    value: "flock-resource-store"
+  - name: LOG_LEVEL
+    value: "DEBUG"
