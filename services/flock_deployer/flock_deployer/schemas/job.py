@@ -83,5 +83,6 @@ export = {
     "sub": {},
     "main": {
         "Job": JobSchema,
+        "CronJob": CronJobSchema,
     },
 }

@@ -3,12 +3,12 @@
 from flock_common.secret_store import SecretStore
 from flock_resource_store.base import ResourceStore
 
-from flock_deployer.deployer.base import BaseDeployers
-from flock_deployer.deployer.k8s.cron_job_deployer import K8sCronJobDeployer
-from flock_deployer.deployer.k8s.deployment_deployer import K8sDeploymentDeployer
-from flock_deployer.deployer.k8s.job_deployer import K8sJobDeployer
-from flock_deployer.deployer.k8s.service_deployer import K8sServiceDeployer
 from flock_deployer.config_store import ConfigStore
+from flock_deployer.deployer.base import BaseDeployers
+from flock_deployer.deployer.k8s.job_deployer import K8sJobDeployer
+from flock_deployer.deployer.k8s.deployment_deployer import K8sDeploymentDeployer
+from flock_deployer.deployer.k8s.cron_job_deployer import K8sCronJobDeployer
+from flock_deployer.deployer.k8s.service_deployer import K8sServiceDeployer
 
 
 class K8sDeployers(BaseDeployers):
@@ -33,5 +33,5 @@ class K8sDeployers(BaseDeployers):
         super().__init__(resource_store, secret_store, config_store)
         self.service_deployer = K8sServiceDeployer()
         self.deployment_deployer = K8sDeploymentDeployer()
-        self.cron_job_deployer = K8sCronJobDeployer()
+        self.cronjob_deployer = K8sCronJobDeployer()
         self.job_deployer = K8sJobDeployer()

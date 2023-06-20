@@ -447,6 +447,15 @@
           "items": {
             "$ref": "#/definitions/Volume"
           }
+        },
+        "restart_policy": {
+          "title": "Restart Policy",
+          "description": "The restart policy of the container",
+          "default": "Always",
+          "enum": [
+            "Always"
+          ],
+          "type": "string"
         }
       },
       "required": [

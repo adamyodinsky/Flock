@@ -1,9 +1,8 @@
 """Base class for a deployer"""
 
+import logging
 import time
 
-from flock_common.secret_store import SecretStore
-from flock_resource_store.base import ResourceStore
 from kubernetes import client, config
 
 from flock_deployer.deployer.base import BaseDeployer
@@ -35,7 +34,10 @@ class K8sServiceDeployer(BaseDeployer):
         response = self.client.create_namespaced_service(
             body=service.rendered_manifest, namespace=service.namespace, dry_run=dry_run
         )
-        print(f"Service created. status='{response.status}'")  # type: ignore
+        logging.info(
+            "Service %s created in %s", service.metadata.name, service.namespace
+        )
+        logging.info(response.status)  # type: ignore
 
     def _patch(self, service: K8sService, dry_run=None):
         """Patch a service in Kubernetes"""
@@ -46,12 +48,15 @@ class K8sServiceDeployer(BaseDeployer):
             body=service.rendered_manifest,
             dry_run=dry_run,
         )
-        print(f"Service updated. status='{response.status}'")
+        logging.info(
+            "Service %s updated in %s", service.metadata.name, service.namespace
+        )
+        logging.info(response.status)  # type: ignore
 
     def _delete(self, name, namespace, dry_run=None):
         """Delete a deployment in Kubernetes"""
 
-        api_response = self.client.delete_namespaced_service(
+        response = self.client.delete_namespaced_service(
             name=name,
             namespace=namespace,
             body=client.V1DeleteOptions(
@@ -61,7 +66,8 @@ class K8sServiceDeployer(BaseDeployer):
             ),
             dry_run=dry_run,
         )
-        print(f"Service deleted. status='{api_response.status}'")  # type: ignore
+        logging.info("Service %s deleted in %s", name, namespace)
+        logging.info(response.status)  # type: ignore
 
     def _update(self, service: K8sService, dry_run=None):
         """Update a service in Kubernetes"""
@@ -87,12 +93,22 @@ class K8sServiceDeployer(BaseDeployer):
             try:
                 self._update(service_obj, dry_run)
             except client.ApiException as error:
-                print(f"Failed to update service: {error}")
+                logging.error(
+                    "Failed to update service %s in %s",
+                    manifest.metadata.name,
+                    manifest.namespace,
+                )
+                logging.error(error)
         else:
             try:
                 self._create(service_obj, dry_run)
             except client.ApiException as error:
-                print(f"Failed to create service: {error}")
+                logging.error(
+                    "Failed to create service %s in %s",
+                    manifest.metadata.name,
+                    manifest.namespace,
+                )
+                logging.error(error)
 
     def delete(self, name: str, namespace: str, dry_run=None):
         """Delete a deployment from Kubernetes"""
@@ -143,4 +159,9 @@ class K8sServiceDeployer(BaseDeployer):
         try:
             self._create(deployment, dry_run)
         except client.ApiException as error:
-            print(f"Failed to create deployment: {error}")
+            logging.error(
+                "Failed to create service %s in %s",
+                manifest.metadata.name,
+                manifest.namespace,
+            )
+            logging.error(error)

@@ -73,7 +73,7 @@ class BaseDeployers(metaclass=abc.ABCMeta):
 
         self.service_deployer: BaseDeployer
         self.deployment_deployer: BaseDeployer
-        self.cron_job_deployer: BaseDeployer
+        self.cronjob_deployer: BaseDeployer
         self.job_deployer: BaseDeployer
 
     def _random_suffix(self, s, length):
@@ -215,6 +215,7 @@ class BaseDeployers(metaclass=abc.ABCMeta):
                 ],
                 replicas=1,
                 container=self._get_container_spec(target_manifest, config),
+                restart_policy="Always",
             ),
         )
 

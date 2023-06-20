@@ -449,7 +449,7 @@
         "backoff_limit": {
           "title": "Backoff Limit",
           "description": "The number of times the job will be retried before it is marked as failed",
-          "default": 6,
+          "default": 0,
           "type": "integer"
         },
         "completions": {

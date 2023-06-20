@@ -1,9 +1,8 @@
 """Base class for a deployer"""
 
+import logging
 import time
 
-from flock_common.secret_store import SecretStore
-from flock_resource_store.base import ResourceStore
 from flock_schemas.base import BaseFlockSchema
 from kubernetes import client, config
 
@@ -26,6 +25,8 @@ class K8sDeploymentDeployer(BaseDeployer):
         self, manifest: DeploymentSchema, target_manifest: BaseFlockSchema
     ) -> K8sDeployment:
         """Create a Kubernetes Deployment object from the manifest"""
+
+        logging.debug(f"Creating deployment object from manifest: {manifest}")
         deployment = K8sDeployment(manifest, target_manifest)
 
         return deployment
@@ -39,8 +40,12 @@ class K8sDeploymentDeployer(BaseDeployer):
             body=deployment.rendered_manifest,
             dry_run=dry_run,
         )
-
-        print(f"Deployment updated. status='{response.status}'")
+        logging.info(
+            "Deployment %s %s updated",
+            deployment.namespace,
+            deployment.manifest.metadata.name,
+        )
+        logging.info(response.status)  # type: ignore
 
     def _delete(self, name, namespace, dry_run=None):
         """Delete a deployment in Kubernetes"""
@@ -55,7 +60,13 @@ class K8sDeploymentDeployer(BaseDeployer):
             ),
             dry_run=dry_run,
         )
-        print(f"Deployment deleted. status='{api_response.status}'")  # type: ignore
+
+        logging.info(
+            "Deployment %s %s deleted status=%s",
+            namespace,
+            name,
+            api_response.status,  # type: ignore
+        )
 
     def _create(self, deployment: K8sDeployment, dry_run=None):
         """Create a deployment in Kubernetes"""
@@ -65,7 +76,13 @@ class K8sDeploymentDeployer(BaseDeployer):
             namespace=deployment.namespace,
             dry_run=dry_run,
         )
-        print(f"Deployment created. status='{response.status}'")  # type: ignore
+
+        logging.info(
+            "Deployment %s %s created status=%s",
+            deployment.namespace,
+            deployment.manifest.metadata.name,
+            response.status,  # type: ignore
+        )
 
     def _update(self, deployment: K8sDeployment, dry_run=None):
         """Update a deployment in Kubernetes"""
@@ -87,12 +104,15 @@ class K8sDeploymentDeployer(BaseDeployer):
     def delete(self, name, namespace, dry_run=None):
         """Delete a deployment from Kubernetes"""
 
+        logging.info("Deleting deployment %s %s", namespace, name)
         dry_run = set_dry_run(dry_run)
 
         try:
             self._delete(name, namespace, dry_run)
         except client.ApiException as error:
-            print(f"Failed to delete deployment: {error}")
+            logging.error(
+                "Failed to delete deployment %s %s: %s", namespace, name, error
+            )
 
     def update(
         self, manifest: DeploymentSchema, target_manifest: BaseFlockSchema, dry_run=None

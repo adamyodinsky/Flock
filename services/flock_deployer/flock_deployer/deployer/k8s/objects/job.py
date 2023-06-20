@@ -14,19 +14,13 @@ class K8sJob(K8sResource):
 
     def __init__(self, manifest: JobSchema, target_manifest: BaseFlockSchema):
         super().__init__(manifest, target_manifest)
-        job_template = client.V1JobSpec(
-            template=FlockPodTemplate(manifest, target_manifest).pod_template_spec,
-            backoff_limit=manifest.spec.backoff_limit,
-            completions=manifest.spec.completions,
-            parallelism=manifest.spec.parallelism,
-        )
-
-        job_template.template.spec.restart_policy = manifest.spec.restart_policy
+        job_spec = self.get_job_spec(manifest, target_manifest)
+        job_spec.template.spec.restart_policy = manifest.spec.restart_policy
         self.rendered_manifest = client.V1Job(
             api_version="batch/v1",
             kind="Job",
             metadata=self.metadata,
-            spec=job_template,
+            spec=job_spec,
         )
 
     def create(self):
@@ -36,27 +30,32 @@ class K8sJob(K8sResource):
             body=self.rendered_manifest, namespace=self.namespace
         )
 
+    def get_job_spec(
+        self, manifest: JobSchema, target_manifest: BaseFlockSchema
+    ) -> client.V1JobSpec:
+        job_spec = client.V1JobSpec(
+            template=FlockPodTemplate(manifest, target_manifest).pod_template_spec,
+            backoff_limit=manifest.spec.backoff_limit,
+            completions=manifest.spec.completions,
+            parallelism=manifest.spec.parallelism,
+        )
+        return job_spec
 
-class K8sCronJob(K8sResource):
+
+class K8sCronJob(K8sJob):
     """Kubernetes CronJob object."""
 
     def __init__(self, manifest: CronJobSchema, target_manifest: BaseFlockSchema):
         super().__init__(manifest, target_manifest)
+        job_spec = self.get_job_spec(manifest, target_manifest)
         self.rendered_manifest = client.V1CronJob(
-            api_version="batch/v1beta1",
+            api_version="batch/v1",
             kind="CronJob",
             metadata=self.metadata,
             spec=client.V1CronJobSpec(
                 schedule=manifest.spec.schedule,
                 job_template=client.V1JobTemplateSpec(
-                    spec=client.V1JobSpec(
-                        template=FlockPodTemplate(
-                            manifest, target_manifest
-                        ).pod_template_spec,
-                        backoff_limit=manifest.spec.backoff_limit,
-                        completions=manifest.spec.completions,
-                        parallelism=manifest.spec.parallelism,
-                    ),
+                    spec=job_spec,
                 ),
             ),
         )

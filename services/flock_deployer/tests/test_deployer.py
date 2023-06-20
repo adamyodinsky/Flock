@@ -3,6 +3,7 @@
 import os
 
 import yaml
+from flock_common import init_logging
 from flock_common.secret_store import SecretStoreFactory
 from flock_resource_store import ResourceStoreFactory
 from flock_schemas.factory import SchemaFactory
@@ -11,8 +12,9 @@ from flock_deployer.config_store import ConfigStoreFactory
 from flock_deployer.deployer import DeployerFactory
 from flock_deployer.schemas.config import DeploymentConfigSchema
 from flock_deployer.schemas.deployment import DeploymentSchema
-from flock_deployer.schemas.job import JobSchema
+from flock_deployer.schemas.job import CronJobSchema, JobSchema
 
+init_logging(level="INFO")
 resource_store = ResourceStoreFactory.get_resource_store()
 secret_store = SecretStoreFactory.get_secret_store("vault")
 config_store = ConfigStoreFactory.get_store("mongo")
@@ -96,19 +98,19 @@ def delete(target_name, target_namespace, deployer, dry_run=DRY_RUN):
 def main():
     # Deploy Global Config
     global_config = deployers.config_store.load_file(
-        "./assets/schemas/global_config.yaml"
+        "./assets/schemas/configs/global_config.yaml"
     )
     agent_config = deployers.config_store.load_file(
-        "./assets/schemas/agent_config.yaml"
+        "./assets/schemas/configs/agent_config.yaml"
     )
     webscraper_config = deployers.config_store.load_file(
-        "./assets/schemas/webscraper_config.yaml"
+        "./assets/schemas/configs/webscraper_config.yaml"
     )
     embeddingsloader_config = deployers.config_store.load_file(
-        "./assets/schemas/embeddingsloader_config.yaml"
+        "./assets/schemas/configs/embeddingsloader_config.yaml"
     )
     example_config = deployers.config_store.load_file(
-        "./assets/schemas/example_config.yaml"
+        "./assets/schemas/configs/example_config.yaml"
     )
 
     global_config = DeploymentConfigSchema.validate(global_config)
@@ -136,6 +138,17 @@ def main():
     #     namespace=deployment_manifest.namespace,
     #     dry_run=DRY_RUN,
     # )
+
+    # Deploy WebSCraper CronJob
+    deployment_manifest = load_and_validate_schema(
+        CronJobSchema, "./assets/schemas/webscraper_cronjob.yaml"
+    )
+    test_deployer(deployers.cronjob_deployer, deployment_manifest)
+    deployers.cronjob_deployer.delete(
+        name=deployment_manifest.metadata.name,
+        namespace=deployment_manifest.namespace,
+        dry_run=DRY_RUN,
+    )
 
     # Deploy EmbeddingsLoader
     deployment_manifest = load_and_validate_schema(

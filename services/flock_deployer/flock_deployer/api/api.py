@@ -7,9 +7,9 @@ from flock_deployer.deployer.base import BaseDeployers
 from flock_deployer.schemas import ResourceCreated, ResourceDeleted
 from flock_deployer.schemas.deployment import DeploymentSchema
 from flock_deployer.schemas.request import (
+    ConfigRequest,
     DeleteRequest,
     DeploymentRequest,
-    ConfigRequest,
 )
 
 
@@ -55,11 +55,13 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
             )
 
         except ValidationError as error:
+            logging.error("Failed to build resource %s", data.resource_name)
             raise HTTPException(
                 status_code=400,
                 detail=["Failed to build resource", str(error)],
             ) from error
         except Exception as error:  # pylint: disable=broad-except
+            logging.error("Failed to build resource %s", data.resource_name)
             raise HTTPException(
                 status_code=500,
                 detail=["Failed to build resource", str(error)],
@@ -80,6 +82,7 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
                 )
 
         except Exception as error:  # pylint: disable=broad-except
+            logging.error("Failed to store resource %s", data.resource_name)
             raise HTTPException(
                 status_code=500,
                 detail=[
@@ -132,6 +135,7 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
                 )
 
         except Exception as error:  # pylint: disable=broad-except
+            logging.error("Failed to store resource %s", data.deployment_name)
             raise HTTPException(
                 status_code=500,
                 detail=[
@@ -160,6 +164,8 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
         Returns:
             ResourceCreated: Resource created
         """
+
+        logging.info("Creating config %s", data.config.metadata.name)
         try:
             deployers.config_store.put(data.config.dict())
         except Exception as error:  # pylint: disable=broad-except
@@ -189,9 +195,12 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
         Returns:
             Config: Config
         """
+
+        logging.info("Getting config %s", name)
         try:
             return deployers.config_store.get(name=name)
         except Exception as error:
+            logging.error("Failed to get config %s", name)
             raise HTTPException(
                 status_code=500,
                 detail=[
@@ -218,9 +227,11 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
         Returns:
             Config: Config
         """
+        logging.info("Deleting config %s", name)
         try:
             deployers.config_store.delete(name=name)
         except Exception as error:
+            logging.error("Failed to delete config %s", name)
             raise HTTPException(
                 status_code=500,
                 detail=[

@@ -1,7 +1,8 @@
 """Module for deploying CronJobs to Kubernetes"""
 
-from flock_common.secret_store import SecretStore
-from flock_resource_store.base import ResourceStore
+
+import logging
+
 from flock_schemas.base import BaseFlockSchema
 from kubernetes import client, config
 
@@ -17,6 +18,7 @@ class K8sCronJobDeployer(BaseDeployer):
     def __init__(self):
         """Initialize the deployer"""
 
+        logging.debug("Initializing K8sCronJobDeployer")
         config.load_kube_config()
         self.client = client.BatchV1Api()
 
@@ -24,6 +26,11 @@ class K8sCronJobDeployer(BaseDeployer):
         self, manifest: CronJobSchema, target_manifest: BaseFlockSchema
     ) -> K8sCronJob:
         """Create a Kubernetes CronJob object from the manifest"""
+        logging.debug(
+            "Creating K8sCronJob object %s for namespace %s",
+            manifest.metadata.name,
+            manifest.namespace,
+        )
         cronjob = K8sCronJob(manifest, target_manifest)
 
         return cronjob
@@ -31,7 +38,8 @@ class K8sCronJobDeployer(BaseDeployer):
     def _delete(self, name, namespace, dry_run=None):
         """Delete a CronJob in Kubernetes"""
 
-        api_response = self.client.delete_namespaced_cron_job(
+        logging.debug("Deleting CronJob %s in namespace %s", name, namespace)
+        response = self.client.delete_namespaced_cron_job(
             name=name,
             namespace=namespace,
             body=client.V1DeleteOptions(
@@ -41,11 +49,17 @@ class K8sCronJobDeployer(BaseDeployer):
             ),
             dry_run=dry_run,
         )
-        print(f"CronJob deleted. status='{api_response.status}'")  # type: ignore
+        logging.info("CronJob deleted")
+        logging.info(response.status)  # type: ignore
 
     def _update(self, cronjob: K8sCronJob, dry_run=None):
         """Update a CronJob in Kubernetes"""
 
+        logging.debug(
+            "Updating CronJob %s in namespace %s",
+            cronjob.manifest.metadata.name,
+            cronjob.namespace,
+        )
         response = self.client.patch_namespaced_cron_job(
             name=cronjob.manifest.metadata.name,
             namespace=cronjob.namespace,
@@ -53,32 +67,48 @@ class K8sCronJobDeployer(BaseDeployer):
             dry_run=dry_run,
         )
 
-        print(f"CronJob updated. status='{response.status}'")
+        logging.info("CronJob updated")
+        logging.info(response.status)
 
     def _create(self, cronjob: K8sCronJob, dry_run=None):
         """Create a CronJob in Kubernetes"""
+
+        logging.debug(
+            "Creating CronJob %s in namespace %s",
+            cronjob.manifest.metadata.name,
+            cronjob.namespace,
+        )
 
         response = self.client.create_namespaced_cron_job(
             body=cronjob.rendered_manifest,
             namespace=cronjob.namespace,
             dry_run=dry_run,
         )
-        print(f"CronJob created. status='{response.status}'")  # type: ignore
+
+        logging.info("CronJob created")
+        logging.info(response.status)  # type: ignore
 
     def delete(self, name, namespace, dry_run=None):
         """Delete a CronJob from Kubernetes"""
 
         dry_run = set_dry_run(dry_run)
-
+        logging.debug("Deleting CronJob %s in namespace %s", name, namespace)
         try:
             self._delete(name, namespace, dry_run)
         except client.ApiException as error:
-            print(f"Failed to delete CronJob: {error}")
+            logging.error("Failed to delete CronJob: %s %s", name, namespace)
+            logging.error(error)
 
     def deploy(
         self, manifest: CronJobSchema, target_manifest: BaseFlockSchema, dry_run=None
     ):
         """Deploy a CronJob to Kubernetes"""
+
+        logging.info(
+            "Deploying CronJob %s in namespace %s",
+            manifest.metadata.name,
+            manifest.namespace,
+        )
 
         dry_run = set_dry_run(dry_run)
 
@@ -88,18 +118,24 @@ class K8sCronJobDeployer(BaseDeployer):
             try:
                 self._update(cronjob, dry_run)
             except client.ApiException as error:
-                print(f"Failed to update CronJob: {error}")
+                logging.error("Failed to update CronJob: %s", error)
         else:
             try:
                 self._create(cronjob, dry_run)
             except client.ApiException as error:
-                print(f"Failed to create CronJob: {error}")
+                logging.error(
+                    "Failed to create CronJob: %s %s",
+                    manifest.metadata.name,
+                    manifest.namespace,
+                )
+                logging.error(error)
 
     def exists(self, name: str, namespace: str):
         """Check if a CronJob exists"""
 
         try:
             self.client.read_namespaced_cron_job(name=name, namespace=namespace)
+            logging.info("CronJob %s exists in namespace %s", name, namespace)
             return True
         except client.ApiException as error:
             if error.status == 404:
@@ -118,7 +154,12 @@ class K8sCronJobDeployer(BaseDeployer):
         try:
             self._create(cronjob, dry_run)
         except client.ApiException as error:
-            print(f"Failed to create CronJob: {error}")
+            logging.error(
+                "Failed to create CronJob: %s %s",
+                manifest.metadata.name,
+                manifest.namespace,
+            )
+            logging.error(error)
 
     def update(
         self, manifest: CronJobSchema, target_manifest: BaseFlockSchema, dry_run=None
@@ -132,4 +173,9 @@ class K8sCronJobDeployer(BaseDeployer):
         try:
             self._update(cronjob, dry_run)
         except client.ApiException as error:
-            print(f"Failed to update CronJob: {error}")
+            logging.error(
+                "Failed to update CronJob: %s %s",
+                manifest.metadata.name,
+                manifest.namespace,
+            )
+            logging.error(error)

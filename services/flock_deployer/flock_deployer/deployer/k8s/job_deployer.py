@@ -1,7 +1,6 @@
 """Module for deploying Jobs to Kubernetes"""
 
-from flock_common.secret_store import SecretStore
-from flock_resource_store.base import ResourceStore
+
 from flock_schemas.base import BaseFlockSchema
 from kubernetes import client, config
 
