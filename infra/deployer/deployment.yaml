@@ -43,4 +43,3 @@ spec:
               value: http://flock-secrets-store-vault:8200
             - name: CONFIG_STORE_HOST
               value: flock-resource-store
-````
