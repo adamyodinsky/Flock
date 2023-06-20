@@ -17,6 +17,7 @@ from flock_deployer.schemas.job import CronJobSchema, JobSchema
 
 SLEEP_TIME = 6
 DRY_RUN = os.environ.get("DRY_RUN", True)
+os.environ["LOCAL"] = "true"
 init_logging(level="INFO")
 
 resource_store = ResourceStoreFactory.get_resource_store()

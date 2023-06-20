@@ -1,6 +1,7 @@
 """Secrets store. Used to save and load secrets."""
 
 import abc
+import logging
 import os
 
 import hvac
@@ -43,7 +44,9 @@ class VaultSecretStore(SecretStore):
         """Check if the Vault secret store is healthy."""
         try:
             return self.client.is_authenticated()
-        except Exception:
+        except Exception as error:
+            logging.error("Vault secret store is not healthy.")
+            logging.error(error)
             return False
 
     def check_secret_engine_enabled(self, path):

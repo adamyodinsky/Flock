@@ -19,6 +19,7 @@ from flock_deployer.schemas.response import (
     ResourceDeleted,
 )
 
+os.environ["LOCAL"] = "true"
 DRY_RUN = os.environ.get("DRY_RUN", True)
 HOST = os.environ.get("FLOCK_DEPLOYER_HOST", "localhost")
 PORT = os.environ.get("FLOCK_DEPLOYER_PORT", "9000")

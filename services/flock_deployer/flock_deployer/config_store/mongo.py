@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 from pymongo import MongoClient
@@ -41,7 +42,9 @@ class MongoConfigStore(ConfigStore):
         try:
             self.client.admin.command("ismaster")
             return True
-        except ConnectionFailure:
+        except ConnectionFailure as error:
+            logging.error("MongoDB config store is not healthy.")
+            logging.error(error)
             return False
 
     def put(self, val: dict) -> None:

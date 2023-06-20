@@ -59,7 +59,7 @@ minikube-start:
 	--ports=127.0.0.1:9000:30205 \
 	--cpus 4 --memory 6144
 	@sleep 5
-	minikube addons enable metrics-server 
+	minikube addons enable metrics-server
 
 # 27017:30200 # mongo
 # 8200:30201 # vault

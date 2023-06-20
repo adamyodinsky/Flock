@@ -27,7 +27,7 @@ spec:
               mountPath: /data/db
           resources:
             limits:
-              cpu: 100m
+              cpu: 250m
               memory: 256Mi
       volumes:
         - name: resource-store-data
