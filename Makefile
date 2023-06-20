@@ -64,6 +64,7 @@ minikube-start:
 # 5672:30202 # rabbitMQ ampq
 # 25672:30203 # rabbitMQ dist
 # 15672:30204 # rabbitMQ manager
+# 9000:30205 # flock-deployer
 
 
 load-webscraper:
@@ -88,6 +89,9 @@ load-images: load-webscraper load-agent load-embeddings-loader load-deployer
 apply-mongo:
 	kubectl apply -f infra/mongoDB/k8s
 
+apply-deployer:
+	kubectl apply -f infra/deployer
+
 apply-rabbitmq:
 	helm repo add bitnami https://charts.bitnami.com/bitnami
 	helm repo update
@@ -103,7 +107,7 @@ apply-vault:
 	# kubectl exec -it flock-secrets-store-vault-0 -- vault operator init
 	# kubectl exec -it flock-secrets-store-vault-0 -- vault operator unseal <key>
 
-apply-infra: apply-mongo apply-rabbitmq apply-vault
+apply-infra: aooky-secret apply-pvc apply-mongo apply-rabbitmq apply-vault apply-deployer
 
 apply-secret:
 	kubectl apply -f infra/secret.yaml

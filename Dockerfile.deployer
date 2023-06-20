@@ -28,7 +28,5 @@ WORKDIR $PYSETUP_PATH/services/flock_deployer
 ENV VIRTUAL_ENV="${PYSETUP_PATH}/services/flock_deployer/.venv"
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-EXPOSE 8080
+EXPOSE 9000
 ENTRYPOINT ["python", "flock_deployer/main.py" ]
-CMD [ "run-deployer" ]
-

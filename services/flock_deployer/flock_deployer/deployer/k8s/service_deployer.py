@@ -18,7 +18,7 @@ class K8sServiceDeployer(BaseDeployer):
         self,
     ) -> None:
         """Initialize the deployer"""
-        config.load_kube_config()
+        config.load_incluster_config()
         self.client = client.CoreV1Api()
 
     def _create_service_obj(self, manifest: DeploymentSchema) -> K8sService:

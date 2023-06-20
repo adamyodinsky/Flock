@@ -18,7 +18,7 @@ class K8sJobDeployer(BaseDeployer):
     def __init__(self):
         """Initialize the deployer"""
 
-        config.load_kube_config()
+        config.load_incluster_config()
         self.client = client.BatchV1Api()
 
     def _create_job_obj(

@@ -19,7 +19,7 @@ class K8sCronJobDeployer(BaseDeployer):
         """Initialize the deployer"""
 
         logging.debug("Initializing K8sCronJobDeployer")
-        config.load_kube_config()
+        config.load_incluster_config()
         self.client = client.BatchV1Api()
 
     def _create_cronjob_obj(

@@ -25,6 +25,10 @@ spec:
           volumeMounts:
             - name: resource-store-data
               mountPath: /data/db
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
       volumes:
         - name: resource-store-data
           persistentVolumeClaim:

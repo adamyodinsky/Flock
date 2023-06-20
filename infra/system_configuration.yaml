@@ -1,7 +1,0 @@
-resource_store:
-  RESOURCE_STORE_USERNAME: root
-  RESOURCE_STORE_PASSWORD: password
-  RESOURCE_STORE_HOST: flock-mongo-service
-api_keys:
-  OPENAI_API_KEY: <>
-  SERPAPI_API_KEY: <>

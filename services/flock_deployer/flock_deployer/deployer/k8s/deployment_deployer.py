@@ -18,7 +18,7 @@ class K8sDeploymentDeployer(BaseDeployer):
     def __init__(self):
         """Initialize the deployer"""
 
-        config.load_kube_config()
+        config.load_incluster_config()
         self.client = client.AppsV1Api()
 
     def _create_deployment_obj(
