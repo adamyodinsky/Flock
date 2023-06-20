@@ -1,0 +1,34 @@
+##### Flock Base deployer #####
+FROM flock-python-base as deployer-base-stage
+
+ENV FASTAPI_ENV=production
+
+COPY ./libs $PYSETUP_PATH/libs
+COPY ./services/flock_deployer $PYSETUP_PATH/services/flock_deployer
+
+WORKDIR $PYSETUP_PATH/services/flock_deployer
+
+# RUN poetry install --only main
+RUN python -m venv .venv
+RUN .venv/bin/pip install --use-pep517 . 
+
+
+##### Flock deployer Stage #####
+FROM python:3.10.10-slim as deployer-stage
+
+ENV PYSETUP_PATH="/opt/pysetup"
+
+COPY --from=deployer-base-stage $PYSETUP_PATH/libs $PYSETUP_PATH/libs
+
+COPY --from=deployer-base-stage $PYSETUP_PATH/services/flock_deployer/.venv $PYSETUP_PATH/services/flock_deployer/.venv
+COPY --from=deployer-base-stage $PYSETUP_PATH/services/flock_deployer/flock_deployer $PYSETUP_PATH/services/flock_deployer/flock_deployer
+
+WORKDIR $PYSETUP_PATH/services/flock_deployer
+
+ENV VIRTUAL_ENV="${PYSETUP_PATH}/services/flock_deployer/.venv"
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+EXPOSE 8080
+ENTRYPOINT ["python", "flock_deployer/main.py" ]
+CMD [ "run-deployer" ]
+
