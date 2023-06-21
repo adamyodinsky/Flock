@@ -1,0 +1,42 @@
+{
+  "title": "BaseMetaData",
+  "description": "Base metadata schema.",
+  "type": "object",
+  "properties": {
+    "annotations": {
+      "title": "Annotations",
+      "description": "Annotations are useful for storing additional information",
+      "default": {},
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "labels": {
+      "title": "Labels",
+      "description": "Labels are useful for filtering and finding objects",
+      "default": {},
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "name": {
+      "title": "Name",
+      "description": "Name of the object",
+      "maxLength": 63,
+      "type": "string"
+    },
+    "description": {
+      "title": "Description",
+      "description": "Description",
+      "maxLength": 255,
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "description"
+  ],
+  "additionalProperties": false
+}

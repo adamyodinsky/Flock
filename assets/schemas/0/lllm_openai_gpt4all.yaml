@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=../../json_schemas/main/LLMChat.json
+---
+apiVersion: flock/v1
+kind: LLMChat
+namespace: default
+metadata:
+  name: my-openai-gpt4all-llm
+  description: openai language model
+  labels:
+    app: my_app
+spec:
+  vendor: OpenAICopyCat
+  options:
+    model_name: ggml-gpt4all-l13b-snoozy.bin
+    openai_api_base: http://localhost:8080/v1 # using github.com/go-skynet/LocalAI
+    max_tokens: 700

@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=../json_schemas/Job.json
+---
+apiVersion: flock/v1
+kind: FlockJob
+namespace: default
+category: job
+metadata:
+  name: embeddings-loader
+  description: embedding loader - load embedding data to a vector store
+  labels:
+    app: my_app
+spec:
+  volumes:
+    - name: flock-data
+      persistentVolumeClaim:
+        claimName: flock
+  container:
+    volume_mounts:
+      - name: flock-data
+        mountPath: /flock-data
+        readOnly: false
+    image_pull_policy: IfNotPresent
+    image: flock-embeddings-loader
+    env:
+      # BASE_META_SOURCE
+      # ALLOWED_EXTENSIONS
+      # DENY_EXTENSIONS
+      - name: SOURCE_DIR
+        value: "/flock-data/embeddings/pre_processed"
+      - name: ARCHIVE_DIR
+        value: "/flock-data/embeddings/processed"
+      - name: RESOURCE_STORE_USERNAME
+        value: root
+      - name: RESOURCE_STORE_PASSWORD
+        value: password
+      - name: RESOURCE_STORE_HOST
+        value: "mongo"
+      - name: QUEUE_HOST
+        value: "flock-queue-rabbitmq"
+      - name: MANAGEMENT_STORE_HOST
+        value: "mongo"
+      - name: FLOCK_LOADER_TYPE
+        value: "scraped-data"
+      - name: OPENAI_API_KEY
+        valueFrom:
+          secretKeyRef:
+            name: mysecret
+            key: openai-token
+  targetResource:
+    kind: EmbeddingsLoader
+    name: embeddings-loader
+    namespace: default
+    labels:
+      app: my_app
+    options: {}

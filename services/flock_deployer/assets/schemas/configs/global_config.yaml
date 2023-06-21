@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=../json_schemas/DeploymentConfig.json
+---
+apiVersion: flock/v1
+kind: DeploymentConfigSchema
+metadata:
+  name: global
+  description: global default configuration
+env:
+  - name: RESOURCE_STORE_HOST
+    value: mongo
+  - name: RESOURCE_STORE_USERNAME
+    value: root
+  - name: RESOURCE_STORE_PASSWORD
+    value: password
+  - name: QUEUE_HOST
+    value: flock-queue-rabbitmq-headless
+  - name: MANAGEMENT_STORE_HOST
+    value: mongo
+  - name: OPENAI_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: mysecret
+        key: openai-token
+  - name: SERPAPI_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: mysecret
+        key: serpapi-token
+  - name: WOLFRAM_ALPHA_APPID
+    valueFrom:
+      secretKeyRef:
+        name: mysecret
+        key: wolfram-app-id

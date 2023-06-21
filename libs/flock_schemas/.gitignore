@@ -1,0 +1,8 @@
+.vscode
+.resource_store
+.documentation_vectorstore
+.venv
+dist
+.env
+*.pyc
+```

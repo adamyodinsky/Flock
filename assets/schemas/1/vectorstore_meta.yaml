@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=../../json_schemas/main/VectorStore.json
+---
+apiVersion: flock/v1
+kind: VectorStore
+namespace: default
+metadata:
+  name: meta_reports
+  description: Meta Reports First Quarter 2023 Results
+  annotations:
+    source: github.com/floc/flock.html
+spec:
+  vendor: Chroma
+  options:
+    persist_directory: "/flock-data/vectorstore/meta_reports"
+    collection_name: "meta_reports"
+  dependencies:
+    - kind: Embedding
+      name: my-openai-embedding
+      namespace: default

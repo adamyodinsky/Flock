@@ -1,0 +1,17 @@
+# yaml-language-server: $schema=../../json_schemas/main/VectorStore.json
+---
+apiVersion: flock/v1
+kind: VectorStore
+namespace: default
+metadata:
+  name: books
+  description: books vector store
+spec:
+  vendor: Chroma
+  options:
+    persist_directory: "/flock-data/vectorstore/books"
+    collection_name: "books"
+  dependencies:
+    - kind: Embedding
+      name: my-openai-embedding
+      namespace: default

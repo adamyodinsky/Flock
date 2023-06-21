@@ -1,0 +1,58 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Current File",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "internalConsole"
+    },
+    {
+      "name": "gpt4all-server",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/flock_client/gpt_4_server.py",
+      "console": "internalConsole"
+    },
+    {
+      "name": "llm-ui",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/flock_client/main.py",
+      "console": "internalConsole",
+      "justMyCode": true,
+      "env": {},
+      "args": [
+        "run-server",
+        "--backend-host",
+        "http://localhost:8080/v1/chat/completions",
+        "--backend-type",
+        "llm",
+        "--port",
+        "7862"
+      ]
+    },
+    {
+      "name": "agent-ui",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/flock_client/main.py",
+      "console": "internalConsole",
+      "justMyCode": true,
+      "env": {},
+      "args": [
+        "run-server",
+        "--backend-host",
+        "http://localhost:8000/agent",
+        "--backend-type",
+        "agent",
+        "--port",
+        "7860"
+      ]
+    }
+  ]
+}

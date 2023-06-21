@@ -1,0 +1,213 @@
+{
+  "title": "ContainerSpec",
+  "description": "Deployment spec schema.",
+  "type": "object",
+  "properties": {
+    "image": {
+      "title": "Image",
+      "description": "The container image to be deployed",
+      "type": "string"
+    },
+    "env": {
+      "title": "Env",
+      "description": "Environment variables to be set for the deployment",
+      "default": [],
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/EnvVar"
+          },
+          {
+            "$ref": "#/definitions/EnvFrom"
+          }
+        ]
+      }
+    },
+    "ports": {
+      "title": "Ports",
+      "description": "The ports to be exposed by the container",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ContainerPort"
+      }
+    },
+    "image_pull_policy": {
+      "title": "Image Pull Policy",
+      "description": "The image pull policy",
+      "default": "IfNotPresent",
+      "enum": [
+        "Always",
+        "Never",
+        "IfNotPresent"
+      ],
+      "type": "string"
+    },
+    "args": {
+      "title": "Args",
+      "description": "The arguments to be passed to the container",
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "command": {
+      "title": "Command",
+      "description": "The command to be executed in the container",
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "volume_mounts": {
+      "title": "Volume Mounts",
+      "description": "The volume mounts to be mounted in the container",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/VolumeMount"
+      }
+    }
+  },
+  "required": [
+    "image"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "EnvVar": {
+      "title": "EnvVar",
+      "description": "Environment variable schema.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "SecretKeyRefValue": {
+      "title": "SecretKeyRefValue",
+      "description": "Environment variable schema.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "key": {
+          "title": "Key",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "key"
+      ],
+      "additionalProperties": false
+    },
+    "SecretKeyRef": {
+      "title": "SecretKeyRef",
+      "description": "Base model config.",
+      "type": "object",
+      "properties": {
+        "secretKeyRef": {
+          "$ref": "#/definitions/SecretKeyRefValue"
+        }
+      },
+      "required": [
+        "secretKeyRef"
+      ],
+      "additionalProperties": false
+    },
+    "EnvFrom": {
+      "title": "EnvFrom",
+      "description": "Base model config.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "valueFrom": {
+          "$ref": "#/definitions/SecretKeyRef"
+        }
+      },
+      "required": [
+        "name",
+        "valueFrom"
+      ],
+      "additionalProperties": false
+    },
+    "ContainerPort": {
+      "title": "ContainerPort",
+      "description": "Container port schema.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "description": "The name of the port",
+          "maxLength": 15,
+          "type": "string"
+        },
+        "protocol": {
+          "title": "Protocol",
+          "description": "The protocol for the port",
+          "default": "tcp",
+          "enum": [
+            "tcp",
+            "udp",
+            "TCP",
+            "UDP"
+          ],
+          "type": "string"
+        },
+        "port": {
+          "title": "Port",
+          "description": "The port number",
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "VolumeMount": {
+      "title": "VolumeMount",
+      "description": "Volume mount schema.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "description": "The name of the volume mount",
+          "type": "string"
+        },
+        "mountPath": {
+          "title": "Mountpath",
+          "description": "The path where the volume should be mounted",
+          "type": "string"
+        },
+        "readOnly": {
+          "title": "Readonly",
+          "description": "Whether the volume should be mounted as read-only",
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "mountPath"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

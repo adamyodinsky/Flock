@@ -1,0 +1,29 @@
+{
+  "title": "DeleteRequest",
+  "description": "Resource created successfully",
+  "type": "object",
+  "properties": {
+    "deployment_name": {
+      "title": "Deployment Name",
+      "type": "string"
+    },
+    "deployment_namespace": {
+      "title": "Deployment Namespace",
+      "type": "string"
+    },
+    "deployment_kind": {
+      "title": "Deployment Kind",
+      "default": "",
+      "type": "string"
+    },
+    "dry_run": {
+      "title": "Dry Run",
+      "default": false,
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "deployment_name",
+    "deployment_namespace"
+  ]
+}

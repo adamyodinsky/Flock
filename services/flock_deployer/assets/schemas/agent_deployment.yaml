@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=../json_schemas/Deployment.json
+---
+apiVersion: flock/v1
+kind: FlockDeployment
+namespace: default
+category: deployment
+metadata:
+  name: my-agent
+  description: A Q&A chat agent server
+  labels:
+    app: my_app
+spec:
+  volumes:
+    - name: flock-data
+      persistentVolumeClaim:
+        claimName: flock
+  container:
+    volume_mounts:
+      - name: flock-data
+        mountPath: /flock-data
+        readOnly: false
+    image_pull_policy: IfNotPresent
+    image: flock-agent
+    ports:
+      - name: http
+        port: 80
+        protocol: TCP
+    env:
+      - name: RESOURCE_STORE_HOST
+        value: "mongo"
+      - name: RESOURCE_STORE_USERNAME
+        value: root
+        # valueFrom:
+        #   secretKeyRef:
+        #     name: mysecret
+        #     key: mongo-username
+      - name: RESOURCE_STORE_PASSWORD
+        value: password
+        # valueFrom:
+        #   secretKeyRef:
+        #     name: mysecret
+        #     key: mongo-password
+      - name: FLOCK_AGENT_PORT
+        value: "8080"
+      - name: FLOCK_AGENT_HOST
+        value: "0.0.0.0"
+      - name: QUEUE_HOST
+        value: "flock-queue-rabbitmq-headless"
+      - name: MANAGEMENT_STORE_HOST
+        value: "mongo"
+      - name: LOG_LEVEL
+        value: "DEBUG"
+      - name: OPENAI_API_KEY
+        valueFrom:
+          secretKeyRef:
+            name: mysecret
+            key: openai-token
+      - name: SERPAPI_API_KEY
+        valueFrom:
+          secretKeyRef:
+            name: mysecret
+            key: serpapi-token
+  targetResource:
+    kind: Agent # this is an agent resource manifest reference that should be loaded to the Flock-Agent FastAPI app.
+    name: my-agent
+    namespace: default
+    labels:
+      app: my_app
+    options: # this is a dict of options that will be passed to the Flock-Agent FastAPI app. deployer can use this to override the options in the target's manifest
+      verbose: true

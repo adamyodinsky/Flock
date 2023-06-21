@@ -1,0 +1,71 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Serve",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/flock_ticket_ingester/main.py",
+      "console": "internalConsole",
+      "justMyCode": true,
+      "env": {
+        "TRELLO_API_KEY": "",
+        "TRELLO_API_SECRET": "",
+        "TRELLO_TOKEN": "",
+        "TRELLO_BOARD_NAME": "api-test",
+        "FLOCK_QUEUE_NAME": "todo_queue"
+      }
+    },
+    {
+      "name": "Create webhook",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/flock_ticket_ingester/trello_client.py",
+      "console": "internalConsole",
+      "justMyCode": true,
+      "env": {
+        "TRELLO_API_KEY": "76dfc3cdcbc19501d85c26da7176ed16",
+        "TRELLO_API_SECRET": "2da987b9dcb6f146abc825a6deac8b351ae62d26a92fd3982caee7e82e611ff3",
+        "TRELLO_TOKEN": "ATTAf6bb81ca86c36e616336230c5c68f178e76713c44f3e385a66614e8599add0ba1B665C0D",
+        "TRELLO_BOARD_NAME": "api-test",
+        "CALLBACK_URL": "https://a192-2a0d-6fc2-45f3-fd00-10c1-79ee-c442-2c5c.ngrok-free.app"
+      },
+      "args": ["create-trello-webhook"]
+    },
+    {
+      "name": "Delete webhook",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/flock_ticket_ingester/trello_client.py",
+      "console": "internalConsole",
+      "justMyCode": true,
+      "env": {
+        "TRELLO_API_KEY": "76dfc3cdcbc19501d85c26da7176ed16",
+        "TRELLO_API_SECRET": "2da987b9dcb6f146abc825a6deac8b351ae62d26a92fd3982caee7e82e611ff3",
+        "TRELLO_TOKEN": "ATTAf6bb81ca86c36e616336230c5c68f178e76713c44f3e385a66614e8599add0ba1B665C0D",
+        "TRELLO_BOARD_NAME": "api-test",
+        "CALLBACK_URL": "https://da4a-2a0d-6fc2-45f3-fd00-458b-e3f3-9386-9a27.ngrok-free.app"
+      },
+      "args": ["delete-trello-webhook"]
+    },
+    {
+      "name": "Get list id",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/flock_ticket_ingester/trello_client.py",
+      "console": "internalConsole",
+      "justMyCode": true,
+      "env": {
+        "TRELLO_API_KEY": "76dfc3cdcbc19501d85c26da7176ed16",
+        "TRELLO_API_SECRET": "2da987b9dcb6f146abc825a6deac8b351ae62d26a92fd3982caee7e82e611ff3",
+        "TRELLO_TOKEN": "ATTAf6bb81ca86c36e616336230c5c68f178e76713c44f3e385a66614e8599add0ba1B665C0D",
+        "TRELLO_BOARD_NAME": "api-test",
+        "CALLBACK_URL": "https://da4a-2a0d-6fc2-45f3-fd00-458b-e3f3-9386-9a27.ngrok-free.app"
+      },
+      "args": ["get-list-id", "--list-name", "api-test"]
+    }
+  ]
+}

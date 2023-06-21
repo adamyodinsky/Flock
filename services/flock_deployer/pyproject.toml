@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "flock-deployer"
+version = "0.1.0"
+description = ""
+authors = ["Adam Yodinsky <27074934+adamyodinsky@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "flock_deployer"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+kubernetes = "^26.1.0"
+fastapi = {extras = ["all"], version = "^0.95.1"}
+flock-common = {path = "../../libs/flock_common", develop = true}
+flock-resource-store = {path = "../../libs/flock_resource_store", develop = true}
+flock-schemas = {path = "../../libs/flock_schemas", develop = true}
+croniter = "^1.4.1"
+pytest = "^7.3.2"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.3.2"
+httpx = "^0.24.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,68 @@
+{
+  "title": "Volume",
+  "description": "Volume schema.",
+  "type": "object",
+  "properties": {
+    "name": {
+      "title": "Name",
+      "description": "Volume name. Must be a DNS_LABEL and unique within the pod.",
+      "type": "string"
+    },
+    "persistentVolumeClaim": {
+      "title": "Persistentvolumeclaim",
+      "description": "PersistentVolumeClaim volume source.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PersistentVolumeClaim"
+        }
+      ]
+    },
+    "secret": {
+      "$ref": "#/definitions/Secret"
+    },
+    "readOnly": {
+      "title": "Readonly",
+      "description": "Whether the volume is read only.",
+      "default": false,
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "name",
+    "persistentVolumeClaim"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "PersistentVolumeClaim": {
+      "title": "PersistentVolumeClaim",
+      "description": "PersistentVolumeClaim schema.",
+      "type": "object",
+      "properties": {
+        "claimName": {
+          "title": "Claimname",
+          "description": "Name of the PersistentVolumeClaim to use.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "claimName"
+      ],
+      "additionalProperties": false
+    },
+    "Secret": {
+      "title": "Secret",
+      "description": "Secret schema.",
+      "type": "object",
+      "properties": {
+        "secretName": {
+          "title": "Secretname",
+          "type": "string"
+        }
+      },
+      "required": [
+        "secretName"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

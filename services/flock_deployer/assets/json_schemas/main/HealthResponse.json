@@ -1,0 +1,30 @@
+{
+  "title": "HealthResponse",
+  "description": "Health response",
+  "type": "object",
+  "properties": {
+    "status": {
+      "title": "Status",
+      "enum": [
+        "OK",
+        "ERROR"
+      ],
+      "type": "string"
+    },
+    "stores": {
+      "title": "Stores",
+      "type": "object",
+      "additionalProperties": {
+        "enum": [
+          "OK",
+          "ERROR"
+        ],
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "status",
+    "stores"
+  ]
+}

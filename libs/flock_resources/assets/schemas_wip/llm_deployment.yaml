@@ -1,0 +1,27 @@
+# yaml-language-server: $schema=../../../json_schemas/main/DeploymentSchema.json
+---
+apiVersion: flock/v1
+kind: FlockDeployment
+namespace: default
+category: deployment
+metadata:
+  name: my-llms-deployment
+  description: A Q&A chat agent server
+  labels:
+    app: my_app
+spec:
+  container:
+    image_pull_policy: IfNotPresent
+    image: quay.io/go-skynet/local-ai:latest
+    ports:
+      - name: http
+        port: 80
+        protocol: TCP
+    env:
+      - name: OPENAI_API_KEY
+        value: skynet
+    args:
+      - --models-path
+      - /path/to/models
+      - --context-size 700
+      - --threads 4

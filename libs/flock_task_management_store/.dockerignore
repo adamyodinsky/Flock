@@ -1,0 +1,85 @@
+# Ignore local virtual environments
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.pyc
+*.venv
+**/.venv
+*.env
+**/.env
+
+# Ignore Git and GitHub files
+.git
+.gitignore
+.gitattributes
+
+# Ignore IDE and editor files
+.vscode
+.idea
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
+
+# Ignore log files
+*.log
+
+# Ignore temporary files and directories
+tmp
+temp
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore test directories and files
+tests/
+*.pytest_cache
+*.coverage
+*.coveragerc
+.coverage/
+
+
+# Ignore local virtual environments
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/*.pyc
+
+# Ignore Git and GitHub files
+**/.git
+**/.gitignore
+**/.gitattributes
+
+# Ignore IDE and editor files
+**/.vscode
+**/.idea
+**/*.swp
+**/*.swo
+**/*.swn
+**/*.bak
+**/*.tmp
+
+# Ignore log files
+**/*.log
+
+# Ignore temporary files and directories
+**/tmp
+**/temp
+
+# Ignore system files
+**/.DS_Store
+**/Thumbs.db
+
+# Ignore Poetry files
+
+# Ignore test directories and files
+**/tests/
+**/*.pytest_cache
+**/*.coverage
+**/*.coveragerc
+**/.coverage/
+**/.documentation_vectorstore

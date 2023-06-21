@@ -1,0 +1,191 @@
+{
+  "title": "VectorStoreQAToolSpec",
+  "description": "VectorStoreQATool spec.",
+  "type": "object",
+  "properties": {
+    "options": {
+      "title": "Options",
+      "description": "Options for the tool",
+      "default": {},
+      "type": "object"
+    },
+    "vendor": {
+      "description": "The class of the tool, e.g. RetrievalQAWithSourcesChain, etc.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VectorStoreQAToolVendor"
+        }
+      ]
+    },
+    "dependencies": {
+      "title": "Dependencies",
+      "description": "Tool dependencies",
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": [
+        {
+          "$ref": "#/definitions/VectorStoreDependency"
+        },
+        {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LLMChatDependency"
+            },
+            {
+              "$ref": "#/definitions/LLMDependency"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "required": [
+    "vendor",
+    "dependencies"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "VectorStoreQAToolVendor": {
+      "title": "VectorStoreQAToolVendor",
+      "description": "Enum for vectorstore_qa_tool vendors.",
+      "enum": [
+        "RetrievalQAWithSourcesChain",
+        "VectorDBQAWithSourcesChain"
+      ],
+      "type": "string"
+    },
+    "VectorStoreDependency": {
+      "title": "VectorStoreDependency",
+      "description": "Store dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "default": {},
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string"
+        },
+        "kind": {
+          "title": "Kind",
+          "default": "VectorStore",
+          "const": "VectorStore",
+          "type": "string"
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string"
+        },
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "LLMChatDependency": {
+      "title": "LLMChatDependency",
+      "description": "LLMChat dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "default": {},
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string"
+        },
+        "kind": {
+          "title": "Kind",
+          "default": "LLMChat",
+          "const": "LLMChat",
+          "type": "string"
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string"
+        },
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "LLMDependency": {
+      "title": "LLMDependency",
+      "description": "LLM dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "default": {},
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string"
+        },
+        "kind": {
+          "title": "Kind",
+          "default": "LLM",
+          "const": "LLM",
+          "type": "string"
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string"
+        },
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

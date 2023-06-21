@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flock-deployer
+  labels:
+    app: flock-deployer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flock-deployer
+  template:
+    metadata:
+      labels:
+        app: flock-deployer
+    spec:
+      serviceAccountName: deployer-sa
+      containers:
+        - name: flock-deployer
+          image: flock-deployer
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 9000
+          resources:
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          env:
+            - name: DEPLOYER_HOST
+              value: "0.0.0.0"
+            - name: DEPLOYER_PORT
+              value: "9000"
+            - name: CONFIG_STORE_HOST
+              value: mongo
+            - name: CONFIG_STORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysecret
+                  key: mongo-password
+            - name: RESOURCE_STORE_HOST
+              value: mongo
+            - name: RESOURCE_STORE_USERNAME
+              value: root
+            - name: RESOURCE_STORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysecret
+                  key: mongo-password
+            - name: SECRET_STORE_HOST
+              value: http://flock-secrets-store-vault:8200
+            - name: SECRET_STORE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: mysecret
+                  key: mongo-username

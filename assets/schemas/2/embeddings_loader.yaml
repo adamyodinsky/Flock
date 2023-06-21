@@ -1,0 +1,20 @@
+# yaml-language-server: $schema=../../json_schemas/main/EmbeddingsLoader.json
+---
+apiVersion: flock/v1
+kind: EmbeddingsLoader
+namespace: default
+category: other
+metadata:
+  name: embeddings-loader
+  description: Embedding Data Loader that can load embedding data to vector store
+  labels:
+    app: my_app
+spec:
+  vendor: v1
+  dependencies:
+    - kind: Splitter
+      name: my-splitter
+      namespace: default
+    - kind: VectorStore
+      name: books
+      namespace: default

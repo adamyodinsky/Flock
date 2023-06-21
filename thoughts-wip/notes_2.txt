@@ -1,0 +1,91 @@
+# AIToMIX
+
+A system for building and deploying all kinds of auto Ai Agents based on llm and other models with a click of a button with an easy to use UI. also giving. visibility on the AI agents of the organization, their tasks, their status, etc.
+There will be a predefined set of AI agents that can be deployed with a click of a button, and also the ability to create your own custom AI agents easily.
+
+## Architecture
+
+- <https://app.diagrams.net/#G1ajILFtn0kCNoobOqU4UvXgZSu_xCpW4P>
+
+In the UI can give the agents avatars.
+
+Some of the the things that can be done with the system (though the possibilities are endless):
+
+- Semantic search engine. (conversational)
+- If he knows also the code... what can he do? can he be a developer? qa tester? debugger?
+- Helps to know what's going in the organization in real time. (conversational)
+- Auto analyst - an ai analyst. (conversational)
+- Chatbot that helps support operators. (conversational)
+- Chatbot that helps support customers. (conversational)
+- Scans big data, and can do all kinds of manipulations on it. (semantic language)
+  - Extract, clustering, categorizing, etc.
+- Auto actuary - an ai actuary for insurance company.
+- Robot that scans the internet and finds new ideas for insurance products.
+  - The customer data.
+  - Documentation details, like how to make operations on the customer data, or in the operators CRM system.
+- Researcher Agent
+- Tasks Trackings agent
+- QA Agent - yes an agent that create pull requests on the organizations repos, adding tests for the project etc...
+
+Ideas:
+
+- People will be able to create, share, and even sell their custom agents and tools they created to other people and organization. creating a sense of community and a marketplace for AI agents. Core, and community.
+- local agents and remote agents.
+- inner data agents, nothing goes out from the organization.
+- outer data agents, can communicate out of the organization.
+
+Also important to mention.
+
+## Tables and fields
+
+### Customers
+
+- Name
+- ID
+- Policy Number
+- Claims list
+- Premie list - yearly price of policy
+
+### Claims
+
+- Claim number/id
+- Date of claim opened
+- Date of claim closed
+- Claim amount
+- Claim type (auto, home, life, etc)
+- Claim status (open, closed, etc)
+
+### Premiums
+
+- Premium number/id
+- Date of premium - yearly price of policy
+- Premium amount
+- Premium type (auto, home, life, etc)
+
+## Use cases
+
+- How many claims the company paid out, this year and over the last 5 years
+- How many in premium the company received, this year and over the last 5 years
+- How many claims are opened, this year and over the last 5 years
+- How many claims are closed, this year and over the last 5 years
+
+- Show it by policy type, and by year
+- Show the yearly change in claims and premiums by policy type
+
+Show it in tables, and in charts and graphs.
+
+## Tasks
+
+- Create a new private repo for the project. choose a name for the project.
+- Create API schemas with pydantic for agents, datastore, models, tools, ETLs and more, get inspiration from CRDs.
+- Start implement the integration of the schemas with the underlying components: agents, datastore, models, tools, ETLs and more. start with the agents (you'll need to drill down as you go forward).
+- Build the project OOP, and use the schemas to validate the data.
+
+API for creating agents on the fly:
+
+Create agent
+Create resource
+Create tool
+
+Tools that can be used easily with load_tools:
+['python_repl', 'requests', 'requests_get', 'requests_post', 'requests_patch', 'requests_put', 'requests_delete', 'terminal', 'wolfram-alpha', 'google-search', 'google-search-results-json', 'searx-search-results-json', 'bing-search', 'google-serper', 'serpapi', 'searx-search', 'wikipedia', 'human', 'news-api', 'tmdb-api', 'podcast-api', 'pal-math', 'pal-colored-objects', 'llm-math', 'open-meteo-api']

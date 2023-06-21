@@ -1,0 +1,34 @@
+{
+  "title": "ResourceDeleted",
+  "description": "Resource deleted successfully",
+  "type": "object",
+  "properties": {
+    "message": {
+      "title": "Message",
+      "description": "Message of the response",
+      "default": "Deleted successfully",
+      "enum": [
+        "Deleted successfully"
+      ],
+      "type": "string"
+    },
+    "status": {
+      "title": "Status",
+      "description": "Status of the response",
+      "default": "Success",
+      "enum": [
+        "Success"
+      ],
+      "type": "string"
+    },
+    "code": {
+      "title": "Code",
+      "description": "HTTP status codes",
+      "default": 200,
+      "enum": [
+        200
+      ],
+      "type": "integer"
+    }
+  }
+}

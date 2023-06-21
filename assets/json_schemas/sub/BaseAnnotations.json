@@ -1,0 +1,17 @@
+{
+  "title": "BaseAnnotations",
+  "description": "Base annotations schema.",
+  "type": "object",
+  "properties": {
+    "annotations": {
+      "title": "Annotations",
+      "description": "Annotations are useful for storing additional information",
+      "default": {},
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

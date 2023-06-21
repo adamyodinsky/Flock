@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "flock-webscraper"
+version = "0.0.1"
+description = ""
+authors = ["Adam Yodinsky <27074934+adamyodinsky@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "flock_webscraper"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+scrapy = "^2.9.0"
+python-dotenv = "^1.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

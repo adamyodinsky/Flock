@@ -1,2 +1,0 @@
-from flock_secrets_store.base import SecretStore
-from flock_secrets_store.vault import VaultSecretStore

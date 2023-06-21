@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "flock-resource-store"
+version = "0.1.0"
+description = ""
+authors = ["Adam Yodinsky <27074934+adamyodinsky@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "flock_resource_store"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pymongo = "^4.3.3"
+
+
+[tool.poetry.group.dev.dependencies]
+mongomock = "^4.1.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
