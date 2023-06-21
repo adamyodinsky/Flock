@@ -1,0 +1,35 @@
+{
+  "title": "LLMSpec",
+  "description": "LLM spec.",
+  "type": "object",
+  "properties": {
+    "options": {
+      "title": "Options",
+      "description": "Resource options",
+      "default": {},
+      "type": "object"
+    },
+    "vendor": {
+      "description": "LLM vendor",
+      "allOf": [
+        {
+          "$ref": "#/definitions/LLMVendor"
+        }
+      ]
+    }
+  },
+  "required": [
+    "vendor"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "LLMVendor": {
+      "title": "LLMVendor",
+      "description": "Enum for llm vendors.",
+      "enum": [
+        "GPT4All"
+      ],
+      "type": "string"
+    }
+  }
+}

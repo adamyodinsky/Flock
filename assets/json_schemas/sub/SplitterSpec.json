@@ -1,0 +1,36 @@
+{
+  "title": "SplitterSpec",
+  "description": "Splitter spec.",
+  "type": "object",
+  "properties": {
+    "options": {
+      "title": "Options",
+      "description": "Resource options",
+      "default": {},
+      "type": "object"
+    },
+    "vendor": {
+      "description": "The class of the splitter, e.g. CharacterTextSplitter, etc.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SplitterVendor"
+        }
+      ]
+    }
+  },
+  "required": [
+    "vendor"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "SplitterVendor": {
+      "title": "SplitterVendor",
+      "description": "Enum for splitter vendors.",
+      "enum": [
+        "CharacterTextSplitter",
+        "PythonCodeTextSplitter"
+      ],
+      "type": "string"
+    }
+  }
+}

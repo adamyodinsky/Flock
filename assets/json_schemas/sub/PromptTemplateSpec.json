@@ -1,0 +1,35 @@
+{
+  "title": "PromptTemplateSpec",
+  "description": "PromptTemplate spec.",
+  "type": "object",
+  "properties": {
+    "options": {
+      "title": "Options",
+      "description": "Resource options",
+      "default": {},
+      "type": "object"
+    },
+    "vendor": {
+      "description": "PromptTemplate vendor",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PromptTemplateVendor"
+        }
+      ]
+    }
+  },
+  "required": [
+    "vendor"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "PromptTemplateVendor": {
+      "title": "PromptTemplateVendor",
+      "description": "Enum for prompt template vendors.",
+      "enum": [
+        "PromptTemplate"
+      ],
+      "type": "string"
+    }
+  }
+}
