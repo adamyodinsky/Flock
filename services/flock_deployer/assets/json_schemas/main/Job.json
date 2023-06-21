@@ -1,6 +1,6 @@
 {
-  "title": "CronJobSchema",
-  "description": "CronJob schema.",
+  "title": "JobSchema",
+  "description": "Job schema.",
   "type": "object",
   "properties": {
     "apiVersion": {
@@ -24,7 +24,7 @@
       "title": "Kind",
       "description": "The kind of the object",
       "enum": [
-        "FlockCronJob"
+        "FlockJob"
       ],
       "type": "string"
     },
@@ -43,7 +43,7 @@
       "description": "The spec of the object",
       "allOf": [
         {
-          "$ref": "#/definitions/CronJobSpec"
+          "$ref": "#/definitions/JobSpec"
         }
       ]
     }
@@ -65,6 +65,7 @@
         "annotations": {
           "title": "Annotations",
           "description": "Annotations are useful for storing additional information",
+          "default": {},
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -73,6 +74,7 @@
         "labels": {
           "title": "Labels",
           "description": "Labels are useful for filtering and finding objects",
+          "default": {},
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -105,6 +107,7 @@
         "labels": {
           "title": "Labels",
           "description": "Labels are useful for filtering and finding objects",
+          "default": {},
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -422,9 +425,9 @@
       ],
       "additionalProperties": false
     },
-    "CronJobSpec": {
-      "title": "CronJobSpec",
-      "description": "CronJob spec schema.",
+    "JobSpec": {
+      "title": "JobSpec",
+      "description": "Job spec schema.",
       "type": "object",
       "properties": {
         "targetResource": {
@@ -482,16 +485,10 @@
             "OnFailure"
           ],
           "type": "string"
-        },
-        "schedule": {
-          "title": "Schedule",
-          "description": "The cron schedule",
-          "type": "string"
         }
       },
       "required": [
-        "container",
-        "schedule"
+        "container"
       ],
       "additionalProperties": false
     }

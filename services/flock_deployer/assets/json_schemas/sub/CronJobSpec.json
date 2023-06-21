@@ -1,102 +1,76 @@
 {
-  "title": "DeploymentSchema",
-  "description": "Deployment schema.",
+  "title": "CronJobSpec",
+  "description": "CronJob spec schema.",
   "type": "object",
   "properties": {
-    "apiVersion": {
-      "title": "Apiversion",
-      "description": "API version",
-      "enum": [
-        "flock/v1"
-      ],
-      "type": "string"
-    },
-    "metadata": {
-      "title": "Metadata",
-      "description": "The metadata of the object",
+    "targetResource": {
+      "title": "Targetresource",
+      "description": "The target resource to be deployed",
+      "default": {},
       "allOf": [
         {
-          "$ref": "#/definitions/BaseMetaData"
+          "$ref": "#/definitions/TargetResource"
         }
       ]
     },
-    "kind": {
-      "title": "Kind",
-      "description": "The kind of the object",
+    "container": {
+      "title": "Container",
+      "description": "The container specs",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ContainerSpec"
+        }
+      ]
+    },
+    "backoff_limit": {
+      "title": "Backoff Limit",
+      "description": "The number of times the job will be retried before it is marked as failed",
+      "default": 0,
+      "type": "integer"
+    },
+    "completions": {
+      "title": "Completions",
+      "description": "The desired number of successfully finished pods the job should be run with",
+      "default": 1,
+      "type": "integer"
+    },
+    "parallelism": {
+      "title": "Parallelism",
+      "description": "The maximum desired number of pods the job should run at any given time",
+      "default": 1,
+      "type": "integer"
+    },
+    "volumes": {
+      "title": "Volumes",
+      "description": "The volumes to be mounted in the container",
+      "default": [],
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Volume"
+      }
+    },
+    "restart_policy": {
+      "title": "Restart Policy",
+      "description": "The restart policy of the container",
+      "default": "Never",
       "enum": [
-        "FlockDeployment"
+        "Never",
+        "OnFailure"
       ],
       "type": "string"
     },
-    "category": {
-      "title": "Category",
-      "default": "deployment",
+    "schedule": {
+      "title": "Schedule",
+      "description": "The cron schedule",
+      "default": "0 0 * * 0",
       "type": "string"
-    },
-    "namespace": {
-      "title": "Namespace",
-      "description": "The namespace of the object",
-      "type": "string"
-    },
-    "spec": {
-      "title": "Spec",
-      "description": "The spec of the object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/DeploymentSpec"
-        }
-      ]
     }
   },
   "required": [
-    "apiVersion",
-    "metadata",
-    "kind",
-    "namespace",
-    "spec"
+    "container"
   ],
   "additionalProperties": false,
   "definitions": {
-    "BaseMetaData": {
-      "title": "BaseMetaData",
-      "description": "Base metadata schema.",
-      "type": "object",
-      "properties": {
-        "annotations": {
-          "title": "Annotations",
-          "description": "Annotations are useful for storing additional information",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "labels": {
-          "title": "Labels",
-          "description": "Labels are useful for filtering and finding objects",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "name": {
-          "title": "Name",
-          "description": "Name of the object",
-          "maxLength": 63,
-          "type": "string"
-        },
-        "description": {
-          "title": "Description",
-          "description": "Description",
-          "maxLength": 255,
-          "type": "string"
-        }
-      },
-      "required": [
-        "name",
-        "description"
-      ],
-      "additionalProperties": false
-    },
     "TargetResource": {
       "title": "TargetResource",
       "description": "Deployment target resource schema.",
@@ -105,6 +79,7 @@
         "labels": {
           "title": "Labels",
           "description": "Labels are useful for filtering and finding objects",
+          "default": {},
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -419,60 +394,6 @@
       "required": [
         "name",
         "persistentVolumeClaim"
-      ],
-      "additionalProperties": false
-    },
-    "DeploymentSpec": {
-      "title": "DeploymentSpec",
-      "description": "Deployment spec schema.",
-      "type": "object",
-      "properties": {
-        "targetResource": {
-          "title": "Targetresource",
-          "description": "The target resource to be deployed",
-          "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/TargetResource"
-            }
-          ]
-        },
-        "replicas": {
-          "title": "Replicas",
-          "description": "The number of replicas to be deployed",
-          "default": 1,
-          "type": "integer"
-        },
-        "container": {
-          "title": "Container",
-          "description": "The container specs",
-          "allOf": [
-            {
-              "$ref": "#/definitions/ContainerSpec"
-            }
-          ]
-        },
-        "volumes": {
-          "title": "Volumes",
-          "description": "The volumes to be mounted in the container",
-          "default": [],
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Volume"
-          }
-        },
-        "restart_policy": {
-          "title": "Restart Policy",
-          "description": "The restart policy of the container",
-          "default": "Always",
-          "enum": [
-            "Always"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "container"
       ],
       "additionalProperties": false
     }

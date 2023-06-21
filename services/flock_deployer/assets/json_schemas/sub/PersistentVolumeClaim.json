@@ -1,0 +1,16 @@
+{
+  "title": "PersistentVolumeClaim",
+  "description": "PersistentVolumeClaim schema.",
+  "type": "object",
+  "properties": {
+    "claimName": {
+      "title": "Claimname",
+      "description": "Name of the PersistentVolumeClaim to use.",
+      "type": "string"
+    }
+  },
+  "required": [
+    "claimName"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,28 @@
+{
+  "title": "VolumeMount",
+  "description": "Volume mount schema.",
+  "type": "object",
+  "properties": {
+    "name": {
+      "title": "Name",
+      "description": "The name of the volume mount",
+      "type": "string"
+    },
+    "mountPath": {
+      "title": "Mountpath",
+      "description": "The path where the volume should be mounted",
+      "type": "string"
+    },
+    "readOnly": {
+      "title": "Readonly",
+      "description": "Whether the volume should be mounted as read-only",
+      "default": false,
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "name",
+    "mountPath"
+  ],
+  "additionalProperties": false
+}

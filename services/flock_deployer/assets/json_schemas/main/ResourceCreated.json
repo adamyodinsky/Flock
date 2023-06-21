@@ -1,61 +1,54 @@
 {
-  "title": "JobSchema",
-  "description": "Job schema.",
+  "title": "ResourceCreated",
+  "description": "Resource created successfully",
   "type": "object",
   "properties": {
-    "apiVersion": {
-      "title": "Apiversion",
-      "description": "API version",
+    "message": {
+      "title": "Message",
+      "description": "Message of the response",
+      "default": "Created successfully",
       "enum": [
-        "flock/v1"
+        "Created successfully"
       ],
       "type": "string"
     },
-    "metadata": {
-      "title": "Metadata",
-      "description": "The metadata of the object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/BaseMetaData"
-        }
-      ]
-    },
-    "kind": {
-      "title": "Kind",
-      "description": "The kind of the object",
+    "status": {
+      "title": "Status",
+      "description": "Status of the response",
+      "default": "Success",
       "enum": [
-        "FlockJob"
+        "Success"
       ],
       "type": "string"
     },
-    "category": {
-      "title": "Category",
-      "default": "deployment",
-      "type": "string"
+    "code": {
+      "title": "Code",
+      "description": "HTTP status codes",
+      "default": 200,
+      "enum": [
+        200
+      ],
+      "type": "integer"
     },
-    "namespace": {
-      "title": "Namespace",
-      "description": "The namespace of the object",
-      "type": "string"
-    },
-    "spec": {
-      "title": "Spec",
-      "description": "The spec of the object",
-      "allOf": [
+    "data": {
+      "title": "Data",
+      "description": "Data of the response",
+      "anyOf": [
         {
-          "$ref": "#/definitions/JobSpec"
+          "$ref": "#/definitions/DeploymentSchema"
+        },
+        {
+          "$ref": "#/definitions/CronJobSchema"
+        },
+        {
+          "$ref": "#/definitions/JobSchema"
         }
       ]
     }
   },
   "required": [
-    "apiVersion",
-    "metadata",
-    "kind",
-    "namespace",
-    "spec"
+    "data"
   ],
-  "additionalProperties": false,
   "definitions": {
     "BaseMetaData": {
       "title": "BaseMetaData",
@@ -65,6 +58,7 @@
         "annotations": {
           "title": "Annotations",
           "description": "Annotations are useful for storing additional information",
+          "default": {},
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -73,6 +67,7 @@
         "labels": {
           "title": "Labels",
           "description": "Labels are useful for filtering and finding objects",
+          "default": {},
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -105,6 +100,7 @@
         "labels": {
           "title": "Labels",
           "description": "Labels are useful for filtering and finding objects",
+          "default": {},
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -422,6 +418,251 @@
       ],
       "additionalProperties": false
     },
+    "DeploymentSpec": {
+      "title": "DeploymentSpec",
+      "description": "Deployment spec schema.",
+      "type": "object",
+      "properties": {
+        "targetResource": {
+          "title": "Targetresource",
+          "description": "The target resource to be deployed",
+          "default": {},
+          "allOf": [
+            {
+              "$ref": "#/definitions/TargetResource"
+            }
+          ]
+        },
+        "replicas": {
+          "title": "Replicas",
+          "description": "The number of replicas to be deployed",
+          "default": 1,
+          "type": "integer"
+        },
+        "container": {
+          "title": "Container",
+          "description": "The container specs",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ContainerSpec"
+            }
+          ]
+        },
+        "volumes": {
+          "title": "Volumes",
+          "description": "The volumes to be mounted in the container",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Volume"
+          }
+        },
+        "restart_policy": {
+          "title": "Restart Policy",
+          "description": "The restart policy of the container",
+          "default": "Always",
+          "enum": [
+            "Always"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "container"
+      ],
+      "additionalProperties": false
+    },
+    "DeploymentSchema": {
+      "title": "DeploymentSchema",
+      "description": "Deployment schema.",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "title": "Apiversion",
+          "description": "API version",
+          "enum": [
+            "flock/v1"
+          ],
+          "type": "string"
+        },
+        "metadata": {
+          "title": "Metadata",
+          "description": "The metadata of the object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/BaseMetaData"
+            }
+          ]
+        },
+        "kind": {
+          "title": "Kind",
+          "description": "The kind of the object",
+          "enum": [
+            "FlockDeployment"
+          ],
+          "type": "string"
+        },
+        "category": {
+          "title": "Category",
+          "default": "deployment",
+          "type": "string"
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "type": "string"
+        },
+        "spec": {
+          "title": "Spec",
+          "description": "The spec of the object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/DeploymentSpec"
+            }
+          ]
+        }
+      },
+      "required": [
+        "apiVersion",
+        "metadata",
+        "kind",
+        "namespace",
+        "spec"
+      ],
+      "additionalProperties": false
+    },
+    "CronJobSpec": {
+      "title": "CronJobSpec",
+      "description": "CronJob spec schema.",
+      "type": "object",
+      "properties": {
+        "targetResource": {
+          "title": "Targetresource",
+          "description": "The target resource to be deployed",
+          "default": {},
+          "allOf": [
+            {
+              "$ref": "#/definitions/TargetResource"
+            }
+          ]
+        },
+        "container": {
+          "title": "Container",
+          "description": "The container specs",
+          "allOf": [
+            {
+              "$ref": "#/definitions/ContainerSpec"
+            }
+          ]
+        },
+        "backoff_limit": {
+          "title": "Backoff Limit",
+          "description": "The number of times the job will be retried before it is marked as failed",
+          "default": 0,
+          "type": "integer"
+        },
+        "completions": {
+          "title": "Completions",
+          "description": "The desired number of successfully finished pods the job should be run with",
+          "default": 1,
+          "type": "integer"
+        },
+        "parallelism": {
+          "title": "Parallelism",
+          "description": "The maximum desired number of pods the job should run at any given time",
+          "default": 1,
+          "type": "integer"
+        },
+        "volumes": {
+          "title": "Volumes",
+          "description": "The volumes to be mounted in the container",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Volume"
+          }
+        },
+        "restart_policy": {
+          "title": "Restart Policy",
+          "description": "The restart policy of the container",
+          "default": "Never",
+          "enum": [
+            "Never",
+            "OnFailure"
+          ],
+          "type": "string"
+        },
+        "schedule": {
+          "title": "Schedule",
+          "description": "The cron schedule",
+          "default": "0 0 * * 0",
+          "type": "string"
+        }
+      },
+      "required": [
+        "container"
+      ],
+      "additionalProperties": false
+    },
+    "CronJobSchema": {
+      "title": "CronJobSchema",
+      "description": "CronJob schema.",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "title": "Apiversion",
+          "description": "API version",
+          "enum": [
+            "flock/v1"
+          ],
+          "type": "string"
+        },
+        "metadata": {
+          "title": "Metadata",
+          "description": "The metadata of the object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/BaseMetaData"
+            }
+          ]
+        },
+        "kind": {
+          "title": "Kind",
+          "description": "The kind of the object",
+          "enum": [
+            "FlockCronJob"
+          ],
+          "type": "string"
+        },
+        "category": {
+          "title": "Category",
+          "default": "deployment",
+          "type": "string"
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "type": "string"
+        },
+        "spec": {
+          "title": "Spec",
+          "description": "The spec of the object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CronJobSpec"
+            }
+          ]
+        }
+      },
+      "required": [
+        "apiVersion",
+        "metadata",
+        "kind",
+        "namespace",
+        "spec"
+      ],
+      "additionalProperties": false
+    },
     "JobSpec": {
       "title": "JobSpec",
       "description": "Job spec schema.",
@@ -486,6 +727,65 @@
       },
       "required": [
         "container"
+      ],
+      "additionalProperties": false
+    },
+    "JobSchema": {
+      "title": "JobSchema",
+      "description": "Job schema.",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "title": "Apiversion",
+          "description": "API version",
+          "enum": [
+            "flock/v1"
+          ],
+          "type": "string"
+        },
+        "metadata": {
+          "title": "Metadata",
+          "description": "The metadata of the object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/BaseMetaData"
+            }
+          ]
+        },
+        "kind": {
+          "title": "Kind",
+          "description": "The kind of the object",
+          "enum": [
+            "FlockJob"
+          ],
+          "type": "string"
+        },
+        "category": {
+          "title": "Category",
+          "default": "deployment",
+          "type": "string"
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "type": "string"
+        },
+        "spec": {
+          "title": "Spec",
+          "description": "The spec of the object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/JobSpec"
+            }
+          ]
+        }
+      },
+      "required": [
+        "apiVersion",
+        "metadata",
+        "kind",
+        "namespace",
+        "spec"
       ],
       "additionalProperties": false
     }

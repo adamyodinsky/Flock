@@ -1,0 +1,24 @@
+{
+  "title": "VolumeEmptyDir",
+  "description": "EmptyDir volume schema.",
+  "type": "object",
+  "properties": {
+    "medium": {
+      "title": "Medium",
+      "description": "What type of storage medium should back this directory.",
+      "default": "",
+      "enum": [
+        "",
+        "Memory",
+        "HugePages"
+      ],
+      "type": "string"
+    },
+    "sizeLimit": {
+      "title": "Sizelimit",
+      "description": "Total amount of local storage required for this EmptyDir volume.",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

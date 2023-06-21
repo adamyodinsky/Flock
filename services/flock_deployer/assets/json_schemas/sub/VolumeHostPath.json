@@ -1,0 +1,21 @@
+{
+  "title": "VolumeHostPath",
+  "description": "HostPath volume schema.",
+  "type": "object",
+  "properties": {
+    "path": {
+      "title": "Path",
+      "description": "Path of the directory on the host.",
+      "type": "string"
+    },
+    "type": {
+      "title": "Type",
+      "description": "Type for HostPath volume.",
+      "type": "string"
+    }
+  },
+  "required": [
+    "path"
+  ],
+  "additionalProperties": false
+}

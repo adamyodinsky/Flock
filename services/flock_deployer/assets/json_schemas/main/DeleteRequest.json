@@ -11,14 +11,19 @@
       "title": "Deployment Namespace",
       "type": "string"
     },
-    "resource_kind": {
-      "title": "Resource Kind",
+    "deployment_kind": {
+      "title": "Deployment Kind",
+      "default": "",
       "type": "string"
+    },
+    "dry_run": {
+      "title": "Dry Run",
+      "default": false,
+      "type": "boolean"
     }
   },
   "required": [
     "deployment_name",
-    "deployment_namespace",
-    "resource_kind"
+    "deployment_namespace"
   ]
 }

@@ -1,0 +1,78 @@
+{
+  "title": "VolumeSource",
+  "description": "Volume source schema.",
+  "anyOf": [
+    {
+      "$ref": "#/definitions/VolumeEmptyDir"
+    },
+    {
+      "$ref": "#/definitions/VolumeHostPath"
+    },
+    {
+      "$ref": "#/definitions/PersistentVolumeClaim"
+    }
+  ],
+  "definitions": {
+    "VolumeEmptyDir": {
+      "title": "VolumeEmptyDir",
+      "description": "EmptyDir volume schema.",
+      "type": "object",
+      "properties": {
+        "medium": {
+          "title": "Medium",
+          "description": "What type of storage medium should back this directory.",
+          "default": "",
+          "enum": [
+            "",
+            "Memory",
+            "HugePages"
+          ],
+          "type": "string"
+        },
+        "sizeLimit": {
+          "title": "Sizelimit",
+          "description": "Total amount of local storage required for this EmptyDir volume.",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "VolumeHostPath": {
+      "title": "VolumeHostPath",
+      "description": "HostPath volume schema.",
+      "type": "object",
+      "properties": {
+        "path": {
+          "title": "Path",
+          "description": "Path of the directory on the host.",
+          "type": "string"
+        },
+        "type": {
+          "title": "Type",
+          "description": "Type for HostPath volume.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "PersistentVolumeClaim": {
+      "title": "PersistentVolumeClaim",
+      "description": "PersistentVolumeClaim schema.",
+      "type": "object",
+      "properties": {
+        "claimName": {
+          "title": "Claimname",
+          "description": "Name of the PersistentVolumeClaim to use.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "claimName"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

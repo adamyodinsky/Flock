@@ -1,43 +1,13 @@
 {
-  "title": "DeploymentRequest",
+  "title": "ConfigRequest",
   "description": "Resource created successfully",
   "type": "object",
   "properties": {
-    "deployment_name": {
-      "title": "Deployment Name",
-      "type": "string"
-    },
-    "deployment_namespace": {
-      "title": "Deployment Namespace",
-      "type": "string"
-    },
-    "deployment_kind": {
-      "title": "Deployment Kind",
-      "type": "string"
-    },
-    "resource_name": {
-      "title": "Resource Name",
-      "type": "string"
-    },
-    "resource_namespace": {
-      "title": "Resource Namespace",
-      "type": "string"
-    },
-    "resource_kind": {
-      "title": "Resource Kind",
-      "type": "string"
-    },
     "config": {
       "$ref": "#/definitions/DeploymentConfigSchema"
     }
   },
   "required": [
-    "deployment_name",
-    "deployment_namespace",
-    "deployment_kind",
-    "resource_name",
-    "resource_namespace",
-    "resource_kind",
     "config"
   ],
   "definitions": {
@@ -49,6 +19,7 @@
         "annotations": {
           "title": "Annotations",
           "description": "Annotations are useful for storing additional information",
+          "default": {},
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -57,6 +28,7 @@
         "labels": {
           "title": "Labels",
           "description": "Labels are useful for filtering and finding objects",
+          "default": {},
           "type": "object",
           "additionalProperties": {
             "type": "string"

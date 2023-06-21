@@ -1,61 +1,55 @@
 {
-  "title": "DeploymentConfigSchema",
-  "description": "Base model config.",
+  "title": "DeploymentRequest",
+  "description": "Resource created successfully",
   "type": "object",
   "properties": {
-    "apiVersion": {
-      "title": "Apiversion",
-      "description": "API version of the object",
-      "enum": [
-        "flock/v1"
-      ],
+    "deployment_name": {
+      "title": "Deployment Name",
       "type": "string"
     },
-    "kind": {
-      "title": "Kind",
-      "description": "Kind of the object",
-      "enum": [
-        "DeploymentConfigSchema"
-      ],
+    "deployment_namespace": {
+      "title": "Deployment Namespace",
       "type": "string"
     },
-    "metadata": {
-      "title": "Metadata",
-      "description": "Metadata for the object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/BaseMetaData"
-        }
-      ]
-    },
-    "env": {
-      "title": "Env",
-      "default": [],
-      "type": "array",
-      "items": {
-        "anyOf": [
-          {
-            "$ref": "#/definitions/EnvVar"
-          },
-          {
-            "$ref": "#/definitions/EnvFrom"
-          }
-        ]
-      }
-    },
-    "image": {
-      "title": "Image",
-      "description": "Image to be deployed",
-      "default": "",
+    "deployment_kind": {
+      "title": "Deployment Kind",
       "type": "string"
+    },
+    "resource_name": {
+      "title": "Resource Name",
+      "type": "string"
+    },
+    "resource_namespace": {
+      "title": "Resource Namespace",
+      "type": "string"
+    },
+    "resource_kind": {
+      "title": "Resource Kind",
+      "type": "string"
+    },
+    "schedule": {
+      "title": "Schedule",
+      "default": "0 0 * * 0",
+      "type": "string"
+    },
+    "config": {
+      "$ref": "#/definitions/DeploymentConfigSchema"
+    },
+    "dry_run": {
+      "title": "Dry Run",
+      "default": false,
+      "type": "boolean"
     }
   },
   "required": [
-    "apiVersion",
-    "kind",
-    "metadata"
+    "deployment_name",
+    "deployment_namespace",
+    "deployment_kind",
+    "resource_name",
+    "resource_namespace",
+    "resource_kind",
+    "config"
   ],
-  "additionalProperties": false,
   "definitions": {
     "BaseMetaData": {
       "title": "BaseMetaData",
@@ -65,6 +59,7 @@
         "annotations": {
           "title": "Annotations",
           "description": "Annotations are useful for storing additional information",
+          "default": {},
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -73,6 +68,7 @@
         "labels": {
           "title": "Labels",
           "description": "Labels are useful for filtering and finding objects",
+          "default": {},
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -167,6 +163,65 @@
       "required": [
         "name",
         "valueFrom"
+      ],
+      "additionalProperties": false
+    },
+    "DeploymentConfigSchema": {
+      "title": "DeploymentConfigSchema",
+      "description": "Base model config.",
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "title": "Apiversion",
+          "description": "API version of the object",
+          "enum": [
+            "flock/v1"
+          ],
+          "type": "string"
+        },
+        "kind": {
+          "title": "Kind",
+          "description": "Kind of the object",
+          "enum": [
+            "DeploymentConfigSchema"
+          ],
+          "type": "string"
+        },
+        "metadata": {
+          "title": "Metadata",
+          "description": "Metadata for the object",
+          "allOf": [
+            {
+              "$ref": "#/definitions/BaseMetaData"
+            }
+          ]
+        },
+        "env": {
+          "title": "Env",
+          "default": [],
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/EnvVar"
+              },
+              {
+                "$ref": "#/definitions/EnvFrom"
+              }
+            ]
+          }
+        },
+        "image": {
+          "title": "Image",
+          "description": "Image to be deployed",
+          "default": "",
+          "type": "string"
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata"
       ],
       "additionalProperties": false
     }
