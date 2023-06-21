@@ -20,9 +20,32 @@ DRY_RUN = os.environ.get("DRY_RUN", True)
 os.environ["LOCAL"] = "true"
 init_logging(level="INFO")
 
-resource_store = ResourceStoreFactory.get_resource_store()
-secret_store = SecretStoreFactory.get_secret_store("vault")
-config_store = ConfigStoreFactory.get_store("mongo")
+
+resource_store = ResourceStoreFactory.get_resource_store(
+    store_type=os.environ.get("RESOURCE_STORE_TYPE", "mongo"),
+    db_name=os.environ.get("RESOURCE_STORE_DB_NAME", "flock_db"),
+    table_name=os.environ.get("RESOURCE_STORE_TABLE_NAME", "flock_resources"),
+    host=os.environ.get("RESOURCE_STORE_HOST", "localhost"),
+    port=int(os.environ.get("RESOURCE_STORE_PORT", 27017)),
+    username=os.environ.get("RESOURCE_STORE_USERNAME", "root"),
+    password=os.environ.get("RESOURCE_STORE_PASSWORD", "password"),
+)
+
+secret_store = SecretStoreFactory.get_secret_store(
+    store_type=os.environ.get("SECRET_STORE_TYPE", "vault"),
+    host=os.environ.get("SECRET_STORE_HOST", "http://localhost:8200"),
+    token=os.environ.get("SECRET_STORE_TOKEN", "root"),
+)
+
+config_store = ConfigStoreFactory.get_store(
+    store_type=os.environ.get("CONFIG_STORE_TYPE", "mongo"),
+    db_name=os.environ.get("CONFIG_STORE_DB_NAME", "flock_db"),
+    table_name=os.environ.get("CONFIG_STORE_TABLE_NAME", "flock_configs"),
+    host=os.environ.get("CONFIG_STORE_HOST", "localhost"),
+    port=int(os.environ.get("CONFIG_STORE_PORT", 27017)),
+    username=os.environ.get("CONFIG_STORE_USERNAME", "root"),
+    password=os.environ.get("CONFIG_STORE_PASSWORD", "password"),
+)
 
 
 def setup_deployers():
