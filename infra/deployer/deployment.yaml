@@ -31,7 +31,7 @@ spec:
             - name: DEPLOYER_PORT
               value: "9000"
             - name: RESOURCE_STORE_HOST
-              value: flock-resource-store
+              value: mongo
             - name: RESOURCE_STORE_USERNAME
               value: root
             - name: RESOURCE_STORE_PASSWORD

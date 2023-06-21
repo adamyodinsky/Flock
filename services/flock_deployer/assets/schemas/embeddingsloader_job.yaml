@@ -34,11 +34,11 @@ spec:
       - name: RESOURCE_STORE_PASSWORD
         value: password
       - name: RESOURCE_STORE_HOST
-        value: "flock-resource-store"
+        value: "mongo"
       - name: QUEUE_HOST
         value: "flock-queue-rabbitmq"
       - name: MANAGEMENT_STORE_HOST
-        value: "flock-resource-store"
+        value: "mongo"
       - name: FLOCK_LOADER_TYPE
         value: "scraped-data"
       - name: OPENAI_API_KEY

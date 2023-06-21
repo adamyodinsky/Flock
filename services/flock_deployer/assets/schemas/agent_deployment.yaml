@@ -27,7 +27,7 @@ spec:
         protocol: TCP
     env:
       - name: RESOURCE_STORE_HOST
-        value: "flock-resource-store"
+        value: "mongo"
       - name: RESOURCE_STORE_USERNAME
         value: root
         # valueFrom:
@@ -47,7 +47,7 @@ spec:
       - name: QUEUE_HOST
         value: "flock-queue-rabbitmq-headless"
       - name: MANAGEMENT_STORE_HOST
-        value: "flock-resource-store"
+        value: "mongo"
       - name: LOG_LEVEL
         value: "DEBUG"
       - name: OPENAI_API_KEY

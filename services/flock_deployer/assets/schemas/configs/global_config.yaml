@@ -7,7 +7,7 @@ metadata:
   description: global default configuration
 env:
   - name: RESOURCE_STORE_HOST
-    value: flock-resource-store
+    value: mongo
   - name: RESOURCE_STORE_USERNAME
     value: root
   - name: RESOURCE_STORE_PASSWORD
@@ -15,7 +15,7 @@ env:
   - name: QUEUE_HOST
     value: flock-queue-rabbitmq-headless
   - name: MANAGEMENT_STORE_HOST
-    value: flock-resource-store
+    value: mongo
   - name: OPENAI_API_KEY
     valueFrom:
       secretKeyRef:
