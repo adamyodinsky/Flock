@@ -24,7 +24,6 @@ help:
 	@echo "  apply-infra to apply all the k8s resources"
 	
 
-
 docker-base-build:
 	docker build -f Dockerfile.python.base -t flock-python-base   .
 
