@@ -3,7 +3,7 @@ import os
 from typing import Type
 
 import flock_schemas
-from flock_schemas.base import BaseFlockSchema
+from flock_schemas.base import BaseResourceSchema
 from flock_schemas.custom import CustomSchema
 
 
@@ -15,7 +15,7 @@ class SchemaFactory:
 
     def load_schemas(
         self, schemas_dir: str = "flock_schemas"
-    ) -> dict[str, Type[BaseFlockSchema]]:
+    ) -> dict[str, Type[BaseResourceSchema]]:
         """Load schemas from flock_schemas module."""
 
         schemas_map = {}
@@ -35,7 +35,7 @@ class SchemaFactory:
 
         return schemas_map
 
-    def get_schema(self, kind: str) -> Type[BaseFlockSchema]:
+    def get_schema(self, kind: str) -> Type[BaseResourceSchema]:
         """Get a schema instance."""
 
         result = self.schemas.get(kind, CustomSchema)

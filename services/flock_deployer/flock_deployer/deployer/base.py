@@ -8,10 +8,6 @@ import string
 from typing import Callable, List, Union
 
 from flock_common.secret_store import SecretStore
-from flock_resource_store.base import ResourceStore
-from flock_schemas.base import BaseFlockSchema
-from flock_schemas.factory import SchemaFactory
-
 from flock_deployer.config_store import ConfigStore
 from flock_deployer.schemas.config import DeploymentConfigSchema
 from flock_deployer.schemas.deployment import (
@@ -33,20 +29,23 @@ from flock_deployer.schemas.job import (
     JobSchema,
     JobSpec,
 )
+from flock_resource_store.base import ResourceStore
+from flock_schemas.base import BaseResourceSchema
+from flock_schemas.factory import SchemaFactory
 
 
 class BaseDeployer(metaclass=abc.ABCMeta):
     """Abstract class for a deployer"""
 
     @abc.abstractmethod
-    def deploy(self, manifest, target_manifest: BaseFlockSchema, dry_run=None):
+    def deploy(self, manifest, target_manifest: BaseResourceSchema, dry_run=None):
         """Deploy"""
 
-    def update(self, manifest, target_manifest: BaseFlockSchema, dry_run=None):
+    def update(self, manifest, target_manifest: BaseResourceSchema, dry_run=None):
         """Update"""
 
     @abc.abstractmethod
-    def create(self, manifest, target_manifest: BaseFlockSchema, dry_run=None):
+    def create(self, manifest, target_manifest: BaseResourceSchema, dry_run=None):
         """Create"""
 
     @abc.abstractmethod
@@ -107,7 +106,7 @@ class BaseDeployers(metaclass=abc.ABCMeta):
             expects the following keyword arguments:
                 name (str): The name of the deployment or job
                 namespace (str): The namespace of the deployment or job
-                target_manifest (BaseFlockSchema): The target manifest
+                target_manifest (BaseResourceSchema): The target manifest
                 config (DeploymentConfigSchema): The deployment config
         """
 
@@ -118,7 +117,7 @@ class BaseDeployers(metaclass=abc.ABCMeta):
             raise ValueError(msg)
         return creator
 
-    def get_target_manifest(self, name, namespace, kind) -> BaseFlockSchema:
+    def get_target_manifest(self, name, namespace, kind) -> BaseResourceSchema:
         """Get the target manifest for a deployment"""
 
         schema_cls = self.schema_factory.get_schema(kind)
@@ -128,7 +127,9 @@ class BaseDeployers(metaclass=abc.ABCMeta):
         target_manifest = schema_cls(**target_manifest)
         return target_manifest
 
-    def _get_target_resource(self, target_manifest: BaseFlockSchema) -> TargetResource:
+    def _get_target_resource(
+        self, target_manifest: BaseResourceSchema
+    ) -> TargetResource:
         return TargetResource(  # type: ignore
             kind=target_manifest.kind,
             name=target_manifest.metadata.name,
@@ -139,7 +140,7 @@ class BaseDeployers(metaclass=abc.ABCMeta):
         )
 
     def _get_container_spec(
-        self, target_manifest: BaseFlockSchema, config: DeploymentConfigSchema
+        self, target_manifest: BaseResourceSchema, config: DeploymentConfigSchema
     ) -> ContainerSpec:
         return ContainerSpec(
             volume_mounts=[
@@ -197,7 +198,7 @@ class BaseDeployers(metaclass=abc.ABCMeta):
         self,
         name,
         namespace,
-        target_manifest: BaseFlockSchema,
+        target_manifest: BaseResourceSchema,
         config: DeploymentConfigSchema,
         **kwargs,
     ) -> DeploymentSchema:
@@ -233,7 +234,7 @@ class BaseDeployers(metaclass=abc.ABCMeta):
         self,
         name,
         namespace,
-        target_manifest: BaseFlockSchema,
+        target_manifest: BaseResourceSchema,
         config: DeploymentConfigSchema,
         **kwargs,
     ) -> JobSchema:
@@ -267,7 +268,7 @@ class BaseDeployers(metaclass=abc.ABCMeta):
         self,
         name,
         namespace,
-        target_manifest: BaseFlockSchema,
+        target_manifest: BaseResourceSchema,
         config: DeploymentConfigSchema,
         **kwargs,
     ) -> JobSchema:
@@ -312,7 +313,7 @@ class BaseDeployers(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     def env_vars(
-        self, target_manifest: BaseFlockSchema, config: DeploymentConfigSchema
+        self, target_manifest: BaseResourceSchema, config: DeploymentConfigSchema
     ) -> List[Union[EnvVar, EnvFrom]]:
         """Fetch env vars dynamically"""
         target_kind = target_manifest.kind

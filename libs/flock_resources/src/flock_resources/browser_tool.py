@@ -4,12 +4,11 @@ import asyncio
 from typing import Dict, List, Optional
 
 from bs4 import BeautifulSoup
+from flock_resources.base import Resource, ToolResource
+from flock_schemas import BaseResourceSchema
+from flock_schemas.base import Kind
 from langchain.agents import tool
 from playwright.async_api import async_playwright
-
-from flock_resources.base import Resource, ToolResource
-from flock_schemas import BaseFlockSchema
-from flock_schemas.base import Kind
 
 
 class BrowserToolResource(ToolResource):
@@ -17,7 +16,7 @@ class BrowserToolResource(ToolResource):
 
     def __init__(
         self,
-        manifest: BaseFlockSchema,
+        manifest: BaseResourceSchema,
         dependencies: Optional[Dict[str, Resource]],
         tools: Optional[List[ToolResource]] = None,
         dry_run: bool = False,

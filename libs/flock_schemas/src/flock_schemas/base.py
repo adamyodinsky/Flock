@@ -107,7 +107,7 @@ class BaseSpec(BaseOptions):
     )
 
 
-class BaseFlockSchema(BaseModelConfig):
+class BaseResourceSchema(BaseModelConfig):
     """Base schema for all Flock objects."""
 
     # id: Optional[PyObjectId] = Field(None, alias="_id", description="Unique identifier")
@@ -150,6 +150,6 @@ export = {
         "BaseSpec": BaseSpec,
     },
     "main": {
-        "BaseFlock": BaseFlockSchema,
+        "BaseFlock": BaseResourceSchema,
     },
 }

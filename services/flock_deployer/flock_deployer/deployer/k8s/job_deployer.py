@@ -4,13 +4,12 @@
 import logging
 import os
 
-from flock_schemas.base import BaseFlockSchema
-from kubernetes import client, config
-
 from flock_deployer.deployer.base import BaseDeployer
 from flock_deployer.deployer.k8s.common import set_dry_run
 from flock_deployer.deployer.k8s.objects.job import K8sJob
 from flock_deployer.schemas.job import JobSchema
+from flock_schemas.base import BaseResourceSchema
+from kubernetes import client, config
 
 
 class K8sJobDeployer(BaseDeployer):
@@ -29,7 +28,7 @@ class K8sJobDeployer(BaseDeployer):
         self.client = client.BatchV1Api()
 
     def _create_job_obj(
-        self, manifest: JobSchema, target_manifest: BaseFlockSchema
+        self, manifest: JobSchema, target_manifest: BaseResourceSchema
     ) -> K8sJob:
         """Create a Kubernetes Job object from the manifest"""
         job = K8sJob(manifest, target_manifest)
@@ -82,7 +81,7 @@ class K8sJobDeployer(BaseDeployer):
             raise error
 
     def deploy(
-        self, manifest: JobSchema, target_manifest: BaseFlockSchema, dry_run=None
+        self, manifest: JobSchema, target_manifest: BaseResourceSchema, dry_run=None
     ):
         """Deploy a Job to Kubernetes"""
 
@@ -107,7 +106,7 @@ class K8sJobDeployer(BaseDeployer):
             raise
 
     def create(
-        self, manifest: JobSchema, target_manifest: BaseFlockSchema, dry_run=None
+        self, manifest: JobSchema, target_manifest: BaseResourceSchema, dry_run=None
     ):
         """Create a Job in Kubernetes"""
 

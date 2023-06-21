@@ -3,9 +3,8 @@
 from enum import Enum
 from typing import Dict, Literal, Optional
 
+from flock_schemas.base import BaseOptions, BaseResourceSchema, Category
 from pydantic import Field
-
-from flock_schemas.base import BaseFlockSchema, BaseOptions, Category
 
 
 class EmbeddingVendor(str, Enum):
@@ -21,7 +20,7 @@ class EmbeddingSpec(BaseOptions):
     options: Optional[Dict] = Field(description="Embedding options")
 
 
-class EmbeddingSchema(BaseFlockSchema):
+class EmbeddingSchema(BaseResourceSchema):
     """Embedding schema."""
 
     kind: Literal["Embedding"] = Field(..., description="The kind of the object")

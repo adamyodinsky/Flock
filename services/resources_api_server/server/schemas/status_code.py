@@ -2,7 +2,7 @@
 
 from enum import Enum
 
-from flock_schemas import BaseFlockSchema
+from flock_schemas import BaseResourceSchema
 
 
 class Code(str, Enum):
@@ -43,7 +43,7 @@ class Message(str, Enum):
     INTERNAL_SERVER_ERROR = "Internal server error"
 
 
-ResourceType = BaseFlockSchema
+ResourceType = BaseResourceSchema
 # class ResourceType(str, Enum):
 #     """Resource type"""
 
@@ -57,4 +57,4 @@ ResourceType = BaseFlockSchema
 #     VectorStoreSchema = (flock_schemas.VectorStoreSchema,)
 #     VectorStoreQAToolSchema = (flock_schemas.VectorStoreQAToolSchema,)
 #     CustomSchema = (flock_schemas.CustomSchema,)
-#     BaseFlockSchema = (flock_schemas.BaseFlockSchema,)
+#     BaseResourceSchema = (flock_schemas.BaseResourceSchema,)

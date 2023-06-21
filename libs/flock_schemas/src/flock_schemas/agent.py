@@ -3,15 +3,14 @@
 from enum import Enum
 from typing import List, Literal, Union
 
-from pydantic import Field
-
 from flock_schemas.base import (
-    BaseFlockSchema,
     BaseOptions,
+    BaseResourceSchema,
     BaseToolDependency,
     Category,
 )
 from flock_schemas.dependencies import LLMChatDependency, LLMDependency
+from pydantic import Field
 
 
 class AgentType(str, Enum):
@@ -35,7 +34,7 @@ class AgentSpec(BaseOptions):
     )
 
 
-class AgentSchema(BaseFlockSchema):
+class AgentSchema(BaseResourceSchema):
     """Agent schema."""
 
     kind: Literal["Agent"] = Field(..., description="The kind of the object")

@@ -4,13 +4,12 @@
 import logging
 import os
 
-from flock_schemas.base import BaseFlockSchema
-from kubernetes import client, config
-
 from flock_deployer.deployer.base import BaseDeployer
 from flock_deployer.deployer.k8s.common import set_dry_run
 from flock_deployer.deployer.k8s.objects.job import K8sCronJob
 from flock_deployer.schemas.job import CronJobSchema
+from flock_schemas.base import BaseResourceSchema
+from kubernetes import client, config
 
 
 class K8sCronJobDeployer(BaseDeployer):
@@ -31,7 +30,7 @@ class K8sCronJobDeployer(BaseDeployer):
         self.client = client.BatchV1Api()
 
     def _create_cronjob_obj(
-        self, manifest: CronJobSchema, target_manifest: BaseFlockSchema
+        self, manifest: CronJobSchema, target_manifest: BaseResourceSchema
     ) -> K8sCronJob:
         """Create a Kubernetes CronJob object from the manifest"""
         logging.debug(
@@ -115,7 +114,7 @@ class K8sCronJobDeployer(BaseDeployer):
             raise error
 
     def deploy(
-        self, manifest: CronJobSchema, target_manifest: BaseFlockSchema, dry_run=None
+        self, manifest: CronJobSchema, target_manifest: BaseResourceSchema, dry_run=None
     ):
         """Deploy a CronJob to Kubernetes"""
 
@@ -160,7 +159,7 @@ class K8sCronJobDeployer(BaseDeployer):
             raise error
 
     def create(
-        self, manifest: CronJobSchema, target_manifest: BaseFlockSchema, dry_run=None
+        self, manifest: CronJobSchema, target_manifest: BaseResourceSchema, dry_run=None
     ):
         """Create a CronJob in Kubernetes"""
 
@@ -180,7 +179,7 @@ class K8sCronJobDeployer(BaseDeployer):
             raise error
 
     def update(
-        self, manifest: CronJobSchema, target_manifest: BaseFlockSchema, dry_run=None
+        self, manifest: CronJobSchema, target_manifest: BaseResourceSchema, dry_run=None
     ):
         """Update a CronJob in Kubernetes"""
 

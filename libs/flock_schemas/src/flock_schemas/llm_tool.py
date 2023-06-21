@@ -3,14 +3,13 @@
 from enum import Enum
 from typing import Dict, Literal, Optional, Union
 
-from pydantic import Field
-
-from flock_schemas.base import BaseFlockSchema, BaseOptions, Category
+from flock_schemas.base import BaseOptions, BaseResourceSchema, Category
 from flock_schemas.dependencies import (
     LLMChatDependency,
     LLMDependency,
     PromptTemplateDependency,
 )
+from pydantic import Field
 
 
 class LLMToolVendor(str, Enum):
@@ -31,7 +30,7 @@ class LLMToolSpec(BaseOptions):
     ] = Field(..., description="Tool dependencies")
 
 
-class LLMToolSchema(BaseFlockSchema):
+class LLMToolSchema(BaseResourceSchema):
     """LLM tool schema."""
 
     kind: Literal["LLMTool"] = Field(..., description="The kind of the object")

@@ -2,10 +2,9 @@
 
 import abc
 
-from flock_schemas.base import BaseFlockSchema
-from kubernetes import client
-
 from flock_deployer.schemas.deployment import DeploymentSchema
+from flock_schemas.base import BaseResourceSchema
+from kubernetes import client
 
 
 def merge_dicts_or_pydantic(ob1, ob2):
@@ -19,7 +18,7 @@ def merge_dicts_or_pydantic(ob1, ob2):
 class K8sResource(metaclass=abc.ABCMeta):
     """Kubernetes Resource object."""
 
-    def __init__(self, manifest: DeploymentSchema, target_manifest: BaseFlockSchema):
+    def __init__(self, manifest: DeploymentSchema, target_manifest: BaseResourceSchema):
         """Initialize the resource."""
 
         if target_manifest is not NotImplemented:

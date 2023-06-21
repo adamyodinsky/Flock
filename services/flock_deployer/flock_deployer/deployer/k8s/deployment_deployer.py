@@ -4,13 +4,12 @@ import logging
 import os
 import time
 
-from flock_schemas.base import BaseFlockSchema
-from kubernetes import client, config
-
 from flock_deployer.deployer.base import BaseDeployer
 from flock_deployer.deployer.k8s.common import set_dry_run
 from flock_deployer.deployer.k8s.objects.deployment import K8sDeployment
 from flock_deployer.schemas.deployment import DeploymentSchema
+from flock_schemas.base import BaseResourceSchema
+from kubernetes import client, config
 
 
 class K8sDeploymentDeployer(BaseDeployer):
@@ -28,7 +27,7 @@ class K8sDeploymentDeployer(BaseDeployer):
         self.client = client.AppsV1Api()
 
     def _create_deployment_obj(
-        self, manifest: DeploymentSchema, target_manifest: BaseFlockSchema
+        self, manifest: DeploymentSchema, target_manifest: BaseResourceSchema
     ) -> K8sDeployment:
         """Create a Kubernetes Deployment object from the manifest"""
 
@@ -127,7 +126,10 @@ class K8sDeploymentDeployer(BaseDeployer):
             raise error
 
     def update(
-        self, manifest: DeploymentSchema, target_manifest: BaseFlockSchema, dry_run=None
+        self,
+        manifest: DeploymentSchema,
+        target_manifest: BaseResourceSchema,
+        dry_run=None,
     ):
         """Update a deployment in Kubernetes"""
 
@@ -146,7 +148,10 @@ class K8sDeploymentDeployer(BaseDeployer):
             self._create(deployment, dry_run)
 
     def deploy(
-        self, manifest: DeploymentSchema, target_manifest: BaseFlockSchema, dry_run=None
+        self,
+        manifest: DeploymentSchema,
+        target_manifest: BaseResourceSchema,
+        dry_run=None,
     ):
         """Deploy service and deployment to Kubernetes"""
 
@@ -189,7 +194,10 @@ class K8sDeploymentDeployer(BaseDeployer):
             raise error
 
     def create(
-        self, manifest: DeploymentSchema, target_manifest: BaseFlockSchema, dry_run=None
+        self,
+        manifest: DeploymentSchema,
+        target_manifest: BaseResourceSchema,
+        dry_run=None,
     ):
         """Create a deployment in Kubernetes"""
 

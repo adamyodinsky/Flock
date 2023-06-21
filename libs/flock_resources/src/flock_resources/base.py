@@ -4,8 +4,8 @@
 from typing import Any, List, Optional, cast
 
 from flock_schemas.agent import AgentSchema
-from flock_schemas.base import BaseFlockSchema
 from flock_schemas.base import BaseOptions as BaseOptionsSchema
+from flock_schemas.base import BaseResourceSchema
 from flock_schemas.custom import CustomSchema
 from langchain.agents import Tool as ToolWarperLC
 
@@ -14,12 +14,12 @@ class Resource:
     """Base class for all resources.
 
     Args:
-        manifest (BaseFlockSchema): Manifest of the resource.
+        manifest (BaseResourceSchema): Manifest of the resource.
         dependencies (Optional[dict[str, Resource]], optional): Dependencies of the resource. Defaults to None.
         tools (Optional[List[Any]], optional): Tools of the resource. Defaults to None.
 
     Attributes:
-        manifest (BaseFlockSchema): Manifest of the resource.
+        manifest (BaseResourceSchema): Manifest of the resource.
         dependencies (dict[str, Resource]): Dependencies of the resource.
         tools (List[Any]): Tools of the resource.
         vendor (str): Vendor of the resource.
@@ -29,7 +29,7 @@ class Resource:
 
     def __init__(
         self,
-        manifest: BaseFlockSchema,
+        manifest: BaseResourceSchema,
         dependencies: Optional[dict[str, Any]] = None,
         tools: Optional[List[Any]] = None,
         dry_run: bool = False,
@@ -58,7 +58,7 @@ class ToolResource(Resource):
 
     def __init__(
         self,
-        manifest: BaseFlockSchema,
+        manifest: BaseResourceSchema,
         dependencies: Optional[dict[str, Resource]] = None,
         dry_run: bool = False,
     ):

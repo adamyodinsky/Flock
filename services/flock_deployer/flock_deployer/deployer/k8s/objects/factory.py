@@ -1,15 +1,14 @@
-from flock_schemas.base import BaseFlockSchema
-
 from flock_deployer.deployer.k8s.objects.base import K8sResource
 from flock_deployer.deployer.k8s.objects.deployment import K8sDeployment
 from flock_deployer.deployer.k8s.objects.job import K8sCronJob, K8sJob
+from flock_schemas.base import BaseResourceSchema
 
 
 class K8sResourceFactory:
     """Factory class for creating k8s resources."""
 
     @staticmethod
-    def create(manifest, target_manifest: BaseFlockSchema) -> K8sResource:
+    def create(manifest, target_manifest: BaseResourceSchema) -> K8sResource:
         """Create a k8s resource."""
         if manifest.category == "deployment":
             return K8sDeployment(manifest, target_manifest)

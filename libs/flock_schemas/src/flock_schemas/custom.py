@@ -1,12 +1,11 @@
 """Custom object schemas for Flock."""
 
 
+from flock_schemas.base import BaseResourceSchema, Category
 from pydantic import Field
 
-from flock_schemas.base import BaseFlockSchema, Category
 
-
-class CustomSchema(BaseFlockSchema):
+class CustomSchema(BaseResourceSchema):
     """Custom object schema."""
 
     kind: str = Field(..., description="The kind of the custom object")

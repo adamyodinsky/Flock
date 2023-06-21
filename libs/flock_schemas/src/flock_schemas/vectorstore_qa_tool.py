@@ -3,14 +3,13 @@
 from enum import Enum
 from typing import Dict, Literal, Optional, Union
 
-from pydantic import Field
-
-from flock_schemas.base import BaseFlockSchema, BaseOptions, Category
+from flock_schemas.base import BaseOptions, BaseResourceSchema, Category
 from flock_schemas.dependencies import (
     LLMChatDependency,
     LLMDependency,
     VectorStoreDependency,
 )
+from pydantic import Field
 
 
 class VectorStoreQAToolVendor(str, Enum):
@@ -32,7 +31,7 @@ class VectorStoreQAToolSpec(BaseOptions):
     ] = Field(..., description="Tool dependencies")
 
 
-class VectorStoreQAToolSchema(BaseFlockSchema):
+class VectorStoreQAToolSchema(BaseResourceSchema):
     """VectorStoreQATool schema."""
 
     kind: Literal["VectorStoreQATool"] = Field(

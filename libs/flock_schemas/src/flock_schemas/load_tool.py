@@ -2,10 +2,9 @@
 from enum import Enum
 from typing import Literal, Union
 
-from pydantic import Field
-
-from flock_schemas.base import BaseFlockSchema, BaseOptions, Category
+from flock_schemas.base import BaseOptions, BaseResourceSchema, Category
 from flock_schemas.dependencies import LLMChatDependency, LLMDependency
+from pydantic import Field
 
 
 class LoadToolVendor(str, Enum):
@@ -50,7 +49,7 @@ class LoadToolSpec(BaseOptions):
     )
 
 
-class LoadToolSchema(BaseFlockSchema):
+class LoadToolSchema(BaseResourceSchema):
     """LoadTool schema."""
 
     kind: Literal["LoadTool"] = Field(..., description="The kind of the object")

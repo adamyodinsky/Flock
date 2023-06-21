@@ -3,9 +3,8 @@
 from enum import Enum
 from typing import Literal
 
+from flock_schemas.base import BaseOptions, BaseResourceSchema, Category
 from pydantic import Field
-
-from flock_schemas.base import BaseFlockSchema, BaseOptions, Category
 
 
 class SplitterVendor(str, Enum):
@@ -23,7 +22,7 @@ class SplitterSpec(BaseOptions):
     )
 
 
-class SplitterSchema(BaseFlockSchema):
+class SplitterSchema(BaseResourceSchema):
     """Splitter schema."""
 
     kind: Literal["Splitter"] = Field(..., description="The kind of the object")

@@ -1,9 +1,6 @@
 """Kubernetes PodTemplateSpec object."""
 from typing import Union
 
-from flock_schemas.base import BaseFlockSchema
-from kubernetes import client
-
 from flock_deployer.schemas.deployment import (  # VolumeEmptyDir,; VolumeHostPath,; VolumePersistentVolumeClaim,
     ContainerSpec,
     DeploymentSchema,
@@ -11,6 +8,8 @@ from flock_deployer.schemas.deployment import (  # VolumeEmptyDir,; VolumeHostPa
     Volume,
 )
 from flock_deployer.schemas.job import CronJobSchema, JobSchema
+from flock_schemas.base import BaseResourceSchema
+from kubernetes import client
 
 
 class FlockPodTemplate:
@@ -19,7 +18,7 @@ class FlockPodTemplate:
     def __init__(
         self,
         manifest: Union[DeploymentSchema, JobSchema, CronJobSchema],
-        target_manifest: BaseFlockSchema,
+        target_manifest: BaseResourceSchema,
     ) -> None:
         container_spec = ContainerSpec(**manifest.spec.container.dict())
         self.pod_template_spec = client.V1PodTemplateSpec(
@@ -59,7 +58,7 @@ class FlockPodTemplate:
         )
 
     def _build_env(
-        self, container_spec: ContainerSpec, target_manifest: BaseFlockSchema
+        self, container_spec: ContainerSpec, target_manifest: BaseResourceSchema
     ) -> list[client.V1EnvVar]:
         result = [
             client.V1EnvVar(

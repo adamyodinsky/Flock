@@ -4,10 +4,9 @@
 from pathlib import Path
 from typing import Literal, Optional
 
-from pydantic import Field
-
-from flock_schemas.base import BaseFlockSchema, BaseModelConfig, BaseSpec, Category
+from flock_schemas.base import BaseModelConfig, BaseResourceSchema, BaseSpec, Category
 from flock_schemas.dependencies import SplitterDependency, VectorStoreDependency
+from pydantic import Field
 
 
 def home_dir():
@@ -53,7 +52,7 @@ class EmbeddingsLoaderSpec(BaseSpec):
     )
 
 
-class EmbeddingsLoaderSchema(BaseFlockSchema):
+class EmbeddingsLoaderSchema(BaseResourceSchema):
     """EmbeddingsLoader schema."""
 
     kind: Literal["EmbeddingsLoader"] = Field(..., description="The kind of the object")

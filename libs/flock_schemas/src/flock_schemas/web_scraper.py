@@ -3,10 +3,9 @@
 
 from typing import Literal
 
-from pydantic import Field
-
-from flock_schemas.base import BaseFlockSchema, BaseOptions, Category
+from flock_schemas.base import BaseOptions, BaseResourceSchema, Category
 from flock_schemas.dependencies import VectorStoreDependency
+from pydantic import Field
 
 
 class VectorStoreSpec(BaseOptions):
@@ -20,7 +19,7 @@ class VectorStoreSpec(BaseOptions):
     )
 
 
-class WebScraperSchema(BaseFlockSchema):
+class WebScraperSchema(BaseResourceSchema):
     """Custom object schema."""
 
     kind: Literal["WebScraper"] = Field(..., description="The object kind")

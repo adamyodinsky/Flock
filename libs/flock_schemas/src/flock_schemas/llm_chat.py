@@ -3,9 +3,8 @@
 from enum import Enum
 from typing import Literal
 
+from flock_schemas.base import BaseOptions, BaseResourceSchema, Category
 from pydantic import Field
-
-from flock_schemas.base import BaseFlockSchema, BaseOptions, Category
 
 
 class LLMChatVendor(str, Enum):
@@ -21,7 +20,7 @@ class LLMChatSpec(BaseOptions):
     vendor: LLMChatVendor = Field(..., description="LLMChat vendor")
 
 
-class LLMChatSchema(BaseFlockSchema):
+class LLMChatSchema(BaseResourceSchema):
     """LLMChat schema."""
 
     kind: Literal["LLMChat"] = Field(..., description="The kind of the object")
