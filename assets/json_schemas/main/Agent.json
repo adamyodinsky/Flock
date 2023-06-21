@@ -86,6 +86,7 @@
         "annotations": {
           "title": "Annotations",
           "description": "Annotations are useful for storing additional information",
+          "default": {},
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -94,6 +95,7 @@
         "labels": {
           "title": "Labels",
           "description": "Labels are useful for filtering and finding objects",
+          "default": {},
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -127,7 +129,9 @@
         "self-ask-with-search",
         "conversational-react-description",
         "chat-zero-shot-react-description",
-        "chat-conversational-react-description"
+        "chat-conversational-react-description",
+        "structured-chat-zero-shot-react-description",
+        "openai-functions"
       ],
       "type": "string"
     },
@@ -159,6 +163,7 @@
         "labels": {
           "title": "Labels",
           "description": "Labels are useful for filtering and finding objects",
+          "default": {},
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -210,6 +215,7 @@
         "labels": {
           "title": "Labels",
           "description": "Labels are useful for filtering and finding objects",
+          "default": {},
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -253,6 +259,7 @@
         "labels": {
           "title": "Labels",
           "description": "Labels are useful for filtering and finding objects",
+          "default": {},
           "type": "object",
           "additionalProperties": {
             "type": "string"

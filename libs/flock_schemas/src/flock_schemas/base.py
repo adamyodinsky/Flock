@@ -150,6 +150,6 @@ export = {
         "BaseSpec": BaseSpec,
     },
     "main": {
-        "BaseFlock": BaseResourceSchema,
+        "BaseResource": BaseResourceSchema,
     },
 }

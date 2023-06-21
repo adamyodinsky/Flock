@@ -44,9 +44,11 @@ class PromptTemplateDependency(BaseDependency):
 export = {
     "sub": {
         "LLMDependency": LLMDependency,
-        "VectorStoreDependency": VectorStoreDependency,
-        "EmbeddingDependency": EmbeddingDependency,
+        "LLMChatDependency": LLMChatDependency,
         "PromptTemplateDependency": PromptTemplateDependency,
+        "SplitterDependency": SplitterDependency,
+        "EmbeddingDependency": EmbeddingDependency,
+        "VectorStoreDependency": VectorStoreDependency,
     },
     "main": {},
 }

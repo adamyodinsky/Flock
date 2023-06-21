@@ -3,6 +3,8 @@
 from enum import Enum
 from typing import List, Literal, Union
 
+from pydantic import Field
+
 from flock_schemas.base import (
     BaseOptions,
     BaseResourceSchema,
@@ -10,7 +12,6 @@ from flock_schemas.base import (
     Category,
 )
 from flock_schemas.dependencies import LLMChatDependency, LLMDependency
-from pydantic import Field
 
 
 class AgentType(str, Enum):
@@ -22,6 +23,10 @@ class AgentType(str, Enum):
     CONVERSATIONAL_REACT_DESCRIPTION = "conversational-react-description"
     CHAT_ZERO_SHOT_REACT_DESCRIPTION = "chat-zero-shot-react-description"
     CHAT_CONVERSATIONAL_REACT_DESCRIPTION = "chat-conversational-react-description"
+    STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION = (
+        "structured-chat-zero-shot-react-description"
+    )
+    OPENAI_FUNCTIONS = "openai-functions"
 
 
 class AgentSpec(BaseOptions):

@@ -4,14 +4,13 @@ from __future__ import annotations
 
 from typing import Literal, Union
 
-from pydantic import BaseModel, Field
-
 from flock_deployer.schemas import (
     CronJobSchema,
     DeploymentConfigSchema,
     DeploymentSchema,
     JobSchema,
 )
+from pydantic import BaseModel, Field
 
 
 class HealthResponse(BaseModel):
@@ -69,5 +68,7 @@ export = {
     "main": {
         "ResourceCreated": ResourceCreated,
         "ResourceDeleted": ResourceDeleted,
+        "ConfigCreated": ConfigCreated,
+        "HealthResponse": HealthResponse,
     },
 }

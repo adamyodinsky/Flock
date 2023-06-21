@@ -1,18 +1,12 @@
 from typing import Literal, Union
 
-from pydantic import Field
-
 from flock_deployer.schemas.deployment import (
     BaseMetaData,
     BaseModelConfig,
     EnvFrom,
     EnvVar,
 )
-
-
-class Metadata(BaseModelConfig):
-    name: str
-    description: str
+from pydantic import Field
 
 
 class DeploymentConfigSchema(BaseModelConfig):

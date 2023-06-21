@@ -1,8 +1,9 @@
 import importlib
 import os
-from typing import Any
+from typing import Any, Type
 
 from flock_deployer import schemas
+from pydantic import BaseModel
 
 
 class DeploymentSchemaFactory:
@@ -10,8 +11,13 @@ class DeploymentSchemaFactory:
 
     def __init__(self):
         self.schemas = self.load_schemas()
+        self.sub_schemas = self.load_schemas("sub")
 
-    def load_schemas(self, schemas_dir: str = "schemas") -> dict[str, Any]:
+    def load_schemas(
+        self,
+        sub_path: str = "main",
+        schemas_dir: str = "schemas",
+    ) -> dict[str, Any]:
         """Load schemas from flock_schemas module."""
 
         schemas_map = {}
@@ -28,15 +34,24 @@ class DeploymentSchemaFactory:
                         f"flock_deployer.{schemas_dir}.{module_name}"
                     )
 
-                    for key, value in module.export["main"].items():
+                    for key, value in module.export[sub_path].items():
                         schemas_map[key] = value
 
         return schemas_map
 
-    def get_schema(self, kind: str) -> Any:
+    def get_schema(self, kind: str) -> Type[BaseModel]:
         """Get a schema instance."""
 
         result = self.schemas.get(kind, None)
+        if result is None:
+            raise ValueError(f"Invalid kind: {kind}")
+
+        return result
+
+    def get_sub_schema(self, kind: str) -> Type[BaseModel]:
+        """Get a schema instance."""
+
+        result = self.sub_schemas.get(kind, None)
         if result is None:
             raise ValueError(f"Invalid kind: {kind}")
 

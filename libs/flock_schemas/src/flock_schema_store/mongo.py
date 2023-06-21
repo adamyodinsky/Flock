@@ -1,6 +1,7 @@
 from typing import Optional
 
 from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
 
 from .base import SchemaStore
 
@@ -96,6 +97,15 @@ class MongoSchemaStore(SchemaStore):
         """Get all the kinds of schemas in the store as a list"""
         kinds = self.table.distinct("kind")
         return kinds
+
+    def health_check(self) -> bool:
+        """Check if the resource store is healthy."""
+
+        try:
+            self.client.admin.command("ismaster")
+            return True
+        except ConnectionFailure:
+            return False
 
     @staticmethod
     def create_filter(

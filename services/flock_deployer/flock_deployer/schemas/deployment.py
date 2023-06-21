@@ -200,7 +200,21 @@ class DeploymentSchema(BaseModelConfig):
 
 
 export = {
-    "sub": {},
+    "sub": {
+        "ContainerPort": ContainerPort,
+        "EnvVar": EnvVar,
+        "EnvFrom": EnvFrom,
+        "VolumeMount": VolumeMount,
+        "PersistentVolumeClaim": PersistentVolumeClaim,
+        "Secret": Secret,
+        "VolumeEmptyDir": VolumeEmptyDir,
+        "VolumeHostPath": VolumeHostPath,
+        "VolumeSource": VolumeSource,
+        "Volume": Volume,
+        "ContainerSpec": ContainerSpec,
+        "TargetResource": TargetResource,
+        "DeploymentSpec": DeploymentSpec,
+    },
     "main": {
         "Deployment": DeploymentSchema,
     },

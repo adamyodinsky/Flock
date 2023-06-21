@@ -40,6 +40,10 @@ class SchemaStore(metaclass=abc.ABCMeta):
     def get_kinds(self):
         """Get all the kinds of schemas in the store as a list"""
 
+    @abc.abstractmethod
+    def health_check(self) -> bool:
+        """Check if the resource store is healthy."""
+
     @staticmethod
     def load_file(path, file_type="yaml") -> dict:
         """Load a resource from the store."""

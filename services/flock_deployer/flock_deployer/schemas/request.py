@@ -47,5 +47,6 @@ export = {
     "main": {
         "DeploymentRequest": DeploymentRequest,
         "DeleteRequest": DeleteRequest,
+        "ConfigRequest": ConfigRequest,
     },
 }

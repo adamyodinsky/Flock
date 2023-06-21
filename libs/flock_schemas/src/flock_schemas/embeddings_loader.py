@@ -65,6 +65,7 @@ class EmbeddingsLoaderSchema(BaseResourceSchema):
 export = {
     "sub": {
         "EmbeddingsLoaderSpec": EmbeddingsLoaderSpec,
+        "EmbeddingsLoaderOptions": EmbeddingsLoaderOptions,
     },
     "main": {
         "EmbeddingsLoader": EmbeddingsLoaderSchema,

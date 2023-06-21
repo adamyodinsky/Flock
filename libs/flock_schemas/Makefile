@@ -1,4 +1,4 @@
-.PHONY: help install validate-schemas write-json-schemas format lint build
+.PHONY: help install validate-schemas write-json-schemas upload-json-schemas-to-db write-upload-schemas format lint build
 
 help:
 	@echo "Please use 'make <target>' where <target> is one of"
@@ -13,12 +13,6 @@ help:
 install:
 	@poetry install
 
-validate-schemas:
-	@echo "Validating Schemas\n"
-	@poetry run python tests/schemas_validation.py
-
-write-json-schemas:
-	@poetry run python scripts/write_json_schemas.py
 
 format:
 	@echo "Formatting code"
@@ -32,4 +26,17 @@ build:
 	@echo "Building package"
 	@poetry build
 	
+
+validate-schemas:
+	@echo "Validating Schemas\n"
+	@poetry run python tests/schemas_validation.py
+
+write-json-schemas:
+	@poetry run python scripts/write_json_schemas.py
+
+upload-json-schemas-to-db:
+	@poetry run python scripts/upload_json_schemas_to_db.py
+
+write-upload-schemas: write-json-schemas upload-json-schemas-to-db
+
 

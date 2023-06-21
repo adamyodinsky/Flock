@@ -3,15 +3,14 @@
 from typing import List, Literal, Optional
 
 from croniter import croniter
-from flock_schemas.base import BaseMetaData, BaseModelConfig
-from pydantic import Field, validator
-
 from flock_deployer.schemas.deployment import (
     ContainerSpec,
     DeploymentSchema,
     TargetResource,
     Volume,
 )
+from flock_schemas.base import BaseMetaData, BaseModelConfig
+from pydantic import Field, validator
 
 
 class JobSpec(BaseModelConfig):
@@ -80,7 +79,10 @@ class CronJobSchema(JobSchema):
 
 
 export = {
-    "sub": {},
+    "sub": {
+        "JobSpec": JobSpec,
+        "CronJobSpec": CronJobSpec,
+    },
     "main": {
         "Job": JobSchema,
         "CronJob": CronJobSchema,
