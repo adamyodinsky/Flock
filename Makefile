@@ -1,12 +1,29 @@
 .PHONY: help docker-base-build docker-agent-build docker-agent-run minikube-start
 
 help:
-	@echo "Usage: make [target]"
-	@echo ""
-	@echo "Targets:"
-	@echo "  build         Build all images"
-	@echo "  build-base  	 Build base image"
-	@echo "  build-agent   Build agent image"
+	@echo "Please use \`make <target>' where <target> is one of"
+	@echo "  docker-base-build to build the base python image"
+	@echo "  docker-agent-build to build the agent image"
+	@echo "  docker-agent-run to run the agent image"
+	@echo "  docker-embeddings-loader-build to build the embeddings loader image"
+	@echo "  docker-embeddings-loader-run to run the embeddings loader image"
+	@echo "  docker-webscraper-build to build the webscraper image"
+	@echo "  docker-webscraper-run to run the webscraper image"
+	@echo "  docker-deployer-build to build the deployer image"
+	@echo "  docker-deployer-run to run the deployer image"
+	@echo "  docker-build-all to build all the images"
+	@echo "  minikube-start to start minikube"
+	@echo "  load-images to load the images into minikube"
+	@echo "  apply-mongo to apply the mongoDB k8s resources"
+	@echo "  apply-deployer to apply the deployer k8s resources"
+	@echo "  apply-rabbitmq to apply the rabbitMQ k8s resources"
+	@echo "  apply-vault to apply the vault k8s resources"
+	@echo "  apply-secret to apply the secret k8s resources"
+	@echo "  apply-pvc to apply the pvc k8s resources"
+	@echo "  setup-all to build all the images and apply all the k8s resources"
+	@echo "  apply-infra to apply all the k8s resources"
+	
+
 
 docker-base-build:
 	docker build -f Dockerfile.python.base -t flock-python-base   .

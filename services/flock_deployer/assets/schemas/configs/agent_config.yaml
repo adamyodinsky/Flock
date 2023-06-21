@@ -9,17 +9,15 @@ env:
   - name: RESOURCE_STORE_HOST
     value: "mongo"
   - name: RESOURCE_STORE_USERNAME
-    value: root
-    # valueFrom:
-    #   secretKeyRef:
-    #     name: mysecret
-    #     key: mongo-username
+    valueFrom:
+      secretKeyRef:
+        name: mysecret
+        key: mongo-username
   - name: RESOURCE_STORE_PASSWORD
-    value: password
-    # valueFrom:
-    #   secretKeyRef:
-    #     name: mysecret
-    #     key: mongo-password
+    valueFrom:
+      secretKeyRef:
+        name: mysecret
+        key: mongo-password
   - name: FLOCK_AGENT_PORT
     value: "8080"
   - name: FLOCK_AGENT_HOST
