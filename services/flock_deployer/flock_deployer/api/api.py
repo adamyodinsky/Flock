@@ -77,16 +77,18 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
         Returns:
             ResourceCreated: Resource created
         """
-        logging.info("Creating resource object %s", data.resource_name)
         try:
+            logging.debug("Fetching %s %s", data.resource_name, data.resource_kind)
             target_manifest = deployers.get_target_manifest(
                 name=data.resource_name,
                 namespace=data.resource_namespace,
                 kind=data.resource_kind,
             )
 
+            logging.debug(
+                "Creating deployment schema", data.resource_name, data.resource_kind
+            )
             creator = deployers.get_creator(data.deployment_kind)
-
             deployment_schema = creator(
                 name=data.deployment_name,
                 namespace=data.deployment_namespace,
@@ -94,21 +96,26 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
                 config=data.config,
                 schedule=data.schedule,
             )
-
         except ValidationError as error:
-            logging.error("Failed to build resource %s", data.resource_name)
+            logging.error(
+                "Failed to deploy %s %s", data.resource_name, data.resource_kind
+            )
+            logging.error(error)
             raise HTTPException(
                 status_code=400,
-                detail=["Failed to build resource", str(error)],
+                detail=["Failed to deploy", str(error)],
             ) from error
         except Exception as error:  # pylint: disable=broad-except
-            logging.error("Failed to build resource %s", data.resource_name)
+            logging.error(
+                "Failed to deploy %s %s", data.resource_name, data.resource_kind
+            )
+            logging.error(error)
             raise HTTPException(
                 status_code=500,
-                detail=["Failed to build resource", str(error)],
+                detail=["Failed to deploy", str(error)],
             ) from error
 
-        logging.info("Deploying resource %s", data.resource_name)
+        logging.info("Deploying resource %s %s", data.resource_name, data.resource_kind)
         try:
             match data.deployment_kind:
                 case "FlockDeployment":
@@ -133,11 +140,12 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
                     )
 
         except Exception as error:  # pylint: disable=broad-except
-            logging.error("Failed to store resource %s", data.resource_name)
+            logging.error("Failed to deploy %s", data.resource_name)
+            logging.error(error)
             raise HTTPException(
                 status_code=500,
                 detail=[
-                    "Failed to store resource",
+                    "Failed to deploy",
                     str(error),
                 ],
             ) from error
@@ -193,7 +201,8 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
                     )
 
         except Exception as error:  # pylint: disable=broad-except
-            logging.error("Failed to store resource %s", data.deployment_name)
+            logging.error("Failed to delete deployment %s", data.deployment_name)
+            logging.error(error)
             raise HTTPException(
                 status_code=500,
                 detail=[
@@ -227,6 +236,8 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
         try:
             deployers.config_store.put(data.config.dict())
         except Exception as error:  # pylint: disable=broad-except
+            logging.error("Failed to store config %s", data.config.metadata.name)
+            logging.error(error)
             raise HTTPException(
                 status_code=500,
                 detail=[
@@ -295,6 +306,7 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
             return ResourceDeleted()
         except Exception as error:
             logging.error("Failed to delete config %s", name)
+            logging.error(error)
             raise HTTPException(
                 status_code=500,
                 detail=[

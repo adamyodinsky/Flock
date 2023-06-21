@@ -7,11 +7,6 @@ from flock_resource_store import ResourceStoreFactory
 from flock_deployer.config_store import ConfigStoreFactory
 from flock_deployer.deployer import DeployerFactory
 from flock_deployer.schemas.config import DeploymentConfigSchema
-from flock_deployer.schemas.request import (
-    ConfigRequest,
-    DeleteRequest,
-    DeploymentRequest,
-)
 from flock_deployer.schemas.response import (
     ConfigCreated,
     HealthResponse,
@@ -164,7 +159,7 @@ def test_job():
 def test_cronjob():
     put_deployment(
         deployment_kind="FlockCronJob",
-        resource_name="meta",
+        resource_name="embeddings-loader",
         resource_kind="EmbeddingsLoader",
     )
     if not DRY_RUN:

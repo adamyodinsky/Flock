@@ -53,5 +53,3 @@ spec:
                 secretKeyRef:
                   name: mysecret
                   key: mongo-username
-            - name: CONFIG_STORE_HOST
-              value: flock-resource-store
