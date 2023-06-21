@@ -6,14 +6,15 @@ import sys
 import click
 from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI
-from flock_agent.agent import FlockAgent
-from flock_agent.routes import create_agent_routes
 from flock_common import EnvVarNotSetError, check_env_vars
 from flock_common.logging import init_logging
 from flock_common.queue_client import QueueClientFactory
 from flock_resource_store import ResourceStoreFactory
 from flock_task_management_store import TaskManagementStoreFactory
 from uvicorn import run
+
+from flock_agent.agent import FlockAgent
+from flock_agent.routes import create_agent_routes
 
 init_logging(
     destination=os.environ.get("FLOCK_LOG_DESTINATION", "stdout"),
@@ -166,8 +167,6 @@ def run_agent(schema_path, schema_value, host, port):
     logging.info("/docs (GET) (http://%s:%s/docs)", host, port)
     logging.info("/redoc (GET) (http://%s:%s/redoc)", host, port)
     logging.info("/openapi.json (GET) (http://%s:%s/openapi.json)", host, port)
-    for route in router.routes:
-        logging.info("%s (%s)", route.path, route.methods)  # type: ignore
     run(app, host=host, port=port, log_level=os.environ.get("LOG_LEVEL", "info"))
 
 

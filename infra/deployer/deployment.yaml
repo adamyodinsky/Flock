@@ -30,6 +30,13 @@ spec:
               value: "0.0.0.0"
             - name: DEPLOYER_PORT
               value: "9000"
+            - name: CONFIG_STORE_HOST
+              value: mongo
+            - name: CONFIG_STORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysecret
+                  key: mongo-password
             - name: RESOURCE_STORE_HOST
               value: mongo
             - name: RESOURCE_STORE_USERNAME
@@ -41,5 +48,10 @@ spec:
                   key: mongo-password
             - name: SECRET_STORE_HOST
               value: http://flock-secrets-store-vault:8200
+            - name: SECRET_STORE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: mysecret
+                  key: mongo-username
             - name: CONFIG_STORE_HOST
               value: flock-resource-store
