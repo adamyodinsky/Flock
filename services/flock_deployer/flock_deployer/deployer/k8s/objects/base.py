@@ -2,9 +2,10 @@
 
 import abc
 
-from flock_deployer.schemas.deployment import DeploymentSchema
 from flock_schemas.base import BaseResourceSchema
 from kubernetes import client
+
+from flock_deployer.schemas.deployment import DeploymentSchema
 
 
 def merge_dicts_or_pydantic(ob1, ob2):
@@ -30,6 +31,13 @@ class K8sResource(metaclass=abc.ABCMeta):
         else:
             self.target_manifest = None
 
+        flock_label = {
+            "flock": "true",
+        }
+        # Add the flock label to the manifest
+        manifest.metadata.labels = merge_dicts_or_pydantic(
+            flock_label, manifest.metadata.labels
+        )
         self.metadata = client.V1ObjectMeta(
             name=manifest.metadata.name,
             namespace=manifest.namespace,

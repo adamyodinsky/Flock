@@ -48,7 +48,7 @@ spec:
             key: openai-token
   targetResource:
     kind: EmbeddingsLoader
-    name: meta
+    name: embeddings-loader
     namespace: default
     labels:
       app: my_app

@@ -83,7 +83,11 @@ class K8sServiceDeployer(BaseDeployer):
         try:
             self._patch(service, dry_run)
         except client.ApiException:
-            self._delete(service, dry_run)
+            self._delete(
+                name=service.manifest.metadata.name,
+                namespace=service.namespace,
+                dry_run=dry_run,
+            )
             while self.exists(
                 name=service.manifest.metadata.name, namespace=service.namespace
             ):

@@ -167,7 +167,9 @@ def run_agent(schema_path, schema_value, host, port):
     logging.info("/docs (GET) (http://%s:%s/docs)", host, port)
     logging.info("/redoc (GET) (http://%s:%s/redoc)", host, port)
     logging.info("/openapi.json (GET) (http://%s:%s/openapi.json)", host, port)
-    run(app, host=host, port=port, log_level=os.environ.get("LOG_LEVEL", "info"))
+    run(
+        app, host=host, port=port, log_level=os.environ.get("LOG_LEVEL", "info").lower()
+    )
 
 
 cli.add_command(run_agent)

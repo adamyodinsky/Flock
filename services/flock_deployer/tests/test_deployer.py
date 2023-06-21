@@ -15,8 +15,19 @@ from flock_deployer.schemas.config import DeploymentConfigSchema
 from flock_deployer.schemas.deployment import DeploymentSchema
 from flock_deployer.schemas.job import CronJobSchema, JobSchema
 
+
+def set_dry_run():
+    dry_run = os.environ.get("DRY_RUN", "true")
+
+    if dry_run.lower() == "true":
+        return True
+    else:
+        return False
+
+
+DRY_RUN = set_dry_run()
 SLEEP_TIME = 6
-DRY_RUN = os.environ.get("DRY_RUN", True)
+
 os.environ["LOCAL"] = "true"
 init_logging(level="INFO")
 

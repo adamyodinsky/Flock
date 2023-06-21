@@ -5,10 +5,61 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "serve",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/flock_deployer/main.py",
+      "console": "internalConsole",
+      "justMyCode": true,
+      "env": {
+        "MONGO_USERNAME": "root",
+        "MONGO_PASSWORD": "password",
+        "FLOCK_DEPLOYER_TYPE": "k8s"
+      }
+    },
+    {
       "name": "test_deployer",
       "type": "python",
       "request": "launch",
       "program": "${workspaceFolder}/tests/test_deployer.py",
+      "console": "internalConsole",
+      "justMyCode": true,
+      "env": {
+        "MONGO_USERNAME": "root",
+        "MONGO_PASSWORD": "password"
+      }
+    },
+    {
+      "name": "test-all",
+      "type": "python",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["-v"],
+      "justMyCode": true,
+      "console": "internalConsole",
+      "env": {
+        "MONGO_USERNAME": "root",
+        "MONGO_PASSWORD": "password"
+      }
+    },
+    {
+      "name": "test-api-e2e",
+      "type": "python",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["tests/test_api_e2e.py", "-v"],
+      "justMyCode": true,
+      "console": "internalConsole",
+      "env": {
+        "MONGO_USERNAME": "root",
+        "MONGO_PASSWORD": "password"
+      }
+    },
+    {
+      "name": "current",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
       "console": "internalConsole",
       "justMyCode": true,
       "env": {
