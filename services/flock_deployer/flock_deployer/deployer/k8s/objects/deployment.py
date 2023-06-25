@@ -1,10 +1,11 @@
 """Kubernetes Deployment controller."""
 
+from flock_schemas.base import BaseResourceSchema
+from kubernetes import client
+
 from flock_deployer.deployer.k8s.objects.base import K8sResource
 from flock_deployer.deployer.k8s.objects.pod_template import FlockPodTemplate
 from flock_deployer.schemas.deployment import DeploymentSchema
-from flock_schemas.base import BaseResourceSchema
-from kubernetes import client
 
 
 class K8sDeployment(K8sResource):
@@ -12,6 +13,7 @@ class K8sDeployment(K8sResource):
 
     def __init__(self, manifest: DeploymentSchema, target_manifest: BaseResourceSchema):
         super().__init__(manifest, target_manifest)
+
         self.rendered_manifest = client.V1Deployment(
             api_version="apps/v1",
             kind="Deployment",

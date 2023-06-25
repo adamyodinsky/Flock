@@ -1,0 +1,7 @@
+.vscode
+.venv
+notes.txt
+.env
+**/__pycache__
+app.log
+```
