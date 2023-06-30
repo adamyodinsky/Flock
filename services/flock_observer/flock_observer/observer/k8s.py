@@ -4,9 +4,11 @@ import os
 from kubernetes import client, config
 from kubernetes.dynamic import DynamicClient
 
+from flock_observer.observer.base import DetailsModel, LogsModel, MetricsModel, Observer
 
-class K8sObserver:
-    def __init__(self, default_label_selector: dict = {}) -> None:
+
+class K8sObserver(Observer):
+    def __init__(self, default_label_selector: str = "flock=true") -> None:
         """Initialize the K8s Observer"""
 
         logging.debug("Initializing K8sCronJobDeployer")
@@ -19,35 +21,30 @@ class K8sObserver:
             logging.debug("Using in-cluster kube config")
 
         configuration = client.Configuration.get_default_copy()
+        self.core_v1 = client.CoreV1Api()
+        self.apps_v1 = client.AppsV1Api()
         self.dyn_client = DynamicClient(client.ApiClient(configuration=configuration))
-
-        if default_label_selector:
-            self.default_label_selector = default_label_selector
-        else:
-            self.default_label_selector = {
-                "label_selector": "flock=true",
-            }
 
         self.metrics_v1beta1 = self.dyn_client.resources.get(
             api_version="metrics.k8s.io/v1beta1", kind="PodMetrics"
         )
-        self.core_v1 = client.CoreV1Api()
-        self.apps_v1 = client.AppsV1Api()
 
-    def _get_deployment_pod(self, deployment_name, namespace) -> object:
-        """Get the pod for a deployment"""
+        self.default_label_selector = default_label_selector
 
-        deployment = self.apps_v1.read_namespaced_deployment(deployment_name, namespace)
+    def _labels_selector_filter(
+        self, kind: str = "", namespace: str = "", name: str = ""
+    ) -> dict:
+        label_selector = ""
 
-        label_selector = ",".join(
-            [f"{k}={v}" for k, v in deployment.spec.selector.match_labels.items()]
-        )
+        if kind:
+            label_selector += f"parent_kind={kind},"
+        if namespace:
+            label_selector += f"parent_namespace={namespace},"
+        if name:
+            label_selector += f"parent_name={name},"
 
-        pods = self.core_v1.list_namespaced_pod(
-            namespace, label_selector=label_selector
-        )
-
-        return pods.items[0]
+        label_selector += self.default_label_selector
+        return {"label_selector": label_selector}
 
     def _get_parent_name_from_pod(self, pod_name) -> str:
         """Get the deployment name from a pod name"""
@@ -70,30 +67,38 @@ class K8sObserver:
         memory_in_mib = int(memory) / 1024  # Convert from KiB to MiB
         return memory_in_mib
 
-    def get_metrics(self, namespace: str = "", label_selector: dict = {}) -> list[dict]:
-        """Get metrics for all pods matching the label selector"""
+    def metrics(
+        self, kind: str = "", namespace: str = "", name: str = ""
+    ) -> list[MetricsModel]:
+        """
+        Get metrics by a filter name, namespace and kind
 
-        label_selector = {**self.default_label_selector, **label_selector}
-        namespace_filter = {}
+        Args:
+            kind (str, optional): The kind of the parent object. Defaults to "".
+            namespace (str, optional): The namespace of the parent object. Defaults to "".
+            name (str, optional): The name of the parent object. Defaults to "".
 
-        if namespace:
-            namespace_filter = {"namespace": namespace}
+        Returns:
+            dict: A dict of metrics for the parent object
+        """
+
+        label_selector = self._labels_selector_filter(
+            kind=kind, namespace=namespace, name=name
+        )
 
         logging.debug("Getting all pods metrics")
 
-        metrics = self.metrics_v1beta1.get(**label_selector, **namespace_filter)
+        metrics = self.metrics_v1beta1.get(**label_selector)
 
         result = []
-        for pod_metrics in metrics.items:
+        for pod in metrics.items:
             result.append(
                 {
-                    "name": self._get_parent_name_from_pod(pod_metrics.metadata.name),
-                    "namespace": pod_metrics.metadata.namespace,
-                    "cpu_usage": self._format_cpu(
-                        pod_metrics.containers[0].usage["cpu"]
-                    ),
+                    "name": pod.metadata.name,
+                    "namespace": pod.metadata.namespace,
+                    "cpu_usage": self._format_cpu(pod.containers[0].usage["cpu"]),
                     "memory_usage": self._format_memory(
-                        pod_metrics.containers[0].usage["memory"]
+                        pod.containers[0].usage["memory"]
                     ),
                 }
             )
@@ -101,49 +106,32 @@ class K8sObserver:
         logging.debug(result)
         return result
 
-    def get_single_metric(self, name, namespace, label_selector: dict = {}) -> dict:
-        """Get metrics for a single pod"""
+    def details(
+        self, kind: str = "", namespace: str = "", name: str = ""
+    ) -> list[DetailsModel]:
+        """Get details for all pods in all namespaces.
 
-        label_selector = {**self.default_label_selector, **label_selector}
+        Returns:
+            list[dict]: A list of details for all pods in all namespaces.
+        """
 
-        logging.debug(f"Getting metrics for pod {name} in namespace {namespace}")
-        pod_metrics = self.metrics_v1beta1.get(
-            name=name, namespace=namespace, **label_selector
+        label_selector = self._labels_selector_filter(
+            kind=kind, namespace=namespace, name=name
         )
 
-        result = {
-            "name": pod_metrics.metadata.name,
-            "namespace": pod_metrics.metadata.namespace,
-            "containers": [
-                {
-                    "name": container.name,
-                    "cpu_usage": self._format_cpu(container.usage["cpu"]),
-                    "memory_usage": self._format_memory(container.usage["memory"]),
-                }
-                for container in pod_metrics.containers
-            ],
-        }
-
-        logging.debug(result)
-
-        return result
-
-    def details_for_all_namespaces(self) -> list[dict]:
-        """Get details for all pods in all namespaces"""
+        response = self.core_v1.list_pod_for_all_namespaces(**label_selector)
 
         result = []
-        response = self.core_v1.list_pod_for_all_namespaces(label_selector="flock=true")
-
-        for i in response.items:
+        for pod in response.items:
             result.append(
                 {
-                    "name": i.metadata.name,
-                    "kind": i.metadata.owner_references[0].kind,
-                    "phase": i.status.phase,
-                    "namespace": i.metadata.namespace,
-                    "ip": i.status.pod_ip,
-                    "host_ip": i.status.host_ip,
-                    "node_name": i.spec.node_name,
+                    "name": pod.metadata.name,
+                    "kind": pod.metadata.owner_references[0].kind,
+                    "phase": pod.status.phase,
+                    "namespace": pod.metadata.namespace,
+                    "ip": pod.status.pod_ip,
+                    "host_ip": pod.status.host_ip,
+                    "node_name": pod.spec.node_name,
                 }
             )
 
@@ -151,31 +139,51 @@ class K8sObserver:
 
         return result
 
-    # TODO: use the parent label selector, needs to think it over a little. maybe draw it
-    def stream_logs(self, name, namespace):
-        """Stream logs for a pod"""
+    def logs(
+        self, kind: str = "", namespace: str = "", name: str = ""
+    ) -> list[LogsModel]:
+        """Get logs for a pod
 
-        pod = self._get_deployment_pod(name, namespace)
+        Args:
+            kind (str, optional): The kind of the parent object. Defaults to "".
+            namespace (str, optional): The namespace of the parent object. Defaults to "".
+            name (str, optional): The name of the parent object. Defaults to "".
 
-        log = self.core_v1.read_namespaced_pod_log(
-            name=pod.metadata.name,
-            namespace=pod.metadata.namespace,
+
+        """
+
+        label_selector = self._labels_selector_filter(
+            kind=kind, namespace=namespace, name=name
         )
 
-        return log
+        response = self.core_v1.list_pod_for_all_namespaces(**label_selector)
+
+        result = []
+        for pod in response.items:
+            logs = self.core_v1.read_namespaced_pod_log(
+                namespace=pod.metadata.namespace, name=pod.metadata.name
+            )
+            result.append({"name": pod.metadata.name, "logs": logs})
+
+        return result
 
 
-# /metrics/{namespace}/{name}
-# /metrics/{namespace}
-# get_pods_metrics()
-# get_single_pod_metric(name, namespace)
+# /metrics/{kind}/{namespace} -> List[MetricsModel]
+# /metrics/{kind} -> List[MetricsModel]
+# /metrics/{namespace} -> List[MetricsModel]
+# /metrics/{kind}/{namespace}/{name} -> List[MetricsModel]
+# /metrics -> List[MetricsModel]
 
 
-# deployment/{namespace}/{name}
-# deployment/{namespace}
-# get_pods()
-# get_deployment_pod("my-agent", "default")
+# details/{kind}/{namespace}/{name} -> List[DetailsModel]
+# details/{kind}/{namespace} -> List[DetailsModel]
+# details/{kind} -> List[DetailsModel]
+# details/{namespace} -> List[DetailsModel]
+# details -> List[DetailsModel]
 
 
-# logs/{namespace}/{name}
-# stream_pod_logs("my-agent", "default")
+# logs/{kind}/{namespace}/{name} -> List[LogsModel]
+# logs/{kind}/{namespace} -> List[LogsModel]
+# logs/{kind} -> List[LogsModel]
+# logs/{namespace} -> List[LogsModel]
+# logs -> List[LogsModel]

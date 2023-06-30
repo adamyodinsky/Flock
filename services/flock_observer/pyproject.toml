@@ -9,6 +9,7 @@ packages = [{include = "flock_observer"}]
 [tool.poetry.dependencies]
 python = "^3.11"
 kubernetes = "^26.1.0"
+pydantic = "^2.0"
 
 
 [tool.poetry.group.dev.dependencies]

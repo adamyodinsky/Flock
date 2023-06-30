@@ -21,14 +21,12 @@ class K8sResource(metaclass=abc.ABCMeta):
     def __init__(self, manifest: DeploymentSchema, target_manifest: BaseResourceSchema):
         """Initialize the resource."""
 
-        manifest.spec.targetResource.options = self.merge_dicts_or_pydantic(
-            target_manifest.spec.options, manifest.spec.targetResource.options
-        )
-
         self.target_manifest = target_manifest
 
         parent_labels = {
-            "parent": f"{self.manifest.kind.lower()}.{self.manifest.namespace}.{self.manifest.metadata.name}"
+            "parent_kind": manifest.kind,
+            "parent_namespace": manifest.namespace,
+            "parent_name": manifest.metadata.name,
         }
 
         # Add the parent label to the manifest

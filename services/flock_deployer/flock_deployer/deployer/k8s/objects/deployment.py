@@ -14,6 +14,10 @@ class K8sDeployment(K8sResource):
     def __init__(self, manifest: DeploymentSchema, target_manifest: BaseResourceSchema):
         super().__init__(manifest, target_manifest)
 
+        manifest.spec.targetResource.options = self.merge_dicts_or_pydantic(
+            target_manifest.spec.options, manifest.spec.targetResource.options
+        )
+
         self.rendered_manifest = client.V1Deployment(
             api_version="apps/v1",
             kind="Deployment",

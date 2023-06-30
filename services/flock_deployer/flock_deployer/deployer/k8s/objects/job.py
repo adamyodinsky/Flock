@@ -1,11 +1,12 @@
 """Kubernetes Job controller."""
 
 
+from flock_schemas.base import BaseResourceSchema
+from kubernetes import client
+
 from flock_deployer.deployer.k8s.objects.base import K8sResource
 from flock_deployer.deployer.k8s.objects.pod_template import FlockPodTemplate
 from flock_deployer.schemas.job import CronJobSchema, JobSchema
-from flock_schemas.base import BaseResourceSchema
-from kubernetes import client
 
 
 class K8sJob(K8sResource):
@@ -13,6 +14,10 @@ class K8sJob(K8sResource):
 
     def __init__(self, manifest: JobSchema, target_manifest: BaseResourceSchema):
         super().__init__(manifest, target_manifest)
+
+        manifest.spec.targetResource.options = self.merge_dicts_or_pydantic(
+            target_manifest.spec.options, manifest.spec.targetResource.options
+        )
         job_spec = self.get_job_spec(manifest, target_manifest)
         job_spec.template.spec.restart_policy = manifest.spec.restart_policy
         self.rendered_manifest = client.V1Job(
@@ -46,6 +51,11 @@ class K8sCronJob(K8sJob):
 
     def __init__(self, manifest: CronJobSchema, target_manifest: BaseResourceSchema):
         super().__init__(manifest, target_manifest)
+
+        manifest.spec.targetResource.options = self.merge_dicts_or_pydantic(
+            target_manifest.spec.options, manifest.spec.targetResource.options
+        )
+
         job_spec = self.get_job_spec(manifest, target_manifest)
         self.rendered_manifest = client.V1CronJob(
             api_version="batch/v1",
