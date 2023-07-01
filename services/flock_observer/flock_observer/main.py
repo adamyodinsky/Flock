@@ -1,3 +1,5 @@
+"""Flock Observer Main Module, this module contains the CLI commands for the Flock Observer service."""
+
 import logging
 import os
 import sys
@@ -32,7 +34,7 @@ def cli():
 )
 @click.option(
     "--port",
-    default=os.environ.get("FLOCK_AGENT_PORT", 8080),
+    default=os.environ.get("FLOCK_AGENT_PORT", 9001),
     type=int,
     help="The port the server should listen on.",
 )

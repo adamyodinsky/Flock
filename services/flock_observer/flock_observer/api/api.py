@@ -1,3 +1,5 @@
+"""API module for the Flock Observer service. This module contains the API router and endpoints."""
+
 import logging
 
 from fastapi import APIRouter, Depends, HTTPException
