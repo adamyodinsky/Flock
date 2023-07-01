@@ -31,6 +31,30 @@ class K8sObserver(Observer):
 
         self.default_label_selector = default_label_selector
 
+        if self.health_check():
+            logging.info("K8s Observer initialized successfully")
+        else:
+            raise Exception("K8s Observer failed to initialize")
+
+    def health_check(self) -> bool:
+        """Health check
+
+        Check the health of the deployer.
+
+        Returns:
+            bool: True if healthy
+        """
+
+        logging.info("Checking health")
+
+        try:
+            self.core_v1.list_pod_for_all_namespaces()
+        except Exception:
+            logging.exception("Health check failed")
+            return False
+
+        return True
+
     def _labels_selector_filter(
         self, kind: str = "", namespace: str = "", name: str = ""
     ) -> dict:
@@ -166,24 +190,3 @@ class K8sObserver(Observer):
             result.append({"name": pod.metadata.name, "logs": logs})
 
         return result
-
-
-# /metrics/{kind}/{namespace} -> List[MetricsModel]
-# /metrics/{kind} -> List[MetricsModel]
-# /metrics/{namespace} -> List[MetricsModel]
-# /metrics/{kind}/{namespace}/{name} -> List[MetricsModel]
-# /metrics -> List[MetricsModel]
-
-
-# details/{kind}/{namespace}/{name} -> List[DetailsModel]
-# details/{kind}/{namespace} -> List[DetailsModel]
-# details/{kind} -> List[DetailsModel]
-# details/{namespace} -> List[DetailsModel]
-# details -> List[DetailsModel]
-
-
-# logs/{kind}/{namespace}/{name} -> List[LogsModel]
-# logs/{kind}/{namespace} -> List[LogsModel]
-# logs/{kind} -> List[LogsModel]
-# logs/{namespace} -> List[LogsModel]
-# logs -> List[LogsModel]
