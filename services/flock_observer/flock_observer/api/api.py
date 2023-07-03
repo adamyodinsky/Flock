@@ -76,7 +76,7 @@ def get_router(observer: Observer) -> APIRouter:
         kind: str = "",
         namespace: str = "",
         name: str = "",
-        observer: Observer = Depends(Observer),
+        observer: Observer = Depends(lambda: observer),
     ) -> list[DetailsModel]:
         """Details endpoint
 
@@ -111,7 +111,7 @@ def get_router(observer: Observer) -> APIRouter:
         kind: str = "",
         namespace: str = "",
         name: str = "",
-        observer: Observer = Depends(Observer),
+        observer: Observer = Depends(lambda: observer),
     ) -> list[LogsModel]:
         """Logs endpoint
 
