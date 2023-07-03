@@ -30,6 +30,12 @@ docker-base-build:
 docker-deployer-build:
 	docker build -f Dockerfile.deployer -t flock-deployer .
 
+docker-observer-build:
+	docker build -f Dockerfile.observer -t flock-observer .
+
+docker-resources-build:
+	docker build -f Dockerfile.resources -t flock-resources .
+
 docker-agent-build:
 	docker build -f Dockerfile.agent -t flock-agent .
 
@@ -44,6 +50,9 @@ docker-build-all: docker-base-build docker-agent-build docker-embeddings-loader-
 
 docker-deployer-run:
 	docker run --rm flock-deployer
+
+docker-observer-run:
+	docker run --rm flock-observer
 
 docker-agent-run:
 	docker run --rm -e LOCAL=true flock-deployer
@@ -73,6 +82,7 @@ minikube-start:
 	--ports=127.0.0.1:25672:30203  \
 	--ports=127.0.0.1:15672:30204 \
 	--ports=127.0.0.1:9000:30205 \
+	--ports=127.0.0.1:9001:30206 \
 	--cpus 4 --memory 6144
 	@sleep 5
 	minikube addons enable metrics-server
@@ -83,6 +93,7 @@ minikube-start:
 # 25672:30203 # rabbitMQ dist
 # 15672:30204 # rabbitMQ manager
 # 9000:30205 # flock-deployer
+# 9001:30206 # flock-observer
 
 
 load-webscraper:
@@ -101,7 +112,11 @@ load-deployer:
 	minikube image unload flock-deployer
 	minikube image load flock-deployer
 
-load-images: load-webscraper load-agent load-embeddings-loader load-deployer
+load-observer:
+	minikube image unload flock-observer
+	minikube image load flock-observer
+
+load-images: load-webscraper load-agent load-embeddings-loader load-deployer load-observer
 
 
 apply-mongo:
@@ -109,6 +124,9 @@ apply-mongo:
 
 apply-deployer:
 	kubectl apply -f infra/deployer
+
+apply-observer:
+	kubectl apply -f infra/observer
 
 apply-rabbitmq:
 	helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -125,12 +143,17 @@ apply-vault:
 	# kubectl exec -it flock-secrets-store-vault-0 -- vault operator init
 	# kubectl exec -it flock-secrets-store-vault-0 -- vault operator unseal <key>
 
+apply-ingress:
+	helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+	helm repo update
+	helm upgrade --install -f infra/ingress/values.yaml nginx-ingress ingress-nginx/ingress-nginx
+
 apply-secret:
 	kubectl apply -f infra/secret.yaml
 
 apply-pvc:
 	kubectl apply -f infra/pvc.yaml
 
-apply-infra: apply-secret apply-pvc apply-mongo apply-rabbitmq apply-vault apply-deployer
+apply-infra: apply-secret apply-pvc apply-mongo apply-rabbitmq apply-vault apply-deployer apply-observer apply-ingress
 
 setup-all: docker-build-all load-images apply-infra

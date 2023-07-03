@@ -1,0 +1,48 @@
+# hello-world-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: flock
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - http:
+        paths:
+          - pathType: Prefix
+            path: "/deployment"
+            backend:
+              service:
+                name: flock-deployer
+                port:
+                  number: 9000
+          - pathType: Prefix
+            path: "/config"
+            backend:
+              service:
+                name: flock-deployer
+                port:
+                  number: 9000
+          - pathType: Prefix
+            path: "/details"
+            backend:
+              service:
+                name: flock-observer
+                port:
+                  number: 9001
+          - pathType: Prefix
+            path: "/metrics"
+            backend:
+              service:
+                name: flock-observer
+                port:
+                  number: 9001
+          - pathType: Prefix
+            path: "/logs"
+            backend:
+              service:
+                name: flock-observer
+                port:
+                  number: 9001
+
+                  # /resource

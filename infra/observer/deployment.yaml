@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flock-observer
+  labels:
+    app: flock-observer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flock-observer
+  template:
+    metadata:
+      labels:
+        app: flock-observer
+    spec:
+      serviceAccountName: observer-sa
+      containers:
+        - name: flock-observer
+          image: flock-observer
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 9001
+          resources:
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          env:
+            - name: HOST
+              value: "0.0.0.0"
+            - name: PORT
+              value: "9001"

@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "flock-api-server"
+name = "flock-resources-server"
 version = "0.0.1"
 description = ""
 authors = ["Adam Yodinsky <27074934+adamyodinsky@users.noreply.github.com>"]
@@ -10,10 +10,10 @@ include = ["server"]
 python = ">=3.9,<3.12"
 fastapi = {extras = ["all"], version = "^0.95.1"}
 pydantic = "^1.10.7"
-flock-schemas = {path = "../flock_schemas", develop = true}
-flock-resource-store = {path = "../flock_resource_store", develop = true}
-flock-models = {path = "../flock_models", develop = true}
-flock-common = {path = "../flock_common", develop = true}
+flock-schemas = {path = "../../libs/flock_schemas", develop = true}
+flock-resource-store = {path = "../../libs/flock_resource_store", develop = true}
+flock-resources = {path = "../../libs/flock_resources", develop = true}
+flock-common = {path = "../../libs/flock_common", develop = true}
 python-dotenv = "^1.0.0"
 
 

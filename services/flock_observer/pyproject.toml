@@ -7,11 +7,11 @@ readme = "README.md"
 packages = [{include = "flock_observer"}]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10"
 kubernetes = "^26.1.0"
 fastapi = {extras = ["all"], version = "^0.99.0"}
 click = "^8.1.3"
-flock-common = {path = "../../libs/flock_common", develop = true}
+flock-common = {path = "../../libs/flock_common"}
 
 
 

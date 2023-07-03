@@ -15,7 +15,7 @@ check_env_vars([], [])
 
 app = FastAPI(
     title="Flock",
-    description="Flock Orchestrator",
+    description="Flock Resources",
     version="0.0.1",
 )
 resource_store = ResourceStoreFactory.get_resource_store()
