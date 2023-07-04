@@ -39,7 +39,9 @@ def cli():
     type=int,
     help="The port the server should listen on.",
 )
-def run_observer(host, port):
+def run_server(host, port):
+    """Run the Resources API Server."""
+
     load_dotenv(find_dotenv(os.environ.get("ENV_FILE", ".env")))
     check_env_vars([], [])
 

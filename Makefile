@@ -33,8 +33,8 @@ docker-deployer-build:
 docker-observer-build:
 	docker build -f Dockerfile.observer -t flock-observer .
 
-docker-resources-build:
-	docker build -f Dockerfile.resources -t flock-resources .
+docker-resources-server-build:
+	docker build -f Dockerfile.resources_server -t flock-resources-server .
 
 docker-agent-build:
 	docker build -f Dockerfile.agent -t flock-agent .
@@ -53,6 +53,9 @@ docker-deployer-run:
 
 docker-observer-run:
 	docker run --rm flock-observer
+
+docker-resources-server-run:
+	docker run --rm flock-resources-server
 
 docker-agent-run:
 	docker run --rm -e LOCAL=true flock-deployer
