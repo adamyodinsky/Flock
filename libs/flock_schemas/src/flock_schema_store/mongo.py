@@ -68,7 +68,7 @@ class MongoSchemaStore(SchemaStore):
         skip_count = (page - 1) * page_size
 
         result = self.table.find(filter={}).skip(skip_count).limit(page_size)
-        return result
+        return list(result)
 
     def delete(
         self,

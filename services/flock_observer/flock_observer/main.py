@@ -7,21 +7,20 @@ import sys
 import click
 from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI
-from flock_common import EnvVarNotSetError, check_env_vars
-from flock_common.logging import init_logging
-from uvicorn import run
-
+from flock_common import EnvVarNotSetError, check_env_vars, init_logging
 from flock_observer.api import get_router
 from flock_observer.observer import ObserverFactory
+from uvicorn import run
 
 init_logging(
-    destination=os.environ.get("FLOCK_LOG_DESTINATION", "stdout"),
+    destination=os.environ.get("LOG_DESTINATION", "stdout"),
+    level=os.environ.get("LOG_LEVEL", "INFO"),
 )
 
 
 @click.group()
 def cli():
-    """Flock Agent CLI"""
+    """Flock Observer CLI"""
 
 
 @cli.command(
@@ -29,12 +28,12 @@ def cli():
 )
 @click.option(
     "--host",
-    default=os.environ.get("FLOCK_AGENT_HOST", "127.0.0.1"),
+    default=os.environ.get("HOST", "127.0.0.1"),
     help="The host address to bind the server to.",
 )
 @click.option(
     "--port",
-    default=os.environ.get("FLOCK_AGENT_PORT", 9001),
+    default=os.environ.get("PORT", 9001),
     type=int,
     help="The port the server should listen on.",
 )
@@ -47,8 +46,6 @@ def run_observer(host, port):
     optional_vars = [
         "HOST",
         "PORT",
-        "LOG_FILE",
-        "LOG_LEVEL",
         "OBSERVER_TYPE",
         "DEFAULT_LABEL_SELECTOR",
     ]

@@ -109,7 +109,7 @@ class MongoConfigStore(ConfigStore):
             .skip(skip_count)
             .limit(page_size)
         )
-        return result
+        return list(result)
 
     def delete(
         self,

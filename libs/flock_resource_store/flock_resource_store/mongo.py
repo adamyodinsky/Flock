@@ -1,8 +1,9 @@
 from typing import Optional
 
-from flock_resource_store.base import ResourceStore
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
+
+from flock_resource_store.base import ResourceStore
 
 
 class MongoResourceStore(ResourceStore):
@@ -112,7 +113,7 @@ class MongoResourceStore(ResourceStore):
             .skip(skip_count)
             .limit(page_size)
         )
-        return result
+        return list(result)
 
     def delete(
         self,
