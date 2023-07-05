@@ -5,7 +5,9 @@ import os
 import httpx
 import pytest
 
-BASE_URL = os.environ.get("BASE_URL", "http://localhost:9001")
+BASE_URL = os.environ.get(
+    "BASE_URL", f"http://localhost:{os.environ.get('PORT', '9001')}"
+)
 NAMESPACE = "default"
 DEPLOYMENT = "my-agent"
 KIND = "FlockDeployment"

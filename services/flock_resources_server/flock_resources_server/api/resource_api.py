@@ -1,5 +1,7 @@
 """Flock API"""
 
+import logging
+
 from fastapi import APIRouter, Body, Depends, HTTPException
 from flock_builder import ResourceBuilder
 from flock_resource_store.mongo import ResourceStore
@@ -21,41 +23,42 @@ def get_router(
     router = APIRouter()
     schema_factory = SchemaFactory()
 
-    @router.get(
-        "/resource/{namespace}/{kind}/{name}",
-        response_model=ResourceFetched,
-    )
-    async def get_resource(
-        namespace: str,
-        kind: str,
-        name: str,
+    @router.get("/")
+    @router.get("/health")
+    @router.head("/health")
+    async def health(
         resource_store: ResourceStore = Depends(lambda: resource_store),
     ):
+        """Health check"""
+
+        healthy = resource_store.health_check()
+
+        if healthy:
+            return {"status": "OK"}
+        raise HTTPException(
+            status_code=500,
+            detail=[
+                "Resource store is not healthy",
+            ],
+        )
+
+    @router.get("/resource/")
+    async def get_resource(
+        namespace: str = "",
+        kind: str = "",
+        category: str = "",
+        name: str = "",
+        page: int = 1,
+        page_size: int = 50,
+        resource_store: ResourceStore = Depends(lambda: resource_store),
+    ) -> ResourceFetched:
         """Get a resource"""
         try:
             resource_data = resource_store.get(
-                namespace=namespace, kind=kind, name=name
+                namespace=namespace, kind=kind, category=category, name=name
             )
-            if resource_data is None:
-                raise HTTPException(
-                    status_code=404,
-                    detail=[
-                        "Resource not found",
-                        f"Parameters: {namespace}/{kind}/{name}",
-                    ],
-                )
-            return ResourceFetched(data=resource_data)
 
-        except HTTPException as error:
-            raise error
-        except ValidationError as error:
-            raise HTTPException(
-                status_code=500,
-                detail=[
-                    "Resource is not valid",
-                    str(error),
-                ],
-            ) from error
+            return ResourceFetched(data=resource_data)
         except Exception as error:  # pylint: disable=broad-except
             raise HTTPException(
                 status_code=500,
@@ -65,35 +68,24 @@ def get_router(
                 ],
             ) from error
 
-    @router.get("/resource/{namespace}/{category}")
-    @router.get("/resource/{namespace}/{kind}")
+
+    @router.get("/resources/")
     async def get_resources(
+        namespace: str = "",
         kind: str = "",
         category: str = "",
-        namespace: str = "",
+        name: str = "",
+        page: int = 1,
+        page_size: int = 50,
         resource_store: ResourceStore = Depends(lambda: resource_store),
-    ) -> ResourcesFetched:
-        """Get Resources list by namespace and kind"""
+    ) -> ResourceFetched:
+        """Get a resource"""
         try:
             resource_data = resource_store.get_many(
-                namespace=namespace, kind=kind, category=category
+                namespace=namespace, kind=kind, category=category, name=name, page=page, page_size=page_size,
             )
 
-            if resource_data is not None and len(resource_data) == 0:
-                raise HTTPException(
-                    status_code=404,
-                    detail=[
-                        "Resource not found",
-                        f"Parameters: {namespace}/{kind}",
-                    ],
-                )
-            schema_instances = [
-                ResourceDetails.validate(item) for item in resource_data  # type: ignore
-            ]
-            return ResourcesFetched(data=schema_instances)
-
-        except HTTPException as error:
-            raise error
+            return ResourceFetched(data=resource_data)
         except Exception as error:  # pylint: disable=broad-except
             raise HTTPException(
                 status_code=500,
@@ -103,30 +95,6 @@ def get_router(
                 ],
             ) from error
 
-    @router.post("/resource/validate")
-    async def validate_resource(
-        resource_data: dict = Body(..., description=""),
-        schema_factory: SchemaFactory = Depends(lambda: schema_factory),
-    ) -> ResourceUpdated:
-        """Create or update a resource"""
-
-        try:
-            schema_instance = schema_factory.get_schema(resource_data["kind"]).validate(
-                resource_data
-            )
-            resource_builder.build_resource(resource_data)
-        except ValidationError as error:
-            raise HTTPException(
-                status_code=400,
-                detail=["Failed to build resource", str(error)],
-            ) from error
-        except Exception as error:  # pylint: disable=broad-except
-            raise HTTPException(
-                status_code=500,
-                detail=["Failed to build resource", str(error)],
-            ) from error
-
-        return ResourceUpdated(data=schema_instance)
 
     @router.put("/resource")
     async def put_resource(
@@ -167,21 +135,17 @@ def get_router(
         return ResourceUpdated(data=schema_instance)
 
     @router.delete(
-        "/resource/{namespace}/{category}",
-        description="Delete all resources by namespace and category",
-    )
-    @router.delete(
-        "/resource/{namespace}/{kind}",
-        description="Delete all resources by namespace and kind",
+        "/resource",
+        description="Delete resources",
     )
     async def delete_resources(
         namespace: str = "",
         kind: str = "",
-        name: str = "",
         category: str = "",
+        name: str = "",
         resource_store: ResourceStore = Depends(lambda: resource_store),
     ) -> ResourceDeleted:
-        """Deletes a resource by namespace, kind and name."""
+        """Deletes a resource."""
 
         try:
             resource_data = resource_store.delete_many(
@@ -190,7 +154,7 @@ def get_router(
             return ResourceDeleted(
                 details=[
                     "Resource deleted",
-                    f"Parameters: {namespace}/{kind}/{name}",
+                    f"Parameters: namespace={namespace}, kind={kind}, category={category}, name={name}",
                     f"Count: {resource_data.deleted_count}",  # type: ignore
                 ],
             )
@@ -203,37 +167,29 @@ def get_router(
                 ],
             ) from error
 
-    @router.delete(
-        "/resource/{namespace}/{kind}/{name}",
-        description="Delete a resource by namespace, kind and name",
-    )
-    async def delete_resource(
-        namespace: str = "",
-        kind: str = "",
-        name: str = "",
-        category: str = "",
-        resource_store: ResourceStore = Depends(lambda: resource_store),
-    ) -> ResourceDeleted:
-        """Deletes a resource by namespace, kind and name."""
+    @router.post("/resource/validate")
+    async def validate_resource(
+        resource_data: dict = Body(..., description=""),
+        schema_factory: SchemaFactory = Depends(lambda: schema_factory),
+    ) -> ResourceUpdated:
+        """Create or update a resource"""
 
         try:
-            resource_data = resource_store.delete(
-                namespace=namespace, kind=kind, category=category, name=name
+            schema_instance = schema_factory.get_schema(resource_data["kind"]).validate(
+                resource_data
             )
-            return ResourceDeleted(
-                details=[
-                    "Resource deleted",
-                    f"Parameters: {namespace}/{kind}/{name}",
-                    f"Count: {resource_data.deleted_count}",  # type: ignore
-                ],
-            )
+            resource_builder.build_resource(resource_data)
+        except ValidationError as error:
+            raise HTTPException(
+                status_code=400,
+                detail=["Failed to build resource", str(error)],
+            ) from error
         except Exception as error:  # pylint: disable=broad-except
             raise HTTPException(
                 status_code=500,
-                detail=[
-                    "Failed to delete resource",
-                    str(error),
-                ],
+                detail=["Failed to build resource", str(error)],
             ) from error
+
+        return ResourceUpdated(data=schema_instance)
 
     return router

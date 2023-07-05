@@ -8,9 +8,10 @@ import click
 from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI
 from flock_common import EnvVarNotSetError, check_env_vars, init_logging
+from uvicorn import run
+
 from flock_observer.api import get_router
 from flock_observer.observer import ObserverFactory
-from uvicorn import run
 
 init_logging(
     destination=os.environ.get("LOG_DESTINATION", "stdout"),

@@ -30,7 +30,7 @@ def get_router(observer: Observer) -> APIRouter:
 
         logging.info("Checking health")
 
-        return {"status": "ok"}
+        return {"status": "OK"}
 
     @router.get("/metrics/{kind}/{namespace}/{name}")
     @router.get("/metrics/{kind}/{namespace}")

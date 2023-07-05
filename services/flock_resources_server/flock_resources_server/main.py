@@ -35,7 +35,7 @@ def cli():
 )
 @click.option(
     "--port",
-    default=os.environ.get("PORT", 9001),
+    default=os.environ.get("PORT", 9002),
     type=int,
     help="The port the server should listen on.",
 )
@@ -43,14 +43,37 @@ def run_server(host, port):
     """Run the Resources API Server."""
 
     load_dotenv(find_dotenv(os.environ.get("ENV_FILE", ".env")))
-    check_env_vars([], [])
+
+    required_vars = []
+    optional_vars = [
+        "HOST",
+        "PORT",
+        "RESOURCE_STORE_TYPE",
+        "RESOURCE_STORE_DB_NAME",
+        "RESOURCE_STORE_TABLE_NAME",
+        "RESOURCE_STORE_HOST",
+        "RESOURCE_STORE_PORT",
+        "RESOURCE_STORE_USERNAME",
+        "RESOURCE_STORE_PASSWORD",
+    ]
+    check_env_vars(required_vars, optional_vars)
 
     app = FastAPI(
         title="Flock",
         description="Flock Resources API Server",
         version="0.0.1",
     )
-    resource_store = ResourceStoreFactory.get_resource_store()
+
+    logging.info("Initializing Flock Resource Store")
+    resource_store = ResourceStoreFactory.get_resource_store(
+        store_type=os.environ.get("RESOURCE_STORE_TYPE", "mongo"),
+        db_name=os.environ.get("RESOURCE_STORE_DB_NAME", "flock_db"),
+        table_name=os.environ.get("RESOURCE_STORE_TABLE_NAME", "flock_resources"),
+        host=os.environ.get("RESOURCE_STORE_HOST", "localhost"),
+        port=int(os.environ.get("RESOURCE_STORE_PORT", 27017)),
+        username=os.environ.get("RESOURCE_STORE_USERNAME", "root"),
+        password=os.environ.get("RESOURCE_STORE_PASSWORD", "password"),
+    )
     resource_builder = ResourceBuilder(resource_store=resource_store)
 
     router = get_router(
@@ -66,7 +89,7 @@ def run_server(host, port):
     )
 
 
-cli.add_command(run_observer)
+cli.add_command(run_server)
 
 
 if __name__ == "__main__":

@@ -21,12 +21,13 @@ ENV PYSETUP_PATH="/opt/pysetup"
 COPY --from=resources-server-base-stage $PYSETUP_PATH/libs $PYSETUP_PATH/libs
 
 COPY --from=resources-server-base-stage $PYSETUP_PATH/services/flock_resources_server/.venv $PYSETUP_PATH/services/flock_resources_server/.venv
-COPY --from=resources-server-base-stage $PYSETUP_PATH/services/flock_resources_server/flock_resources_server $PYSETUP_PATH/services/flock_resources_server/server
+COPY --from=resources-server-base-stage $PYSETUP_PATH/services/flock_resources_server/flock_resources_server $PYSETUP_PATH/services/flock_resources_server/flock_resources_server
 
 WORKDIR $PYSETUP_PATH/services/flock_resources_server
 
 ENV VIRTUAL_ENV="${PYSETUP_PATH}/services/flock_resources_server/.venv"
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-EXPOSE 9000
+EXPOSE 9002
 ENTRYPOINT ["python", "flock_resources_server/main.py" ]
+CMD ["run-server"]

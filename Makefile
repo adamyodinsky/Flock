@@ -79,6 +79,8 @@ docker-webscraper-run:
 
 minikube-start:
 	minikube start \
+	--ports=127.0.0.1:80:32080 \
+	--ports=127.0.0.1:443:32443 \
 	--ports=127.0.0.1:27017:30200  \
 	--ports=127.0.0.1:8200:30201  \
 	--ports=127.0.0.1:5672:30202	\
@@ -86,10 +88,13 @@ minikube-start:
 	--ports=127.0.0.1:15672:30204 \
 	--ports=127.0.0.1:9000:30205 \
 	--ports=127.0.0.1:9001:30206 \
+	--ports=127.0.0.1:9002:30207 \
 	--cpus 4 --memory 6144
 	@sleep 5
 	minikube addons enable metrics-server
 
+# 80:32080 # ingress http
+# 443:32443 # ingress https
 # 27017:30200 # mongo
 # 8200:30201 # vault
 # 5672:30202 # rabbitMQ ampq
@@ -97,6 +102,7 @@ minikube-start:
 # 15672:30204 # rabbitMQ manager
 # 9000:30205 # flock-deployer
 # 9001:30206 # flock-observer
+# 9002:30207 # flock-resources-server
 
 
 load-webscraper:
@@ -119,7 +125,11 @@ load-observer:
 	minikube image unload flock-observer
 	minikube image load flock-observer
 
-load-images: load-webscraper load-agent load-embeddings-loader load-deployer load-observer
+load-resources-server:
+	minikube image unload flock-resources-server
+	minikube image load flock-resources-server
+
+load-images: load-webscraper load-agent load-embeddings-loader load-deployer load-observer load-resources-server
 
 
 apply-mongo:
@@ -130,6 +140,9 @@ apply-deployer:
 
 apply-observer:
 	kubectl apply -f infra/observer
+
+apply-resources-server:
+	kubectl apply -f infra/resources_server
 
 apply-rabbitmq:
 	helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -149,7 +162,9 @@ apply-vault:
 apply-ingress:
 	helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 	helm repo update
-	helm upgrade --install -f infra/ingress/values.yaml nginx-ingress ingress-nginx/ingress-nginx
+	helm upgrade --install -f infra/ingress/helm/values.local.yaml nginx-ingress ingress-nginx/ingress-nginx
+	sleep 60 # waitng for ingress to be ready
+	kubectl apply -f infra/ingress/k8s
 
 apply-secret:
 	kubectl apply -f infra/secret.yaml
@@ -157,6 +172,6 @@ apply-secret:
 apply-pvc:
 	kubectl apply -f infra/pvc.yaml
 
-apply-infra: apply-secret apply-pvc apply-mongo apply-rabbitmq apply-vault apply-deployer apply-observer apply-ingress
+apply-infra: apply-secret apply-pvc apply-mongo apply-rabbitmq apply-vault apply-deployer apply-observer apply-resources-server apply-ingress
 
 setup-all: docker-build-all load-images apply-infra

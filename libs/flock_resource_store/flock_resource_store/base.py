@@ -31,7 +31,7 @@ class ResourceStore(metaclass=abc.ABCMeta):
         kind: str = "",
         page: int = 1,
         page_size: int = 50,
-    ):
+    ) -> list[dict]:
         """Get many resources with the same namespace and kind"""
 
     @abc.abstractmethod
