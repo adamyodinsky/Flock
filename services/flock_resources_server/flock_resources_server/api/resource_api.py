@@ -58,7 +58,22 @@ def get_router(
                 namespace=namespace, kind=kind, category=category, name=name
             )
 
+            if resource_data is None:
+                raise HTTPException(
+                    status_code=404,
+                    detail=[
+                        "Resource not found",
+                        f"namespace: {namespace}",
+                        f"kind: {kind}",
+                        f"category: {category}",
+                        f"name: {name}",
+                    ],
+                )
+
             return ResourceFetched(data=resource_data)
+
+        except HTTPException as error:
+            raise error
         except Exception as error:  # pylint: disable=broad-except
             raise HTTPException(
                 status_code=500,
@@ -68,29 +83,34 @@ def get_router(
                 ],
             ) from error
 
-
     @router.get("/resources/")
     async def get_resources(
-        namespace: str = "",
         kind: str = "",
         category: str = "",
-        name: str = "",
+        namespace: str = "",
         page: int = 1,
         page_size: int = 50,
         resource_store: ResourceStore = Depends(lambda: resource_store),
-    ) -> ResourceFetched:
-        """Get a resource"""
+    ) -> ResourcesFetched:
+        """Get Resources list by namespace and kind"""
         try:
             resource_data = resource_store.get_many(
-                namespace=namespace, kind=kind, category=category, name=name, page=page, page_size=page_size,
+                namespace=namespace, kind=kind, category=category, page=page, page_size=page_size
             )
 
-            return ResourceFetched(data=resource_data)
+            fetched_resources = [
+                ResourceDetails.validate(item) for item in resource_data
+            ]
+            return ResourcesFetched(data=fetched_resources)
+
         except Exception as error:  # pylint: disable=broad-except
             raise HTTPException(
                 status_code=500,
                 detail=[
                     "Failed to get resource",
+                    f"namespace: {namespace}",
+                    f"kind: {kind}",
+                    f"category: {category}",
                     str(error),
                 ],
             ) from error
