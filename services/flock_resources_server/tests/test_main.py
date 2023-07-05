@@ -85,7 +85,7 @@ def test_get_resource(test_data):
     """Test get_resource endpoint"""
 
     response = client.get(
-        f"/resource/{test_data[0]['namespace']}/{test_data[0]['kind']}/{test_data[0]['metadata']['name']}"
+        f"/resource/?namespace={test_data[0]['namespace']}&kind={test_data[0]['kind']}&name={test_data[0]['metadata']['name']}"
     )
     assert response.status_code == 200
     assert response.json()["data"] == test_data[0]
@@ -95,7 +95,7 @@ def test_get_resources(test_data):
     """Test get_resources endpoint"""
 
     response = client.get(
-        f"/resource/{test_data[0]['namespace']}/{test_data[0]['kind']}"
+        f"/resources/?namespace={test_data[0]['namespace']}&kind={test_data[0]['kind']}"
     )
     assert response.status_code == 200
     assert len(response.json()["data"]) == 2
@@ -111,7 +111,7 @@ def test_put_resource(test_data):
 
     # Check if the resource is created
     response = client.get(
-        f"/resource/{resource_data['namespace']}/{resource_data['kind']}/{resource_data['metadata']['name']}"
+        f"/resource/?namespace={resource_data['namespace']}&kind={resource_data['kind']}&name={resource_data['metadata']['name']}"
     )
     assert response.status_code == 200
     assert response.json()["data"] == resource_data
@@ -121,28 +121,37 @@ def test_delete_resource(test_data):
     """Test delete_resource endpoint"""
 
     response = client.delete(
-        f"/resource/{test_data[0]['namespace']}/{test_data[0]['kind']}/{test_data[0]['metadata']['name']}"
+        f"/resource/?namespace={test_data[0]['namespace']}&kind={test_data[0]['kind']}&name={test_data[0]['metadata']['name']}"
     )
     assert response.status_code == 200
 
     # Check if the resource is deleted
     response = client.get(
-        f"/resource/{test_data[0]['namespace']}/{test_data[0]['kind']}/{test_data[0]['metadata']['name']}"
+        f"/resource/?namespace={test_data[0]['namespace']}&kind={test_data[0]['kind']}&name={test_data[0]['metadata']['name']}"
     )
     assert response.status_code == 404
+
+    response = client.get(
+        f"/resource/?namespace={test_data[1]['namespace']}&kind={test_data[1]['kind']}&name={test_data[1]['metadata']['name']}"
+    )
+    assert response.status_code == 200
 
 
 def test_delete_resources(test_data):
     """Test delete_resources endpoint"""
 
     response = client.delete(
-        f"/resource/{test_data[0]['namespace']}/{test_data[0]['kind']}"
+        f"/resource/?namespace={test_data[0]['namespace']}&kind={test_data[0]['kind']}"
     )
     assert response.status_code == 200
 
     # Check if the resources are deleted
     response = client.get(
-        f"/resource/{test_data[0]['namespace']}/{test_data[0]['kind']}"
+        f"/resource/?namespace={test_data[0]['namespace']}&kind={test_data[0]['kind']}&name={test_data[0]['metadata']['name']}"
+    )
+    assert response.status_code == 404
+    response = client.get(
+        f"/resource/?namespace={test_data[1]['namespace']}&kind={test_data[1]['kind']}&name={test_data[1]['metadata']['name']}"
     )
     assert response.status_code == 404
 

@@ -42,7 +42,7 @@ def get_router(
             ],
         )
 
-    @router.get("/resource/")
+    @router.get("/resource")
     async def get_resource(
         namespace: str = "",
         kind: str = "",
@@ -83,7 +83,7 @@ def get_router(
                 ],
             ) from error
 
-    @router.get("/resources/")
+    @router.get("/resources")
     async def get_resources(
         kind: str = "",
         category: str = "",
@@ -156,9 +156,9 @@ def get_router(
 
     @router.delete(
         "/resource",
-        description="Delete resources",
+        description="Delete resource",
     )
-    async def delete_resources(
+    async def delete_resource(
         namespace: str = "",
         kind: str = "",
         category: str = "",
