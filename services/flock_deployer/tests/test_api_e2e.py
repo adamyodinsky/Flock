@@ -58,7 +58,7 @@ def test_put_config():
 
 def test_get_config():
     response = requests.get(
-        "http://localhost:9000/config/example",
+        "http://localhost:9000/config/?name=example",
     )
 
     assert response.status_code == 200
@@ -67,7 +67,7 @@ def test_get_config():
 
 def test_delete_config():
     response = requests.delete(
-        "http://localhost:9000/config/example",
+        "http://localhost:9000/config/?name=example",
     )
 
     assert response.status_code == 200

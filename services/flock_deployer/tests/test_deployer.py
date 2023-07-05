@@ -179,14 +179,14 @@ def test_integration():
     )
     deploy(deployers.job_deployer, deployment_manifest)
 
-    # if not DRY_RUN:
-    #     time.sleep(SLEEP_TIME)
-    #     print("Deleting WebScraper Job")
-    #     deployers.job_deployer.delete(
-    #         name=deployment_manifest.metadata.name,
-    #         namespace=deployment_manifest.namespace,
-    #         dry_run=DRY_RUN,
-    #     )
+    if not DRY_RUN:
+        time.sleep(SLEEP_TIME)
+        print("Deleting WebScraper Job")
+        deployers.job_deployer.delete(
+            name=deployment_manifest.metadata.name,
+            namespace=deployment_manifest.namespace,
+            dry_run=DRY_RUN,
+        )
 
     # Deploy WebSCraper CronJob
     print("Deploying WebScraper CronJob")
@@ -195,14 +195,14 @@ def test_integration():
     )
     deploy(deployers.cronjob_deployer, deployment_manifest)
 
-    # if not DRY_RUN:
-    #     time.sleep(SLEEP_TIME)
-    #     print("Deleting WebScraper CronJob")
-    #     deployers.cronjob_deployer.delete(
-    #         name=deployment_manifest.metadata.name,
-    #         namespace=deployment_manifest.namespace,
-    #         dry_run=DRY_RUN,
-    #     )
+    if not DRY_RUN:
+        time.sleep(SLEEP_TIME)
+        print("Deleting WebScraper CronJob")
+        deployers.cronjob_deployer.delete(
+            name=deployment_manifest.metadata.name,
+            namespace=deployment_manifest.namespace,
+            dry_run=DRY_RUN,
+        )
 
     # Deploy EmbeddingsLoader
     print("Deploying EmbeddingsLoader Job")
@@ -211,14 +211,14 @@ def test_integration():
     )
     deploy(deployers.job_deployer, deployment_manifest)
 
-    # if not DRY_RUN:
-    #     time.sleep(SLEEP_TIME)
-    #     print("Deleting EmbeddingsLoader Job")
-    #     deployers.job_deployer.delete(
-    #         name=deployment_manifest.metadata.name,
-    #         namespace=deployment_manifest.namespace,
-    #         dry_run=DRY_RUN,
-    #     )
+    if not DRY_RUN:
+        time.sleep(SLEEP_TIME)
+        print("Deleting EmbeddingsLoader Job")
+        deployers.job_deployer.delete(
+            name=deployment_manifest.metadata.name,
+            namespace=deployment_manifest.namespace,
+            dry_run=DRY_RUN,
+        )
 
     # Deploy Agent
     print("Deploying Agent Deployment and Service")

@@ -17,7 +17,7 @@ def test_health_endpoint():
     response = httpx.get(f"{BASE_URL}/health")
 
     assert response.status_code == 200
-    assert response.json() == {"status": "ok"}
+    assert response.json() == {"status": "OK"}
 
 
 def test_metrics_endpoint():
@@ -26,17 +26,19 @@ def test_metrics_endpoint():
     assert response.status_code == 200
     assert isinstance(response.json(), list)
 
-    response = httpx.get(f"{BASE_URL}/metrics/{KIND}")
+    response = httpx.get(f"{BASE_URL}/metrics?kind={KIND}")
 
     assert response.status_code == 200
     assert isinstance(response.json(), list)
 
-    response = httpx.get(f"{BASE_URL}/metrics/{KIND}/{NAMESPACE}")
+    response = httpx.get(f"{BASE_URL}/metrics?kind={KIND}&namespace={NAMESPACE}")
 
     assert response.status_code == 200
     assert isinstance(response.json(), list)
 
-    response = httpx.get(f"{BASE_URL}/metrics/{KIND}/{NAMESPACE}/{DEPLOYMENT}")
+    response = httpx.get(
+        f"{BASE_URL}/metrics?kind={KIND}&namespace={NAMESPACE}&name={DEPLOYMENT}"
+    )
 
     assert response.status_code == 200
     assert isinstance(response.json(), list)
@@ -48,17 +50,19 @@ def test_details_endpoint():
     assert response.status_code == 200
     assert isinstance(response.json(), list)
 
-    response = httpx.get(f"{BASE_URL}/details/{KIND}")
+    response = httpx.get(f"{BASE_URL}/details?kind={KIND}")
 
     assert response.status_code == 200
     assert isinstance(response.json(), list)
 
-    response = httpx.get(f"{BASE_URL}/details/{KIND}/{NAMESPACE}")
+    response = httpx.get(f"{BASE_URL}/details?kind={KIND}&namespace={NAMESPACE}")
 
     assert response.status_code == 200
     assert isinstance(response.json(), list)
 
-    response = httpx.get(f"{BASE_URL}/details/{KIND}/{NAMESPACE}/{DEPLOYMENT}")
+    response = httpx.get(
+        f"{BASE_URL}/details?kind={KIND}&namespace={NAMESPACE}&name={DEPLOYMENT}"
+    )
 
     assert response.status_code == 200
     assert isinstance(response.json(), list)
@@ -70,17 +74,19 @@ def test_logs_endpoint():
     assert response.status_code == 200
     assert isinstance(response.json(), list)
 
-    response = httpx.get(f"{BASE_URL}/logs/{KIND}")
+    response = httpx.get(f"{BASE_URL}/logs?kind={KIND}")
 
     assert response.status_code == 200
     assert isinstance(response.json(), list)
 
-    response = httpx.get(f"{BASE_URL}/logs/{KIND}/{NAMESPACE}")
+    response = httpx.get(f"{BASE_URL}/logs?kind={KIND}&namespace={NAMESPACE}")
 
     assert response.status_code == 200
     assert isinstance(response.json(), list)
 
-    response = httpx.get(f"{BASE_URL}/logs/{KIND}/{NAMESPACE}/{DEPLOYMENT}")
+    response = httpx.get(
+        f"{BASE_URL}/logs?kind={KIND}&namespace={NAMESPACE}&name={DEPLOYMENT}"
+    )
     assert response.status_code == 200
 
 

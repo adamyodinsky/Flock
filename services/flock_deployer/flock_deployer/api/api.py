@@ -248,7 +248,7 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
 
         return ConfigCreated(data=data.config)
 
-    @router.get("/config/{name}")
+    @router.get("/config")
     async def get_config(
         name: str,
         deployers: BaseDeployers = Depends(lambda: deployers),
@@ -282,7 +282,7 @@ def get_router(deployers: BaseDeployers) -> APIRouter:
                 ],
             ) from error
 
-    @router.delete("/config/{name}")
+    @router.delete("/config")
     async def delete_config(
         name: str,
         deployers: BaseDeployers = Depends(lambda: deployers),

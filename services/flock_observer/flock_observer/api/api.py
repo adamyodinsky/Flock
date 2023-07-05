@@ -32,10 +32,6 @@ def get_router(observer: Observer) -> APIRouter:
 
         return {"status": "OK"}
 
-    @router.get("/metrics/{kind}/{namespace}/{name}")
-    @router.get("/metrics/{kind}/{namespace}")
-    @router.get("/metrics/{kind}")
-    @router.get("/metrics/{namespace}")
     @router.get("/metrics")
     async def metrics_endpoint(
         kind: str = "",
@@ -67,10 +63,6 @@ def get_router(observer: Observer) -> APIRouter:
 
         return metrics
 
-    @router.get("/details/{kind}/{namespace}/{name}")
-    @router.get("/details/{kind}/{namespace}")
-    @router.get("/details/{kind}")
-    @router.get("/details/{namespace}")
     @router.get("/details")
     async def details_endpoint(
         kind: str = "",
@@ -102,10 +94,6 @@ def get_router(observer: Observer) -> APIRouter:
 
         return details
 
-    @router.get("/logs/{kind}/{namespace}/{name}")
-    @router.get("/logs/{kind}/{namespace}")
-    @router.get("/logs/{kind}")
-    @router.get("/logs/{namespace}")
     @router.get("/logs")
     async def logs_endpoint(
         kind: str = "",
