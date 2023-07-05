@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flock-resources-server
+  labels:
+    app: flock-resources-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flock-resources-server
+  template:
+    metadata:
+      labels:
+        app: flock-resources-server
+    spec:
+      serviceAccountName: resources-server-sa
+      containers:
+        - name: flock-resources-server
+          image: flock-resources-server
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 9002
+          resources:
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          env:
+            - name: HOST
+              value: "0.0.0.0"
+            - name: PORT
+              value: "9002"
+            - name: RESOURCE_STORE_HOST
+              value: mongo
+            - name: RESOURCE_STORE_USERNAME
+              value: root
+            - name: RESOURCE_STORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysecret
+                  key: mongo-password

@@ -1,0 +1,33 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: flock-health
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /health
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - pathType: Prefix
+            path: "/deployer/health"
+            backend:
+              service:
+                name: flock-deployer
+                port:
+                  number: 9000
+          - pathType: Prefix
+            path: "/observer/health"
+            backend:
+              service:
+                name: flock-observer
+                port:
+                  number: 9001
+          - pathType: Prefix
+            path: "/resources-server/health"
+            backend:
+              service:
+                name: flock-resources-server
+                port:
+                  number: 9002
