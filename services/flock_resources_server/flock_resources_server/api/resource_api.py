@@ -1,7 +1,5 @@
 """Flock API"""
 
-import logging
-
 from fastapi import APIRouter, Body, Depends, HTTPException
 from flock_builder import ResourceBuilder
 from flock_resource_store.mongo import ResourceStore

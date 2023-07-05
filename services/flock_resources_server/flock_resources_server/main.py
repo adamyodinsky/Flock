@@ -19,7 +19,6 @@ init_logging(
     level=os.environ.get("LOG_LEVEL", "INFO"),
 )
 
-
 @click.group()
 def cli():
     """Flock Resources API Server CLI"""
