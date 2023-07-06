@@ -1,0 +1,33 @@
+##### Flock Base observer #####
+FROM flock-python-base as observer-base-stage
+
+ENV FASTAPI_ENV=production
+
+COPY ./libs/flock_common $PYSETUP_PATH/libs/flock_common
+COPY ./services/flock_observer $PYSETUP_PATH/services/flock_observer
+
+WORKDIR $PYSETUP_PATH/services/flock_observer
+
+# RUN poetry install --only main
+RUN python -m venv .venv
+RUN .venv/bin/pip install --use-pep517 . 
+
+
+##### Flock observer Stage #####
+FROM python:3.10.10-slim as observer-stage
+
+ENV PYSETUP_PATH="/opt/pysetup"
+
+COPY --from=observer-base-stage $PYSETUP_PATH/libs/flock_common $PYSETUP_PATH/libs/flock_common
+
+COPY --from=observer-base-stage $PYSETUP_PATH/services/flock_observer/.venv $PYSETUP_PATH/services/flock_observer/.venv
+COPY --from=observer-base-stage $PYSETUP_PATH/services/flock_observer/flock_observer $PYSETUP_PATH/services/flock_observer/flock_observer
+
+WORKDIR $PYSETUP_PATH/services/flock_observer
+
+ENV VIRTUAL_ENV="${PYSETUP_PATH}/services/flock_observer/.venv"
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+EXPOSE 9001
+ENTRYPOINT ["python", "flock_observer/main.py" ]
+CMD [ "run-observer" ]

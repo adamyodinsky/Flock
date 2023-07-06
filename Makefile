@@ -30,6 +30,12 @@ docker-base-build:
 docker-deployer-build:
 	docker build -f Dockerfile.deployer -t flock-deployer .
 
+docker-observer-build:
+	docker build -f Dockerfile.observer -t flock-observer .
+
+docker-resources-server-build:
+	docker build -f Dockerfile.resources_server -t flock-resources-server .
+
 docker-agent-build:
 	docker build -f Dockerfile.agent -t flock-agent .
 
@@ -44,6 +50,12 @@ docker-build-all: docker-base-build docker-agent-build docker-embeddings-loader-
 
 docker-deployer-run:
 	docker run --rm flock-deployer
+
+docker-observer-run:
+	docker run --rm flock-observer
+
+docker-resources-server-run:
+	docker run --rm flock-resources-server
 
 docker-agent-run:
 	docker run --rm -e LOCAL=true flock-deployer
@@ -67,22 +79,30 @@ docker-webscraper-run:
 
 minikube-start:
 	minikube start \
+	--ports=127.0.0.1:80:32080 \
+	--ports=127.0.0.1:443:32443 \
 	--ports=127.0.0.1:27017:30200  \
 	--ports=127.0.0.1:8200:30201  \
 	--ports=127.0.0.1:5672:30202	\
 	--ports=127.0.0.1:25672:30203  \
 	--ports=127.0.0.1:15672:30204 \
 	--ports=127.0.0.1:9000:30205 \
+	--ports=127.0.0.1:9001:30206 \
+	--ports=127.0.0.1:9002:30207 \
 	--cpus 4 --memory 6144
 	@sleep 5
 	minikube addons enable metrics-server
 
+# 80:32080 # ingress http
+# 443:32443 # ingress https
 # 27017:30200 # mongo
 # 8200:30201 # vault
 # 5672:30202 # rabbitMQ ampq
 # 25672:30203 # rabbitMQ dist
 # 15672:30204 # rabbitMQ manager
 # 9000:30205 # flock-deployer
+# 9001:30206 # flock-observer
+# 9002:30207 # flock-resources-server
 
 
 load-webscraper:
@@ -101,7 +121,15 @@ load-deployer:
 	minikube image unload flock-deployer
 	minikube image load flock-deployer
 
-load-images: load-webscraper load-agent load-embeddings-loader load-deployer
+load-observer:
+	minikube image unload flock-observer
+	minikube image load flock-observer
+
+load-resources-server:
+	minikube image unload flock-resources-server
+	minikube image load flock-resources-server
+
+load-images: load-webscraper load-agent load-embeddings-loader load-deployer load-observer load-resources-server
 
 
 apply-mongo:
@@ -109,6 +137,12 @@ apply-mongo:
 
 apply-deployer:
 	kubectl apply -f infra/deployer
+
+apply-observer:
+	kubectl apply -f infra/observer
+
+apply-resources-server:
+	kubectl apply -f infra/resources_server
 
 apply-rabbitmq:
 	helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -125,12 +159,19 @@ apply-vault:
 	# kubectl exec -it flock-secrets-store-vault-0 -- vault operator init
 	# kubectl exec -it flock-secrets-store-vault-0 -- vault operator unseal <key>
 
+apply-ingress:
+	helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+	helm repo update
+	helm upgrade --install -f infra/ingress/helm/values.local.yaml nginx-ingress ingress-nginx/ingress-nginx
+	sleep 60 # waitng for ingress to be ready
+	kubectl apply -f infra/ingress/k8s
+
 apply-secret:
 	kubectl apply -f infra/secret.yaml
 
 apply-pvc:
 	kubectl apply -f infra/pvc.yaml
 
-apply-infra: apply-secret apply-pvc apply-mongo apply-rabbitmq apply-vault apply-deployer
+apply-infra: apply-secret apply-pvc apply-mongo apply-rabbitmq apply-vault apply-deployer apply-observer apply-resources-server apply-ingress
 
 setup-all: docker-build-all load-images apply-infra

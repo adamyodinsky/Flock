@@ -1,0 +1,33 @@
+##### Flock Base resources #####
+FROM flock-python-base as resources-server-base-stage
+
+ENV FASTAPI_ENV=production
+
+COPY ./libs $PYSETUP_PATH/libs
+COPY ./services/flock_resources_server $PYSETUP_PATH/services/flock_resources_server
+
+WORKDIR $PYSETUP_PATH/services/flock_resources_server
+
+# RUN poetry install --only main
+RUN python -m venv .venv
+RUN .venv/bin/pip install --use-pep517 . 
+
+
+##### Flock resources Stage #####
+FROM python:3.10.10-slim as resources-stage
+
+ENV PYSETUP_PATH="/opt/pysetup"
+
+COPY --from=resources-server-base-stage $PYSETUP_PATH/libs $PYSETUP_PATH/libs
+
+COPY --from=resources-server-base-stage $PYSETUP_PATH/services/flock_resources_server/.venv $PYSETUP_PATH/services/flock_resources_server/.venv
+COPY --from=resources-server-base-stage $PYSETUP_PATH/services/flock_resources_server/flock_resources_server $PYSETUP_PATH/services/flock_resources_server/flock_resources_server
+
+WORKDIR $PYSETUP_PATH/services/flock_resources_server
+
+ENV VIRTUAL_ENV="${PYSETUP_PATH}/services/flock_resources_server/.venv"
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+EXPOSE 9002
+ENTRYPOINT ["python", "flock_resources_server/main.py" ]
+CMD ["run-server"]

@@ -1,0 +1,21 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "resources_validation",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/tests/resources_validation.py",
+      "console": "internalConsole",
+      "justMyCode": true,
+      "env": {
+        "OPENAI_API_KEY": "",
+        "SERPAPI_API_KEY": "",
+        "WOLFRAM_ALPHA_APPID": ""
+      }
+    }
+  ]
+}

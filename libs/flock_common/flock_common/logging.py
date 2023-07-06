@@ -13,7 +13,7 @@ def init_logging(
     level="INFO",
     log_format=LOG_FORMAT,
     datefmt=DATE_FMT,
-    destination="both",
+    destination="stdout",
 ):
     """Initialize logging
 

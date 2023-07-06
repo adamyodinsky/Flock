@@ -1,8 +1,9 @@
 from typing import Optional
 
-from flock_resource_store.base import ResourceStore
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
+
+from flock_resource_store.base import ResourceStore
 
 
 class MongoResourceStore(ResourceStore):
@@ -60,7 +61,7 @@ class MongoResourceStore(ResourceStore):
         namespace: str = "",
         name: str = "",
         kind: str = "",
-    ):
+    ) -> dict:
         query_filter = MongoResourceStore.create_filter(
             category=category,
             namespace=namespace,
@@ -84,7 +85,7 @@ class MongoResourceStore(ResourceStore):
         kind: str = "",
         page: int = 1,
         page_size: int = 50,
-    ):
+    ) -> list[dict]:
         """Get many resources with the same namespace and kind"""
 
         skip_count = (page - 1) * page_size
@@ -112,7 +113,7 @@ class MongoResourceStore(ResourceStore):
             .skip(skip_count)
             .limit(page_size)
         )
-        return result
+        return list(result)
 
     def delete(
         self,

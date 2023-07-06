@@ -7,21 +7,24 @@ from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI
 from flock_common import check_env_vars, init_logging
 from flock_common.secret_store import SecretStoreFactory
-from flock_resource_store import ResourceStoreFactory
-from uvicorn import run
-
 from flock_deployer.api import get_router
 from flock_deployer.config_store import ConfigStoreFactory
 from flock_deployer.deployer import DeployerFactory
+from flock_resource_store import ResourceStoreFactory
+from uvicorn import run
 
 init_logging()
 
 
 def get_app():
+    prefix = "deployer"
     app = FastAPI(
         title="Flock Deployer",
         description="Flock Deployer is a service that deploys resources to a target cluster.",
         version="0.0.1",
+        docs_url=f"/{prefix}/docs",
+        redoc_url=f"/{prefix}/redoc",
+        openapi_url=f"/{prefix}/openapi.json",
     )
 
     @app.on_event("startup")

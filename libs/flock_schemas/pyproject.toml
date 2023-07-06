@@ -11,9 +11,9 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.9"
-pydantic = "^1.10.9"
 flock-common = {path = "../flock_common", develop = true}
 pymongo = "^4.3.3"
+pydantic = "==1.*"
 
 
 [tool.poetry.group.dev.dependencies]
