@@ -174,7 +174,7 @@ apply-vault:
 apply-ingress:
 	helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 	helm repo update
-	helm upgrade --install -f infra/ingress/helm/values.local.yaml nginx-ingress ingress-nginx/ingress-nginx
+	helm upgrade --install -f infra/ingress/helm/values.yaml nginx-ingress ingress-nginx/ingress-nginx
 	sleep 60 # waitng for ingress to be ready
 	kubectl apply -f infra/ingress/k8s
 
