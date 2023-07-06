@@ -187,3 +187,6 @@ apply-pvc:
 apply-infra: apply-secret apply-pvc apply-mongo apply-rabbitmq apply-vault apply-deployer apply-observer apply-resources-server apply-ingress
 
 setup-all: docker-build-all load-images apply-infra
+
+ngrok:
+	ngrok http 80
