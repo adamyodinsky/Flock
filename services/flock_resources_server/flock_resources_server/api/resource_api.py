@@ -1,5 +1,7 @@
 """Flock API"""
 
+import os
+
 from fastapi import APIRouter, Body, Depends, HTTPException
 from flock_builder import ResourceBuilder
 from flock_resource_store.mongo import ResourceStore
@@ -14,7 +16,7 @@ from flock_resources_server.schemas.responses.resources_fetched import Resources
 
 
 def get_router(
-    resource_store: ResourceStore, resource_builder: ResourceBuilder
+    resource_store: ResourceStore, resource_builder: ResourceBuilder, prefix: str
 ) -> APIRouter:
     """Get API router"""
 
@@ -24,6 +26,7 @@ def get_router(
     @router.get("/")
     @router.get("/health")
     @router.head("/health")
+    @router.get(f"/{prefix}/health")
     async def health(
         resource_store: ResourceStore = Depends(lambda: resource_store),
     ):
@@ -93,7 +96,11 @@ def get_router(
         """Get Resources list by namespace and kind"""
         try:
             resource_data = resource_store.get_many(
-                namespace=namespace, kind=kind, category=category, page=page, page_size=page_size
+                namespace=namespace,
+                kind=kind,
+                category=category,
+                page=page,
+                page_size=page_size,
             )
 
             fetched_resources = [
@@ -112,7 +119,6 @@ def get_router(
                     str(error),
                 ],
             ) from error
-
 
     @router.put("/resource")
     async def put_resource(

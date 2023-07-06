@@ -43,3 +43,10 @@ move to "todo queue" list
   label "ai_enabled" exists
   not closed
   list_id == the todo list id
+
+
+### install ngrok
+
+```sh
+brew install ngrok/ngrok/ngrok
+```

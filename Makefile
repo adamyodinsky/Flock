@@ -135,14 +135,26 @@ load-images: load-webscraper load-agent load-embeddings-loader load-deployer loa
 apply-mongo:
 	kubectl apply -f infra/mongoDB/k8s
 
+delete-mongo:
+	kubectl delete -f infra/mongoDB/k8s
+
 apply-deployer:
 	kubectl apply -f infra/deployer
+
+delete-deployer:
+	kubectl delete -f infra/deployer
 
 apply-observer:
 	kubectl apply -f infra/observer
 
+delete-observer:
+	kubectl delete -f infra/observer
+
 apply-resources-server:
 	kubectl apply -f infra/resources_server
+
+delete-resources-server:
+	kubectl delete -f infra/resources_server
 
 apply-rabbitmq:
 	helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -162,7 +174,7 @@ apply-vault:
 apply-ingress:
 	helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 	helm repo update
-	helm upgrade --install -f infra/ingress/helm/values.local.yaml nginx-ingress ingress-nginx/ingress-nginx
+	helm upgrade --install -f infra/ingress/helm/values.yaml nginx-ingress ingress-nginx/ingress-nginx
 	sleep 60 # waitng for ingress to be ready
 	kubectl apply -f infra/ingress/k8s
 
@@ -175,3 +187,6 @@ apply-pvc:
 apply-infra: apply-secret apply-pvc apply-mongo apply-rabbitmq apply-vault apply-deployer apply-observer apply-resources-server apply-ingress
 
 setup-all: docker-build-all load-images apply-infra
+
+ngrok:
+	ngrok http 80

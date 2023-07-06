@@ -54,18 +54,21 @@ def run_observer(host, port):
     load_dotenv(find_dotenv(os.environ.get("ENV_FILE", ".env")))
     check_env_vars(required_vars, optional_vars)
 
-    # Create the observer
     observer = ObserverFactory().get_observer(
         observer_type=os.environ.get("OBSERVER_TYPE", "k8s"),
         default_label_selector=os.environ.get("DEFAULT_LABEL_SELECTOR", "flock=true"),
     )
 
+    api_prefix = os.environ.get("API_PREFIX", "observer")
     app = FastAPI(
         title="Flock Observer",
         description="Flock Observer API",
         version="0.0.1",
+        docs_url=f"/{api_prefix}/docs",
+        redoc_url=f"/{api_prefix}/redoc",
+        openapi_url=f"/{api_prefix}/openapi.json",
     )
-    router = get_router(observer)
+    router = get_router(observer, api_prefix)
     app.include_router(router)
 
     # Spin up the API server
