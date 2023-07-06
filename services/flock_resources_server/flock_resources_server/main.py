@@ -19,6 +19,7 @@ init_logging(
     level=os.environ.get("LOG_LEVEL", "INFO"),
 )
 
+
 @click.group()
 def cli():
     """Flock Resources API Server CLI"""
@@ -54,13 +55,18 @@ def run_server(host, port):
         "RESOURCE_STORE_PORT",
         "RESOURCE_STORE_USERNAME",
         "RESOURCE_STORE_PASSWORD",
+        "API_PREFIX",
     ]
     check_env_vars(required_vars, optional_vars)
 
+    api_prefix = os.environ.get("API_PREFIX", "resources-server")
     app = FastAPI(
         title="Flock",
         description="Flock Resources API Server",
         version="0.0.1",
+        docs_url=f"/{api_prefix}/docs",
+        redoc_url=f"/{api_prefix}/redoc",
+        openapi_url=f"/{api_prefix}/openapi.json",
     )
 
     logging.info("Initializing Flock Resource Store")
@@ -76,7 +82,9 @@ def run_server(host, port):
     resource_builder = ResourceBuilder(resource_store=resource_store)
 
     router = get_router(
-        resource_store=resource_store, resource_builder=resource_builder
+        resource_store=resource_store,
+        resource_builder=resource_builder,
+        prefix=api_prefix,
     )
     app.include_router(router)
     logging.info("Starting server...")

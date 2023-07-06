@@ -135,14 +135,26 @@ load-images: load-webscraper load-agent load-embeddings-loader load-deployer loa
 apply-mongo:
 	kubectl apply -f infra/mongoDB/k8s
 
+delete-mongo:
+	kubectl delete -f infra/mongoDB/k8s
+
 apply-deployer:
 	kubectl apply -f infra/deployer
+
+delete-deployer:
+	kubectl delete -f infra/deployer
 
 apply-observer:
 	kubectl apply -f infra/observer
 
+delete-observer:
+	kubectl delete -f infra/observer
+
 apply-resources-server:
 	kubectl apply -f infra/resources_server
+
+delete-resources-server:
+	kubectl delete -f infra/resources_server
 
 apply-rabbitmq:
 	helm repo add bitnami https://charts.bitnami.com/bitnami

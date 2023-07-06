@@ -3,29 +3,28 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: flock-docs
-  # annotations:
-  #   nginx.ingress.kubernetes.io/rewrite-target: /docs
+  
 spec:
   ingressClassName: nginx
   rules:
     - http:
         paths:
           - pathType: Prefix
-            path: "/deployer/docs"
+            path: "/deployer"
             backend:
               service:
                 name: flock-deployer
                 port:
                   number: 9000
           - pathType: Prefix
-            path: "/observer/docs"
+            path: "/observer"
             backend:
               service:
                 name: flock-observer
                 port:
                   number: 9001
           - pathType: Prefix
-            path: "/resources-server/docs"
+            path: "/resources"
             backend:
               service:
                 name: flock-resources-server

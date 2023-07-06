@@ -7,14 +7,15 @@ from fastapi import APIRouter, Depends, HTTPException
 from flock_observer.observer import DetailsModel, LogsModel, MetricsModel, Observer
 
 
-def get_router(observer: Observer) -> APIRouter:
+def get_router(observer: Observer, api_prefix: str) -> APIRouter:
     """Get API router"""
 
     logging.info("Creating API router")
     router = APIRouter()
 
-    @router.get("/health")
     @router.get("/")
+    @router.get("/health")
+    @router.get(f"/{api_prefix}/health")
     async def health_endpoint():
         """Health endpoint
 
