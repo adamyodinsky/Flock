@@ -34,6 +34,9 @@ export NGROK_PASSWORD=pass
 make ngrok
 ```
 
+- For accessing the ngrok endpoint via the browser, just enter the username and password.
+- For accessing the ngrok endpoint via an http request, add an "Authorization" header, the value should be a base64 converted string of `<username>:<password>`.
+
 #### Env Variables needed
 
 - OPENAI_API_KEY

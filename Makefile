@@ -1,4 +1,4 @@
-.PHONY: help docker-base-build docker-agent-build docker-agent-run minikube-start
+.PHONY: help docker-base-build docker-agent-build docker-agent-run minikube-start load-images docker-embeddings-loader-build docker-embeddings-loader-run docker-webscraper-build docker-webscraper-run docker-deployer-build docker-deployer-run docker-build-all apply-mongo apply-deployer apply-rabbitmq apply-vault apply-secret apply-pvc setup-all apply-infra
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
