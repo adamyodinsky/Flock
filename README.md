@@ -5,6 +5,8 @@
 - Minikube
 - Docker
 - Python
+- Ngrok
+- Okteto
 
 ## Setup
 
