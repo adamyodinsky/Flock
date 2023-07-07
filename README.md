@@ -25,6 +25,15 @@ Under `libs/flock_resources`, run the `resources_validation.py` script
 make validate-resources
 ```
 
+### Expose the local machine with ngrok
+
+```sh
+export NGROK_USERNAME=user
+export NGROK_PASSWORD=pass
+
+make ngrok
+```
+
 #### Env Variables needed
 
 - OPENAI_API_KEY
@@ -33,9 +42,9 @@ make validate-resources
 
 ## Troubleshooting
 
-### 01
+### Issue 01
 
-Getting error when starting Minikube on Mac machine
+Getting error when starting Minikube on a Mac machine
 
 `failed to connect to /var/run/com.docker.vmnetd.sock: is vmnetd running?`
 
@@ -47,4 +56,3 @@ sudo /Applications/Docker.app/Contents/MacOS/install vmnetd
 ```
 
 source: <https://github.com/docker/for-mac/issues/6677#issuecomment-1593787335>
-

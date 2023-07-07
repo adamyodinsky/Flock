@@ -189,4 +189,4 @@ apply-infra: apply-secret apply-pvc apply-mongo apply-rabbitmq apply-vault apply
 setup-all: docker-build-all load-images apply-infra
 
 ngrok:
-	ngrok http 80
+	ngrok http 80 --basic-auth="$(NGROK_USERNAME):$(NGROK_PASSWORD)"
