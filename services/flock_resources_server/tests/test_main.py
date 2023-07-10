@@ -122,11 +122,35 @@ def test_get_resources(test_data):
     assert len(response.json()["data"]) == 2
 
 
+def test_post_resource(test_data):
+    """Test put_resource endpoint"""
+
+    resource_store.delete_many(
+        namespace=test_data[0]["namespace"], kind=test_data[0]["kind"]
+    )
+
+    resource_data = test_data[0]
+    response = client.post("/resource", json=resource_data)
+    assert response.status_code == 200
+
+    # Check if the resource is created
+    response = client.get(
+        f"/resource/?namespace={resource_data['namespace']}&kind={resource_data['kind']}&name={resource_data['metadata']['name']}"
+    )
+    response_body = response.json()["data"]
+
+    assert response.status_code == 200
+    assert response_body["id"] is not None
+
+    resource_data["id"] = response_body["id"]
+    assert response_body == resource_data
+
+
 def test_put_resource(test_data):
     """Test put_resource endpoint"""
 
     resource_data = test_data[0]
-    response = client.put("/resource", json=resource_data)
+    response = client.put(f"/resource/{resource_data['id']}", json=resource_data)
     assert response.status_code == 200
 
     # Check if the resource is created

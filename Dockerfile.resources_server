@@ -9,8 +9,8 @@ COPY ./services/flock_resources_server $PYSETUP_PATH/services/flock_resources_se
 WORKDIR $PYSETUP_PATH/services/flock_resources_server
 
 # RUN poetry install --only main
-RUN python -m venv .venv
-RUN .venv/bin/pip install --use-pep517 . 
+RUN  python -m venv .venv
+RUN --mount=type=cache,target=/root/.cache .venv/bin/pip install --use-pep517 . 
 
 
 ##### Flock resources Stage #####

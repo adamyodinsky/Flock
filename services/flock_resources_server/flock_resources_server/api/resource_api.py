@@ -51,6 +51,7 @@ def get_router(
         )
 
     @router.get("/resource")
+    @router.get("/resource/{id}")
     async def get_resource(
         namespace: str = "",
         kind: str = "",
@@ -91,7 +92,6 @@ def get_router(
             ) from error
 
     @router.get("/resources")
-    @router.get("/resources/{id}")
     async def get_resources(
         kind: str = "",
         category: str = "",
@@ -127,13 +127,126 @@ def get_router(
                 ],
             ) from error
 
-    @router.put("/resource")
-    async def put_resource(
+    @router.post("/resource")
+    async def create_resource(
         resource_data: dict = Body(..., description=""),
         resource_store: ResourceStore = Depends(lambda: resource_store),
         schema_factory: SchemaFactory = Depends(lambda: schema_factory),
     ) -> ResourceUpdated:
-        """Create or update a resource"""
+        """Create or update a resource.
+
+        If the resource already exists, an error will be returned.
+        """
+
+        try:
+            name: str = resource_data["metadata"]["name"]
+            namespace: str = resource_data["namespace"]
+            kind: str = resource_data["kind"]
+
+            if (
+                resource_store.get(namespace=namespace, kind=kind, name=name)
+                is not None
+            ):
+                raise HTTPException(
+                    status_code=409,
+                    detail=[
+                        "Resource already exists",
+                        f"namespace: {namespace}",
+                        f"kind: {kind}",
+                        f"name: {name}",
+                    ],
+                )
+        except HTTPException as error:
+            raise error
+        except KeyError as error:
+            raise HTTPException(
+                status_code=400,
+                detail=["Failed to build resource", str(error)],
+            ) from error
+        except Exception as error:  # pylint: disable=broad-except
+            raise HTTPException(
+                status_code=500,
+                detail=[
+                    "Failed to build resource",
+                    str(error),
+                ],
+            ) from error
+
+        try:
+            schema_instance = schema_factory.get_schema(resource_data["kind"]).validate(
+                resource_data
+            )
+            resource_builder.build_resource(resource_data)
+        except ValidationError as error:
+            raise HTTPException(
+                status_code=400,
+                detail=["Failed to build resource", str(error)],
+            ) from error
+        except Exception as error:  # pylint: disable=broad-except
+            raise HTTPException(
+                status_code=500,
+                detail=["Failed to build resource", str(error)],
+            ) from error
+
+        # store resource
+        try:
+            resource_store.put(val=schema_instance.dict(by_alias=True))
+        except Exception as error:  # pylint: disable=broad-except
+            raise HTTPException(
+                status_code=500,
+                detail=[
+                    "Failed to store resource",
+                    str(error),
+                ],
+            ) from error
+
+        return ResourceUpdated(data=schema_instance)
+
+    @router.put("/resource/{id}")
+    async def put_resource(
+        resource_data: dict = Body(..., description=""),
+        resource_store: ResourceStore = Depends(lambda: resource_store),
+        schema_factory: SchemaFactory = Depends(lambda: schema_factory),
+        id: str = "",
+    ) -> ResourceUpdated:
+        """Create or update a resource.
+
+        If the resource already exists, it will be updated. Otherwise, an error will be returned.
+        """
+
+        try:
+            if not resource_store.get(id=id):
+                raise HTTPException(
+                    status_code=404,
+                    detail=[
+                        "Resource not found",
+                        f"id: {id}",
+                    ],
+                )
+            if not resource_store.get(
+                namespace=resource_data["namespace"],
+                kind=resource_data["kind"],
+                name=resource_data["metadata"]["name"],
+            ):
+                raise HTTPException(
+                    status_code=404,
+                    detail=[
+                        "Resource not found",
+                        f"namespace: {resource_data['namespace']}",
+                        f"kind: {resource_data['kind']}",
+                        f"name: {resource_data['metadata']['name']}",
+                    ],
+                )
+        except HTTPException as error:
+            raise error
+        except Exception as error:  # pylint: disable=broad-except
+            raise HTTPException(
+                status_code=500,
+                detail=[
+                    "Failed to build resource",
+                    str(error),
+                ],
+            ) from error
 
         try:
             schema_instance = schema_factory.get_schema(resource_data["kind"]).validate(
@@ -212,7 +325,10 @@ def get_router(
         resource_data: dict = Body(..., description=""),
         schema_factory: SchemaFactory = Depends(lambda: schema_factory),
     ) -> ResourceUpdated:
-        """Create or update a resource"""
+        """Resource validation only
+
+        This endpoint does not store the resource. It is used to validate the resource only.
+        """
 
         try:
             schema_instance = schema_factory.get_schema(resource_data["kind"]).validate(
