@@ -56,12 +56,13 @@ def get_router(
         kind: str = "",
         category: str = "",
         name: str = "",
+        id: str = "",
         resource_store: ResourceStore = Depends(lambda: resource_store),
     ) -> ResourceFetched:
         """Get a resource"""
         try:
             resource_data = resource_store.get(
-                namespace=namespace, kind=kind, category=category, name=name
+                namespace=namespace, kind=kind, category=category, name=name, id=id
             )
 
             if resource_data is None:

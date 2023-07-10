@@ -1,10 +1,17 @@
 """Base schema for all Flock objects."""
+
+
 from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, List, Literal, Mapping, Optional
+from uuid import UUID, uuid4
 
 from bson import ObjectId
 from pydantic import BaseModel, Extra, Field
+
+
+def str_uuid():
+    return str(uuid4())
 
 
 class PyObjectId(ObjectId):
@@ -130,7 +137,8 @@ class BaseResourceSchema(BaseModelConfig):
     """Base schema for all Flock objects."""
 
     # id: Optional[PyObjectId] = Field(default_factory=PyObjectId, alias="_id")
-    id: Optional[str] = Field(alias="_id")
+    # id: Optional[str]
+    id: str = Field(default_factory=str_uuid, description="String UUID of the object")
     apiVersion: Literal["flock/v1"] = Field(..., description="API version")
     kind: Kind = Field(..., description="Kind of the object")
     category: Optional[Category] = Field(

@@ -9,6 +9,7 @@ from fastapi.testclient import TestClient
 from flock_common import check_env_vars
 from flock_resource_store import ResourceStoreFactory
 from flock_schema_store import SchemaStoreFactory
+from flock_schemas import SchemaFactory
 
 from flock_resources_server.api.resource_api import ResourceBuilder, get_router
 
@@ -20,7 +21,7 @@ check_env_vars([], [])
 resource_store = ResourceStoreFactory.get_resource_store("mongo")
 resource_builder = ResourceBuilder(resource_store)
 schema_store = SchemaStoreFactory.get_store("mongo")
-
+schema_factory = SchemaFactory()
 
 router = get_router(resource_store, resource_builder, schema_store, "resources-server")
 app.include_router(router)
@@ -32,42 +33,50 @@ client = TestClient(app)
 def test_data():
     """Test data"""
     return [
-        {
-            "apiVersion": "flock/v1",
-            "kind": "Splitter",
-            "namespace": "bla",
-            "category": "other",
-            "created_at": None,
-            "updated_at": None,
-            "metadata": {
-                "name": "test-1",
-                "description": "text-splitter",
-                "annotations": {},
-                "labels": {"app": "my_app"},
-            },
-            "spec": {
-                "vendor": "CharacterTextSplitter",
-                "options": {"chunk_size": 30, "chunk_overlap": 0},
-            },
-        },
-        {
-            "apiVersion": "flock/v1",
-            "kind": "Splitter",
-            "namespace": "bla",
-            "category": "other",
-            "created_at": None,
-            "updated_at": None,
-            "metadata": {
-                "name": "test-2",
-                "description": "text-splitter",
-                "annotations": {},
-                "labels": {"app": "my_app"},
-            },
-            "spec": {
-                "vendor": "CharacterTextSplitter",
-                "options": {"chunk_size": 30, "chunk_overlap": 0},
-            },
-        },
+        schema_factory.get_schema(kind="Splitter")
+        .validate(
+            {
+                "apiVersion": "flock/v1",
+                "kind": "Splitter",
+                "namespace": "bla",
+                "category": "other",
+                "created_at": None,
+                "updated_at": None,
+                "metadata": {
+                    "name": "test-1",
+                    "description": "text-splitter",
+                    "annotations": {},
+                    "labels": {"app": "my_app"},
+                },
+                "spec": {
+                    "vendor": "CharacterTextSplitter",
+                    "options": {"chunk_size": 30, "chunk_overlap": 0},
+                },
+            }
+        )
+        .dict(),
+        schema_factory.get_schema(kind="Splitter")
+        .validate(
+            {
+                "apiVersion": "flock/v1",
+                "kind": "Splitter",
+                "namespace": "bla",
+                "category": "other",
+                "created_at": None,
+                "updated_at": None,
+                "metadata": {
+                    "name": "test-2",
+                    "description": "text-splitter",
+                    "annotations": {},
+                    "labels": {"app": "my_app"},
+                },
+                "spec": {
+                    "vendor": "CharacterTextSplitter",
+                    "options": {"chunk_size": 30, "chunk_overlap": 0},
+                },
+            }
+        )
+        .dict(),
     ]
 
 
@@ -90,8 +99,14 @@ def test_get_resource(test_data):
     response = client.get(
         f"/resource/?namespace={test_data[0]['namespace']}&kind={test_data[0]['kind']}&name={test_data[0]['metadata']['name']}"
     )
+
+    response_body = response.json()["data"]
+
     assert response.status_code == 200
-    assert response.json()["data"] == test_data[0]
+    assert response_body["id"] is not None
+
+    test_data[0]["id"] = response_body["id"]
+    assert response_body == test_data[0]
 
 
 def test_get_resources(test_data):
@@ -100,9 +115,9 @@ def test_get_resources(test_data):
     response = client.get(
         f"/resources/?namespace={test_data[0]['namespace']}&kind={test_data[0]['kind']}"
     )
+
     assert response.status_code == 200
     assert len(response.json()["data"]) == 2
-    assert response.json()["data"][0]["name"] == test_data[0]["metadata"]["name"]
 
 
 def test_put_resource(test_data):
@@ -116,8 +131,13 @@ def test_put_resource(test_data):
     response = client.get(
         f"/resource/?namespace={resource_data['namespace']}&kind={resource_data['kind']}&name={resource_data['metadata']['name']}"
     )
+    response_body = response.json()["data"]
+
     assert response.status_code == 200
-    assert response.json()["data"] == resource_data
+    assert response_body["id"] is not None
+
+    resource_data["id"] = response_body["id"]
+    assert response_body == resource_data
 
 
 def test_delete_resource(test_data):

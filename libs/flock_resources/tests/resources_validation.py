@@ -35,11 +35,17 @@ def test_building_resource(manifest):
     schema_instance = schema_cls.validate(manifest)
 
     # test save and load from resource store
-    resource_store.put(val=manifest)
+    resource_store.put(val=schema_instance.dict())
     manifest = resource_store.get(
         namespace=schema_instance.namespace,
         kind=schema_instance.kind,
         name=schema_instance.metadata.name,
+    )
+    schema_instance = schema_cls.validate(manifest)
+    resource_store.put(val=schema_instance.dict())
+
+    manifest = resource_store.get(
+        id=schema_instance.id,
     )
     schema_instance = schema_cls.validate(manifest)
 

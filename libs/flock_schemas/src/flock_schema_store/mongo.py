@@ -52,8 +52,9 @@ class MongoSchemaStore(SchemaStore):
 
         result = self.table.find_one(filter=query_filter)
 
-        result["id"] = str(result.get("_id"))
-        del result["_id"]
+        if result:
+            result["id"] = str(result.get("_id"))
+            del result["_id"]
 
         return result
 

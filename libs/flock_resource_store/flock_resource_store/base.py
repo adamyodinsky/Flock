@@ -9,7 +9,10 @@ class ResourceStore(metaclass=abc.ABCMeta):
     """Abstract base class for resource stores."""
 
     @abc.abstractmethod
-    def put(self, val: dict) -> None:
+    def put(
+        self,
+        val: dict,
+    ) -> None:
         """Save a resource to the store."""
 
     @abc.abstractmethod
@@ -19,6 +22,7 @@ class ResourceStore(metaclass=abc.ABCMeta):
         namespace: str = "",
         name: str = "",
         kind: str = "",
+        id: str = "",
     ) -> dict:
         """Load a resource from the store."""
 
@@ -41,6 +45,7 @@ class ResourceStore(metaclass=abc.ABCMeta):
         namespace: str = "",
         name: str = "",
         kind: str = "",
+        id: str = "",
     ):
         """Delete a resource"""
 

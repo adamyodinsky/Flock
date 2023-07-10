@@ -61,12 +61,14 @@ class MongoResourceStore(ResourceStore):
         namespace: str = "",
         name: str = "",
         kind: str = "",
+        id: str = "",
     ) -> dict:
         query_filter = MongoResourceStore.create_filter(
             category=category,
             namespace=namespace,
             name=name,
             kind=kind,
+            id=id,
         )
 
         result = self.table.find_one(
@@ -75,6 +77,7 @@ class MongoResourceStore(ResourceStore):
                 "_id": False,
             },
         )
+
         return result
 
     def get_many(
@@ -121,6 +124,7 @@ class MongoResourceStore(ResourceStore):
         namespace: str = "",
         name: str = "",
         kind: str = "",
+        id: str = "",
     ):
         """Delete a resource"""
 
@@ -129,6 +133,7 @@ class MongoResourceStore(ResourceStore):
             namespace=namespace,
             name=name,
             kind=kind,
+            id=id,
         )
 
         result = self.table.delete_one(
@@ -163,6 +168,7 @@ class MongoResourceStore(ResourceStore):
         namespace: str = "",
         name: str = "",
         kind: str = "",
+        id: str = "",
     ) -> dict:
         """Create a filter query"""
 
@@ -175,5 +181,7 @@ class MongoResourceStore(ResourceStore):
             filter_query["kind"] = kind
         if name:
             filter_query["metadata.name"] = name
+        if id:
+            filter_query["id"] = id
 
         return filter_query
