@@ -56,6 +56,7 @@ class ResourceStore(metaclass=abc.ABCMeta):
         namespace: str = "",
         name: str = "",
         kind: str = "",
+        id: str = "",
     ):
         """Delete a resource"""
 

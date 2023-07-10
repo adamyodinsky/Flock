@@ -91,6 +91,7 @@ def get_router(
             ) from error
 
     @router.get("/resources")
+    @router.get("/resources/{id}")
     async def get_resources(
         kind: str = "",
         category: str = "",
@@ -168,18 +169,27 @@ def get_router(
         "/resource",
         description="Delete resource",
     )
+    @router.delete(
+        "/resource/{id}",
+        description="Delete resource",
+    )
     async def delete_resource(
         namespace: str = "",
         kind: str = "",
         category: str = "",
         name: str = "",
+        id: str = "",
         resource_store: ResourceStore = Depends(lambda: resource_store),
     ) -> ResourceDeleted:
         """Deletes a resource."""
 
         try:
             resource_data = resource_store.delete_many(
-                namespace=namespace, kind=kind, category=category, name=name
+                namespace=namespace,
+                kind=kind,
+                category=category,
+                name=name,
+                id=id,
             )
             return ResourceDeleted(
                 details=[

@@ -108,6 +108,8 @@ def test_get_resource(test_data):
     test_data[0]["id"] = response_body["id"]
     assert response_body == test_data[0]
 
+    response = client.get(f"/resource/?id={test_data[0]['id']}")
+
 
 def test_get_resources(test_data):
     """Test get_resources endpoint"""

@@ -45,7 +45,7 @@ docker-embeddings-loader-build:
 docker-webscraper-build:
 	docker build -f Dockerfile.webscraper -t flock-webscraper .
 
-docker-build-all: docker-base-build docker-agent-build docker-embeddings-loader-build docker-webscraper-build docker-deployer-build
+docker-build-all: docker-base-build docker-agent-build docker-embeddings-loader-build docker-webscraper-build docker-deployer-build docker-observer-build docker-resources-server-build
 
 
 docker-deployer-run:
@@ -185,6 +185,8 @@ apply-pvc:
 	kubectl apply -f infra/pvc.yaml
 
 apply-infra: apply-secret apply-pvc apply-mongo apply-rabbitmq apply-vault apply-deployer apply-observer apply-resources-server apply-ingress
+
+delete-apps: delete-deployer delete-observer delete-resources-server
 
 setup-all: docker-build-all load-images apply-infra
 

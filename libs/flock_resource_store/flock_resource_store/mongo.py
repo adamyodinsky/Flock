@@ -147,6 +147,7 @@ class MongoResourceStore(ResourceStore):
         namespace: str = "",
         name: str = "",
         kind: str = "",
+        id: str = "",
     ):
         """Delete a resource"""
 
@@ -155,6 +156,7 @@ class MongoResourceStore(ResourceStore):
             namespace=namespace,
             name=name,
             kind=kind,
+            id=id,
         )
 
         result = self.table.delete_many(
