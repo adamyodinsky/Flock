@@ -25,7 +25,17 @@ def set_dry_run():
         return False
 
 
+def set_keep_resources():
+    keep_resources = os.environ.get("KEEP_RESOURCES", "false")
+
+    if keep_resources.lower() == "true":
+        return True
+    else:
+        return False
+
+
 DRY_RUN = set_dry_run()
+KEEP_RESOURCES = set_keep_resources()
 SLEEP_TIME = 6
 
 os.environ["LOCAL"] = "true"
@@ -117,7 +127,7 @@ def create_manifest(
 
     extra_args = {}
     if deployment_kind == "FlockCronJob":
-        extra_args["schedule"] = "0 0 * * 0"
+        extra_args["schedule"] = "0 */5 * * *"
 
     deployment_manifest = creator_func(
         name=target_name,
@@ -243,7 +253,6 @@ def test_integration():
             name=deployment_manifest.metadata.name, namespace="default", dry_run=DRY_RUN
         )
 
-    # Deploy WebScraper with manifest creators
     print("\n######## Manifest Creators to Deployers Test ##########\n")
 
     print("Deploying WebScraper Job")
@@ -252,7 +261,7 @@ def test_integration():
     )
     deploy(deployers.job_deployer, deployment_manifest)
 
-    if not DRY_RUN:
+    if not DRY_RUN and not KEEP_RESOURCES:
         time.sleep(SLEEP_TIME)
         print("Deleting WebScraper Job")
         deployers.job_deployer.delete(
@@ -267,7 +276,7 @@ def test_integration():
     )
     deploy(deployers.cronjob_deployer, deployment_manifest)
 
-    if not DRY_RUN:
+    if not DRY_RUN and not KEEP_RESOURCES:
         time.sleep(SLEEP_TIME)
         print("Deleting WebScraper CronJob")
         deployers.cronjob_deployer.delete(
@@ -282,7 +291,7 @@ def test_integration():
     )
     deploy(deployers.job_deployer, deployment_manifest)
 
-    if not DRY_RUN:
+    if not DRY_RUN and not KEEP_RESOURCES:
         time.sleep(SLEEP_TIME)
         print("Deleting EmbeddingsLoader Job")
         deployers.job_deployer.delete(
@@ -298,7 +307,7 @@ def test_integration():
     deploy(deployers.deployment_deployer, deployment_manifest)
     deploy(deployers.service_deployer, deployment_manifest)
 
-    if not DRY_RUN:
+    if not DRY_RUN and not KEEP_RESOURCES:
         time.sleep(SLEEP_TIME)
         print("Deleting Agent Deployment and Service")
         deployers.deployment_deployer.delete(

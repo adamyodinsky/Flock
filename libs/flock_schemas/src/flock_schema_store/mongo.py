@@ -93,10 +93,10 @@ class MongoSchemaStore(SchemaStore):
         result = self.table.delete_many(filter={})
         return result
 
-    def get_kinds(self):
+    def get_kinds(self) -> list:
         """Get all the kinds of schemas in the store as a list"""
         kinds = self.table.distinct("kind")
-        return kinds
+        return list(kinds)
 
     def health_check(self) -> bool:
         """Check if the resource store is healthy."""

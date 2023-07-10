@@ -8,6 +8,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from flock_common import check_env_vars
 from flock_resource_store import ResourceStoreFactory
+from flock_schema_store import SchemaStoreFactory
 
 from flock_resources_server.api.resource_api import ResourceBuilder, get_router
 
@@ -18,8 +19,10 @@ check_env_vars([], [])
 
 resource_store = ResourceStoreFactory.get_resource_store("mongo")
 resource_builder = ResourceBuilder(resource_store)
+schema_store = SchemaStoreFactory.get_store("mongo")
 
-router = get_router(resource_store, resource_builder)
+
+router = get_router(resource_store, resource_builder, schema_store, "resources-server")
 app.include_router(router)
 
 client = TestClient(app)
@@ -154,6 +157,30 @@ def test_delete_resources(test_data):
         f"/resource/?namespace={test_data[1]['namespace']}&kind={test_data[1]['kind']}&name={test_data[1]['metadata']['name']}"
     )
     assert response.status_code == 404
+
+
+def test_get_schema():
+    """Test delete_resources endpoint"""
+
+    response = client.get("/schema/Agent")
+    assert response.status_code == 200
+    assert response.json()["data"] is not None
+
+
+def test_get_schemas():
+    """Test delete_resources endpoint"""
+
+    response = client.get("/schemas")
+    assert response.status_code == 200
+    assert response.json()["data"] is not None
+
+
+def test_get_kinds():
+    """Test delete_resources endpoint"""
+
+    response = client.get("/kinds")
+    assert response.status_code == 200
+    assert response.json()["data"] is not None
 
 
 if __name__ == "__main__":

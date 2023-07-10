@@ -22,4 +22,16 @@ class ResourceFetched(BaseModel):
     data: dict = Field(..., description="Data of the response")
 
 
+class KindsFetched(ResourceFetched):
+    """Response model for kinds fetched"""
+
+    data: list[str] = Field(..., description="Data of the response")
+
+
+class SchemasFetched(ResourceFetched):
+    """Response model for schema fetched"""
+
+    data: list[dict] = Field(..., description="Data of the response")
+
+
 ResourceFetched.update_forward_refs()

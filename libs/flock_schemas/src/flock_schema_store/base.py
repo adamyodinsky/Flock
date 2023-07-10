@@ -27,7 +27,7 @@ class SchemaStore(metaclass=abc.ABCMeta):
         """Delete a resource"""
 
     @abc.abstractmethod
-    def get_many(self):
+    def get_many(self) -> list:
         """Get many resources with the same kind"""
 
     @abc.abstractmethod
@@ -37,7 +37,7 @@ class SchemaStore(metaclass=abc.ABCMeta):
         """Delete a resource"""
 
     @abc.abstractmethod
-    def get_kinds(self):
+    def get_kinds(self) -> list:
         """Get all the kinds of schemas in the store as a list"""
 
     @abc.abstractmethod

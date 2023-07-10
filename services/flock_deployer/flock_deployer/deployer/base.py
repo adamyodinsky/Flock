@@ -190,13 +190,13 @@ class BaseDeployers(metaclass=abc.ABCMeta):
                     if env.name not in existing_env_names
                 )
 
-        # Merge global config
-        global_config = self.config_store.get(name="global")
-        merge_envs(global_config)
-
         # Merge kind-specific global config
         kind_global_config = self.config_store.get(name=f"{target_kind}_global".lower())
         merge_envs(kind_global_config)
+
+        # Merge global config
+        global_config = self.config_store.get(name="global")
+        merge_envs(global_config)
 
         return config
 

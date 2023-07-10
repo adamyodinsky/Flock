@@ -1,22 +1,29 @@
 """Flock API"""
 
-import os
 
 from fastapi import APIRouter, Body, Depends, HTTPException
 from flock_builder import ResourceBuilder
 from flock_resource_store.mongo import ResourceStore
+from flock_schema_store import SchemaStore
 from flock_schemas import SchemaFactory
 from pydantic import ValidationError
 
 from flock_resources_server.schemas.resource_details import ResourceDetails
 from flock_resources_server.schemas.responses.resource_deleted import ResourceDeleted
-from flock_resources_server.schemas.responses.resource_fetched import ResourceFetched
+from flock_resources_server.schemas.responses.resource_fetched import (
+    KindsFetched,
+    ResourceFetched,
+    SchemasFetched,
+)
 from flock_resources_server.schemas.responses.resource_updated import ResourceUpdated
 from flock_resources_server.schemas.responses.resources_fetched import ResourcesFetched
 
 
 def get_router(
-    resource_store: ResourceStore, resource_builder: ResourceBuilder, prefix: str
+    resource_store: ResourceStore,
+    resource_builder: ResourceBuilder,
+    schema_store: SchemaStore,
+    prefix: str,
 ) -> APIRouter:
     """Get API router"""
 
@@ -49,8 +56,6 @@ def get_router(
         kind: str = "",
         category: str = "",
         name: str = "",
-        page: int = 1,
-        page_size: int = 50,
         resource_store: ResourceStore = Depends(lambda: resource_store),
     ) -> ResourceFetched:
         """Get a resource"""
@@ -215,5 +220,86 @@ def get_router(
             ) from error
 
         return ResourceUpdated(data=schema_instance)
+
+    @router.get("/schema/{kind}")
+    async def get_schema(
+        schema_store: SchemaStore = Depends(lambda: schema_store), kind: str = ""
+    ):
+        """Get schema for kind"""
+        try:
+            schema_data = schema_store.get(kind=kind)
+
+            if schema_data is None:
+                raise HTTPException(
+                    status_code=404,
+                    detail=[
+                        "Schema not found",
+                        f"kind: {kind}",
+                    ],
+                )
+
+            return ResourceFetched(data=schema_data)
+
+        except HTTPException as error:
+            raise error
+        except Exception as error:
+            raise HTTPException(
+                status_code=500,
+                detail=[
+                    "Failed to get schema",
+                    str(error),
+                ],
+            ) from error
+
+    @router.get("/schemas")
+    async def get_schemas(
+        schema_store: SchemaStore = Depends(lambda: schema_store),
+    ) -> SchemasFetched:
+        """Get all schemas"""
+
+        result = []
+        try:
+            schemas_data = schema_store.get_many()
+
+            for schema in schemas_data:
+                schema["id"] = str(schema.get("_id"))
+                del schema["_id"]
+
+                result.append(
+                    {
+                        "kind": schema["kind"],
+                        "schema": schema,
+                    }
+                )
+
+            return SchemasFetched(data=result)
+
+        except Exception as error:
+            raise HTTPException(
+                status_code=500,
+                detail=[
+                    "Failed to get schemas",
+                    str(error),
+                ],
+            ) from error
+
+    @router.get("/kinds")
+    async def get_kinds(
+        schema_store: SchemaStore = Depends(lambda: schema_store),
+    ) -> KindsFetched:
+        """Get all kinds"""
+        try:
+            kinds_data = schema_store.get_kinds()
+
+            return KindsFetched(data=kinds_data)
+
+        except Exception as error:
+            raise HTTPException(
+                status_code=500,
+                detail=[
+                    "Failed to get kinds",
+                    str(error),
+                ],
+            ) from error
 
     return router

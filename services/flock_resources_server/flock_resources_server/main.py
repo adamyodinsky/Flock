@@ -10,6 +10,7 @@ from fastapi import FastAPI
 from flock_builder import ResourceBuilder
 from flock_common import EnvVarNotSetError, check_env_vars, init_logging
 from flock_resource_store import ResourceStoreFactory
+from flock_schema_store import SchemaStoreFactory
 from uvicorn import run
 
 from flock_resources_server.api.resource_api import get_router
@@ -81,9 +82,21 @@ def run_server(host, port):
     )
     resource_builder = ResourceBuilder(resource_store=resource_store)
 
+    logging.info("Initializing Flock Schema Store")
+    schema_store = SchemaStoreFactory.get_store(
+        store_type=os.environ.get("SCHEMA_STORE_TYPE", "mongo"),
+        db_name=os.environ.get("SCHEMA_STORE_DB_NAME", "flock_db"),
+        table_name=os.environ.get("SCHEMA_STORE_TABLE_NAME", "flock_schema"),
+        host=os.environ.get("SCHEMA_STORE_HOST", "localhost"),
+        port=int(os.environ.get("SCHEMA_STORE_PORT", 27017)),
+        username=os.environ.get("SCHEMA_STORE_USERNAME", "root"),
+        password=os.environ.get("SCHEMA_STORE_PASSWORD", "password"),
+    )
+
     router = get_router(
         resource_store=resource_store,
         resource_builder=resource_builder,
+        schema_store=schema_store,
         prefix=api_prefix,
     )
     app.include_router(router)
