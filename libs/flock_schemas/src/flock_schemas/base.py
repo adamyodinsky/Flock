@@ -129,7 +129,8 @@ class BaseSpec(BaseOptions):
 class BaseResourceSchema(BaseModelConfig):
     """Base schema for all Flock objects."""
 
-    id: Optional[PyObjectId] = Field(default_factory=PyObjectId, alias="_id")
+    # id: Optional[PyObjectId] = Field(default_factory=PyObjectId, alias="_id")
+    id: Optional[str] = Field(alias="_id")
     apiVersion: Literal["flock/v1"] = Field(..., description="API version")
     kind: Kind = Field(..., description="Kind of the object")
     category: Optional[Category] = Field(

@@ -50,12 +50,11 @@ class MongoSchemaStore(SchemaStore):
             kind=kind,
         )
 
-        result = self.table.find_one(
-            filter=query_filter,
-            projection={
-                "_id": False,
-            },
-        )
+        result = self.table.find_one(filter=query_filter)
+
+        result["id"] = str(result.get("_id"))
+        del result["_id"]
+
         return result
 
     def get_many(
@@ -68,6 +67,13 @@ class MongoSchemaStore(SchemaStore):
         skip_count = (page - 1) * page_size
 
         result = self.table.find(filter={}).skip(skip_count).limit(page_size)
+
+        result = list(result)
+
+        for data in result:
+            data["id"] = str(data.get("_id"))
+            del data["_id"]
+
         return list(result)
 
     def delete(

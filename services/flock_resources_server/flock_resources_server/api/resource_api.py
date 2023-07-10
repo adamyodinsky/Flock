@@ -257,22 +257,10 @@ def get_router(
     ) -> SchemasFetched:
         """Get all schemas"""
 
-        result = []
         try:
             schemas_data = schema_store.get_many()
 
-            for schema in schemas_data:
-                schema["id"] = str(schema.get("_id"))
-                del schema["_id"]
-
-                result.append(
-                    {
-                        "kind": schema["kind"],
-                        "schema": schema,
-                    }
-                )
-
-            return SchemasFetched(data=result)
+            return SchemasFetched(data=schemas_data)
 
         except Exception as error:
             raise HTTPException(
