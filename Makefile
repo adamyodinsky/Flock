@@ -45,8 +45,11 @@ docker-embeddings-loader-build:
 docker-webscraper-build:
 	docker build -f Dockerfile.webscraper -t flock-webscraper .
 
-docker-build-all: docker-base-build docker-agent-build docker-embeddings-loader-build docker-webscraper-build docker-deployer-build docker-observer-build docker-resources-server-build
 
+docker-proxy-build:
+	cd infra/flock_proxy; docker build -f Dockerfile.proxy -t flock-proxy .
+
+docker-build-all: docker-base-build docker-agent-build docker-embeddings-loader-build docker-webscraper-build docker-deployer-build docker-observer-build docker-resources-server-build docker-proxy-build
 
 docker-deployer-run:
 	docker run --rm flock-deployer
@@ -59,6 +62,7 @@ docker-resources-server-run:
 
 docker-agent-run:
 	docker run --rm -e LOCAL=true flock-deployer
+
 
 docker-embeddings-loader-run:
 	docker run --rm flock-embeddings-loader
@@ -76,6 +80,8 @@ docker-webscraper-run:
 	-v ${PWD}/.spider_output:/app/spider_output \
 	flock-webscraper
 
+docker-proxy-run:
+	docker run --rm flock-proxy
 
 minikube-start:
 	minikube start \
@@ -129,7 +135,11 @@ load-resources-server:
 	minikube image unload flock-resources-server
 	minikube image load flock-resources-server
 
-load-images: load-webscraper load-agent load-embeddings-loader load-deployer load-observer load-resources-server
+load-proxy:
+	minikube image unload flock-proxy
+	minikube image load flock-proxy
+
+load-images: load-webscraper load-agent load-embeddings-loader load-deployer load-observer load-resources-server load-proxy
 
 
 apply-mongo:
@@ -178,17 +188,23 @@ apply-ingress:
 	sleep 60 # waitng for ingress to be ready
 	kubectl apply -f infra/ingress/k8s
 
+apply-proxy:
+	kubectl apply -f infra/flock_proxy/k8s
+
+delete-proxy:
+	kubectl delete -f infra/flock_proxy/k8s
+
 apply-secret:
 	kubectl apply -f infra/secret.yaml
 
 apply-pvc:
 	kubectl apply -f infra/pvc.yaml
 
-apply-infra: apply-secret apply-pvc apply-mongo apply-rabbitmq apply-vault apply-deployer apply-observer apply-resources-server apply-ingress
+apply-all: apply-secret apply-pvc apply-mongo apply-rabbitmq apply-vault apply-deployer apply-observer apply-resources-server apply-ingress apply-proxy
 
 delete-apps: delete-deployer delete-observer delete-resources-server
 
-setup-all: docker-build-all load-images apply-infra
+setup-all: docker-build-all load-images apply-all
 
 ngrok:
 	ngrok http 80 --basic-auth="$(NGROK_USERNAME):$(NGROK_PASSWORD)"

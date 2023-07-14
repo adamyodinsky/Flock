@@ -1,0 +1,5 @@
+FROM openresty/openresty:alpine
+
+# Copy your custom NGINX configuration file and Lua script into the image
+COPY nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
+COPY script.lua /usr/local/openresty/nginx/conf/script.lua

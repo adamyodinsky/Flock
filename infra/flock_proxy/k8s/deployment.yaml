@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flock-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flock-proxy
+  template:
+    metadata:
+      labels:
+        app: flock-proxy
+    spec:
+      containers:
+        - name: flock-proxy
+          image: flock-proxy
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
