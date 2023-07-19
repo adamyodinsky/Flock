@@ -202,11 +202,19 @@ apply-secret:
 apply-pvc:
 	kubectl apply -f infra/pvc.yaml
 
+validate-resources:
+	cd libs/flock_resources; make validate-resources
+
+upload-schemas:
+	cd libs/flock_schemas; make upload-json-schemas-to-db
+
 apply-all: apply-secret apply-pvc apply-mongo apply-rabbitmq apply-vault apply-deployer apply-observer apply-resources-server apply-ingress apply-proxy
 
 delete-apps: delete-deployer delete-observer delete-resources-server
 
-setup-all: docker-build-all load-images apply-all
+setup-all: docker-build-all load-images apply-all fill-db-with-data
 
 ngrok:
 	ngrok http 80 --basic-auth="$(NGROK_USERNAME):$(NGROK_PASSWORD)"
+
+fill-db-with-data: validate-resources upload-schemas

@@ -3,6 +3,8 @@
 import os
 import readline
 
+from dotenv import find_dotenv, load_dotenv
+from flock_common import check_env_vars
 from flock_common.validation import validation_iterator
 from flock_resource_store import ResourceStoreFactory
 from flock_schemas import SchemaFactory
@@ -10,16 +12,35 @@ from flock_schemas import SchemaFactory
 from flock_builder import ResourceBuilder
 from flock_resources.embeddings_loader import EmbeddingsLoaderResource
 
-
 # Setup
 # pylint: disable=C0103
 secret_store = None
-required_vars = []
-optional_vars = ["STORE_TYPE"]
+required_vars = [
+    "OPENAI_API_KEY",
+    "SERPAPI_API_KEY",
+    "WOLFRAM_ALPHA_APPID",
+]
+optional_vars = [
+    "RESOURCE_STORE_TYPE",
+    "RESOURCE_STORE_DB_NAME",
+    "RESOURCE_STORE_TABLE_NAME",
+    "RESOURCE_STORE_HOST",
+    "RESOURCE_STORE_PORT",
+    "RESOURCE_STORE_USERNAME",
+    "RESOURCE_STORE_PASSWORD",
+]
 
+load_dotenv(find_dotenv(os.environ.get("ENV_FILE", ".env")))
+check_env_vars(required_vars, optional_vars)
 
 resource_store = ResourceStoreFactory.get_resource_store(
-    store_type=os.getenv("STORE_TYPE", "mongo")
+    store_type=os.environ.get("RESOURCE_STORE_TYPE", "mongo"),
+    db_name=os.environ.get("RESOURCE_STORE_DB_NAME", "flock_db"),
+    table_name=os.environ.get("RESOURCE_STORE_TABLE_NAME", "flock_resources"),
+    host=os.environ.get("RESOURCE_STORE_HOST", "localhost"),
+    port=int(os.environ.get("RESOURCE_STORE_PORT", 27017)),
+    username=os.environ.get("RESOURCE_STORE_USERNAME", "root"),
+    password=os.environ.get("RESOURCE_STORE_PASSWORD", "password"),
 )
 
 resource_builder = ResourceBuilder(resource_store=resource_store)
