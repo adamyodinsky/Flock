@@ -1,4 +1,4 @@
-.PHONY: help docker-base-build docker-agent-build docker-agent-run minikube-start load-images docker-embeddings-loader-build docker-embeddings-loader-run docker-webscraper-build docker-webscraper-run docker-deployer-build docker-deployer-run docker-build-all apply-mongo apply-deployer apply-rabbitmq apply-vault apply-secret apply-pvc setup-all apply-infra
+.PHONY: help docker-base-build docker-agent-build docker-agent-run minikube-start load-images docker-embeddings-loader-build docker-embeddings-loader-run docker-webscraper-build docker-webscraper-run docker-deployer-build docker-deployer-run docker-build-all apply-mongo apply-deployer apply-rabbitmq apply-vault apply-secret apply-pvc setup-all apply-infra fill-db-with-data
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
@@ -208,6 +208,8 @@ validate-resources:
 upload-schemas:
 	cd libs/flock_schemas; make upload-json-schemas-to-db
 
+fill-db-with-data: validate-resources upload-schemas
+
 apply-all: apply-secret apply-pvc apply-mongo apply-vault apply-rabbitmq apply-deployer apply-observer apply-resources-server apply-ingress apply-proxy
 
 delete-apps: delete-deployer delete-observer delete-resources-server
@@ -216,5 +218,3 @@ setup-all: docker-build-all load-images apply-all fill-db-with-data
 
 ngrok:
 	ngrok http 80 --basic-auth="$(NGROK_USERNAME):$(NGROK_PASSWORD)"
-
-fill-db-with-data: validate-resources upload-schemas
