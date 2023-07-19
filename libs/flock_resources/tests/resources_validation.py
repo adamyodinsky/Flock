@@ -10,6 +10,7 @@ from flock_schemas import SchemaFactory
 from flock_builder import ResourceBuilder
 from flock_resources.embeddings_loader import EmbeddingsLoaderResource
 
+
 # Setup
 # pylint: disable=C0103
 secret_store = None

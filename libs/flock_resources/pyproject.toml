@@ -13,7 +13,7 @@ packages = [
 python = "^3.9"
 pydantic = "^1.10.7"
 pyyaml = "^6.0"
-langchain = "^0.0.222"
+langchain = "^0.0.235"
 chromadb = "^0.3.21"
 tiktoken = "^0.3.3"
 google-search-results = "^2.4.2"
@@ -32,6 +32,8 @@ flock-schemas = {path = "../flock_schemas", develop = true}
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"
 isort = "^5.12.0"
+python-dotenv = "^1.0.0"
+flock-common = {path = "../../libs/flock_common", develop = true}
 
 [build-system]
 requires = ["poetry-core"]
