@@ -55,4 +55,4 @@ spec:
               service:
                 name: flock-proxy
                 port:
-                  number: 9002
+                  number: 80

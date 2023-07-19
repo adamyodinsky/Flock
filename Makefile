@@ -194,6 +194,8 @@ apply-proxy:
 delete-proxy:
 	kubectl delete -f infra/flock_proxy/k8s
 
+reload-proxy: delete-proxy docker-proxy-build load-proxy apply-proxy
+
 apply-secret:
 	kubectl apply -f infra/secret.yaml
 

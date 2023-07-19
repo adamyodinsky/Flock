@@ -46,7 +46,7 @@ def cli():
 )
 @click.option(
     "--port",
-    default=os.environ.get("FLOCK_AGENT_PORT", 8080),
+    default=os.environ.get("FLOCK_AGENT_PORT", 80),
     type=int,
     help="The port the server should listen on.",
 )

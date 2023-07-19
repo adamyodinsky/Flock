@@ -19,7 +19,7 @@ env:
         name: mysecret
         key: mongo-password
   - name: FLOCK_AGENT_PORT
-    value: "8080"
+    value: "80"
   - name: FLOCK_AGENT_HOST
     value: "0.0.0.0"
   - name: QUEUE_HOST
