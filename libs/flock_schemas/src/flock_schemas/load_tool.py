@@ -2,9 +2,10 @@
 from enum import Enum
 from typing import Literal, Union
 
-from flock_schemas.base import BaseOptions, BaseResourceSchema, Category
-from flock_schemas.dependencies import LLMChatDependency, LLMDependency
 from pydantic import Field
+
+from flock_schemas.base import BaseOptions, BaseResourceSchema, BaseSpec, Category
+from flock_schemas.dependencies import LLMChatDependency, LLMDependency
 
 
 class LoadToolVendor(str, Enum):
@@ -37,7 +38,7 @@ class LoadToolVendor(str, Enum):
     open_meteo_api = "open-meteo-api"
 
 
-class LoadToolSpec(BaseOptions):
+class LoadToolSpec(BaseSpec):
     """LoadTool spec."""
 
     vendor: LoadToolVendor = Field(

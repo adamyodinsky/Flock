@@ -5,7 +5,7 @@ kind: LLMChat
 namespace: default
 # uuid: b70bb61d-6710-48bd-85b0-f32c91f1eed1
 metadata:
-  name: my-openai-llm-gpt4
+  name: openai-gpt-4
   description: openai large language model
   labels:
     app: my_app

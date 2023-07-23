@@ -15,5 +15,5 @@ spec:
     collection_name: "meta_reports"
   dependencies:
     - kind: Embedding
-      name: my-openai-embedding
+      name: openai-embedding
       namespace: default

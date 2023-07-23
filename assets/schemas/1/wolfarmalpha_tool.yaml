@@ -4,7 +4,7 @@ apiVersion: flock/v1
 kind: LoadTool
 namespace: default
 metadata:
-  name: my-wolfram-alpha
+  name: wolfram-alpha
   description: Data computation, factual information retrieval, mathematics problems, scientific queries, and statistics.
   labels:
     app: my_app
@@ -14,5 +14,5 @@ spec:
     verbose: true
   dependencies:
     - kind: LLMChat
-      name: my-openai-llm
+      name: openai-gpt-3-5
       namespace: default

@@ -14,9 +14,9 @@ spec:
     verbose: true
   dependencies:
     - kind: LLMChat
-      name: my-openai-llm
+      name: openai-gpt-4
       namespace: default
   tools:
     - kind: LoadTool
-      name: my-google-search
+      name: google-search-gpt-4
       namespace: default

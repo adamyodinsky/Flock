@@ -14,15 +14,15 @@ spec:
     verbose: true
   dependencies:
     - kind: LLMChat
-      name: my-openai-gpt4all-llm # my-openai-llm
+      name: gpt4all-llm-copycat
       namespace: default
   tools:
     - kind: VectorStoreQATool
       name: finance-qa-tool
       namespace: default
     - kind: LoadTool
-      name: my-google-search
+      name: google-search-gpt-4
       namespace: default
     - kind: LoadTool
-      name: my-wolfram-alpha
+      name: wolfram-alpha
       namespace: default

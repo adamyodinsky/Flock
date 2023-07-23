@@ -4,7 +4,7 @@ apiVersion: flock/v1
 kind: Embedding
 namespace: default
 metadata:
-  name: my-openai-embedding
+  name: openai-embedding
   description: OpenAI embedding
 spec:
   vendor: OpenAIEmbeddings

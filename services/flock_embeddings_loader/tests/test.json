@@ -23,14 +23,14 @@
     "dependencies": [
       {
         "labels": null,
-        "name": "my-splitter",
+        "name": "text-splitter",
         "kind": "Splitter",
         "namespace": "default",
         "options": {}
       },
       {
         "labels": null,
-        "name": "my-openai-embedding",
+        "name": "openai-embedding",
         "kind": "Embedding",
         "namespace": "default",
         "options": {}

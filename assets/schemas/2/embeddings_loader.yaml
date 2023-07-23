@@ -13,7 +13,7 @@ spec:
   vendor: v1
   dependencies:
     - kind: Splitter
-      name: my-splitter
+      name: text-splitter
       namespace: default
     - kind: VectorStore
       name: books

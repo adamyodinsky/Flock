@@ -4,7 +4,7 @@ apiVersion: flock/v1
 kind: Agent
 namespace: default
 metadata:
-  name: my-baby-agi-agent
+  name: task-delegation-agent
   description: An autonomous agent
   labels:
     app: my_app
@@ -21,12 +21,12 @@ spec:
       input_variables: ["objective", "task", "context", "agent_scratchpad"]
   dependencies:
     - kind: LLMChat
-      name: my-openai-llm
+      name: openai-gpt-4
       namespace: default
   tools:
     - kind: LLMTool
-      name: my-llm-tool
+      name: todo-list-tool
       namespace: default
     - kind: LoadTool
-      name: my-google-search
+      name: google-search-gpt-4
       namespace: default

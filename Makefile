@@ -208,7 +208,7 @@ validate-resources:
 upload-schemas:
 	cd libs/flock_schemas; make upload-json-schemas-to-db
 
-fill-db-with-data: validate-resources upload-schemas
+fill-db-with-data: upload-schemas validate-resources
 
 apply-all: apply-secret apply-pvc apply-mongo apply-vault apply-rabbitmq apply-deployer apply-observer apply-resources-server apply-ingress apply-proxy
 

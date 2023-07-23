@@ -13,5 +13,5 @@ spec:
     collection_name: "books"
   dependencies:
     - kind: Embedding
-      name: my-openai-embedding
+      name: openai-embedding
       namespace: default

@@ -4,7 +4,7 @@ apiVersion: flock/v1
 kind: Splitter
 namespace: default
 metadata:
-  name: my-splitter
+  name: text-splitter
   description: text-splitter
   labels:
     app: my_app

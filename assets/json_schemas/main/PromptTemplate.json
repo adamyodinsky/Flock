@@ -3,6 +3,11 @@
   "description": "PromptTemplate schema.",
   "type": "object",
   "properties": {
+    "id": {
+      "title": "Id",
+      "description": "String UUID of the object",
+      "type": "string"
+    },
     "apiVersion": {
       "title": "Apiversion",
       "description": "API version",

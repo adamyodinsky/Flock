@@ -4,7 +4,7 @@ apiVersion: flock/v1
 kind: PromptTemplate
 namespace: default
 metadata:
-  name: my-prompt-template
+  name: prompt-template
   description: prompt template
   labels:
     app: my_app

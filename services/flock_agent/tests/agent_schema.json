@@ -17,14 +17,14 @@
     "dependencies": [
       {
         "kind": "LLMChat",
-        "name": "my-openai-llm-gpt4",
+        "name": "openai-gpt4",
         "namespace": "default"
       }
     ],
     "tools": [
       {
         "kind": "LoadTool",
-        "name": "my-google-search-gpt4",
+        "name": "google-search-gpt4",
         "namespace": "default"
       }
     ]

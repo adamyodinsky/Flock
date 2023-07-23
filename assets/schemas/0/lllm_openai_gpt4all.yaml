@@ -4,7 +4,7 @@ apiVersion: flock/v1
 kind: LLMChat
 namespace: default
 metadata:
-  name: my-openai-gpt4all-llm
+  name: gpt4all-llm-copycat
   description: openai language model
   labels:
     app: my_app

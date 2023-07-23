@@ -12,6 +12,7 @@
     "vendor": {
       "title": "Vendor",
       "description": "The resource class",
+      "default": "",
       "type": "string"
     },
     "dependencies": {
@@ -33,9 +34,6 @@
       }
     }
   },
-  "required": [
-    "vendor"
-  ],
   "additionalProperties": false,
   "definitions": {
     "Kind": {

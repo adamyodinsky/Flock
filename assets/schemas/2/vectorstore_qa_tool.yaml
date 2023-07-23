@@ -19,5 +19,5 @@ spec:
       name: meta_reports
       namespace: default
     - kind: LLMChat
-      name: my-openai-llm
+      name: openai-gpt-3-5
       namespace: default

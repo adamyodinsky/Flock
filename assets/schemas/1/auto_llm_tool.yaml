@@ -4,7 +4,7 @@ apiVersion: flock/v1
 kind: LLMTool
 namespace: default
 metadata:
-  name: my-llm-tool
+  name: todo-list-tool
   description: "Useful for coming up with todo lists. Input: an objective to create a todo list for. Output: a todo list for that objective. Please be very clear what the objective is!"
   labels:
     app: my_app
@@ -14,8 +14,8 @@ spec:
     verbose: true
   dependencies:
     - kind: PromptTemplate
-      name: my-prompt-template
+      name: prompt-template
       namespace: default
     - kind: LLMChat
-      name: my-openai-llm
+      name: openai-gpt-3-5
       namespace: default

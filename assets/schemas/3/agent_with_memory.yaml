@@ -14,12 +14,12 @@ spec:
     verbose: true
   dependencies:
     - kind: LLMChat
-      name: my-openai-llm
+      name: openai-gpt-3-5
       namespace: default
   tools:
     - kind: VectorStoreQATool
       name: finance-qa-tool
       namespace: default
     - kind: LoadTool
-      name: my-google-search
+      name: google-search-gpt-4
       namespace: default

@@ -1,11 +1,11 @@
-# yaml-language-server: $schema=../../../json_schemas/main/LoadToolSchema.json
+# yaml-language-server: $schema=../../json_schemas/main/LoadTool.json
 ---
 apiVersion: flock/v1
 kind: LoadTool
 namespace: default
 metadata:
-  name: my-google-search
-  description: Reliable source for knowledge about current events and facts beyond 2021.
+  name: google-search-gpt-4
+  description: Reliable source for current events and facts beyond 2021.
   labels:
     app: my_app
 spec:
@@ -14,5 +14,5 @@ spec:
     verbose: true
   dependencies:
     - kind: LLMChat
-      name: my-openai-llm
+      name: openai-gpt-4
       namespace: default

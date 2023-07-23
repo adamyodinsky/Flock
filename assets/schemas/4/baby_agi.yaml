@@ -15,11 +15,11 @@ spec:
     max_iterations: 3
   dependencies:
     - kind: LLMChat
-      name: my-openai-llm # my-openai-gpt4all-llm # my-openai-llm
+      name: openai-gpt-4
       namespace: default
     - kind: Embedding
-      name: my-openai-embedding
+      name: openai-embedding
       namespace: default
     - kind: Agent
-      name: my-baby-agi-agent
+      name: task-delegation-agent
       namespace: default
