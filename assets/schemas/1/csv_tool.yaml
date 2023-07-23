@@ -1,0 +1,17 @@
+# yaml-language-server: $schema=../../json_schemas/main/CSVTool.json
+---
+apiVersion: flock/v1
+kind: CSVTool
+namespace: default
+metadata:
+  name: csv-tool
+  description: "Useful for reading and writing csv files"
+  labels:
+    app: my_app
+spec:
+  options:
+    verbose: true
+  dependencies:
+    - kind: LLMChat
+      name: openai-gpt-3-5
+      namespace: default

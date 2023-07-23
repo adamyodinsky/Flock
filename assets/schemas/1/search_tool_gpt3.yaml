@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=../../json_schemas/main/LoadTool.json
+---
+apiVersion: flock/v1
+kind: LoadTool
+namespace: default
+metadata:
+  name: google-search-gpt-3-5
+  description: Reliable source for knowledge about current events and facts beyond 2021.
+  labels:
+    app: my_app
+spec:
+  vendor: serpapi
+  options:
+    verbose: true
+  dependencies:
+    - kind: LLMChat
+      name: openai-gpt-3-5
+      namespace: default
