@@ -47,6 +47,8 @@ class Kind(str, Enum):
     LLMTool = "LLMTool"
     EmbeddingsLoader = "EmbeddingsLoader"
     WebScraper = "WebScraper"
+    CSVTool = "CSVTool"
+    BrowserTool = "BrowserTool"
     Custom = "Custom"
 
 

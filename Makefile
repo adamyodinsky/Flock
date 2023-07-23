@@ -1,4 +1,4 @@
-.PHONY: help docker-base-build docker-agent-build docker-agent-run minikube-start load-images docker-embeddings-loader-build docker-embeddings-loader-run docker-webscraper-build docker-webscraper-run docker-deployer-build docker-deployer-run docker-build-all apply-mongo apply-deployer apply-rabbitmq apply-vault apply-secret apply-pvc setup-all apply-infra fill-db-with-data
+.PHONY: help docker-base-build docker-agent-build docker-agent-run docker-embeddings-loader-build docker-embeddings-loader-run docker-webscraper-build docker-webscraper-run docker-deployer-build docker-deployer-run docker-build-all
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
@@ -83,6 +83,8 @@ docker-webscraper-run:
 docker-proxy-run:
 	docker run --rm flock-proxy
 
+.PHONY: minikube-start
+
 minikube-start:
 	minikube start \
 	--ports=127.0.0.1:80:32080 \
@@ -110,6 +112,7 @@ minikube-start:
 # 9001:30206 # flock-observer
 # 9002:30207 # flock-resources-server
 
+.PHONY: load-webscraper load-agent load-embeddings-loader load-deployer load-observer load-resources-server load-proxy load-images
 
 load-webscraper:
 	minikube image unload flock-webscraper
@@ -141,6 +144,7 @@ load-proxy:
 
 load-images: load-webscraper load-agent load-embeddings-loader load-deployer load-observer load-resources-server load-proxy
 
+.PHONY: apply-mongo delete-mongo apply-deployer delete-deployer apply-observer delete-observer apply-resources-server delete-resources-server apply-rabbitmq delete-rabbitmq apply-vault delete-vault apply-ingress apply-proxy delete-proxy reload-proxy apply-secret apply-pvc validate-resources write-schemas validate-flock-schemas upload-schemas fill-db-with-data apply-all delete-apps setup-all
 
 apply-mongo:
 	kubectl apply -f infra/mongoDB/k8s
@@ -205,10 +209,15 @@ apply-pvc:
 validate-resources:
 	cd libs/flock_resources; make validate-resources
 
-upload-schemas:
+write-schemas:
+	cd libs/flock_schemas; make write-json-schemas
+
+schemas-setup:
+	cd libs/flock_schemas; make validate-schemas
+	cd libs/flock_schemas; make write-json-schemas
 	cd libs/flock_schemas; make upload-json-schemas-to-db
 
-fill-db-with-data: upload-schemas validate-resources
+fill-db-with-data: schemas-setup validate-resources
 
 apply-all: apply-secret apply-pvc apply-mongo apply-vault apply-rabbitmq apply-deployer apply-observer apply-resources-server apply-ingress apply-proxy
 

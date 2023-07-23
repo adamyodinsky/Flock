@@ -1,6 +1,6 @@
 {
-  "title": "EmbeddingsLoaderSchema",
-  "description": "EmbeddingsLoader schema.",
+  "title": "BrowserToolSchema",
+  "description": "BrowserTool schema.",
   "type": "object",
   "properties": {
     "id": {
@@ -20,13 +20,13 @@
       "title": "Kind",
       "description": "The kind of the object",
       "enum": [
-        "EmbeddingsLoader"
+        "BrowserTool"
       ],
       "type": "string"
     },
     "category": {
       "description": "The resource category",
-      "default": "other",
+      "default": "tool",
       "allOf": [
         {
           "$ref": "#/definitions/Category"
@@ -55,7 +55,7 @@
       "format": "date-time"
     },
     "spec": {
-      "$ref": "#/definitions/EmbeddingsLoaderSpec"
+      "$ref": "#/definitions/BrowserToolSpec"
     }
   },
   "required": [
@@ -125,47 +125,9 @@
       ],
       "additionalProperties": false
     },
-    "EmbeddingsLoaderOptions": {
-      "title": "EmbeddingsLoaderOptions",
-      "description": "Options schema.",
-      "type": "object",
-      "properties": {
-        "source_directory": {
-          "title": "Source Directory",
-          "description": "The directory containing the data files",
-          "default": "/Users/adam/.flock/data/raw",
-          "type": "string"
-        },
-        "base_meta_source": {
-          "title": "Base Meta Source",
-          "description": "The base meta source file name",
-          "default": "",
-          "type": "string"
-        },
-        "archive_path": {
-          "title": "Archive Path",
-          "description": "The path to the archive file containing the data files",
-          "default": "/Users/adam/.flock/data/archive",
-          "type": "string"
-        },
-        "allowed_extensions": {
-          "title": "Allowed Extensions",
-          "description": "The allowed extensions for the data files",
-          "default": "",
-          "type": "string"
-        },
-        "deny_extensions": {
-          "title": "Deny Extensions",
-          "description": "The denied extensions for the data files",
-          "default": "",
-          "type": "string"
-        }
-      },
-      "additionalProperties": false
-    },
-    "SplitterDependency": {
-      "title": "SplitterDependency",
-      "description": "Embedding dependency schema.",
+    "LLMDependency": {
+      "title": "LLMDependency",
+      "description": "LLM dependency schema.",
       "type": "object",
       "properties": {
         "labels": {
@@ -184,8 +146,8 @@
         },
         "kind": {
           "title": "Kind",
-          "default": "Splitter",
-          "const": "Splitter",
+          "default": "LLM",
+          "const": "LLM",
           "type": "string"
         },
         "namespace": {
@@ -207,9 +169,9 @@
       ],
       "additionalProperties": false
     },
-    "VectorStoreDependency": {
-      "title": "VectorStoreDependency",
-      "description": "Store dependency schema.",
+    "LLMChatDependency": {
+      "title": "LLMChatDependency",
+      "description": "LLMChat dependency schema.",
       "type": "object",
       "properties": {
         "labels": {
@@ -228,8 +190,8 @@
         },
         "kind": {
           "title": "Kind",
-          "default": "VectorStore",
-          "const": "VectorStore",
+          "default": "LLMChat",
+          "const": "LLMChat",
           "type": "string"
         },
         "namespace": {
@@ -325,37 +287,39 @@
       ],
       "additionalProperties": false
     },
-    "EmbeddingsLoaderSpec": {
-      "title": "EmbeddingsLoaderSpec",
-      "description": "EmbeddingsLoader spec.",
+    "BrowserToolSpec": {
+      "title": "BrowserToolSpec",
+      "description": "BrowserTool spec.",
       "type": "object",
       "properties": {
         "options": {
           "title": "Options",
-          "description": "Options for the embeddings loader",
-          "allOf": [
-            {
-              "$ref": "#/definitions/EmbeddingsLoaderOptions"
-            }
-          ]
+          "description": "Resource options",
+          "default": {},
+          "type": "object"
         },
         "vendor": {
           "title": "Vendor",
-          "default": "v1",
+          "description": "The resource class",
+          "default": "",
           "type": "string"
         },
         "dependencies": {
           "title": "Dependencies",
-          "description": "dependencies",
+          "description": "Tool dependencies",
           "type": "array",
-          "minItems": 2,
-          "maxItems": 2,
+          "minItems": 1,
+          "maxItems": 1,
           "items": [
             {
-              "$ref": "#/definitions/SplitterDependency"
-            },
-            {
-              "$ref": "#/definitions/VectorStoreDependency"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/LLMDependency"
+                },
+                {
+                  "$ref": "#/definitions/LLMChatDependency"
+                }
+              ]
             }
           ]
         },

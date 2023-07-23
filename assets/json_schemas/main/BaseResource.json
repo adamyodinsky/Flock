@@ -83,6 +83,8 @@
         "LLMTool",
         "EmbeddingsLoader",
         "WebScraper",
+        "CSVTool",
+        "BrowserTool",
         "Custom"
       ],
       "type": "string"

@@ -1,0 +1,17 @@
+# yaml-language-server: $schema=../../json_schemas/main/BrowserTool.json
+---
+apiVersion: flock/v1
+kind: BrowserTool
+namespace: default
+metadata:
+  name: browser-tool
+  description: "Useful for browsing the web"
+  labels:
+    app: my_app
+spec:
+  options:
+    verbose: true
+  dependencies:
+    - kind: LLMChat
+      name: openai-gpt-3-5
+      namespace: default

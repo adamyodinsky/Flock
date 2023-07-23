@@ -4,11 +4,12 @@ import asyncio
 from typing import Dict, List, Optional
 
 from bs4 import BeautifulSoup
-from flock_resources.base import Resource, ToolResource
-from flock_schemas import BaseResourceSchema
 from flock_schemas.base import Kind
+from flock_schemas.browser_tool import BrowserToolSchema
 from langchain.agents import tool
 from playwright.async_api import async_playwright
+
+from flock_resources.base import Resource, ToolResource
 
 
 class BrowserToolResource(ToolResource):
@@ -16,7 +17,7 @@ class BrowserToolResource(ToolResource):
 
     def __init__(
         self,
-        manifest: BaseResourceSchema,
+        manifest: BrowserToolSchema,
         dependencies: Optional[Dict[str, Resource]],
         tools: Optional[List[ToolResource]] = None,
         dry_run: bool = False,
@@ -34,7 +35,7 @@ class BrowserToolResource(ToolResource):
             Kind.LLMChat
         )
 
-        self.resource = self.VENDORS[self.vendor]
+        self.resource = self.VENDORS["playwright"]
 
     async def async_load_playwright(self, url: str) -> str:
         """Load the specified URLs using Playwright and parse using BeautifulSoup."""

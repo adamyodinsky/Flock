@@ -6,29 +6,29 @@ from flock_schemas.base import BaseResourceSchema, BaseSpec, Category
 from flock_schemas.dependencies import LLMChatDependency, LLMDependency
 
 
-class CSVToolSpec(BaseSpec):
-    """CSVTool spec."""
+class BrowserToolSpec(BaseSpec):
+    """BrowserTool spec."""
 
     dependencies: tuple[Union[LLMDependency, LLMChatDependency]] = Field(
         ..., description="Tool dependencies"
     )
 
 
-class CSVToolSchema(BaseResourceSchema):
-    """CSVTool schema."""
+class BrowserToolSchema(BaseResourceSchema):
+    """BrowserTool schema."""
 
-    kind: Literal["CSVTool"] = Field(..., description="The kind of the object")
+    kind: Literal["BrowserTool"] = Field(..., description="The kind of the object")
     category: Category = Field(
         default=Category.TOOL, description="The resource category"
     )
-    spec: CSVToolSpec
+    spec: BrowserToolSpec
 
 
 export = {
     "sub": {
-        "CSVToolSpec": CSVToolSpec,
+        "BrowserToolSpec": BrowserToolSpec,
     },
     "main": {
-        "CSVTool": CSVToolSchema,
+        "BrowserTool": BrowserToolSchema,
     },
 }

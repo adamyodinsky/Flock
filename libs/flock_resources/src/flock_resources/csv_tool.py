@@ -3,11 +3,12 @@
 from typing import Dict, List, Optional
 
 import pandas as pd
-from flock_resources.base import Resource, ToolResource
-from flock_schemas import BaseResourceSchema
 from flock_schemas.base import Kind
+from flock_schemas.csv_tool import CSVToolSchema
 from langchain.agents import tool
 from langchain.agents.agent_toolkits.pandas.base import create_pandas_dataframe_agent
+
+from flock_resources.base import Resource, ToolResource
 
 
 class CSVToolResource(ToolResource):
@@ -17,7 +18,7 @@ class CSVToolResource(ToolResource):
 
     def __init__(
         self,
-        manifest: BaseResourceSchema,
+        manifest: CSVToolSchema,
         dependencies: Optional[Dict[str, Resource]],
         tools: Optional[List[ToolResource]] = None,
         dry_run: bool = False,
