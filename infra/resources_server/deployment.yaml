@@ -23,7 +23,7 @@ spec:
             - containerPort: 9002
           resources:
             limits:
-              cpu: 250m
+              cpu: 512m
               memory: 254Mi
           env:
             - name: HOST

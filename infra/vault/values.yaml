@@ -1014,10 +1014,10 @@ csi:
   # resources:
   #   requests:
   #     cpu: 50m
-  #     memory: 128Mi
+  #     memory: 254Mi
   #   limits:
   #     cpu: 50m
-  #     memory: 128Mi
+  #     memory: 254Mi
 
   # Override the default secret name for the CSI Provider's HMAC key used for
   # generating secret versions.

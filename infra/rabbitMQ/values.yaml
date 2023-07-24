@@ -1408,13 +1408,13 @@ volumePermissions:
     ## Example:
     ## limits:
     ##    cpu: 100m
-    ##    memory: 128Mi
+    ##    memory: 254Mi
     ##
     limits: {}
     ## Examples:
     ## requests:
     ##    cpu: 100m
-    ##    memory: 128Mi
+    ##    memory: 254Mi
     ##
     requests: {}
   ## Init container' Security Context
