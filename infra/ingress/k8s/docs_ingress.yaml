@@ -3,7 +3,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: flock-docs
-  
+
 spec:
   ingressClassName: nginx
   rules:
@@ -24,7 +24,7 @@ spec:
                 port:
                   number: 9001
           - pathType: Prefix
-            path: "/resources"
+            path: "/resources-server"
             backend:
               service:
                 name: flock-resources-server

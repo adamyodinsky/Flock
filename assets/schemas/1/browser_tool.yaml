@@ -13,5 +13,5 @@ spec:
     verbose: true
   dependencies:
     - kind: LLMChat
-      name: openai-gpt-3-5
+      name: openai-gpt-4
       namespace: default
