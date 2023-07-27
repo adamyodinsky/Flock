@@ -199,6 +199,9 @@ delete-proxy:
 	kubectl delete -f infra/flock_proxy/k8s
 
 reload-proxy: delete-proxy docker-proxy-build load-proxy apply-proxy
+reload-resources-server: delete-resources-server docker-resources-server-build load-resources-server apply-resources-server
+reload-observer: delete-observer docker-observer-build load-observer apply-observer
+reload-deployer: delete-deployer docker-deployer-build load-deployer apply-deployer
 
 apply-secret:
 	kubectl apply -f infra/secret.yaml
@@ -224,6 +227,8 @@ apply-all: apply-secret apply-pvc apply-mongo apply-vault apply-rabbitmq apply-d
 delete-apps: delete-deployer delete-observer delete-resources-server
 
 setup-all: docker-build-all load-images apply-all fill-db-with-data
+
+reload-all: reload-deployer reload-observer reload-resources-server
 
 ngrok:
 	ngrok http 80 --basic-auth="$(NGROK_USERNAME):$(NGROK_PASSWORD)"

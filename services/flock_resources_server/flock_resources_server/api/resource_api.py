@@ -1,6 +1,5 @@
 """Flock API"""
 
-
 from fastapi import APIRouter, Body, Depends, HTTPException
 from flock_builder import ResourceBuilder
 from flock_resource_store.mongo import ResourceStore
@@ -84,7 +83,7 @@ def get_router(
             raise error
         except Exception as error:  # pylint: disable=broad-except
             raise HTTPException(
-                status_code=500,
+                status_code=400,
                 detail=[
                     "Failed to get resource",
                     str(error),
@@ -117,7 +116,7 @@ def get_router(
 
         except Exception as error:  # pylint: disable=broad-except
             raise HTTPException(
-                status_code=500,
+                status_code=400,
                 detail=[
                     "Failed to get resource",
                     f"namespace: {namespace}",
@@ -158,18 +157,10 @@ def get_router(
                 )
         except HTTPException as error:
             raise error
-        except KeyError as error:
+        except Exception as error:
             raise HTTPException(
                 status_code=422,
                 detail=["Failed to build resource", str(error)],
-            ) from error
-        except Exception as error:  # pylint: disable=broad-except
-            raise HTTPException(
-                status_code=500,
-                detail=[
-                    "Failed to build resource",
-                    str(error),
-                ],
             ) from error
 
         try:
@@ -193,7 +184,7 @@ def get_router(
             resource_store.put(val=schema_instance.dict(by_alias=True))
         except Exception as error:  # pylint: disable=broad-except
             raise HTTPException(
-                status_code=500,
+                status_code=400,
                 detail=[
                     "Failed to store resource",
                     str(error),
@@ -213,9 +204,10 @@ def get_router(
 
         If the resource already exists, it will be updated. Otherwise, an error will be returned.
         """
-
+        fetched_resource = {}
         try:
-            if not resource_store.get(id=id):
+            fetched_resource = resource_store.get(id=id)
+            if fetched_resource is None:
                 raise HTTPException(
                     status_code=404,
                     detail=[
@@ -223,44 +215,27 @@ def get_router(
                         f"id: {id}",
                     ],
                 )
-            if not resource_store.get(
-                namespace=resource_data["namespace"],
-                kind=resource_data["kind"],
-                name=resource_data["metadata"]["name"],
-            ):
-                raise HTTPException(
-                    status_code=404,
-                    detail=[
-                        "Resource not found",
-                        f"namespace: {resource_data['namespace']}",
-                        f"kind: {resource_data['kind']}",
-                        f"name: {resource_data['metadata']['name']}",
-                    ],
-                )
         except HTTPException as error:
             raise error
         except Exception as error:  # pylint: disable=broad-except
             raise HTTPException(
-                status_code=500,
+                status_code=400,
                 detail=[
-                    "Failed to build resource",
+                    "Failed to fetch resource",
                     str(error),
                 ],
             ) from error
+
+        resource_data["id"] = fetched_resource["id"]
 
         try:
             schema_instance = schema_factory.get_schema(resource_data["kind"]).validate(
                 resource_data
             )
             resource_builder.build_resource(resource_data)
-        except ValidationError as error:
+        except Exception as error:
             raise HTTPException(
                 status_code=400,
-                detail=["Failed to build resource", str(error)],
-            ) from error
-        except Exception as error:  # pylint: disable=broad-except
-            raise HTTPException(
-                status_code=500,
                 detail=["Failed to build resource", str(error)],
             ) from error
 
@@ -269,7 +244,7 @@ def get_router(
             resource_store.put(val=schema_instance.dict(by_alias=True))
         except Exception as error:  # pylint: disable=broad-except
             raise HTTPException(
-                status_code=500,
+                status_code=400,
                 detail=[
                     "Failed to store resource",
                     str(error),
@@ -313,7 +288,7 @@ def get_router(
             )
         except Exception as error:  # pylint: disable=broad-except
             raise HTTPException(
-                status_code=500,
+                status_code=400,
                 detail=[
                     "Failed to delete resource",
                     str(error),
@@ -371,7 +346,7 @@ def get_router(
             raise error
         except Exception as error:
             raise HTTPException(
-                status_code=500,
+                status_code=400,
                 detail=[
                     "Failed to get schema",
                     str(error),
@@ -391,7 +366,7 @@ def get_router(
 
         except Exception as error:
             raise HTTPException(
-                status_code=500,
+                status_code=400,
                 detail=[
                     "Failed to get schemas",
                     str(error),
