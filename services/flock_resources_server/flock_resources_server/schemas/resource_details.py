@@ -8,9 +8,11 @@ from pydantic import BaseModel, Field
 class ResourceDetails(BaseModel):
     """ResourceDetails."""
 
-    name: str = Field(alias="name", default=None)
+    id: str = Field(default=None)
+    metadata: dict = Field(default=None)
+    kind: str = Field(default=None)
     namespace: str = Field(default=None)
-    kind: str = Field(alias="kind", default=None)
+    category: str = Field(default=None)
 
 
 ResourceDetails.update_forward_refs()

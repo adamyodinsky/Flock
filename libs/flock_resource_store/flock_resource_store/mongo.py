@@ -106,11 +106,11 @@ class MongoResourceStore(ResourceStore):
             self.table.find(
                 filter=filter_query,
                 projection={
-                    "name": "$metadata.name",
-                    "description": "$metadata.description",
+                    "id": True,
+                    "metadata": True,
                     "kind": True,
-                    "category": True,
                     "namespace": True,
+                    "category": True,
                 },
             )
             .skip(skip_count)

@@ -6,15 +6,15 @@ import sys
 import click
 from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from flock_agent.agent import FlockAgent
+from flock_agent.routes import create_agent_routes
 from flock_common import EnvVarNotSetError, check_env_vars
 from flock_common.logging import init_logging
 from flock_common.queue_client import QueueClientFactory
 from flock_resource_store import ResourceStoreFactory
 from flock_task_management_store import TaskManagementStoreFactory
 from uvicorn import run
-
-from flock_agent.agent import FlockAgent
-from flock_agent.routes import create_agent_routes
 
 init_logging(
     destination=os.environ.get("FLOCK_LOG_DESTINATION", "stdout"),
@@ -156,6 +156,12 @@ def run_agent(schema_path, schema_value, host, port):
         description="A Flock Agent is a server that can be used to run Flock tasks.",
         version="0.0.1",
     )
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],  # Allow any origin
+    )
+
     router = create_agent_routes(flock_agent)
     app.include_router(router)
 
