@@ -148,7 +148,7 @@ def get_router(
                 is not None
             ):
                 raise HTTPException(
-                    status_code=409,
+                    status_code=422,
                     detail=[
                         "Resource already exists",
                         f"namespace: {namespace}",
@@ -160,7 +160,7 @@ def get_router(
             raise error
         except KeyError as error:
             raise HTTPException(
-                status_code=400,
+                status_code=422,
                 detail=["Failed to build resource", str(error)],
             ) from error
         except Exception as error:  # pylint: disable=broad-except

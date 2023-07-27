@@ -7,6 +7,7 @@ import sys
 import click
 from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from flock_builder import ResourceBuilder
 from flock_common import EnvVarNotSetError, check_env_vars, init_logging
 from flock_resource_store import ResourceStoreFactory
@@ -68,6 +69,14 @@ def run_server(host, port):
         docs_url=f"/{api_prefix}/docs",
         redoc_url=f"/{api_prefix}/redoc",
         openapi_url=f"/{api_prefix}/openapi.json",
+    )
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["http://localhost:3000"],  # Allow any origin
+        allow_credentials=True,
+        allow_methods=["*"],  # Allow any method
+        allow_headers=["*"],  # Allow any header
     )
 
     logging.info("Initializing Flock Resource Store")

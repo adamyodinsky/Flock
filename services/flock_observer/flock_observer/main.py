@@ -7,6 +7,7 @@ import sys
 import click
 from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from flock_common import EnvVarNotSetError, check_env_vars, init_logging
 from uvicorn import run
 
@@ -68,6 +69,15 @@ def run_observer(host, port):
         redoc_url=f"/{api_prefix}/redoc",
         openapi_url=f"/{api_prefix}/openapi.json",
     )
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["http://localhost:3000"],  # Allow any origin
+        allow_credentials=True,
+        allow_methods=["*"],  # Allow any method
+        allow_headers=["*"],  # Allow any header
+    )
+
     router = get_router(observer, api_prefix)
     app.include_router(router)
 

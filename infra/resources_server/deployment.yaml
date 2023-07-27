@@ -39,3 +39,19 @@ spec:
                 secretKeyRef:
                   name: mysecret
                   key: mongo-password
+
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mysecret
+                  key: openai-token
+            - name: SERPAPI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mysecret
+                  key: serpapi-token
+            - name: WOLFRAM_ALPHA_APPID
+              valueFrom:
+                secretKeyRef:
+                  name: mysecret
+                  key: wolfram-app-id
