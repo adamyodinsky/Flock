@@ -184,7 +184,7 @@ def get_router(
             ) from error
         except Exception as error:  # pylint: disable=broad-except
             raise HTTPException(
-                status_code=500,
+                status_code=400,
                 detail=["Failed to build resource", str(error)],
             ) from error
 
@@ -307,7 +307,7 @@ def get_router(
             return ResourceDeleted(
                 details=[
                     "Resource deleted",
-                    f"Parameters: namespace={namespace}, kind={kind}, category={category}, name={name}",
+                    f"Parameters: namespace={namespace}, kind={kind}, category={category}, name={name}, id={id}",
                     f"Count: {resource_data.deleted_count}",  # type: ignore
                 ],
             )
