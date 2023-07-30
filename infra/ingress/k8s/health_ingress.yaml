@@ -5,6 +5,8 @@ metadata:
   name: flock-health
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /health
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+
 spec:
   ingressClassName: nginx
   rules:

@@ -3,7 +3,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: flock-docs
-
+  annotations:
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
 spec:
   ingressClassName: nginx
   rules:
