@@ -87,7 +87,7 @@ docker-proxy-run:
 
 minikube-start:
 	minikube start \
-	--ports=127.0.0.1:80:32080 \
+	--ports=0.0.0.0:80:32080 \
 	--ports=127.0.0.1:443:32443 \
 	--ports=127.0.0.1:27017:30200  \
 	--ports=127.0.0.1:8200:30201  \
@@ -231,4 +231,4 @@ setup-all: docker-build-all load-images apply-all fill-db-with-data
 reload-all: reload-deployer reload-observer reload-resources-server
 
 ngrok:
-	ngrok http --basic-auth="$(NGROK_USERNAME):$(NGROK_PASSWORD)" --host-header=rewrite 3000
+	ngrok http 80 # --basic-auth="$(NGROK_USERNAME):$(NGROK_PASSWORD)" --host-header=rewrite 

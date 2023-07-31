@@ -3,8 +3,9 @@
 from enum import Enum
 from typing import Literal
 
-from flock_schemas.base import BaseOptions, BaseResourceSchema, Category
 from pydantic import Field
+
+from flock_schemas.base import BaseOptions, BaseResourceSchema, Category
 
 
 class LLMChatVendor(str, Enum):
