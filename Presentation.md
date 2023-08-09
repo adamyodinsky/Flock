@@ -176,3 +176,8 @@ Great, you've done an excellent job in providing crucial details. Based on the i
 - Open the floor for questions from the audience
 
 Remember, this is just a suggested structure. Feel free to adjust it based on your unique needs and the flow of your presentation. Keep your presentation engaging with visuals, charts, and graphs to support your points. It's also good to practice your pitch to ensure that you can deliver it confidently and within the time frame given.
+
+
+## Vision
+
+What is my vision

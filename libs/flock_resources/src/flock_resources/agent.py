@@ -39,7 +39,7 @@ class AgentResource(Agent):
                     memory_key="chat_history", return_messages=True
                 )
             }
-        llm = self.dependencies.get(Kind.LLM) or self.dependencies.get(Kind.LLMChat)
+        llm = self.dependencies.get(Kind.LLMChat)
         self.llm = llm
 
         self.resource = initialize_agent(

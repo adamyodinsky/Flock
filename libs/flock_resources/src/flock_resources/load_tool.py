@@ -52,9 +52,7 @@ class LoadToolResource(ToolResource):
         if tools is None:
             tools = []
 
-        self.llm = self.dependencies.get(Kind.LLM) or self.dependencies.get(
-            Kind.LLMChat
-        )
+        self.llm = self.dependencies.get(Kind.LLMChat)
 
         self.tool_function = load_toolsLC(
             tool_names=[self.vendor],

@@ -3,7 +3,10 @@ FROM flock-python-base as agent-base-stage
 
 ENV FASTAPI_ENV=production
 
-COPY ./libs $PYSETUP_PATH/libs
+COPY ./libs/flock_common $PYSETUP_PATH/libs/flock_common
+COPY ./libs/flock_resources $PYSETUP_PATH/libs/flock_resources
+COPY ./libs/flock_task_management_store $PYSETUP_PATH/libs/flock_task_management_store
+
 COPY ./services/flock_agent $PYSETUP_PATH/services/flock_agent
 
 WORKDIR $PYSETUP_PATH/services/flock_agent

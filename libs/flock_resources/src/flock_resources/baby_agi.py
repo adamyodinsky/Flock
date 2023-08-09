@@ -2,14 +2,14 @@
 from typing import Dict, List, Optional
 
 import faiss
+from flock_schemas.base import Kind
+from flock_schemas.custom import CustomSchema
 from langchain.docstore import InMemoryDocstore
 from langchain.embeddings.base import Embeddings
-from langchain.experimental import BabyAGI
 from langchain.vectorstores import FAISS
+from langchain_experimental.autonomous_agents import BabyAGI
 
 from flock_resources.base import CustomResource, Resource, ToolResource
-from flock_schemas.custom import CustomSchema
-from flock_schemas.base import Kind
 
 
 class BabyAGIAgent(CustomResource):
@@ -30,7 +30,7 @@ class BabyAGIAgent(CustomResource):
         index = faiss.IndexFlatL2(embedding_size)
         vectorstore = FAISS(embedding.embed_query, index, InMemoryDocstore({}), {})
 
-        llm = self.dependencies.get(Kind.LLM) or self.dependencies.get(Kind.LLMChat)
+        llm = self.dependencies.get(Kind.LLMChat)
         self.llm = llm.resource  # type: ignore
 
         self.resource = BabyAGI.from_llm(

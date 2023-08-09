@@ -125,6 +125,14 @@
       ],
       "additionalProperties": false
     },
+    "VectorStoreVendor": {
+      "title": "VectorStoreVendor",
+      "description": "Enum for vectorstore vendors.",
+      "enum": [
+        "Chroma"
+      ],
+      "type": "string"
+    },
     "EmbeddingDependency": {
       "title": "EmbeddingDependency",
       "description": "Embedding dependency schema.",
@@ -181,9 +189,12 @@
           "type": "object"
         },
         "vendor": {
-          "title": "Vendor",
           "description": "The vendor of the vector store, e.g. Chroma, Pinecone, etc.",
-          "type": "string"
+          "allOf": [
+            {
+              "$ref": "#/definitions/VectorStoreVendor"
+            }
+          ]
         },
         "dependencies": {
           "title": "Dependencies",

@@ -27,14 +27,15 @@ class AgentVendor(str, Enum):
         "structured-chat-zero-shot-react-description"
     )
     OPENAI_FUNCTIONS = "openai-functions"
+    OPENAI_MULTI_FUNCTIONS = "openai-multi-functions"
 
 
 class AgentSpec(BaseOptions):
     """Agent spec."""
 
-    vendor: AgentType = Field(..., description="Agent type")
+    vendor: AgentVendor = Field(..., description="Agent type")
     tools: List[BaseToolDependency] = Field(..., description="Agent tools")
-    dependencies: tuple[Union[LLMDependency, LLMChatDependency]] = Field(
+    dependencies: tuple[LLMChatDependency] = Field(
         ..., description="Agent dependencies"
     )
 

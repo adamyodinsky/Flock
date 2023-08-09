@@ -55,7 +55,7 @@
       "format": "date-time"
     },
     "spec": {
-      "$ref": "#/definitions/VectorStoreSpec"
+      "$ref": "#/definitions/WebScraperSpec"
     }
   },
   "required": [
@@ -125,6 +125,80 @@
       ],
       "additionalProperties": false
     },
+    "Kind": {
+      "title": "Kind",
+      "description": "Enum for all kinds of resources.",
+      "enum": [
+        "Embedding",
+        "VectorStore",
+        "VectorStoreQATool",
+        "LLM",
+        "LLMChat",
+        "LoadTool",
+        "Splitter",
+        "Agent",
+        "PromptTemplate",
+        "LLMTool",
+        "EmbeddingsLoader",
+        "WebScraper",
+        "CSVTool",
+        "BrowserTool",
+        "Custom"
+      ],
+      "type": "string"
+    },
+    "BaseToolDependency": {
+      "title": "BaseToolDependency",
+      "description": "Base tool dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "default": {},
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind of the dependency",
+          "allOf": [
+            {
+              "$ref": "#/definitions/Kind"
+            }
+          ]
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string"
+        },
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object"
+        },
+        "description": {
+          "title": "Description",
+          "description": "Tool description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
     "VectorStoreDependency": {
       "title": "VectorStoreDependency",
       "description": "Store dependency schema.",
@@ -169,9 +243,9 @@
       ],
       "additionalProperties": false
     },
-    "VectorStoreSpec": {
-      "title": "VectorStoreSpec",
-      "description": "Vectorstore spec.",
+    "WebScraperSpec": {
+      "title": "WebScraperSpec",
+      "description": "WebScraper spec.",
       "type": "object",
       "properties": {
         "options": {
@@ -182,12 +256,22 @@
         },
         "vendor": {
           "title": "Vendor",
-          "description": "The vendor of the vector store, e.g. Chroma, Pinecone, etc.",
+          "description": "The resource class",
+          "default": "",
           "type": "string"
+        },
+        "tools": {
+          "title": "Tools",
+          "description": "Tools for the object",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BaseToolDependency"
+          }
         },
         "dependencies": {
           "title": "Dependencies",
-          "description": "Vectorstore dependencies",
+          "description": "dependencies",
           "type": "array",
           "minItems": 1,
           "maxItems": 1,
@@ -199,7 +283,6 @@
         }
       },
       "required": [
-        "vendor",
         "dependencies"
       ],
       "additionalProperties": false

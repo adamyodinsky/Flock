@@ -23,6 +23,7 @@ class ResourceStore(metaclass=abc.ABCMeta):
         name: str = "",
         kind: str = "",
         id: str = "",
+        tool: str = "",
     ) -> dict:
         """Load a resource from the store."""
 
@@ -33,6 +34,7 @@ class ResourceStore(metaclass=abc.ABCMeta):
         namespace: str = "",
         name: str = "",
         kind: str = "",
+        tool: str = "",
         page: int = 1,
         page_size: int = 50,
     ) -> list[dict]:
@@ -46,6 +48,7 @@ class ResourceStore(metaclass=abc.ABCMeta):
         name: str = "",
         kind: str = "",
         id: str = "",
+        tool: str = "",
     ):
         """Delete a resource"""
 
@@ -57,6 +60,7 @@ class ResourceStore(metaclass=abc.ABCMeta):
         name: str = "",
         kind: str = "",
         id: str = "",
+        tool: str = "",
     ):
         """Delete a resource"""
 

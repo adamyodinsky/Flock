@@ -57,12 +57,18 @@ def get_router(
         category: str = "",
         name: str = "",
         id: str = "",
+        tool: str = "",
         resource_store: ResourceStore = Depends(lambda: resource_store),
     ) -> ResourceFetched:
         """Get a resource"""
         try:
             resource_data = resource_store.get(
-                namespace=namespace, kind=kind, category=category, name=name, id=id
+                namespace=namespace,
+                kind=kind,
+                category=category,
+                name=name,
+                id=id,
+                tool=tool,
             )
 
             if resource_data is None:
@@ -95,6 +101,7 @@ def get_router(
         kind: str = "",
         category: str = "",
         namespace: str = "",
+        tool: str = "",
         page: int = 1,
         page_size: int = 50,
         resource_store: ResourceStore = Depends(lambda: resource_store),
@@ -105,6 +112,7 @@ def get_router(
                 namespace=namespace,
                 kind=kind,
                 category=category,
+                tool=tool,
                 page=page,
                 page_size=page_size,
             )
@@ -267,6 +275,7 @@ def get_router(
         category: str = "",
         name: str = "",
         id: str = "",
+        tool: str = "",
         resource_store: ResourceStore = Depends(lambda: resource_store),
     ) -> ResourceDeleted:
         """Deletes a resource."""
@@ -278,6 +287,7 @@ def get_router(
                 category=category,
                 name=name,
                 id=id,
+                tool=tool,
             )
             return ResourceDeleted(
                 details=[

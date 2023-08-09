@@ -28,9 +28,7 @@ class CSVToolResource(ToolResource):
         if tools is None:
             tools = []
 
-        self.llm = self.dependencies.get(Kind.LLM) or self.dependencies.get(
-            Kind.LLMChat
-        )
+        self.llm = self.dependencies.get(Kind.LLMChat)
 
         self.resource = self.process_csv
 

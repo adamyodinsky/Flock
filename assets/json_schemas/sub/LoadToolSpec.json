@@ -17,25 +17,6 @@
         }
       ]
     },
-    "dependencies": {
-      "title": "Dependencies",
-      "description": "Tool dependencies",
-      "type": "array",
-      "minItems": 1,
-      "maxItems": 1,
-      "items": [
-        {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/LLMDependency"
-            },
-            {
-              "$ref": "#/definitions/LLMChatDependency"
-            }
-          ]
-        }
-      ]
-    },
     "tools": {
       "title": "Tools",
       "description": "Tools for the object",
@@ -44,6 +25,18 @@
       "items": {
         "$ref": "#/definitions/BaseToolDependency"
       }
+    },
+    "dependencies": {
+      "title": "Dependencies",
+      "description": "Tool dependencies",
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": [
+        {
+          "$ref": "#/definitions/LLMChatDependency"
+        }
+      ]
     }
   },
   "required": [
@@ -83,94 +76,6 @@
         "open-meteo-api"
       ],
       "type": "string"
-    },
-    "LLMDependency": {
-      "title": "LLMDependency",
-      "description": "LLM dependency schema.",
-      "type": "object",
-      "properties": {
-        "labels": {
-          "title": "Labels",
-          "description": "Labels are useful for filtering and finding objects",
-          "default": {},
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "name": {
-          "title": "Name",
-          "description": "Name of the dependency",
-          "type": "string"
-        },
-        "kind": {
-          "title": "Kind",
-          "default": "LLM",
-          "const": "LLM",
-          "type": "string"
-        },
-        "namespace": {
-          "title": "Namespace",
-          "description": "The namespace of the object",
-          "default": "default",
-          "maxLength": 63,
-          "type": "string"
-        },
-        "options": {
-          "title": "Options",
-          "description": "Resource options",
-          "default": {},
-          "type": "object"
-        }
-      },
-      "required": [
-        "name"
-      ],
-      "additionalProperties": false
-    },
-    "LLMChatDependency": {
-      "title": "LLMChatDependency",
-      "description": "LLMChat dependency schema.",
-      "type": "object",
-      "properties": {
-        "labels": {
-          "title": "Labels",
-          "description": "Labels are useful for filtering and finding objects",
-          "default": {},
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "name": {
-          "title": "Name",
-          "description": "Name of the dependency",
-          "type": "string"
-        },
-        "kind": {
-          "title": "Kind",
-          "default": "LLMChat",
-          "const": "LLMChat",
-          "type": "string"
-        },
-        "namespace": {
-          "title": "Namespace",
-          "description": "The namespace of the object",
-          "default": "default",
-          "maxLength": 63,
-          "type": "string"
-        },
-        "options": {
-          "title": "Options",
-          "description": "Resource options",
-          "default": {},
-          "type": "object"
-        }
-      },
-      "required": [
-        "name"
-      ],
-      "additionalProperties": false
     },
     "Kind": {
       "title": "Kind",
@@ -243,6 +148,50 @@
       "required": [
         "name",
         "kind"
+      ],
+      "additionalProperties": false
+    },
+    "LLMChatDependency": {
+      "title": "LLMChatDependency",
+      "description": "LLMChat dependency schema.",
+      "type": "object",
+      "properties": {
+        "labels": {
+          "title": "Labels",
+          "description": "Labels are useful for filtering and finding objects",
+          "default": {},
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "title": "Name",
+          "description": "Name of the dependency",
+          "type": "string"
+        },
+        "kind": {
+          "title": "Kind",
+          "default": "LLMChat",
+          "const": "LLMChat",
+          "type": "string"
+        },
+        "namespace": {
+          "title": "Namespace",
+          "description": "The namespace of the object",
+          "default": "default",
+          "maxLength": 63,
+          "type": "string"
+        },
+        "options": {
+          "title": "Options",
+          "description": "Resource options",
+          "default": {},
+          "type": "object"
+        }
+      },
+      "required": [
+        "name"
       ],
       "additionalProperties": false
     }

@@ -3,13 +3,14 @@
 from enum import Enum
 from typing import Dict, Literal, Optional, Union
 
+from pydantic import Field
+
 from flock_schemas.base import BaseOptions, BaseResourceSchema, Category
 from flock_schemas.dependencies import (
     LLMChatDependency,
     LLMDependency,
     VectorStoreDependency,
 )
-from pydantic import Field
 
 
 class VectorStoreQAToolVendor(str, Enum):
@@ -26,9 +27,9 @@ class VectorStoreQAToolSpec(BaseOptions):
         ..., description="The class of the tool, e.g. RetrievalQAWithSourcesChain, etc."
     )
     options: Optional[Dict] = Field({}, description="Options for the tool")
-    dependencies: tuple[
-        VectorStoreDependency, Union[LLMChatDependency, LLMDependency]
-    ] = Field(..., description="Tool dependencies")
+    dependencies: tuple[VectorStoreDependency, LLMChatDependency] = Field(
+        ..., description="Tool dependencies"
+    )
 
 
 class VectorStoreQAToolSchema(BaseResourceSchema):
@@ -37,6 +38,7 @@ class VectorStoreQAToolSchema(BaseResourceSchema):
     kind: Literal["VectorStoreQATool"] = Field(
         ..., description="The kind of the object"
     )
+    tool: bool = Field(default=True, description="")
     category: Category = Field(
         default=Category.OTHER, description="The resource category"
     )

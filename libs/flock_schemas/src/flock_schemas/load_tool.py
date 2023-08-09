@@ -45,15 +45,14 @@ class LoadToolSpec(BaseSpec):
         ...,
         description="The name of the search tool, e.g. serpapi, google-serper, etc.",
     )
-    dependencies: tuple[Union[LLMDependency, LLMChatDependency]] = Field(
-        ..., description="Tool dependencies"
-    )
+    dependencies: tuple[LLMChatDependency] = Field(..., description="Tool dependencies")
 
 
 class LoadToolSchema(BaseResourceSchema):
     """LoadTool schema."""
 
     kind: Literal["LoadTool"] = Field(..., description="The kind of the object")
+    tool: bool = Field(default=True, description="")
     category: Category = Field(
         default=Category.TOOL, description="The resource category"
     )

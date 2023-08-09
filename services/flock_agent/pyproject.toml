@@ -4,19 +4,19 @@ version = "0.0.1"
 description = ""
 authors = ["Adam Yodinsky <27074934+adamyodinsky@users.noreply.github.com>"]
 readme = "README.md"
-packages = [{include = "flock_agent"}]
+packages = [{ include = "flock_agent" }]
 
 [tool.poetry.dependencies]
 python = "^3.10"
 pydantic = "^1.10.7"
 click = "^8.1.3"
-fastapi = {extras = ["all"], version = "^0.95.1"}
+fastapi = { extras = ["all"], version = "^0.95.1" }
 websockets = "^11.0.2"
 pymongo = "^4.3.3"
 python-dotenv = "^1.0.0"
-flock-task-management-store = {path = "../../libs/flock_task_management_store"}
-flock-common = {path = "../../libs/flock_common"}
-flock-resources = {path = "../../libs/flock_resources"}
+flock-task-management-store = { path = "../../libs/flock_task_management_store", develop = true }
+flock-common = { path = "../../libs/flock_common", develop = true }
+flock-resources = { path = "../../libs/flock_resources", develop = true }
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"

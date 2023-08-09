@@ -147,53 +147,6 @@
       ],
       "additionalProperties": false
     },
-    "BaseDependency": {
-      "title": "BaseDependency",
-      "description": "Base dependency schema.",
-      "type": "object",
-      "properties": {
-        "labels": {
-          "title": "Labels",
-          "description": "Labels are useful for filtering and finding objects",
-          "default": {},
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "name": {
-          "title": "Name",
-          "description": "Name of the dependency",
-          "type": "string"
-        },
-        "kind": {
-          "description": "Kind of the dependency",
-          "allOf": [
-            {
-              "$ref": "#/definitions/Kind"
-            }
-          ]
-        },
-        "namespace": {
-          "title": "Namespace",
-          "description": "The namespace of the object",
-          "default": "default",
-          "maxLength": 63,
-          "type": "string"
-        },
-        "options": {
-          "title": "Options",
-          "description": "Resource options",
-          "default": {},
-          "type": "object"
-        }
-      },
-      "required": [
-        "name",
-        "kind"
-      ],
-      "additionalProperties": false
-    },
     "BaseToolDependency": {
       "title": "BaseToolDependency",
       "description": "Base tool dependency schema.",
@@ -263,15 +216,6 @@
           "default": "",
           "type": "string"
         },
-        "dependencies": {
-          "title": "Dependencies",
-          "description": "Dependencies for the object",
-          "default": [],
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/BaseDependency"
-          }
-        },
         "tools": {
           "title": "Tools",
           "description": "Tools for the object",
@@ -280,6 +224,11 @@
           "items": {
             "$ref": "#/definitions/BaseToolDependency"
           }
+        },
+        "dependencies": {
+          "title": "Dependencies",
+          "description": "Dependencies for the object",
+          "default": []
         }
       },
       "additionalProperties": false

@@ -27,16 +27,56 @@ def upload_json_schema(name, schema: dict):
     print("OK")
 
 
-def upload_schema(schema):
+def upload_reduced_schema(kind_name, schema):
     """Upload a schema to the schema store."""
 
-    print(f"Uploading {schema.__name__} - ", end="", flush=True)
-    # schema_store.put(
-    #     {
-    #         "kind": schema.__name__,
-    #         "schema": schema.json(),
-    #     }
-    # )
+    vendors_list = []
+    dependencies_list = []
+
+    print(f"Uploading {kind_name} - ", end="", flush=True)
+
+    # Get spec
+    spec_name = (
+        schema.get("properties", {}).get("spec", {}).get("$ref", "").split("/")[-1]
+    )
+    spec = schema.get("definitions", {}).get(spec_name, {})
+
+    # Get Vendor list
+    vendor_name = (
+        spec.get("properties", {})
+        .get("vendor", {})
+        .get("allOf", [{}])[0]
+        .get("$ref", "")
+        .split("/")[-1]
+    )
+
+    if vendor_name:
+        vendors_list = (
+            schema.get("definitions", {}).get(vendor_name, []).get("enum", [])
+        )
+
+    # Get dependencies list
+    dependencies = spec.get("properties", {}).get("dependencies", {}).get("items", [])
+    for dependency in dependencies:
+        dependency_name = dependency["$ref"].split("/")[-1]
+        dependency_name = (
+            schema.get("definitions", {})
+            .get(dependency_name, [])
+            .get("properties", {})
+            .get("kind", {})
+            .get("const", "")
+        )
+
+        if dependency_name:
+            dependencies_list.append(dependency_name)
+
+    schema_store.put(
+        {
+            "kind": kind_name,
+            "vendor": vendors_list,
+            "dependencies": dependencies_list,
+        }
+    )
 
     print("OK")
 
@@ -44,17 +84,17 @@ def upload_schema(schema):
 def upload_schemas(schemas):
     for name, schema in schemas.items():
         schema_json = schema.schema()
-        upload_json_schema(name, schema_json)
-        upload_schema(schema)
+        # upload_json_schema(name, schema_json)
+        upload_reduced_schema(name, schema_json)
 
 
 def run_script():
     """Main function."""
 
     schema_factory = SchemaFactory()
-    sub_schemas_map = schema_factory.load_schemas("sub")
+    # sub_schemas_map = schema_factory.load_schemas("sub")
     main_schemas_map = schema_factory.load_schemas()
-    upload_schemas(sub_schemas_map)
+    # upload_schemas(sub_schemas_map)
     upload_schemas(main_schemas_map)
 
 

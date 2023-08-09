@@ -62,6 +62,7 @@ class MongoResourceStore(ResourceStore):
         name: str = "",
         kind: str = "",
         id: str = "",
+        tool: str = "",
     ) -> dict:
         query_filter = MongoResourceStore.create_filter(
             category=category,
@@ -69,6 +70,7 @@ class MongoResourceStore(ResourceStore):
             name=name,
             kind=kind,
             id=id,
+            tool=tool,
         )
 
         result = self.table.find_one(
@@ -86,21 +88,20 @@ class MongoResourceStore(ResourceStore):
         namespace: str = "",
         name: str = "",
         kind: str = "",
+        tool: str = "",
         page: int = 1,
         page_size: int = 50,
     ) -> list[dict]:
         """Get many resources with the same namespace and kind"""
 
         skip_count = (page - 1) * page_size
-        filter_query = {}
-        if namespace:
-            filter_query["namespace"] = namespace
-        if category:
-            filter_query["category"] = category
-        if kind:
-            filter_query["kind"] = kind
-        if name:
-            filter_query["metadata.name"] = name
+        filter_query = MongoResourceStore.create_filter(
+            category=category,
+            namespace=namespace,
+            name=name,
+            kind=kind,
+            tool=tool,
+        )
 
         result = (
             self.table.find(
@@ -125,6 +126,7 @@ class MongoResourceStore(ResourceStore):
         name: str = "",
         kind: str = "",
         id: str = "",
+        tool: str = "",
     ):
         """Delete a resource"""
 
@@ -134,6 +136,7 @@ class MongoResourceStore(ResourceStore):
             name=name,
             kind=kind,
             id=id,
+            tool=tool,
         )
 
         result = self.table.delete_one(
@@ -148,6 +151,7 @@ class MongoResourceStore(ResourceStore):
         name: str = "",
         kind: str = "",
         id: str = "",
+        tool: str = "",
     ):
         """Delete a resource"""
 
@@ -157,6 +161,7 @@ class MongoResourceStore(ResourceStore):
             name=name,
             kind=kind,
             id=id,
+            tool=tool,
         )
 
         result = self.table.delete_many(
@@ -171,6 +176,7 @@ class MongoResourceStore(ResourceStore):
         name: str = "",
         kind: str = "",
         id: str = "",
+        tool: str = "",
     ) -> dict:
         """Create a filter query"""
 
@@ -185,5 +191,7 @@ class MongoResourceStore(ResourceStore):
             filter_query["metadata.name"] = name
         if id:
             filter_query["id"] = id
+        if tool:
+            filter_query["tool"] = True
 
         return filter_query

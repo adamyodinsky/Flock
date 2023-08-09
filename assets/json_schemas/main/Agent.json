@@ -125,8 +125,8 @@
       ],
       "additionalProperties": false
     },
-    "AgentType": {
-      "title": "AgentType",
+    "AgentVendor": {
+      "title": "AgentVendor",
       "description": "Enum for Agent types.",
       "enum": [
         "zero-shot-react-description",
@@ -136,7 +136,8 @@
         "chat-zero-shot-react-description",
         "chat-conversational-react-description",
         "structured-chat-zero-shot-react-description",
-        "openai-functions"
+        "openai-functions",
+        "openai-multi-functions"
       ],
       "type": "string"
     },
@@ -214,50 +215,6 @@
       ],
       "additionalProperties": false
     },
-    "LLMDependency": {
-      "title": "LLMDependency",
-      "description": "LLM dependency schema.",
-      "type": "object",
-      "properties": {
-        "labels": {
-          "title": "Labels",
-          "description": "Labels are useful for filtering and finding objects",
-          "default": {},
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "name": {
-          "title": "Name",
-          "description": "Name of the dependency",
-          "type": "string"
-        },
-        "kind": {
-          "title": "Kind",
-          "default": "LLM",
-          "const": "LLM",
-          "type": "string"
-        },
-        "namespace": {
-          "title": "Namespace",
-          "description": "The namespace of the object",
-          "default": "default",
-          "maxLength": 63,
-          "type": "string"
-        },
-        "options": {
-          "title": "Options",
-          "description": "Resource options",
-          "default": {},
-          "type": "object"
-        }
-      },
-      "required": [
-        "name"
-      ],
-      "additionalProperties": false
-    },
     "LLMChatDependency": {
       "title": "LLMChatDependency",
       "description": "LLMChat dependency schema.",
@@ -317,7 +274,7 @@
           "description": "Agent type",
           "allOf": [
             {
-              "$ref": "#/definitions/AgentType"
+              "$ref": "#/definitions/AgentVendor"
             }
           ]
         },
@@ -337,14 +294,7 @@
           "maxItems": 1,
           "items": [
             {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/LLMDependency"
-                },
-                {
-                  "$ref": "#/definitions/LLMChatDependency"
-                }
-              ]
+              "$ref": "#/definitions/LLMChatDependency"
             }
           ]
         }

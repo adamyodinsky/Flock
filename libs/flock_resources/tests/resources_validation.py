@@ -100,11 +100,11 @@ def run_build_tests():
 
     embeddings_loader.load_files_to_vectorstore()
 
-    OBJECTIVE = "Write a weather report for SF today"
-    single_test(
-        file_path="../../assets/schemas/3/agent.yaml",
-        prompt="Who is the current prime minister of israel?",
-    )
+    # OBJECTIVE = "Write a weather report for SF today"
+    # single_test(
+    #     file_path="../../assets/schemas/3/agent.yaml",
+    #     prompt="Who is the current prime minister of israel?",
+    # )
 
     # single_test(
     #     file_path="../schemas_core/3/agent_with_memory.yaml",

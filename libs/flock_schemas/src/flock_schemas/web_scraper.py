@@ -1,22 +1,19 @@
 """web-scraper object schemas for Flock."""
 
 
+from enum import Enum
 from typing import Literal
 
-from flock_schemas.base import BaseOptions, BaseResourceSchema, Category
-from flock_schemas.dependencies import VectorStoreDependency
 from pydantic import Field
 
+from flock_schemas.base import BaseResourceSchema, BaseSpec, Category
+from flock_schemas.dependencies import VectorStoreDependency
 
-class VectorStoreSpec(BaseOptions):
-    """Vectorstore spec."""
 
-    vendor: str = Field(
-        ..., description="The vendor of the vector store, e.g. Chroma, Pinecone, etc."
-    )
-    dependencies: tuple[VectorStoreDependency] = Field(
-        ..., description="Vectorstore dependencies"
-    )
+class WebScraperSpec(BaseSpec):
+    """WebScraper spec."""
+
+    dependencies: tuple[VectorStoreDependency] = Field(..., description="dependencies")
 
 
 class WebScraperSchema(BaseResourceSchema):
@@ -26,13 +23,11 @@ class WebScraperSchema(BaseResourceSchema):
     category: Category = Field(
         default=Category.JOB, description="The resource category"
     )
-    spec: VectorStoreSpec
+    spec: WebScraperSpec
 
 
 export = {
-    "sub": {
-        "VectorStoreSpec": VectorStoreSpec,
-    },
+    "sub": {},
     "main": {
         "WebScraper": WebScraperSchema,
     },
