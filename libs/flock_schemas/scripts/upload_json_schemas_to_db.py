@@ -13,7 +13,7 @@ if not os.path.exists(PATH):
 schema_store = SchemaStoreFactory.get_store("mongo")
 
 
-def upload_schema(name, schema: dict):
+def upload_json_schema(name, schema: dict):
     """Upload a schema to the schema store."""
 
     print(f"Uploading {name} - ", end="", flush=True)
@@ -27,10 +27,25 @@ def upload_schema(name, schema: dict):
     print("OK")
 
 
+def upload_schema(schema):
+    """Upload a schema to the schema store."""
+
+    print(f"Uploading {schema.__name__} - ", end="", flush=True)
+    # schema_store.put(
+    #     {
+    #         "kind": schema.__name__,
+    #         "schema": schema.json(),
+    #     }
+    # )
+
+    print("OK")
+
+
 def upload_schemas(schemas):
     for name, schema in schemas.items():
         schema_json = schema.schema()
-        upload_schema(name, schema_json)
+        upload_json_schema(name, schema_json)
+        upload_schema(schema)
 
 
 def run_script():

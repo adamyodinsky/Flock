@@ -61,3 +61,17 @@ sudo /Applications/Docker.app/Contents/MacOS/install vmnetd
 ```
 
 source: <https://github.com/docker/for-mac/issues/6677#issuecomment-1593787335>
+
+
+
+### Exposing the service
+
+https://www.softwaretestinghelp.com/ngrok-alternatives/
+https://github.com/anderspitman/awesome-tunneling
+
+
+- ngrok has an issue with cors i could not solve
+- local tunnel - "lt --port 80" need to try it
+- servo
+
+י

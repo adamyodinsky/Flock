@@ -73,7 +73,11 @@ def run_server(host, port):
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:3000"],  # Allow any origin
+        allow_origins=[
+            "http://localhost:3000",
+            "http://localhost:5000",
+            "http://localhost:5500",
+        ],
         allow_credentials=True,
         allow_methods=["*"],  # Allow any method
         allow_headers=["*"],  # Allow any header

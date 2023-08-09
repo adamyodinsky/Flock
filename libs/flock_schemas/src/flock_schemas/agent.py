@@ -14,7 +14,7 @@ from flock_schemas.base import (
 from flock_schemas.dependencies import LLMChatDependency, LLMDependency
 
 
-class AgentType(str, Enum):
+class AgentVendor(str, Enum):
     """Enum for Agent types."""
 
     ZERO_SHOT_REACT_DESCRIPTION = "zero-shot-react-description"

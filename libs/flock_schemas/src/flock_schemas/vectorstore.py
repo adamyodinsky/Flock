@@ -3,9 +3,10 @@
 from enum import Enum
 from typing import Literal
 
+from pydantic import Field
+
 from flock_schemas.base import BaseOptions, BaseResourceSchema, Category
 from flock_schemas.dependencies import EmbeddingDependency
-from pydantic import Field
 
 
 class VectorStoreVendor(str, Enum):
@@ -17,7 +18,7 @@ class VectorStoreVendor(str, Enum):
 class VectorStoreSpec(BaseOptions):
     """Vectorstore spec."""
 
-    vendor: str = Field(
+    vendor: VectorStoreVendor = Field(
         ..., description="The vendor of the vector store, e.g. Chroma, Pinecone, etc."
     )
     dependencies: tuple[EmbeddingDependency] = Field(
