@@ -9,6 +9,18 @@ class ResourceStore(metaclass=abc.ABCMeta):
     """Abstract base class for resource stores."""
 
     @abc.abstractmethod
+    def total(
+        self,
+        category: str = "",
+        namespace: str = "",
+        name: str = "",
+        kind: str = "",
+        id: str = "",
+        tool: str = "",
+    ) -> int:
+        """Get the total number of resources in the store by a given filter"""
+
+    @abc.abstractmethod
     def put(
         self,
         val: dict,

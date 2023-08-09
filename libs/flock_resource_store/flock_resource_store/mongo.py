@@ -169,6 +169,29 @@ class MongoResourceStore(ResourceStore):
         )
         return result
 
+    def total(
+        self,
+        category: str = "",
+        namespace: str = "",
+        name: str = "",
+        kind: str = "",
+        id: str = "",
+        tool: str = "",
+    ) -> int:
+        """Get the total number of resources in the store by a given filter"""
+
+        filter_query = MongoResourceStore.create_filter(
+            category=category,
+            namespace=namespace,
+            name=name,
+            kind=kind,
+            id=id,
+            tool=tool,
+        )
+
+        return self.table.count_documents(filter_query)
+        
+
     @staticmethod
     def create_filter(
         category: str = "",

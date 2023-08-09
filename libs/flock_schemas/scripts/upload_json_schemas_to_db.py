@@ -27,6 +27,7 @@ def upload_json_schema(name, schema: dict):
     print("OK")
 
 
+# TODO change this with projection or aggregation, or migration
 def upload_reduced_schema(kind_name, schema):
     """Upload a schema to the schema store."""
 

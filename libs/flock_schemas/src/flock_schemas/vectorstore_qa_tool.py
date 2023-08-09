@@ -40,7 +40,7 @@ class VectorStoreQAToolSchema(BaseResourceSchema):
     )
     tool: bool = Field(default=True, description="")
     category: Category = Field(
-        default=Category.OTHER, description="The resource category"
+        default=Category.TOOL, description="The resource category"
     )
     spec: VectorStoreQAToolSpec
 

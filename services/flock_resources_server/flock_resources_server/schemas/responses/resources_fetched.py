@@ -7,6 +7,7 @@ from typing import List, Literal
 from pydantic import BaseModel, Field  # noqa: F401
 
 from flock_resources_server.schemas.resource_details import ResourceDetails
+from flock_resources_server.schemas.responses.resource_fetched import ListData
 from flock_resources_server.schemas.status_code import Code, Message, Status
 
 
@@ -20,7 +21,7 @@ class ResourcesFetched(BaseModel):
         default=Status.SUCCESS, description="Status of the response"
     )
     code: Literal[Code.OK] = Field(default=Code.OK, description="HTTP status codes")
-    data: List[ResourceDetails] = Field(..., description="Data of the response")
+    data: ListData = Field(..., description="Data of the response")
 
 
 ResourcesFetched.update_forward_refs()

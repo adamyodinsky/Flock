@@ -11,6 +11,7 @@ from flock_resources_server.schemas.resource_details import ResourceDetails
 from flock_resources_server.schemas.responses.resource_deleted import ResourceDeleted
 from flock_resources_server.schemas.responses.resource_fetched import (
     KindsFetched,
+    ListData,
     ResourceFetched,
     SchemasFetched,
 )
@@ -35,13 +36,19 @@ def get_router(
     @router.get(f"/{prefix}/health")
     async def health(
         resource_store: ResourceStore = Depends(lambda: resource_store),
+        schema_store: SchemaStore = Depends(lambda: schema_store),
     ):
         """Health check"""
 
-        healthy = resource_store.health_check()
+        resource_store_health = resource_store.health_check()
+        schema_store_health = schema_store.health_check()
 
-        if healthy:
-            return {"status": "OK"}
+        if resource_store_health and schema_store_health:
+            return {
+                "status": "OK",
+                "resource_store": resource_store_health,
+                "schema_store": schema_store_health,
+            }
         raise HTTPException(
             status_code=500,
             detail=[
@@ -117,10 +124,23 @@ def get_router(
                 page_size=page_size,
             )
 
+            total_count = resource_store.total(
+                namespace=namespace,
+                kind=kind,
+                category=category,
+                tool=tool,
+            )
+
             fetched_resources = [
                 ResourceDetails.validate(item) for item in resource_data
             ]
-            return ResourcesFetched(data=fetched_resources)
+            return ResourcesFetched(
+                data=ListData(
+                    items=fetched_resources,
+                    count=len(fetched_resources),
+                    total=total_count,
+                )
+            )
 
         except Exception as error:  # pylint: disable=broad-except
             raise HTTPException(
@@ -371,8 +391,11 @@ def get_router(
 
         try:
             schemas_data = schema_store.get_many()
+            total = schema_store.total()
 
-            return SchemasFetched(data=schemas_data)
+            return SchemasFetched(
+                data=ListData(items=schemas_data, count=len(schemas_data), total=total)
+            )
 
         except Exception as error:
             raise HTTPException(
@@ -390,8 +413,11 @@ def get_router(
         """Get all kinds"""
         try:
             kinds_data = schema_store.get_kinds()
+            total = len(kinds_data)
 
-            return KindsFetched(data=kinds_data)
+            return KindsFetched(
+                data=ListData(items=kinds_data, count=len(kinds_data), total=total)
+            )
 
         except Exception as error:
             raise HTTPException(

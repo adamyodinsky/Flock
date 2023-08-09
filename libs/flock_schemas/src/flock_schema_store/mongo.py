@@ -35,6 +35,11 @@ class MongoSchemaStore(SchemaStore):
             self.db = self.client[db_name]
             self.table = self.db[table_name]
 
+    def total(self) -> int:
+        """Get the total number of resources in the store"""
+
+        return self.table.count_documents({})
+
     def put(self, val: dict) -> None:
         self.table.update_one(
             {"kind": val["kind"]},

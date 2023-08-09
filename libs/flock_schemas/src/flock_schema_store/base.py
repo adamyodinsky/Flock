@@ -9,6 +9,10 @@ class SchemaStore(metaclass=abc.ABCMeta):
     """Abstract base class for resource stores."""
 
     @abc.abstractmethod
+    def total(self) -> int:
+        """Get the total number of resources in the store"""
+
+    @abc.abstractmethod
     def put(self, val: dict) -> None:
         """Save a resource to the store."""
 

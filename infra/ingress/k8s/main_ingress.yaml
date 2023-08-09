@@ -53,6 +53,27 @@ spec:
                 port:
                   number: 9002
           - pathType: Prefix
+            path: "/kinds"
+            backend:
+              service:
+                name: flock-resources-server
+                port:
+                  number: 9002
+          - pathType: Prefix
+            path: "/schemas"
+            backend:
+              service:
+                name: flock-resources-server
+                port:
+                  number: 9002
+          - pathType: Prefix
+            path: "/schema"
+            backend:
+              service:
+                name: flock-resources-server
+                port:
+                  number: 9002
+          - pathType: Prefix
             path: "/chat"
             backend:
               service:

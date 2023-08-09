@@ -119,7 +119,7 @@ def test_get_resources(test_data):
     )
 
     assert response.status_code == 200
-    assert len(response.json()["data"]) == 2
+    assert len(response.json()["data"]) == 3
 
 
 def test_post_resource(test_data):
@@ -227,6 +227,95 @@ def test_get_kinds():
     response = client.get("/kinds")
     assert response.status_code == 200
     assert response.json()["data"] is not None
+
+
+def test_flow():
+    """Test flow endpoint"""
+
+    # get kinds
+    response = client.get("/kinds")
+    assert response.status_code == 200
+    assert response.json()["data"] is not None
+
+    data = response.json()["data"]
+
+    # choose a kind Agent
+    kind = data["items"][0]
+    assert kind == "Agent"
+
+    # get the schema for the kind Agent
+    response = client.get(f"/schema/{kind}")
+    assert response.status_code == 200
+    assert response.json()["data"] is not None
+
+    data = response.json()["data"]
+    dependency_kind = data["dependencies"][0]
+
+    # search for a resource of the dependency kind
+    response = client.get(f"/resources/?kind={dependency_kind}")
+    assert response.status_code == 200
+    assert response.json()["data"] is not None
+
+    data = response.json()["data"]
+    dependency_resource = data["items"][0]
+
+    assert dependency_resource["kind"] == dependency_kind
+
+    # get tools
+
+    response = client.get("/resources/?category=tool")
+    assert response.status_code == 200
+    assert response.json()["data"] is not None
+
+    data = response.json()["data"]
+    tool_resource = data["items"][0]
+
+    # create a resource of the kind Agent with the first tool available
+    response = client.post(
+        "/resource",
+        json={
+            "apiVersion": "flock/v1",
+            "kind": "Agent",
+            "namespace": "default",
+            "metadata": {
+                "name": "my-agent-test",
+                "description": "A Q&A agent for internal projects",
+                "labels": {"app": "my_app"},
+            },
+            "spec": {
+                "vendor": "zero-shot-react-description",
+                "options": {"verbose": True},
+                "dependencies": [
+                    {
+                        "kind": dependency_resource["kind"],
+                        "name": dependency_resource["metadata"]["name"],
+                        "namespace": dependency_resource["namespace"],
+                    }
+                ],
+                "tools": [
+                    {
+                        "kind": tool_resource["kind"],
+                        "name": tool_resource["metadata"]["name"],
+                        "namespace": tool_resource["namespace"],
+                    }
+                ],
+            },
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["data"] is not None
+
+    # get the resource
+    response = client.get(f"/resource/?namespace=default&kind=Agent&name=my-agent-test")
+    assert response.status_code == 200
+    assert response.json()["data"] is not None
+    assert response.json()["data"]["spec"]["dependencies"][0]["kind"] == dependency_kind
+    assert response.json()["data"]["spec"]["tools"][0]["kind"] == tool_resource["kind"]
+
+    # delete resource
+    response = client.delete(f"/resource/?id={response.json()['data']['id']}")
+    assert response.status_code == 200
 
 
 if __name__ == "__main__":
