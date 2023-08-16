@@ -1,6 +1,6 @@
 """Flock API"""
 
-from fastapi import APIRouter, Body, Depends, HTTPException
+from fastapi import APIRouter, Body, Depends, HTTPException, Response
 from flock_builder import ResourceBuilder
 from flock_resource_store.mongo import ResourceStore
 from flock_schema_store import SchemaStore
@@ -105,6 +105,7 @@ def get_router(
 
     @router.get("/resources")
     async def get_resources(
+        res: Response,
         kind: str = "",
         category: str = "",
         namespace: str = "",
@@ -114,6 +115,7 @@ def get_router(
         resource_store: ResourceStore = Depends(lambda: resource_store),
     ) -> ResourcesFetched:
         """Get Resources list by namespace and kind"""
+        # res.headers["Access-Control-Allow-Origin"] = "*"
         try:
             resource_data = resource_store.get_many(
                 namespace=namespace,

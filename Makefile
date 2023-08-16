@@ -231,4 +231,4 @@ setup-all: docker-build-all load-images apply-all fill-db-with-data
 reload-all: reload-deployer reload-observer reload-resources-server
 
 ngrok:
-	ngrok http 80 # --basic-auth="$(NGROK_USERNAME):$(NGROK_PASSWORD)" --host-header=rewrite 
+	ngrok http 80 --host-header=rewrite # --basic-auth="$(NGROK_USERNAME):$(NGROK_PASSWORD)"

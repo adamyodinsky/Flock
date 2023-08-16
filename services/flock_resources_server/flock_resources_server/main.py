@@ -77,10 +77,14 @@ def run_server(host, port):
             "http://localhost:3000",
             "http://localhost:5000",
             "http://localhost:5500",
+            "http://127.0.0.1:5500",
+            "http://127.0.0.1:3000",
+            "https://0ae7-2a0d-6fc2-45f1-6500-48fe-a9ec-3ab2-d313.ngrok-free.app",
         ],
         allow_credentials=True,
         allow_methods=["*"],  # Allow any method
         allow_headers=["*"],  # Allow any header
+        # expose_headers=["*"],
     )
 
     logging.info("Initializing Flock Resource Store")

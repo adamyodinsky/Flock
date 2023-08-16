@@ -1,6 +1,17 @@
 ##### Flock Base resources #####
 FROM flock-python-base as resources-server-base-stage
 
+# WIP to make the build faster
+# COPY ./libs $PYSETUP_PATH/libs
+# COPY ./services/flock_resources_server/poetry.lock $PYSETUP_PATH/services/flock_resources_server/poetry.lock
+# COPY ./services/flock_resources_server/pyproject.toml $PYSETUP_PATH/services/flock_resources_server/pyproject.toml
+
+# RUN  python -m venv .venv
+# RUN --mount=type=cache,target=/root/.cache .venv/bin/pip install --use-pep517 .
+
+# COPY ./services/flock_resource
+######
+
 ENV FASTAPI_ENV=production
 
 COPY ./libs $PYSETUP_PATH/libs
@@ -8,7 +19,6 @@ COPY ./services/flock_resources_server $PYSETUP_PATH/services/flock_resources_se
 
 WORKDIR $PYSETUP_PATH/services/flock_resources_server
 
-# RUN poetry install --only main
 RUN  python -m venv .venv
 RUN --mount=type=cache,target=/root/.cache .venv/bin/pip install --use-pep517 . 
 
