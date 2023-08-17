@@ -171,27 +171,22 @@ def get_router(
             name: str = resource_data["metadata"]["name"]
             namespace: str = resource_data["namespace"]
             kind: str = resource_data["kind"]
-
-            if (
-                resource_store.get(namespace=namespace, kind=kind, name=name)
-                is not None
-            ):
-                raise HTTPException(
-                    status_code=422,
-                    detail=[
-                        "Resource already exists",
-                        f"namespace: {namespace}",
-                        f"kind: {kind}",
-                        f"name: {name}",
-                    ],
-                )
-        except HTTPException as error:
-            raise error
-        except Exception as error:
+        except KeyError as error:
             raise HTTPException(
                 status_code=422,
                 detail=["Failed to build resource", str(error)],
             ) from error
+
+        if resource_store.get(namespace=namespace, kind=kind, name=name) is not None:
+            raise HTTPException(
+                status_code=422,
+                detail=[
+                    "Resource already exists",
+                    f"namespace: {namespace}",
+                    f"kind: {kind}",
+                    f"name: {name}",
+                ],
+            )
 
         try:
             schema_instance = schema_factory.get_schema(resource_data["kind"]).validate(
@@ -430,4 +425,96 @@ def get_router(
                 ],
             ) from error
 
+    # 2. Create vector-store resource
+    #    1. if create
+    #       1. fill in the name of the vector store
+    #       2. fill in description
+    #       3. choose embeddings resource
+    # 3. Submit
+
+    # Automatically in the backend:
+
+    # 1. create a vector-store A
+
+    @router.post("/shortcut/VectorStore")
+    async def create_vector_store(
+        data: dict = Body(..., description=""),
+        resource_store: ResourceStore = Depends(lambda: resource_store),
+        schema_factory: SchemaFactory = Depends(lambda: schema_factory),
+    ) -> ResourceUpdated:
+        """Create vector store"""
+
+        VECTOR_STORE_KIND = "VectorStore"
+
+        try:
+            name: str = data["name"]
+            namespace: str = data["namespace"]
+            description: str = data["description"]
+            embeddings_resource_id: str = data["embeddings_resource_id"]
+        except KeyError as error:
+            raise HTTPException(
+                status_code=400,
+                detail=[
+                    "Invalid request",
+                    str(error),
+                ],
+            ) from error
+
+        # check if embeddings resource exists
+        embeddings_resource = resource_store.get(id=embeddings_resource_id)
+        if embeddings_resource is None:
+            raise HTTPException(
+                status_code=422,
+                detail=[
+                    "Embeddings resource does not exist",
+                    f"id: {embeddings_resource_id}",
+                ],
+            )
+
+        if (
+            resource_store.get(namespace=namespace, kind=VECTOR_STORE_KIND, name=name)
+            is not None
+        ):
+            raise HTTPException(
+                status_code=422,
+                detail=[
+                    "Resource already exists",
+                    f"namespace: {namespace}",
+                    f"kind: {VECTOR_STORE_KIND}",
+                    f"name: {name}",
+                ],
+            )
+
+        # create vector store resource
+
+        vectorstore_schema_cls = schema_factory.get_schema("VectorStore").validate(data)
+        vectorstore_dict = {
+            "apiVersion": "flock/v1",
+            "kind": VECTOR_STORE_KIND,
+            "namespace": namespace,
+            "metadata": {"name": name, "description": description},
+            "spec": {
+                "vendor": "Chroma",
+                "dependencies": [
+                    {
+                        "name": embeddings_resource.get("metadata", {}).get("name"),
+                        "namespace": embeddings_resource.get("namespace"),
+                        "kind": embeddings_resource.get("kind"),
+                    }
+                ],
+            },
+        }
+
+        try:
+            schema_instance = vectorstore_schema_cls.validate(**vectorstore_dict)
+            resource_builder.build_resource(schema_instance.dict())
+        except Exception as error:  # pylint: disable=broad-except
+            raise HTTPException(
+                status_code=500,
+                detail=["Failed to build resource", str(error)],
+            ) from error
+
+        return ResourceUpdated(data=schema_instance)
+
+    @router.post("/shortcut/WebsScraper")
     return router
