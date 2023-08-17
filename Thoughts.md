@@ -29,21 +29,22 @@ Shortcut
 
 1. Choose address source of the knowledge base
 2. Choose an existent vector-store resource, or create one
+3. Choosing LLM
    1. if create
       1. fill in the name of the vector store
       2. fill in description
       3. choose embeddings resource
-3. Submit
+4. Submit
 
-Automatically in the backend:
+Automatically:
 
-the frontend send a request to /shortcut/vectorstore or creating the vector store if needed. returns the vector store id.
+the frontend send a request to /shortcut/vectorstore or creating the vector store if needed. returns the vector store id. - done
 
-then it makes another request for doing the webscraper job, with the vector store id.
+then it makes another request for doing the shortcut/webscraper job, with the vector store id.
 
-then it makes another request for doing the embeddingloader job, with the vector store id.
+then it makes another request for doing the shortcut/embeddingloader job, with the vector store id.
 
-then it makes another request for creating, or updating the vector-store-qa tool, with the vector store id.
+then it makes another request for creating, or updating to shortcut/vector-store-qa tool, with the vector store id. need to choose llm. (in th backend i'll search if there is a qa tool with this vector store in the dependencies, i might need to make here a very custom query to mongodb)
 
 
 1. create a vector-store A (only if not choose)
