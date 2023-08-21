@@ -425,18 +425,7 @@ def get_router(
                 ],
             ) from error
 
-    # 2. Create vector-store resource
-    #    1. if create
-    #       1. fill in the name of the vector store
-    #       2. fill in description
-    #       3. choose embeddings resource
-    # 3. Submit
-
-    # Automatically in the backend:
-
-    # 1. create a vector-store A
-
-    @router.post("/shortcut/VectorStore")
+    @router.post("/shortcut")
     async def create_vector_store(
         data: dict = Body(..., description=""),
         resource_store: ResourceStore = Depends(lambda: resource_store),
@@ -444,13 +433,16 @@ def get_router(
     ) -> ResourceUpdated:
         """Create vector store"""
 
-        VECTOR_STORE_KIND = "VectorStore"
+        dependencies = []
 
         try:
+            kind = data["kind"]
+            vendor = data["vendor"]
+            options = data["options"]
             name: str = data["name"]
             namespace: str = data["namespace"]
             description: str = data["description"]
-            embeddings_resource_id: str = data["embeddings_resource_id"]
+            dependencies_ids: list[str] = data["dependency_ids"]
         except KeyError as error:
             raise HTTPException(
                 status_code=400,
@@ -460,47 +452,46 @@ def get_router(
                 ],
             ) from error
 
-        # check if embeddings resource exists
-        embeddings_resource = resource_store.get(id=embeddings_resource_id)
-        if embeddings_resource is None:
-            raise HTTPException(
-                status_code=422,
-                detail=[
-                    "Embeddings resource does not exist",
-                    f"id: {embeddings_resource_id}",
-                ],
-            )
+        for dependency_id in dependencies_ids:
+            dependency_resource = resource_store.get(id=dependency_id)
+            if not resource_store.get(id=dependency_id):
+                raise HTTPException(
+                    status_code=422,
+                    detail=[
+                        "Dependency does not exist",
+                        f"id: {dependency_id}",
+                    ],
+                )
+            dependencies.append(dependency_resource)
 
-        if (
-            resource_store.get(namespace=namespace, kind=VECTOR_STORE_KIND, name=name)
-            is not None
-        ):
+        if resource_store.get(namespace=namespace, kind=kind, name=name) is not None:
             raise HTTPException(
                 status_code=422,
                 detail=[
                     "Resource already exists",
                     f"namespace: {namespace}",
-                    f"kind: {VECTOR_STORE_KIND}",
+                    f"kind: {kind}",
                     f"name: {name}",
                 ],
             )
 
         # create vector store resource
 
-        vectorstore_schema_cls = schema_factory.get_schema("VectorStore").validate(data)
+        vectorstore_schema_cls = schema_factory.get_schema(kind).validate(data)
         vectorstore_dict = {
             "apiVersion": "flock/v1",
-            "kind": VECTOR_STORE_KIND,
+            "kind": kind,
             "namespace": namespace,
             "metadata": {"name": name, "description": description},
             "spec": {
                 "vendor": "Chroma",
                 "dependencies": [
                     {
-                        "name": embeddings_resource.get("metadata", {}).get("name"),
-                        "namespace": embeddings_resource.get("namespace"),
-                        "kind": embeddings_resource.get("kind"),
+                        "name": dependency.get("metadata", {}).get("name"),
+                        "namespace": dependency.get("namespace"),
+                        "kind": dependency.get("kind"),
                     }
+                    for dependency in dependencies
                 ],
             },
         }
@@ -516,5 +507,57 @@ def get_router(
 
         return ResourceUpdated(data=schema_instance)
 
+    # shortcut/webscraper job, with the vector store id.
     @router.post("/shortcut/WebsScraper")
+    async def create_webscraper(
+        data: dict = Body(..., description=""),
+        resource_store: ResourceStore = Depends(lambda: resource_store),
+        schema_factory: SchemaFactory = Depends(lambda: schema_factory),
+    ):
+        webscraper_kind = "WebScraper"
+        vector_store_id = data["vector_store_id"]
+        namespace: str = data["namespace"]
+        name: str = data["name"]
+        description: str = data["description"]
+
+        # check if vector store exists
+        vector_store = resource_store.get(id=vector_store_id)
+        if vector_store is None:
+            raise HTTPException(
+                status_code=422,
+                detail=[
+                    "Vector store does not exist",
+                    f"id: {vector_store_id}",
+                ],
+            )
+
+        # create webscraper resource
+        webscraper_dict = {
+            "apiVersion": "flock/v1",
+            "kind": webscraper_kind,
+            "namespace": namespace,
+            "metadata": {"name": name, "description": description},
+            "spec": {
+                "dependencies": [
+                    {
+                        "name": vector_store.get("metadata", {}).get("name"),
+                        "namespace": vector_store.get("namespace"),
+                        "kind": vector_store.get("kind"),
+                    }
+                ],
+            },
+        }
+
+        try:
+            webscraper_schema_cls = schema_factory.get_schema(webscraper_kind).validate(
+                webscraper_dict
+            )
+            schema_instance = webscraper_schema_cls.validate(**webscraper_dict)
+            resource_builder.build_resource(schema_instance.dict())
+        except Exception as error:  # pylint: disable=broad-except
+            raise HTTPException(
+                status_code=500,
+                detail=["Failed to build resource", str(error)],
+            ) from error
+
     return router
