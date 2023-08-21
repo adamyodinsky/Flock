@@ -6,3 +6,5 @@ notes.txt
 .pytest_cache
 dist
 **/.env
+**/build
+**/dist
