@@ -74,6 +74,7 @@ https://developer.hashicorp.com/vault/tutorials/kubernetes/vault-secrets-operato
 vault secret operator is a k8s operator that can inject secrets into pods. interesting.
 5. An alternative for kubernetes can be great, like docker swarm, or even bare metal processes.
 6. Fully functional User interface.
+7. How to enforce license?
 
 Section 1,2,3 are essential for the system to be ready for customers. How long i estimate this can be done? i think the hardest part in here is the compilation of the code the binary, and obfuscation. technically i tried to do it and it just seemed like an impossible mission.
 
