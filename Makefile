@@ -184,6 +184,12 @@ apply-vault:
 	helm upgrade --install -f infra/vault/values.yaml flock-secrets-store hashicorp/vault
 	# kubectl exec -it flock-secrets-store-vault-0 -- vault operator init
 	# kubectl exec -it flock-secrets-store-vault-0 -- vault operator unseal <key>
+	
+apply-vault-operator:
+	helm upgrade --install vault-secrets-operator -f infra/vault_operator/values.yaml -n vault-secrets-operator-system --create-namespace hashicorp/vault-secrets-operator
+
+delete-vault-operator:
+	helm delete vault-secrets-operator -n vault-secrets-operator-system
 
 apply-ingress:
 	helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx

@@ -62,7 +62,7 @@ then it makes another request for creating, or updating to shortcut/vector-store
    1. choose vector-store A
    2. choose default llmchat resource
 
-
+Create request id ?
 
 ## what needs to be done for this to be ready for customers?
 
@@ -78,6 +78,7 @@ vault secret operator is a k8s operator that can inject secrets into pods. inter
 
 Section 1,2,3 are essential for the system to be ready for customers. How long i estimate this can be done? i think the hardest part in here is the compilation of the code the binary, and obfuscation. technically i tried to do it and it just seemed like an impossible mission.
 
+
 1. It's a a blocker, i tried pyinstaller and did not succeed. I'll need to try again, and also use some help.
 2. It can be done, though need some work. A week of work. 2 days of planning, 3 days of implementation, 2 days of testing.
 3. It can be done, 1-2 day of planning.
@@ -85,5 +86,3 @@ Section 1,2,3 are essential for the system to be ready for customers. How long i
 5. It's a lot of work, at least a full month.
 6. This is up to Yossi. may take something like a week if we are both focused on it. may takes forever if we are not.
 
-
- 

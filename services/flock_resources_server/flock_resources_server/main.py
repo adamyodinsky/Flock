@@ -79,7 +79,7 @@ def run_server(host, port):
             "http://localhost:5500",
             "http://127.0.0.1:5500",
             "http://127.0.0.1:3000",
-            "https://0ae7-2a0d-6fc2-45f1-6500-48fe-a9ec-3ab2-d313.ngrok-free.app",
+            "https://6411-2a02-14f-3-dd9a-1c72-8cc0-446a-26c6.ngrok-free.app",
         ],
         allow_credentials=True,
         allow_methods=["*"],  # Allow any method

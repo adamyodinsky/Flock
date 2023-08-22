@@ -1,9 +1,8 @@
 from typing import Optional
 
+from flock_resource_store.base import ResourceStore
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
-
-from flock_resource_store.base import ResourceStore
 
 
 class MongoResourceStore(ResourceStore):
@@ -112,6 +111,7 @@ class MongoResourceStore(ResourceStore):
                     "kind": True,
                     "namespace": True,
                     "category": True,
+                    "spec": True,
                 },
             )
             .skip(skip_count)
@@ -190,7 +190,6 @@ class MongoResourceStore(ResourceStore):
         )
 
         return self.table.count_documents(filter_query)
-        
 
     @staticmethod
     def create_filter(
