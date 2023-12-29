@@ -15,11 +15,8 @@ interface Props {
 
 const CreateResourceForm = (props: Props) => {
   const [kind, setKind] = useState<string>(Kind.Embedding);
-  const [namespace, setNamespace] = useState("default");
   const [vendorList, setVendorList] = useState<string[]>([]);
-  const [vendor, setVendor] = useState<string>("");
   const [dependencyList, setDependencyList] = useState<string[]>([]);
-  const [dependency, setDependency] = useState<string>("");
 
   useEffect(() => {
     const service = new ResourceSchemaService();
@@ -28,16 +25,6 @@ const CreateResourceForm = (props: Props) => {
       setDependencyList(response.data.dependencies);
     });
   }, [kind]);
-
-  useEffect(() => {
-    setVendor(vendorList[0]);
-  }, [vendorList, dependencyList]);
-
-  // TODO: debug, can remove later before production
-  useEffect(() => {
-    console.log(kind);
-    console.log(vendor);
-  }, [vendor]);
 
   const {
     register,
@@ -60,7 +47,6 @@ const CreateResourceForm = (props: Props) => {
           id="name"
           type="text"
           className="form-control"
-          onChange={(event) => setNamespace(event.target.value)}
         ></input>
         {errors.name && <p className="text-danger">{errors.name.message}</p>}
       </div>
@@ -87,7 +73,6 @@ const CreateResourceForm = (props: Props) => {
           id="namespace"
           className="form-control"
         >
-          {/* this should be fetched dynamically */}
           <option value="default">default</option>
         </select>
         {errors.namespace && (
@@ -116,12 +101,7 @@ const CreateResourceForm = (props: Props) => {
         <label className="form-label" htmlFor="vendor">
           Vendor
         </label>
-        <select
-          {...register("vendor")}
-          id="vendor"
-          className="form-control"
-          onChange={(event) => setVendor(event.target.value)}
-        >
+        <select {...register("vendor")} id="vendor" className="form-control">
           {vendorList.map((val) => (
             <option key={val} value={val}>
               {val}
@@ -136,18 +116,18 @@ const CreateResourceForm = (props: Props) => {
         <label className="form-label" htmlFor="dependencies">
           Dependencies
         </label>
-        <select
-          {...register("dependencies")}
-          id="dependencies"
-          className="form-control"
-          onChange={(event) => setDependency(event.target.value)}
-        >
-          {dependencyList.map((val) => (
+        {dependencyList.map((val) => (
+          <select
+            id={val}
+            className="form-control"
+            value=""
+            {...register("dependencies")}
+          >
             <option key={val} value={val}>
               {val}
             </option>
-          ))}
-        </select>
+          </select>
+        ))}
         {errors.dependencies && (
           <p className="text-danger">{errors.dependencies.message}</p>
         )}

@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
+import Modal from "../components/Modal";
 import { BaseResourceSchema } from "../schemas";
 import { ResourceService } from "../services/resourceService";
 
 const ResourcesTable = () => {
   const [resourceList, setResourceList] = useState<BaseResourceSchema[]>([]);
   const [error, setError] = useState("");
+  const [selectedResource, setSelectedResource] =
+    useState<BaseResourceSchema>();
 
   const apiService = new ResourceService();
 
@@ -14,7 +17,7 @@ const ResourcesTable = () => {
     request
       .then((response) => {
         setResourceList(response.data.items);
-        // console.log(response.data);
+        console.log(response.data);
       })
       .catch((err) => {
         if (err.message !== "canceled") setError(err.message);
@@ -26,6 +29,14 @@ const ResourcesTable = () => {
   useEffect(() => {
     console.log(resourceList);
   }, [resourceList]);
+
+  const handleRowClick = (resource: BaseResourceSchema) => {
+    setSelectedResource(resource);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedResource(undefined);
+  };
 
   return (
     <>
@@ -40,7 +51,7 @@ const ResourcesTable = () => {
         </thead>
         <tbody>
           {resourceList.map((e) => (
-            <tr key={e.id}>
+            <tr key={e.id} onClick={() => handleRowClick(e)}>
               <td>{e.metadata.name}</td>
               <td>{e.kind}</td>
               <td>{e.metadata.description}</td>
@@ -48,6 +59,7 @@ const ResourcesTable = () => {
           ))}
         </tbody>
       </table>
+      <Modal resource={selectedResource} onClose={handleCloseModal} />
     </>
   );
 };
