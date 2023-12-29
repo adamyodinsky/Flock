@@ -11,10 +11,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from flock_builder import ResourceBuilder
 from flock_common import EnvVarNotSetError, check_env_vars, init_logging
 from flock_resource_store import ResourceStoreFactory
+from flock_resources_server.api.resource_api import get_router
 from flock_schema_store import SchemaStoreFactory
 from uvicorn import run
-
-from flock_resources_server.api.resource_api import get_router
 
 init_logging(
     destination=os.environ.get("LOG_DESTINATION", "console"),
@@ -79,6 +78,8 @@ def run_server(host, port):
             "http://localhost:5500",
             "http://127.0.0.1:5500",
             "http://127.0.0.1:3000",
+            "http://127.0.0.1:5173",
+            "http://127.0.0.1:5174",
             "https://6411-2a02-14f-3-dd9a-1c72-8cc0-446a-26c6.ngrok-free.app",
         ],
         allow_credentials=True,

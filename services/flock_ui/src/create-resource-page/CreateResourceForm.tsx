@@ -1,8 +1,26 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { ResourceFormData, kindValues, resourceFormSchema } from "./schemas";
+import {
+  Kind,
+  ResourceFormData,
+  kindValues,
+  resourceFormSchema,
+} from "../schemas";
+import ResourceSchemaService from "../services/resourceService";
 
 const CreateResourceForm = () => {
+  const [vendors, setVendors] = useState<string[]>([]);
+  const [kind, setKind] = useState<Kind>(Kind.Embedding);
+
+  useEffect(() => {
+    console.log(kind);
+    console.log(vendors);
+    ResourceSchemaService.get(kind).then((response) => {
+      setVendors(response.data.vendor);
+    });
+  }, [kind]);
+
   const {
     register,
     handleSubmit,
@@ -57,9 +75,16 @@ const CreateResourceForm = () => {
         <label className="form-label" htmlFor="kind">
           Kind
         </label>
-        <select {...register("kind")} id="kind" className="form-control">
+        <select
+          {...register("kind")}
+          id="kind"
+          className="form-control"
+          onChange={(event) => setKind(event.target.value)}
+        >
           {kindValues.map((kind) => (
-            <option value={kind}>{kind}</option>
+            <option key={kind} value={kind}>
+              {kind}
+            </option>
           ))}
         </select>
         {errors.kind && <p className="text-danger">{errors.kind.message}</p>}
