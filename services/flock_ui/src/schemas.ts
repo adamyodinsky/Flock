@@ -68,7 +68,7 @@ export interface BaseResourceSchema {
 
 export interface ResourceInfoSchema {
   kind: Kind;
-  dependencies: Array<Kind>
+  dependencies: Kind[];
   vendor: string[];
 }
 

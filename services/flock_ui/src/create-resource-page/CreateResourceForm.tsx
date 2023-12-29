@@ -15,11 +15,15 @@ const CreateResourceForm = () => {
 
   useEffect(() => {
     console.log(kind);
-    console.log(vendors);
     ResourceSchemaService.get(kind).then((response) => {
       setVendors(response.data.vendor);
+      console.log(response.data);
     });
   }, [kind]);
+
+  useEffect(() => {
+    console.log(vendors);
+  }, [vendors]);
 
   const {
     register,
