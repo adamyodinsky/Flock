@@ -1,5 +1,3 @@
-import { Kind } from "../schemas";
-import { ResourceInfoSchema } from "../schemas";
 import apiClient from "./apiClient";
 
 class ResourceSchemaService {
@@ -13,9 +11,9 @@ class ResourceSchemaService {
     return { request, cancel: () => controller.abort() }
   }
 
-  get(kind: Kind) {
+  get(kind: string) {
     return apiClient
-      .get<ResourceInfoSchema>("schema/" + kind)
+      .get("schema/" + kind)
   }
 }
 

@@ -78,12 +78,12 @@ const kindTuple: [string, ...string[]] = kindValues as [string, ...string[]];
 
 
 export const baseToolDependencySchema = z.object({
-  labels: z.record(z.string()),
+  labels: z.record(z.string()).optional(),
   name: z.string(),
   kind: z.enum(kindTuple),
   namespace: z.string(),
-  options: z.record(z.string()),
-  description: z.string(),
+  options: z.record(z.string()).optional(),
+  description: z.string().optional(),
 });
 
 export const resourceFormSchema = z.object({
@@ -91,9 +91,10 @@ export const resourceFormSchema = z.object({
   description: z.string().max(255),
   namespace: z.string().default("default"),
   kind: string().max(63),
-  vendor: string().max(63),
-  options: z.array(baseToolDependencySchema),
-  tools: z.array(baseToolDependencySchema),
+  vendor: string().max(63).optional(),
+  options: z.array(z.record(z.string())).optional(),
+  dependencies: z.array(baseToolDependencySchema).optional(),
+  tools: z.array(baseToolDependencySchema).optional(),
 });
 
 export const fieldNames = Object.keys(resourceFormSchema.shape);
