@@ -57,6 +57,11 @@
     "spec": {
       "$ref": "#/definitions/BrowserToolSpec"
     },
+    "tool": {
+      "title": "Tool",
+      "default": true,
+      "type": "boolean"
+    },
     "vendor": {
       "title": "Vendor",
       "default": "v1",

@@ -26,7 +26,7 @@
     },
     "category": {
       "description": "The resource category",
-      "default": "other",
+      "default": "tool",
       "allOf": [
         {
           "$ref": "#/definitions/Category"
@@ -56,6 +56,11 @@
     },
     "spec": {
       "$ref": "#/definitions/VectorStoreQAToolSpec"
+    },
+    "tool": {
+      "title": "Tool",
+      "default": true,
+      "type": "boolean"
     }
   },
   "required": [
