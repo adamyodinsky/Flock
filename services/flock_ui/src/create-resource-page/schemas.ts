@@ -35,8 +35,7 @@ export interface BaseResourceSchema {
   spec: BaseSpec;
 }
 
-
-export const BaseToolDependencySchema = z.object({
+export const baseToolDependencySchema = z.object({
   labels: z.record(z.string()),
   name: z.string(),
   kind: z.enum([
@@ -55,8 +54,8 @@ export const resourceFormSchema = z.object({
   namespace: z.string().default("default"),
   kind: string().max(64),
   vendor: string().max(64),
-  options: z.array(BaseToolDependencySchema),
-  tools: z.array(BaseToolDependencySchema),
+  options: z.array(baseToolDependencySchema),
+  tools: z.array(baseToolDependencySchema),
 });
 
 export const fieldNames = Object.keys(resourceFormSchema.shape);

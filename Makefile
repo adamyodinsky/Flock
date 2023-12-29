@@ -189,7 +189,7 @@ apply-vault-operator:
 	helm upgrade --install vault-secrets-operator -f infra/vault_operator/values.yaml -n vault-secrets-operator-system --create-namespace hashicorp/vault-secrets-operator
 
 delete-vault-operator:
-	helm delete vault-secrets-operator -n vault-secrets-operator-system
+	helm delete flock-secrets-store -n default
 
 apply-ingress:
 	helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
@@ -231,8 +231,6 @@ fill-db-with-data: schemas-setup validate-resources
 apply-all: apply-secret apply-pvc apply-mongo apply-vault apply-rabbitmq apply-deployer apply-observer apply-resources-server apply-ingress apply-proxy
 
 delete-apps: delete-deployer delete-observer delete-resources-server
-
-
 
 setup-docker: docker-build-all load-images
 
