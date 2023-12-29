@@ -100,7 +100,7 @@ def test_get_resource(test_data):
         f"/resource/?namespace={test_data[0]['namespace']}&kind={test_data[0]['kind']}&name={test_data[0]['metadata']['name']}"
     )
 
-    response_body = response.json()["data"]
+    response_body = response.json()
 
     assert response.status_code == 200
     assert response_body["id"] is not None
@@ -119,7 +119,7 @@ def test_get_resources(test_data):
     )
 
     assert response.status_code == 200
-    assert len(response.json()["data"]) == 3
+    assert len(response.json()) == 3
 
 
 def test_post_resource(test_data):
@@ -137,7 +137,7 @@ def test_post_resource(test_data):
     response = client.get(
         f"/resource/?namespace={resource_data['namespace']}&kind={resource_data['kind']}&name={resource_data['metadata']['name']}"
     )
-    response_body = response.json()["data"]
+    response_body = response.json()
 
     assert response.status_code == 200
     assert response_body["id"] is not None
@@ -157,7 +157,7 @@ def test_put_resource(test_data):
     response = client.get(
         f"/resource/?namespace={resource_data['namespace']}&kind={resource_data['kind']}&name={resource_data['metadata']['name']}"
     )
-    response_body = response.json()["data"]
+    response_body = response.json()
 
     assert response.status_code == 200
     assert response_body["id"] is not None
@@ -210,7 +210,7 @@ def test_get_schema():
 
     response = client.get("/schema/Agent")
     assert response.status_code == 200
-    assert response.json()["data"] is not None
+    assert response.json() is not None
 
 
 def test_get_schemas():
@@ -218,7 +218,7 @@ def test_get_schemas():
 
     response = client.get("/schemas")
     assert response.status_code == 200
-    assert response.json()["data"] is not None
+    assert response.json() is not None
 
 
 def test_get_kinds():
@@ -226,7 +226,7 @@ def test_get_kinds():
 
     response = client.get("/kinds")
     assert response.status_code == 200
-    assert response.json()["data"] is not None
+    assert response.json() is not None
 
 
 def test_flow():
@@ -235,9 +235,9 @@ def test_flow():
     # get kinds
     response = client.get("/kinds")
     assert response.status_code == 200
-    assert response.json()["data"] is not None
+    assert response.json() is not None
 
-    data = response.json()["data"]
+    data = response.json()
 
     # choose a kind Agent
     kind = data["items"][0]
@@ -246,17 +246,17 @@ def test_flow():
     # get the schema for the kind Agent
     response = client.get(f"/schema/{kind}")
     assert response.status_code == 200
-    assert response.json()["data"] is not None
+    assert response.json() is not None
 
-    data = response.json()["data"]
+    data = response.json()
     dependency_kind = data["dependencies"][0]
 
     # search for a resource of the dependency kind
     response = client.get(f"/resources/?kind={dependency_kind}")
     assert response.status_code == 200
-    assert response.json()["data"] is not None
+    assert response.json() is not None
 
-    data = response.json()["data"]
+    data = response.json()
     dependency_resource = data["items"][0]
 
     assert dependency_resource["kind"] == dependency_kind
@@ -265,9 +265,9 @@ def test_flow():
 
     response = client.get("/resources/?category=tool")
     assert response.status_code == 200
-    assert response.json()["data"] is not None
+    assert response.json() is not None
 
-    data = response.json()["data"]
+    data = response.json()
     tool_resource = data["items"][0]
 
     # create a resource of the kind Agent with the first tool available
@@ -302,19 +302,18 @@ def test_flow():
             },
         },
     )
-
     assert response.status_code == 200
-    assert response.json()["data"] is not None
+    assert response.json() is not None
 
     # get the resource
     response = client.get(f"/resource/?namespace=default&kind=Agent&name=my-agent-test")
     assert response.status_code == 200
-    assert response.json()["data"] is not None
-    assert response.json()["data"]["spec"]["dependencies"][0]["kind"] == dependency_kind
-    assert response.json()["data"]["spec"]["tools"][0]["kind"] == tool_resource["kind"]
+    assert response.json() is not None
+    assert response.json()["spec"]["dependencies"][0]["kind"] == dependency_kind
+    assert response.json()["spec"]["tools"][0]["kind"] == tool_resource["kind"]
 
     # delete resource
-    response = client.delete(f"/resource/?id={response.json()['data']['id']}")
+    response = client.delete(f"/resource/?id={response.json()['id']}")
     assert response.status_code == 200
 
 

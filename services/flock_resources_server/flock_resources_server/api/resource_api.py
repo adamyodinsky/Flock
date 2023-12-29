@@ -1,6 +1,8 @@
 """Flock API"""
 
-from fastapi import APIRouter, Body, Depends, HTTPException, Response
+from typing import List
+
+from fastapi import APIRouter, Body, Depends, HTTPException
 from flock_builder import ResourceBuilder
 from flock_resource_store.mongo import ResourceStore
 from flock_schema_store import SchemaStore
@@ -8,15 +10,8 @@ from flock_schemas import SchemaFactory
 from pydantic import ValidationError
 
 from flock_resources_server.schemas.resource_details import ResourceDetails
-from flock_resources_server.schemas.responses.resource_deleted import ResourceDeleted
-from flock_resources_server.schemas.responses.resource_fetched import (
-    KindsFetched,
-    ListData,
-    ResourceFetched,
-    SchemasFetched,
-)
-from flock_resources_server.schemas.responses.resource_updated import ResourceUpdated
-from flock_resources_server.schemas.responses.resources_fetched import ResourcesFetched
+from flock_resources_server.schemas.responses.resource_fetched import ListData
+from flock_resources_server.schemas.status_code import ResourceType
 
 
 def get_router(
@@ -66,7 +61,7 @@ def get_router(
         id: str = "",
         tool: str = "",
         resource_store: ResourceStore = Depends(lambda: resource_store),
-    ) -> ResourceFetched:
+    ) -> dict:
         """Get a resource"""
         try:
             resource_data = resource_store.get(
@@ -90,7 +85,7 @@ def get_router(
                     ],
                 )
 
-            return ResourceFetched(data=resource_data)
+            return resource_data
 
         except HTTPException as error:
             raise error
@@ -105,7 +100,6 @@ def get_router(
 
     @router.get("/resources")
     async def get_resources(
-        res: Response,
         kind: str = "",
         category: str = "",
         namespace: str = "",
@@ -113,7 +107,7 @@ def get_router(
         page: int = 1,
         page_size: int = 50,
         resource_store: ResourceStore = Depends(lambda: resource_store),
-    ) -> ResourcesFetched:
+    ) -> ListData:
         """Get Resources list by namespace and kind"""
         # res.headers["Access-Control-Allow-Origin"] = "*"
         try:
@@ -136,12 +130,10 @@ def get_router(
             fetched_resources = [
                 ResourceDetails.validate(item) for item in resource_data
             ]
-            return ResourcesFetched(
-                data=ListData(
-                    items=fetched_resources,
-                    count=len(fetched_resources),
-                    total=total_count,
-                )
+            return ListData(
+                items=fetched_resources,
+                count=len(fetched_resources),
+                total=total_count,
             )
 
         except Exception as error:  # pylint: disable=broad-except
@@ -161,7 +153,7 @@ def get_router(
         resource_data: dict = Body(..., description=""),
         resource_store: ResourceStore = Depends(lambda: resource_store),
         schema_factory: SchemaFactory = Depends(lambda: schema_factory),
-    ) -> ResourceUpdated:
+    ) -> ResourceType:
         """Create or update a resource.
 
         If the resource already exists, an error will be returned.
@@ -216,7 +208,7 @@ def get_router(
                 ],
             ) from error
 
-        return ResourceUpdated(data=schema_instance)
+        return schema_instance
 
     @router.put("/resource/{id}")
     async def put_resource(
@@ -224,7 +216,7 @@ def get_router(
         resource_store: ResourceStore = Depends(lambda: resource_store),
         schema_factory: SchemaFactory = Depends(lambda: schema_factory),
         id: str = "",
-    ) -> ResourceUpdated:
+    ) -> ResourceType:
         """Create or update a resource.
 
         If the resource already exists, it will be updated. Otherwise, an error will be returned.
@@ -276,7 +268,7 @@ def get_router(
                 ],
             ) from error
 
-        return ResourceUpdated(data=schema_instance)
+        return schema_instance
 
     @router.delete(
         "/resource",
@@ -294,7 +286,7 @@ def get_router(
         id: str = "",
         tool: str = "",
         resource_store: ResourceStore = Depends(lambda: resource_store),
-    ) -> ResourceDeleted:
+    ) -> List[str]:
         """Deletes a resource."""
 
         try:
@@ -306,13 +298,12 @@ def get_router(
                 id=id,
                 tool=tool,
             )
-            return ResourceDeleted(
-                details=[
-                    "Resource deleted",
-                    f"Parameters: namespace={namespace}, kind={kind}, category={category}, name={name}, id={id}",
-                    f"Count: {resource_data.deleted_count}",  # type: ignore
-                ],
-            )
+            return [
+                "Resource deleted",
+                f"Parameters: namespace={namespace}, kind={kind}, category={category}, name={name}, id={id}",
+                f"Count: {resource_data.deleted_count}",  # type: ignore
+            ]
+
         except Exception as error:  # pylint: disable=broad-except
             raise HTTPException(
                 status_code=400,
@@ -326,7 +317,7 @@ def get_router(
     async def validate_resource(
         resource_data: dict = Body(..., description=""),
         schema_factory: SchemaFactory = Depends(lambda: schema_factory),
-    ) -> ResourceUpdated:
+    ) -> ResourceType:
         """Resource validation only
 
         This endpoint does not store the resource. It is used to validate the resource only.
@@ -348,12 +339,12 @@ def get_router(
                 detail=["Failed to build resource", str(error)],
             ) from error
 
-        return ResourceUpdated(data=schema_instance)
+        return schema_instance
 
     @router.get("/schema/{kind}")
     async def get_schema(
         schema_store: SchemaStore = Depends(lambda: schema_store), kind: str = ""
-    ):
+    ) -> dict:
         """Get schema for kind"""
         try:
             schema_data = schema_store.get(kind=kind)
@@ -367,7 +358,7 @@ def get_router(
                     ],
                 )
 
-            return ResourceFetched(data=schema_data)
+            return schema_data
 
         except HTTPException as error:
             raise error
@@ -383,16 +374,14 @@ def get_router(
     @router.get("/schemas")
     async def get_schemas(
         schema_store: SchemaStore = Depends(lambda: schema_store),
-    ) -> SchemasFetched:
+    ) -> ListData:
         """Get all schemas"""
 
         try:
             schemas_data = schema_store.get_many()
             total = schema_store.total()
 
-            return SchemasFetched(
-                data=ListData(items=schemas_data, count=len(schemas_data), total=total)
-            )
+            return ListData(items=schemas_data, count=len(schemas_data), total=total)
 
         except Exception as error:
             raise HTTPException(
@@ -406,15 +395,13 @@ def get_router(
     @router.get("/kinds")
     async def get_kinds(
         schema_store: SchemaStore = Depends(lambda: schema_store),
-    ) -> KindsFetched:
+    ) -> ListData:
         """Get all kinds"""
         try:
             kinds_data = schema_store.get_kinds()
             total = len(kinds_data)
 
-            return KindsFetched(
-                data=ListData(items=kinds_data, count=len(kinds_data), total=total)
-            )
+            return ListData(items=kinds_data, count=len(kinds_data), total=total)
 
         except Exception as error:
             raise HTTPException(
@@ -430,15 +417,13 @@ def get_router(
         data: dict = Body(..., description=""),
         resource_store: ResourceStore = Depends(lambda: resource_store),
         schema_factory: SchemaFactory = Depends(lambda: schema_factory),
-    ) -> ResourceUpdated:
+    ) -> ResourceType:
         """Create vector store"""
 
         dependencies = []
 
         try:
             kind = data["kind"]
-            vendor = data["vendor"]
-            options = data["options"]
             name: str = data["name"]
             namespace: str = data["namespace"]
             description: str = data["description"]
@@ -505,7 +490,7 @@ def get_router(
                 detail=["Failed to build resource", str(error)],
             ) from error
 
-        return ResourceUpdated(data=schema_instance)
+        return schema_instance
 
     # shortcut/webscraper job, with the vector store id.
     @router.post("/shortcut/WebsScraper")
