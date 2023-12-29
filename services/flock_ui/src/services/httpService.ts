@@ -4,7 +4,7 @@ interface entity {
   id: number
 }
 
-class HttpService<T extends entity> {
+class HttpResource<T extends entity> {
   endpoint: string;
 
   constructor(endpoint: string) {

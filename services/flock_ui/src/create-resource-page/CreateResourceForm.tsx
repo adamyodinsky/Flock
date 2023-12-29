@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { ResourceFormData, resourceFormSchema } from "./schemas";
+import { ResourceFormData, kindValues, resourceFormSchema } from "./schemas";
 
 const CreateResourceForm = () => {
   const {
@@ -58,8 +58,9 @@ const CreateResourceForm = () => {
           Kind
         </label>
         <select {...register("kind")} id="kind" className="form-control">
-          {/* this should be fetched dynamically */}
-          <option value="default">default</option>
+          {kindValues.map((kind) => (
+            <option value={kind}>{kind}</option>
+          ))}
         </select>
         {errors.kind && <p className="text-danger">{errors.kind.message}</p>}
       </div>
