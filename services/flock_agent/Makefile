@@ -31,3 +31,6 @@ docker-build: test install
 	@echo "Building Docker image"
 	@version=$$(poetry version | awk '{print $$2}') && \
 	docker build -t flock-agent:${version} .
+
+build-binary:
+	pyinstaller main.spec
