@@ -1,6 +1,6 @@
 import apiClient from "./apiClient";
 
-class ResourceSchemaService {
+export class ResourceSchemaService {
   getAll() {
     const controller = new AbortController();
     const request = apiClient
@@ -17,21 +17,55 @@ class ResourceSchemaService {
   }
 }
 
-class ResourceService {
-  getAll() {
+
+export class ResourceService {
+
+  private createParams(kind: string = "", name: string = "", namespace: string = "", id: number = 0) {
+    let params = {}
+
+    if (id) {
+      params = { ...params, id: id }
+    }
+    if (kind) {
+      params = { ...params, kind: kind }
+    }
+    if (name) {
+      params = { ...params, name: name }
+    }
+    if (namespace) {
+      params = { ...params, namespace: namespace }
+    }
+    return params
+  }
+
+  getAll(kind: string = "", name: string = "", namespace: string = "", id: number = 0) {
     const controller = new AbortController();
+
+    const params = this.createParams(
+      kind,
+      name,
+      namespace,
+      id
+    )
+
     const request = apiClient
-      .get("schemas", {
-        signal: controller.signal,
+      .get("resources", {
+        signal: controller.signal, params: params
       })
 
     return { request, cancel: () => controller.abort() }
   }
 
-  get(kind: string) {
+  get(kind: string = "", name: string = "", namespace: string = "", id: number = 0) {
+
+    const params = this.createParams(
+      kind,
+      name,
+      namespace,
+      id
+    )
+
     return apiClient
-      .get("schema/" + kind)
+      .get(`resource`, { params: params })
   }
 }
-
-export default new ResourceSchemaService();

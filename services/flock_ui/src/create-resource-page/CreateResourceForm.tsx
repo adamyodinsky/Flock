@@ -7,7 +7,7 @@ import {
   kindValues,
   resourceFormSchema,
 } from "../schemas";
-import ResourceSchemaService from "../services/resourceService";
+import { ResourceSchemaService } from "../services/resourceService";
 
 interface Props {
   onSubmit: (data: ResourceFormData) => void;
@@ -22,9 +22,10 @@ const CreateResourceForm = (props: Props) => {
   const [dependency, setDependency] = useState<string>("");
 
   useEffect(() => {
-    ResourceSchemaService.get(kind).then((response) => {
-      setVendorList(response.data.data.vendor);
-      setDependencyList(response.data.data.dependencies);
+    const service = new ResourceSchemaService();
+    service.get(kind).then((response) => {
+      setVendorList(response.data.vendor);
+      setDependencyList(response.data.dependencies);
     });
   }, [kind]);
 
