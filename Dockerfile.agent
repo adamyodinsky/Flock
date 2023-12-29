@@ -6,6 +6,8 @@ ENV FASTAPI_ENV=production
 COPY ./libs/flock_common $PYSETUP_PATH/libs/flock_common
 COPY ./libs/flock_resources $PYSETUP_PATH/libs/flock_resources
 COPY ./libs/flock_task_management_store $PYSETUP_PATH/libs/flock_task_management_store
+COPY ./libs/flock_schemas $PYSETUP_PATH/libs/flock_schemas
+COPY ./libs/flock_resource_store $PYSETUP_PATH/libs/flock_resource_store
 
 COPY ./services/flock_agent $PYSETUP_PATH/services/flock_agent
 

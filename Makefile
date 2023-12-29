@@ -97,7 +97,7 @@ minikube-start:
 	--ports=127.0.0.1:9000:30205 \
 	--ports=127.0.0.1:9001:30206 \
 	--ports=127.0.0.1:9002:30207 \
-	--cpus 4 --memory 6144
+	# --cpus 4 --memory 6144
 	@sleep 5
 	minikube addons enable metrics-server
 
@@ -232,9 +232,15 @@ apply-all: apply-secret apply-pvc apply-mongo apply-vault apply-rabbitmq apply-d
 
 delete-apps: delete-deployer delete-observer delete-resources-server
 
-setup-all: docker-build-all load-images apply-all fill-db-with-data
 
-reload-all: reload-deployer reload-observer reload-resources-server
+
+setup-docker: docker-build-all load-images
+
+start-services: apply-all validate-resources write-schemas fill-db-with-data
+
+setup-start-all: setup-docker start-services
+
+reload-all: reload-deployer reload-observer reload-resources-server reload-proxy
 
 ngrok:
 	ngrok http 80 --host-header=rewrite # --basic-auth="$(NGROK_USERNAME):$(NGROK_PASSWORD)"
