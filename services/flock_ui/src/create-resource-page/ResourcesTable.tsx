@@ -1,3 +1,4 @@
+import yaml from "js-yaml";
 import { useEffect, useState } from "react";
 import Modal from "../components/Modal";
 import { BaseResourceSchema } from "../schemas";
@@ -8,6 +9,7 @@ const ResourcesTable = () => {
   const [error, setError] = useState("");
   const [selectedResource, setSelectedResource] =
     useState<BaseResourceSchema>();
+  const [showModal, setShowModal] = useState(false);
 
   const apiService = new ResourceService();
 
@@ -26,15 +28,13 @@ const ResourcesTable = () => {
     return () => cancel();
   }, []);
 
-  useEffect(() => {
-    console.log(resourceList);
-  }, [resourceList]);
-
   const handleRowClick = (resource: BaseResourceSchema) => {
     setSelectedResource(resource);
+    setShowModal(true);
   };
 
   const handleCloseModal = () => {
+    setShowModal(false);
     setSelectedResource(undefined);
   };
 
@@ -59,7 +59,13 @@ const ResourcesTable = () => {
           ))}
         </tbody>
       </table>
-      <Modal resource={selectedResource} onClose={handleCloseModal} />
+      <Modal
+        title={selectedResource?.metadata.name}
+        onClose={handleCloseModal}
+        showModal={showModal}
+      >
+        <pre>{yaml.dump(selectedResource)}</pre>
+      </Modal>
     </>
   );
 };

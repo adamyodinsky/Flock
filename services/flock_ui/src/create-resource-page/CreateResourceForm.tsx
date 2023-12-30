@@ -8,6 +8,7 @@ import {
   resourceFormSchema,
 } from "../schemas";
 import { ResourceSchemaService } from "../services/resourceService";
+import DependencyInput from "./DependencyInput";
 
 interface Props {
   onSubmit: (data: ResourceFormData) => void;
@@ -40,7 +41,7 @@ const CreateResourceForm = (props: Props) => {
     <form className="form-control">
       <div className="mb-3">
         <label className="form-label" htmlFor="name">
-          Name
+          <strong>Name</strong>
         </label>
         <input
           {...register("name")}
@@ -51,8 +52,8 @@ const CreateResourceForm = (props: Props) => {
         {errors.name && <p className="text-danger">{errors.name.message}</p>}
       </div>
       <div className="mb-3">
-        <label className="form-label" htmlFor="description">
-          Description
+        <label htmlFor="description">
+          <strong>Description</strong>
         </label>
         <input
           {...register("description")}
@@ -66,12 +67,12 @@ const CreateResourceForm = (props: Props) => {
       </div>
       <div className="mb-3">
         <label className="form-label" htmlFor="namespace">
-          Namespace
+          <strong>Namespace</strong>
         </label>
         <select
           {...register("namespace")}
           id="namespace"
-          className="form-control"
+          className="form-select"
         >
           <option value="default">default</option>
         </select>
@@ -81,12 +82,12 @@ const CreateResourceForm = (props: Props) => {
       </div>
       <div className="mb-3">
         <label className="form-label" htmlFor="kind">
-          Kind
+          <strong>Kind</strong>
         </label>
         <select
           {...register("kind")}
           id="kind"
-          className="form-control"
+          className="form-select"
           onChange={(event) => setKind(event.target.value)}
         >
           {kindValues.map((val) => (
@@ -99,9 +100,9 @@ const CreateResourceForm = (props: Props) => {
       </div>
       <div className="mb-3">
         <label className="form-label" htmlFor="vendor">
-          Vendor
+          <strong>Vendor</strong>
         </label>
-        <select {...register("vendor")} id="vendor" className="form-control">
+        <select {...register("vendor")} id="vendor" className="form-select">
           {vendorList.map((val) => (
             <option key={val} value={val}>
               {val}
@@ -114,20 +115,9 @@ const CreateResourceForm = (props: Props) => {
       </div>
       <div className="mb-3">
         <label className="form-label" htmlFor="dependencies">
-          Dependencies
+          <strong>Dependencies</strong>
         </label>
-        {dependencyList.map((val) => (
-          <select
-            id={val}
-            className="form-control"
-            value=""
-            {...register("dependencies")}
-          >
-            <option key={val} value={val}>
-              {val}
-            </option>
-          </select>
-        ))}
+        <DependencyInput dependencyList={dependencyList} />
         {errors.dependencies && (
           <p className="text-danger">{errors.dependencies.message}</p>
         )}

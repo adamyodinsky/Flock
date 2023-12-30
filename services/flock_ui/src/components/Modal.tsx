@@ -1,20 +1,21 @@
-import yaml from "js-yaml";
-import { BaseResourceSchema } from "../schemas";
+import { ReactNode } from "react";
 
 interface Props {
-  resource: BaseResourceSchema | undefined;
+  title: string | undefined;
+  children: ReactNode;
+  showModal: boolean;
   onClose: () => void;
   onSave?: () => void;
 }
-const Modal = ({ resource, onClose, onSave }: Props) => {
-  if (!resource) return null;
+const Modal = ({ onClose, onSave, showModal, title, children }: Props) => {
+  if (!showModal) return null;
 
   return (
     <div className="modal show" style={{ display: "block" }}>
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">{resource.metadata.name}</h5>
+            <h5 className="modal-title">{title}</h5>
             <button
               type="button"
               className="btn-close"
@@ -23,9 +24,7 @@ const Modal = ({ resource, onClose, onSave }: Props) => {
               onClick={onClose}
             ></button>
           </div>
-          <div className="modal-body">
-            <pre>{yaml.dump(resource)}</pre>
-          </div>
+          <div className="modal-body">{children}</div>
           <div className="modal-footer">
             <button
               type="button"
