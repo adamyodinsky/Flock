@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import yaml from "js-yaml";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Modal from "../components/Modal";
@@ -21,14 +22,15 @@ const CreateResourceForm = (props: Props) => {
   const [kind, setKind] = useState<string>(Kind.Embedding);
   const [vendorList, setVendorList] = useState<string[]>([]);
   const [dependencyList, setDependencyList] = useState<string[]>([]);
-  const [showModal, setShowModal] = useState(false);
+  const [showTableModal, setShowTableModal] = useState(false);
+  const [showResourceModal, setShowResourceModal] = useState(false);
+
+  const [savedResource, setSavedResource] = useState<BaseResourceSchema>();
+
   const [selectedResource, setSelectedResource] =
     useState<BaseResourceSchema>();
 
   const [dependencyMap, setDependencyMap] = useState<
-    Map<string, BaseResourceSchema>
-  >(new Map());
-  const [tempDependencyMap, setTempDependencyMap] = useState<
     Map<string, BaseResourceSchema>
   >(new Map());
 
@@ -40,6 +42,10 @@ const CreateResourceForm = (props: Props) => {
     });
   }, [kind]);
 
+  useEffect(() => {
+    onSaveResourceModal(savedResource);
+  }, [savedResource]);
+
   const {
     register,
     handleSubmit,
@@ -50,17 +56,30 @@ const CreateResourceForm = (props: Props) => {
     props.onSubmit(data);
   };
 
-  const onCloseModalHandler = () => {
-    setShowModal(false);
+  const handleTableRawClick = (resource: BaseResourceSchema) => {
+    setSelectedResource(resource);
+    setShowResourceModal(true);
   };
 
-  const onClickChooseDependency = () => {
-    setShowModal(true);
+  const handleCloseTableModal = () => {
+    setShowTableModal(false);
   };
 
-  const onSaveDependency = () => {
-    const updatedDependencyMap = new Map(tempDependencyMap);
+  const handleClickChoose = () => {
+    setShowTableModal(true);
+  };
+
+  const handleCloseResourceModal = () => {
+    setShowResourceModal(false);
+  };
+
+  const onSaveResourceModal = (e: BaseResourceSchema | undefined) => {
+    if (!e) return;
+
+    const updatedDependencyMap = new Map(dependencyMap);
+    dependencyMap.set(e.kind, e);
     setDependencyMap(updatedDependencyMap);
+    console.log(dependencyMap);
   };
 
   return (
@@ -145,7 +164,7 @@ const CreateResourceForm = (props: Props) => {
             <strong>Dependencies</strong>
           </label>
           <DependencyInput
-            onClickChoose={onClickChooseDependency}
+            onClickChoose={handleClickChoose}
             dependencyList={dependencyList}
             dependencyMap={dependencyMap}
           />
@@ -164,12 +183,22 @@ const CreateResourceForm = (props: Props) => {
         </button>
       </form>
       <Modal
-        title="modal table test"
-        showModal={showModal}
-        onClose={onCloseModalHandler}
-        onSave={() => onSaveDependency()}
+        title="Resources"
+        showModal={showTableModal}
+        onClose={handleCloseTableModal}
       >
-        <ResourcesTable filter={{ kind: kind }} />
+        <ResourcesTable
+          filter={{ kind: kind }}
+          onRawClick={handleTableRawClick}
+        />
+      </Modal>
+      <Modal
+        title={selectedResource?.metadata.name}
+        onClose={handleCloseResourceModal}
+        showModal={showResourceModal}
+        onSave={() => setSavedResource(selectedResource)}
+      >
+        <pre>{yaml.dump(selectedResource)}</pre>
       </Modal>
     </>
   );

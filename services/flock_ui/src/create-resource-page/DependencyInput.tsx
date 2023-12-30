@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { BaseResourceSchema } from "../schemas";
 
 interface Props {
@@ -12,15 +11,11 @@ const DependencyInput = ({
   dependencyMap,
   onClickChoose,
 }: Props) => {
-  useEffect(() => {
-    console.log(dependencyList);
-  }, [dependencyList]);
-
   return (
     <>
-      {dependencyList.map((dependency) => {
+      {dependencyList.map((dependency, index) => {
         return (
-          <div className="form-control">
+          <div key={index} className="form-control">
             <label className="form-label" htmlFor="dependencies">
               <strong>{dependency}</strong>
             </label>
@@ -28,7 +23,7 @@ const DependencyInput = ({
               <button
                 className="btn btn-outline-primary"
                 type="button"
-                id="button-addon1"
+                id={`button-addon-${dependency}`}
                 onClick={() => onClickChoose()}
               >
                 Choose {dependency}
@@ -38,7 +33,7 @@ const DependencyInput = ({
                 className="form-control"
                 placeholder="Name"
                 aria-label="Name"
-                aria-describedby="Name"
+                aria-describedby={`Name-${dependency}`}
                 value={dependencyMap.get(dependency)?.metadata.name}
               />
               <input
@@ -46,7 +41,7 @@ const DependencyInput = ({
                 className="form-control"
                 placeholder="Namespace"
                 aria-label="Namespace"
-                aria-describedby="Namespace"
+                aria-describedby={`Namespace-${dependency}`}
                 value={dependencyMap.get(dependency)?.namespace}
               />
             </div>

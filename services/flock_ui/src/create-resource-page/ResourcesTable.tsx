@@ -1,20 +1,15 @@
-import yaml from "js-yaml";
 import { useEffect, useState } from "react";
-import Modal from "../components/Modal";
 import { BaseResourceSchema } from "../schemas";
 import { ResourceParams, ResourceService } from "../services/resourceService";
 
 interface Props {
   filter: ResourceParams;
   onRawClick: (e: BaseResourceSchema) => void;
-  onClose: () => void;
-  onSave?: (e: BaseResourceSchema) => void;
 }
 
-const ResourcesTable = ({ filter, onSave, onRawClick, onClose }: Props) => {
+const ResourcesTable = ({ filter, onRawClick }: Props) => {
   const [resourceList, setResourceList] = useState<BaseResourceSchema[]>([]);
   const [error, setError] = useState("");
-  const [showModal, setShowModal] = useState(false);
 
   const apiService = new ResourceService();
 
@@ -32,16 +27,6 @@ const ResourcesTable = ({ filter, onSave, onRawClick, onClose }: Props) => {
 
     return () => cancel();
   }, []);
-
-  // const handleRowClick = (resource: BaseResourceSchema) => {
-  //   setSelectedResource(resource);
-  //   setShowModal(true);
-  // };
-
-  // const handleCloseModal = () => {
-  //   setShowModal(false);
-  //   setSelectedResource(undefined);
-  // };
 
   return (
     <>
@@ -64,14 +49,6 @@ const ResourcesTable = ({ filter, onSave, onRawClick, onClose }: Props) => {
           ))}
         </tbody>
       </table>
-      <Modal
-        title={selectedResource?.metadata.name}
-        onClose={handleCloseModal}
-        showModal={showModal}
-        onSave={onSave}
-      >
-        <pre>{yaml.dump(selectedResource)}</pre>
-      </Modal>
     </>
   );
 };
