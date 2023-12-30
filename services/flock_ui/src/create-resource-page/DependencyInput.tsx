@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { BaseResourceSchema } from "../schemas";
 
 interface Props {
@@ -12,10 +11,6 @@ const DependencyInput = ({
   dependencyMap,
   onClickChoose,
 }: Props) => {
-  useEffect(() => {
-    console.log(dependencyMap);
-  });
-
   return (
     <>
       {dependencyList.map((dependency, index) => {

@@ -14,11 +14,7 @@ import { ResourceSchemaService } from "../services/resourceService";
 import DependencyInput from "./DependencyInput";
 import ResourcesTable from "./ResourcesTable";
 
-interface Props {
-  onSubmit: (data: ResourceFormData) => void;
-}
-
-const CreateResourceForm = (props: Props) => {
+const CreateResourceForm = () => {
   const [kind, setKind] = useState<string>(Kind.Embedding);
   const [vendorList, setVendorList] = useState<string[]>([]);
   const [showTableModal, setShowTableModal] = useState(false);
@@ -48,7 +44,9 @@ const CreateResourceForm = (props: Props) => {
   } = useForm<ResourceFormData>({ resolver: zodResolver(resourceFormSchema) });
 
   const onSubmitHandler = (data: ResourceFormData) => {
-    props.onSubmit(data);
+    console.log(data);
+    console.log(errors);
+    console.log(isValid);
   };
 
   const handleTableRawClick = (resource: BaseResourceSchema) => {
@@ -133,6 +131,10 @@ const CreateResourceForm = (props: Props) => {
             className="form-select"
             onChange={(event) => setKind(event.target.value)}
           >
+            <option value="" disabled selected>
+              Select Kind
+            </option>
+
             {kindValues.map((val) => (
               <option key={val} value={val}>
                 {val}
@@ -146,6 +148,10 @@ const CreateResourceForm = (props: Props) => {
             <strong>Vendor</strong>
           </label>
           <select {...register("vendor")} id="vendor" className="form-select">
+            <option value="" disabled selected>
+              Select Vendor
+            </option>
+
             {vendorList.map((val) => (
               <option key={val} value={val}>
                 {val}
@@ -171,9 +177,7 @@ const CreateResourceForm = (props: Props) => {
         </div>
         <button
           disabled={!isValid}
-          onClick={handleSubmit((data) => {
-            console.log(data);
-          })}
+          onClick={handleSubmit(onSubmitHandler)}
           className="btn btn-primary"
         >
           Create
@@ -194,6 +198,7 @@ const CreateResourceForm = (props: Props) => {
         onClose={handleCloseResourceModal}
         showModal={showResourceModal}
         onSave={() => handleOnSaveResourceModal(selectedResource)}
+        saveButtonText="Save Choice"
       >
         <pre>{yaml.dump(selectedResource)}</pre>
       </Modal>

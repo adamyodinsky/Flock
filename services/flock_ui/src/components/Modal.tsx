@@ -4,10 +4,18 @@ interface Props {
   title: string | undefined;
   children: ReactNode;
   showModal: boolean;
+  saveButtonText?: string;
   onClose: () => void;
   onSave?: () => void;
 }
-const Modal = ({ onClose, onSave, showModal, title, children }: Props) => {
+const Modal = ({
+  onClose,
+  onSave,
+  showModal,
+  title,
+  children,
+  saveButtonText,
+}: Props) => {
   if (!showModal) return null;
 
   return (
@@ -40,7 +48,7 @@ const Modal = ({ onClose, onSave, showModal, title, children }: Props) => {
                 className="btn btn-primary"
                 onClick={() => onSave()}
               >
-                Save changes
+                {saveButtonText}
               </button>
             )}
           </div>
