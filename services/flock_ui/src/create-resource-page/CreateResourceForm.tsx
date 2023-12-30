@@ -170,7 +170,7 @@ const CreateResourceForm = (props: Props) => {
           )}
         </div>
         <button
-          // disabled={!isValid}
+          disabled={!isValid}
           onClick={handleSubmit((data) => {
             console.log(data);
           })}
