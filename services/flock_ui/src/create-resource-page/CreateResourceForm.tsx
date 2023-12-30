@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import Modal from "../components/Modal";
 import {
   BaseResourceSchema,
-  Kind,
   ResourceFormData,
   kindValues,
   resourceFormSchema,
@@ -15,7 +14,7 @@ import DependencyInput from "./DependencyInput";
 import ResourcesTable from "./ResourcesTable";
 
 const CreateResourceForm = () => {
-  const [kind, setKind] = useState<string>(Kind.Embedding);
+  const [kind, setKind] = useState<string>();
   const [vendorList, setVendorList] = useState<string[]>([]);
   const [showTableModal, setShowTableModal] = useState(false);
   const [showResourceModal, setShowResourceModal] = useState(false);
@@ -30,6 +29,8 @@ const CreateResourceForm = () => {
   >(new Map());
 
   useEffect(() => {
+    if (!kind) return;
+
     const service = new ResourceSchemaService();
     service.get(kind).then((response) => {
       setVendorList(response.data.vendor);
