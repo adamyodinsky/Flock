@@ -19,7 +19,6 @@ const ResourcesTable = ({ filter, onRawClick }: Props) => {
     request
       .then((response) => {
         setResourceList(response.data.items);
-        console.log(response.data);
       })
       .catch((err) => {
         if (err.message !== "canceled") setError(err.message);

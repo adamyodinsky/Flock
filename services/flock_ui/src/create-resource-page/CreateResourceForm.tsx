@@ -21,15 +21,14 @@ interface Props {
 const CreateResourceForm = (props: Props) => {
   const [kind, setKind] = useState<string>(Kind.Embedding);
   const [vendorList, setVendorList] = useState<string[]>([]);
-  const [dependencyList, setDependencyList] = useState<string[]>([]);
   const [showTableModal, setShowTableModal] = useState(false);
   const [showResourceModal, setShowResourceModal] = useState(false);
-
-  const [savedResource, setSavedResource] = useState<BaseResourceSchema>();
 
   const [selectedResource, setSelectedResource] =
     useState<BaseResourceSchema>();
 
+  const [dependencyKind, setDependencyKind] = useState<string>();
+  const [dependencyList, setDependencyList] = useState<string[]>([]);
   const [dependencyMap, setDependencyMap] = useState<
     Map<string, BaseResourceSchema>
   >(new Map());
@@ -41,10 +40,6 @@ const CreateResourceForm = (props: Props) => {
       setDependencyList(response.data.dependencies);
     });
   }, [kind]);
-
-  useEffect(() => {
-    onSaveResourceModal(savedResource);
-  }, [savedResource]);
 
   const {
     register,
@@ -65,7 +60,8 @@ const CreateResourceForm = (props: Props) => {
     setShowTableModal(false);
   };
 
-  const handleClickChoose = () => {
+  const handleClickChoose = (d: string) => {
+    setDependencyKind(d);
     setShowTableModal(true);
   };
 
@@ -73,13 +69,14 @@ const CreateResourceForm = (props: Props) => {
     setShowResourceModal(false);
   };
 
-  const onSaveResourceModal = (e: BaseResourceSchema | undefined) => {
+  const handleOnSaveResourceModal = (e: BaseResourceSchema | undefined) => {
     if (!e) return;
 
     const updatedDependencyMap = new Map(dependencyMap);
-    dependencyMap.set(e.kind, e);
+    updatedDependencyMap.set(e.kind, e);
     setDependencyMap(updatedDependencyMap);
-    console.log(dependencyMap);
+    setShowResourceModal(false);
+    setShowTableModal(false);
   };
 
   return (
@@ -188,7 +185,7 @@ const CreateResourceForm = (props: Props) => {
         onClose={handleCloseTableModal}
       >
         <ResourcesTable
-          filter={{ kind: kind }}
+          filter={{ kind: dependencyKind }}
           onRawClick={handleTableRawClick}
         />
       </Modal>
@@ -196,7 +193,7 @@ const CreateResourceForm = (props: Props) => {
         title={selectedResource?.metadata.name}
         onClose={handleCloseResourceModal}
         showModal={showResourceModal}
-        onSave={() => setSavedResource(selectedResource)}
+        onSave={() => handleOnSaveResourceModal(selectedResource)}
       >
         <pre>{yaml.dump(selectedResource)}</pre>
       </Modal>

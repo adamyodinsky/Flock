@@ -1,9 +1,10 @@
+import { useEffect } from "react";
 import { BaseResourceSchema } from "../schemas";
 
 interface Props {
   dependencyList: string[];
   dependencyMap: Map<string, BaseResourceSchema>;
-  onClickChoose: () => void;
+  onClickChoose: (d: string) => void;
 }
 
 const DependencyInput = ({
@@ -11,9 +12,17 @@ const DependencyInput = ({
   dependencyMap,
   onClickChoose,
 }: Props) => {
+  useEffect(() => {
+    console.log(dependencyMap);
+  });
+
   return (
     <>
       {dependencyList.map((dependency, index) => {
+        const resource = dependencyMap.get(dependency);
+        const name = resource?.metadata.name || "";
+        const namespace = resource?.namespace || "";
+
         return (
           <div key={index} className="form-control">
             <label className="form-label" htmlFor="dependencies">
@@ -24,7 +33,7 @@ const DependencyInput = ({
                 className="btn btn-outline-primary"
                 type="button"
                 id={`button-addon-${dependency}`}
-                onClick={() => onClickChoose()}
+                onClick={() => onClickChoose(dependency)}
               >
                 Choose {dependency}
               </button>
@@ -33,16 +42,16 @@ const DependencyInput = ({
                 className="form-control"
                 placeholder="Name"
                 aria-label="Name"
-                aria-describedby={`Name-${dependency}`}
-                value={dependencyMap.get(dependency)?.metadata.name}
+                value={name}
+                readOnly
               />
               <input
                 type="text"
                 className="form-control"
                 placeholder="Namespace"
                 aria-label="Namespace"
-                aria-describedby={`Namespace-${dependency}`}
-                value={dependencyMap.get(dependency)?.namespace}
+                value={namespace}
+                readOnly
               />
             </div>
           </div>
