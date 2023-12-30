@@ -1,7 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import Modal from "../components/Modal";
 import {
+  BaseResourceSchema,
   Kind,
   ResourceFormData,
   kindValues,
@@ -9,6 +11,7 @@ import {
 } from "../schemas";
 import { ResourceSchemaService } from "../services/resourceService";
 import DependencyInput from "./DependencyInput";
+import ResourcesTable from "./ResourcesTable";
 
 interface Props {
   onSubmit: (data: ResourceFormData) => void;
@@ -18,6 +21,16 @@ const CreateResourceForm = (props: Props) => {
   const [kind, setKind] = useState<string>(Kind.Embedding);
   const [vendorList, setVendorList] = useState<string[]>([]);
   const [dependencyList, setDependencyList] = useState<string[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedResource, setSelectedResource] =
+    useState<BaseResourceSchema>();
+
+  const [dependencyMap, setDependencyMap] = useState<
+    Map<string, BaseResourceSchema>
+  >(new Map());
+  const [tempDependencyMap, setTempDependencyMap] = useState<
+    Map<string, BaseResourceSchema>
+  >(new Map());
 
   useEffect(() => {
     const service = new ResourceSchemaService();
@@ -33,105 +46,132 @@ const CreateResourceForm = (props: Props) => {
     formState: { errors, isValid },
   } = useForm<ResourceFormData>({ resolver: zodResolver(resourceFormSchema) });
 
-  const onSubmit = (data: ResourceFormData) => {
+  const onSubmitHandler = (data: ResourceFormData) => {
     props.onSubmit(data);
   };
 
+  const onCloseModalHandler = () => {
+    setShowModal(false);
+  };
+
+  const onClickChooseDependency = () => {
+    setShowModal(true);
+  };
+
+  const onSaveDependency = () => {
+    const updatedDependencyMap = new Map(tempDependencyMap);
+    setDependencyMap(updatedDependencyMap);
+  };
+
   return (
-    <form className="form-control">
-      <div className="mb-3">
-        <label className="form-label" htmlFor="name">
-          <strong>Name</strong>
-        </label>
-        <input
-          {...register("name")}
-          id="name"
-          type="text"
-          className="form-control"
-        ></input>
-        {errors.name && <p className="text-danger">{errors.name.message}</p>}
-      </div>
-      <div className="mb-3">
-        <label htmlFor="description">
-          <strong>Description</strong>
-        </label>
-        <input
-          {...register("description")}
-          id="description"
-          type="text"
-          className="form-control"
-        ></input>
-        {errors.description && (
-          <p className="text-danger">{errors.description.message}</p>
-        )}
-      </div>
-      <div className="mb-3">
-        <label className="form-label" htmlFor="namespace">
-          <strong>Namespace</strong>
-        </label>
-        <select
-          {...register("namespace")}
-          id="namespace"
-          className="form-select"
+    <>
+      <form className="form-control">
+        <div className="mb-3">
+          <label className="form-label" htmlFor="name">
+            <strong>Name</strong>
+          </label>
+          <input
+            {...register("name")}
+            id="name"
+            type="text"
+            className="form-control"
+          ></input>
+          {errors.name && <p className="text-danger">{errors.name.message}</p>}
+        </div>
+        <div className="mb-3">
+          <label htmlFor="description">
+            <strong>Description</strong>
+          </label>
+          <input
+            {...register("description")}
+            id="description"
+            type="text"
+            className="form-control"
+          ></input>
+          {errors.description && (
+            <p className="text-danger">{errors.description.message}</p>
+          )}
+        </div>
+        <div className="mb-3">
+          <label className="form-label" htmlFor="namespace">
+            <strong>Namespace</strong>
+          </label>
+          <select
+            {...register("namespace")}
+            id="namespace"
+            className="form-select"
+          >
+            <option value="default">default</option>
+          </select>
+          {errors.namespace && (
+            <p className="text-danger">{errors.namespace.message}</p>
+          )}
+        </div>
+        <div className="mb-3">
+          <label className="form-label" htmlFor="kind">
+            <strong>Kind</strong>
+          </label>
+          <select
+            {...register("kind")}
+            id="kind"
+            className="form-select"
+            onChange={(event) => setKind(event.target.value)}
+          >
+            {kindValues.map((val) => (
+              <option key={val} value={val}>
+                {val}
+              </option>
+            ))}
+          </select>
+          {errors.kind && <p className="text-danger">{errors.kind.message}</p>}
+        </div>
+        <div className="mb-3">
+          <label className="form-label" htmlFor="vendor">
+            <strong>Vendor</strong>
+          </label>
+          <select {...register("vendor")} id="vendor" className="form-select">
+            {vendorList.map((val) => (
+              <option key={val} value={val}>
+                {val}
+              </option>
+            ))}
+          </select>
+          {errors.vendor && (
+            <p className="text-danger">{errors.vendor.message}</p>
+          )}
+        </div>
+        <div className="mb-3">
+          <label className="form-label" htmlFor="dependencies">
+            <strong>Dependencies</strong>
+          </label>
+          <DependencyInput
+            onClickChoose={onClickChooseDependency}
+            dependencyList={dependencyList}
+            dependencyMap={dependencyMap}
+          />
+          {errors.dependencies && (
+            <p className="text-danger">{errors.dependencies.message}</p>
+          )}
+        </div>
+        <button
+          // disabled={!isValid}
+          onClick={handleSubmit((data) => {
+            console.log(data);
+          })}
+          className="btn btn-primary"
         >
-          <option value="default">default</option>
-        </select>
-        {errors.namespace && (
-          <p className="text-danger">{errors.namespace.message}</p>
-        )}
-      </div>
-      <div className="mb-3">
-        <label className="form-label" htmlFor="kind">
-          <strong>Kind</strong>
-        </label>
-        <select
-          {...register("kind")}
-          id="kind"
-          className="form-select"
-          onChange={(event) => setKind(event.target.value)}
-        >
-          {kindValues.map((val) => (
-            <option key={val} value={val}>
-              {val}
-            </option>
-          ))}
-        </select>
-        {errors.kind && <p className="text-danger">{errors.kind.message}</p>}
-      </div>
-      <div className="mb-3">
-        <label className="form-label" htmlFor="vendor">
-          <strong>Vendor</strong>
-        </label>
-        <select {...register("vendor")} id="vendor" className="form-select">
-          {vendorList.map((val) => (
-            <option key={val} value={val}>
-              {val}
-            </option>
-          ))}
-        </select>
-        {errors.vendor && (
-          <p className="text-danger">{errors.vendor.message}</p>
-        )}
-      </div>
-      <div className="mb-3">
-        <label className="form-label" htmlFor="dependencies">
-          <strong>Dependencies</strong>
-        </label>
-        <DependencyInput dependencyList={dependencyList} />
-        {errors.dependencies && (
-          <p className="text-danger">{errors.dependencies.message}</p>
-        )}
-      </div>
-      <button
-        // disabled={!isValid}
-        onClick={handleSubmit((data) => {
-          console.log(data);
-        })}
-        className="btn btn-primary"
+          Create
+        </button>
+      </form>
+      <Modal
+        title="modal table test"
+        showModal={showModal}
+        onClose={onCloseModalHandler}
+        onSave={() => onSaveDependency()}
       >
-        Create
-      </button>
-    </form>
+        <ResourcesTable filter={{ kind: kind }} />
+      </Modal>
+    </>
   );
 };
 

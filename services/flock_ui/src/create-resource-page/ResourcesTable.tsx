@@ -2,19 +2,24 @@ import yaml from "js-yaml";
 import { useEffect, useState } from "react";
 import Modal from "../components/Modal";
 import { BaseResourceSchema } from "../schemas";
-import { ResourceService } from "../services/resourceService";
+import { ResourceParams, ResourceService } from "../services/resourceService";
 
-const ResourcesTable = () => {
+interface Props {
+  filter: ResourceParams;
+  onRawClick: (e: BaseResourceSchema) => void;
+  onClose: () => void;
+  onSave?: (e: BaseResourceSchema) => void;
+}
+
+const ResourcesTable = ({ filter, onSave, onRawClick, onClose }: Props) => {
   const [resourceList, setResourceList] = useState<BaseResourceSchema[]>([]);
   const [error, setError] = useState("");
-  const [selectedResource, setSelectedResource] =
-    useState<BaseResourceSchema>();
   const [showModal, setShowModal] = useState(false);
 
   const apiService = new ResourceService();
 
   useEffect(() => {
-    const { request, cancel } = apiService.getAll();
+    const { request, cancel } = apiService.getAll(filter);
 
     request
       .then((response) => {
@@ -28,15 +33,15 @@ const ResourcesTable = () => {
     return () => cancel();
   }, []);
 
-  const handleRowClick = (resource: BaseResourceSchema) => {
-    setSelectedResource(resource);
-    setShowModal(true);
-  };
+  // const handleRowClick = (resource: BaseResourceSchema) => {
+  //   setSelectedResource(resource);
+  //   setShowModal(true);
+  // };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setSelectedResource(undefined);
-  };
+  // const handleCloseModal = () => {
+  //   setShowModal(false);
+  //   setSelectedResource(undefined);
+  // };
 
   return (
     <>
@@ -51,7 +56,7 @@ const ResourcesTable = () => {
         </thead>
         <tbody>
           {resourceList.map((e) => (
-            <tr key={e.id} onClick={() => handleRowClick(e)}>
+            <tr key={e.id} onClick={() => onRawClick(e)}>
               <td>{e.metadata.name}</td>
               <td>{e.kind}</td>
               <td>{e.metadata.description}</td>
@@ -63,6 +68,7 @@ const ResourcesTable = () => {
         title={selectedResource?.metadata.name}
         onClose={handleCloseModal}
         showModal={showModal}
+        onSave={onSave}
       >
         <pre>{yaml.dump(selectedResource)}</pre>
       </Modal>

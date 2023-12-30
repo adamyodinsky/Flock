@@ -1,5 +1,12 @@
 import apiClient from "./apiClient";
 
+export interface ResourceParams {
+  kind?: string;
+  name?: string;
+  namespace?: string;
+  id?: number;
+}
+
 export class ResourceSchemaService {
   getAll() {
     const controller = new AbortController();
@@ -20,33 +27,8 @@ export class ResourceSchemaService {
 
 export class ResourceService {
 
-  private createParams(kind: string = "", name: string = "", namespace: string = "", id: number = 0) {
-    let params = {}
-
-    if (id) {
-      params = { ...params, id: id }
-    }
-    if (kind) {
-      params = { ...params, kind: kind }
-    }
-    if (name) {
-      params = { ...params, name: name }
-    }
-    if (namespace) {
-      params = { ...params, namespace: namespace }
-    }
-    return params
-  }
-
-  getAll(kind: string = "", name: string = "", namespace: string = "", id: number = 0) {
+  getAll(params: Params) {
     const controller = new AbortController();
-
-    const params = this.createParams(
-      kind,
-      name,
-      namespace,
-      id
-    )
 
     const request = apiClient
       .get("resources", {
@@ -56,14 +38,7 @@ export class ResourceService {
     return { request, cancel: () => controller.abort() }
   }
 
-  get(kind: string = "", name: string = "", namespace: string = "", id: number = 0) {
-
-    const params = this.createParams(
-      kind,
-      name,
-      namespace,
-      id
-    )
+  get(params: Params) {
 
     return apiClient
       .get(`resource`, { params: params })
