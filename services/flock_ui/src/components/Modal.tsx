@@ -5,6 +5,7 @@ interface Props {
   children: ReactNode;
   showModal: boolean;
   saveButtonText?: string;
+  extraClassNames?: string;
   onClose: () => void;
   onSave?: () => void;
 }
@@ -15,11 +16,15 @@ const Modal = ({
   title,
   children,
   saveButtonText,
+  extraClassNames,
 }: Props) => {
   if (!showModal) return null;
 
   return (
-    <div className="modal show" style={{ display: "block" }}>
+    <div
+      className={`modal show ${extraClassNames}`}
+      style={{ display: "block" }}
+    >
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">

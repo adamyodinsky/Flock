@@ -1,23 +1,70 @@
-import { UseFormRegister } from "react-hook-form";
-import { ResourceFormData } from "../schemas";
+import yaml from "js-yaml";
+import { useState } from "react";
+import Modal from "../components/Modal";
+import { BaseResourceSchema } from "../schemas";
 import { ResourceParams } from "../services/resourceService";
+import ResourcesTable from "./ResourcesTable";
 
-export interface Tool {
-  name: string;
-  namespace: string;
-  kind: string;
+interface Tool {
+  name?: string;
+  namespace?: string;
+  kind?: string;
+  id?: string;
 }
 
-interface Props {
-  toolsList: Tool[];
-  onClickAdd: () => void;
-  onClickChoose: () => void;
-  register?: UseFormRegister<ResourceFormData>;
-}
+const ToolsInput = () => {
+  const [showTableModal, setShowTableModal] = useState(false);
+  const [tableFilter, setTableFilter] = useState<ResourceParams>({});
+  const [showResourceModal, setShowResourceModal] = useState(false);
+  const [toolsList, setToolsList] = useState<Tool[]>([]);
+  const [selectedResource, setSelectedResource] =
+    useState<BaseResourceSchema>();
 
-const ToolsInput = ({ toolsList, onClickChoose }: Props) => {
+  const handleCloseTableModal = () => {
+    setShowTableModal(false);
+  };
+
+  const handleTableRawClick = (resource: BaseResourceSchema) => {
+    setSelectedResource(resource);
+    setShowResourceModal(true);
+  };
+
+  const handleCloseResourceModal = () => {
+    setShowResourceModal(false);
+  };
+
+  const handleClickAdd = (filter: ResourceParams) => {
+    setTableFilter(filter);
+    setShowTableModal(true);
+  };
+
+  const handleClickRemove = (tool: Tool) => {
+    setToolsList(toolsList.filter((e) => e.id !== tool.id));
+  };
+
+  const handleOnSaveResourceModal = (e: BaseResourceSchema | undefined) => {
+    if (!e) return;
+
+    setToolsList([
+      ...toolsList,
+      { name: e.metadata.name, kind: e.kind, namespace: e.namespace, id: e.id },
+    ]);
+    setShowResourceModal(false);
+    setShowTableModal(false);
+  };
+
   return (
     <>
+      <div className="mb-3">
+        <button
+          className="btn btn-outline-primary"
+          type="button"
+          id="add-tool-button"
+          onClick={() => handleClickAdd({ category: "tool" })}
+        >
+          Add Tool
+        </button>
+      </div>
       {toolsList.map((tool, index) => {
         const name = tool.name || "";
         const namespace = tool.namespace || "";
@@ -25,18 +72,7 @@ const ToolsInput = ({ toolsList, onClickChoose }: Props) => {
 
         return (
           <div key={index} className="form-control">
-            <label className="form-label" htmlFor="dependencies">
-              <strong>{`Tool ${index + 1}`}</strong>
-            </label>
             <div className="input-group mb-3">
-              <button
-                className="btn btn-outline-primary"
-                type="button"
-                id={`button-addon-${tool}`}
-                onClick={() => onClickChoose()}
-              >
-                Choose
-              </button>
               <input
                 type="text"
                 className="form-control"
@@ -61,10 +97,35 @@ const ToolsInput = ({ toolsList, onClickChoose }: Props) => {
                 value={namespace}
                 readOnly
               />
+              <button
+                className="btn btn-outline-danger"
+                type="button"
+                id="add-tool-button"
+                onClick={() => handleClickRemove(tool)}
+              >
+                Remove
+              </button>
             </div>
           </div>
         );
       })}
+      <Modal
+        title="Resources"
+        showModal={showTableModal}
+        onClose={handleCloseTableModal}
+        extraClassNames="modal-xl"
+      >
+        <ResourcesTable filter={tableFilter} onRawClick={handleTableRawClick} />
+      </Modal>
+      <Modal
+        title={selectedResource?.metadata.name}
+        onClose={handleCloseResourceModal}
+        showModal={showResourceModal}
+        onSave={() => handleOnSaveResourceModal(selectedResource)}
+        saveButtonText="Save Choice"
+      >
+        <pre>{yaml.dump(selectedResource)}</pre>
+      </Modal>
     </>
   );
 };

@@ -1,20 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import yaml from "js-yaml";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import Modal from "../components/Modal";
-import {
-  BaseResourceSchema,
-  ResourceFormData,
-  kindValues,
-  resourceFormSchema,
-} from "../schemas";
-import {
-  ResourceParams,
-  ResourceSchemaService,
-} from "../services/resourceService";
+import { ResourceFormData, kindValues, resourceFormSchema } from "../schemas";
+import { ResourceSchemaService } from "../services/resourceService";
 import DependencyInput from "./DependencyInput";
-import ResourcesTable from "./ResourcesTable";
 import ToolsInput, { Tool } from "./ToolsInput";
 
 const CreateResourceForm = () => {
@@ -25,20 +14,9 @@ const CreateResourceForm = () => {
   } = useForm<ResourceFormData>({ resolver: zodResolver(resourceFormSchema) });
 
   const [error, SetError] = useState("");
-  const [tableFilter, setTableFilter] = useState<ResourceParams>({});
   const [kind, setKind] = useState<string>();
   const [vendorList, setVendorList] = useState<string[]>([]);
-  const [showTableModal, setShowTableModal] = useState(false);
-  const [showResourceModal, setShowResourceModal] = useState(false);
-
-  const [selectedResource, setSelectedResource] =
-    useState<BaseResourceSchema>();
-
   const [dependencyList, setDependencyList] = useState<string[]>([]);
-  const [dependencyMap, setDependencyMap] = useState<
-    Map<string, BaseResourceSchema>
-  >(new Map());
-
   const [toolsList, setToolsList] = useState<Tool[]>([]);
 
   useEffect(() => {
@@ -59,36 +37,8 @@ const CreateResourceForm = () => {
     console.log(errors);
   };
 
-  const handleTableRawClick = (resource: BaseResourceSchema) => {
-    setSelectedResource(resource);
-    setShowResourceModal(true);
-  };
-
-  const handleCloseTableModal = () => {
-    setShowTableModal(false);
-  };
-
-  const handleClickChoose = (filter: ResourceParams) => {
-    setTableFilter(filter);
-    setShowTableModal(true);
-  };
-
   const handleClickAddTool = () => {
     setToolsList([...toolsList, { name: "", namespace: "", kind: "" }]);
-  };
-
-  const handleCloseResourceModal = () => {
-    setShowResourceModal(false);
-  };
-
-  const handleOnSaveResourceModal = (e: BaseResourceSchema | undefined) => {
-    if (!e) return;
-
-    const updatedDependencyMap = new Map(dependencyMap);
-    updatedDependencyMap.set(e.kind, e);
-    setDependencyMap(updatedDependencyMap);
-    setShowResourceModal(false);
-    setShowTableModal(false);
   };
 
   const onSubmit = () => {
@@ -185,12 +135,7 @@ const CreateResourceForm = () => {
           <label className="form-label" htmlFor="dependencies">
             <strong>Dependencies</strong>
           </label>
-          <DependencyInput
-            register={register}
-            onClickChoose={handleClickChoose}
-            dependencyKindList={dependencyList}
-            dependencyMap={dependencyMap}
-          />
+          <DependencyInput dependencyKindList={dependencyList} />
           {errors.dependencies && (
             <p className="text-danger">{errors.dependencies.message}</p>
           )}
@@ -200,11 +145,7 @@ const CreateResourceForm = () => {
             <label className="form-label" htmlFor="tools">
               <strong>Tools</strong>
             </label>
-            <ToolsInput
-              onClickAdd={() => handleClickAddTool()}
-              toolsList={toolsList}
-              onClickChoose={() => handleClickChoose({ category: "tool" })}
-            />
+            <ToolsInput />
             {errors.tools && (
               <p className="text-danger">{errors.tools?.message}</p>
             )}
@@ -218,22 +159,6 @@ const CreateResourceForm = () => {
           Create
         </button>
       </form>
-      <Modal
-        title="Resources"
-        showModal={showTableModal}
-        onClose={handleCloseTableModal}
-      >
-        <ResourcesTable filter={tableFilter} onRawClick={handleTableRawClick} />
-      </Modal>
-      <Modal
-        title={selectedResource?.metadata.name}
-        onClose={handleCloseResourceModal}
-        showModal={showResourceModal}
-        onSave={() => handleOnSaveResourceModal(selectedResource)}
-        saveButtonText="Save Choice"
-      >
-        <pre>{yaml.dump(selectedResource)}</pre>
-      </Modal>
     </>
   );
 };
