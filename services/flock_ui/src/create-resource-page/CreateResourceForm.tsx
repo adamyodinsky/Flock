@@ -168,6 +168,7 @@ const CreateResourceForm = () => {
             <strong>Dependencies</strong>
           </label>
           <DependencyInput
+            register={register}
             onClickChoose={handleClickChoose}
             dependencyList={dependencyList}
             dependencyMap={dependencyMap}
@@ -176,6 +177,21 @@ const CreateResourceForm = () => {
             <p className="text-danger">{errors.dependencies.message}</p>
           )}
         </div>
+        {kind === "Agent" && (
+          <div className="mb-3">
+            <label className="form-label" htmlFor="tools">
+              <strong>Tools</strong>
+            </label>
+            <DependencyInput
+              onClickChoose={handleClickChoose}
+              dependencyList={dependencyList}
+              dependencyMap={dependencyMap}
+            />
+            {errors.tools && (
+              <p className="text-danger">{errors.tools?.message}</p>
+            )}
+          </div>
+        )}
         <button
           disabled={!isValid}
           onClick={handleSubmit(onSubmitHandler)}

@@ -1,9 +1,11 @@
-import { BaseResourceSchema } from "../schemas";
+import { UseFormRegister } from "react-hook-form";
+import { BaseResourceSchema, ResourceFormData } from "../schemas";
 
 interface Props {
   dependencyList: string[];
   dependencyMap: Map<string, BaseResourceSchema>;
   onClickChoose: (d: string) => void;
+  register?: UseFormRegister<ResourceFormData>;
 }
 
 const DependencyInput = ({
@@ -17,6 +19,7 @@ const DependencyInput = ({
         const resource = dependencyMap.get(dependency);
         const name = resource?.metadata.name || "";
         const namespace = resource?.namespace || "";
+        const kind = resource?.kind || "";
 
         return (
           <div key={index} className="form-control">
@@ -30,8 +33,16 @@ const DependencyInput = ({
                 id={`button-addon-${dependency}`}
                 onClick={() => onClickChoose(dependency)}
               >
-                Choose {dependency}
+                Choose
               </button>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Kind"
+                aria-label="Kind"
+                value={kind}
+                readOnly
+              />
               <input
                 type="text"
                 className="form-control"
