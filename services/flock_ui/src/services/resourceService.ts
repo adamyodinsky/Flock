@@ -27,7 +27,7 @@ export class ResourceSchemaService {
 
 export class ResourceService {
 
-  getAll(params: Params) {
+  getAll(params: ResourceParams) {
     const controller = new AbortController();
 
     const request = apiClient
@@ -38,7 +38,7 @@ export class ResourceService {
     return { request, cancel: () => controller.abort() }
   }
 
-  get(params: Params) {
+  get(params: ResourceParams) {
 
     return apiClient
       .get(`resource`, { params: params })

@@ -20,6 +20,7 @@ const CreateResourceForm = () => {
     formState: { errors, isValid },
   } = useForm<ResourceFormData>({ resolver: zodResolver(resourceFormSchema) });
 
+  const [error, SetError] = useState("");
   const [kind, setKind] = useState<string>();
   const [vendorList, setVendorList] = useState<string[]>([]);
   const [showTableModal, setShowTableModal] = useState(false);
@@ -43,16 +44,18 @@ const CreateResourceForm = () => {
     if (!kind) return;
 
     const service = new ResourceSchemaService();
-    service.get(kind).then((response) => {
-      setVendorList(response.data.vendor);
-      setDependencyList(response.data.dependencies);
-    });
+    service
+      .get(kind)
+      .then((response) => {
+        setVendorList(response.data.vendor);
+        setDependencyList(response.data.dependencies);
+      })
+      .catch((err) => SetError(err.message));
   }, [kind]);
 
   const onSubmitHandler = (data: ResourceFormData) => {
     console.log(data);
     console.log(errors);
-    console.log(isValid);
   };
 
   const handleTableRawClick = (resource: BaseResourceSchema) => {
@@ -89,6 +92,7 @@ const CreateResourceForm = () => {
 
   return (
     <>
+      <p className="text-danger">{error}</p>
       <form className="form-control" onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-3">
           <label className="form-label" htmlFor="name">
