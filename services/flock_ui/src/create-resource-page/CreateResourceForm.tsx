@@ -14,6 +14,12 @@ import DependencyInput from "./DependencyInput";
 import ResourcesTable from "./ResourcesTable";
 
 const CreateResourceForm = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<ResourceFormData>({ resolver: zodResolver(resourceFormSchema) });
+
   const [kind, setKind] = useState<string>();
   const [vendorList, setVendorList] = useState<string[]>([]);
   const [showTableModal, setShowTableModal] = useState(false);
@@ -28,6 +34,11 @@ const CreateResourceForm = () => {
     Map<string, BaseResourceSchema>
   >(new Map());
 
+  const [toolsList, setToolsList] = useState<string[]>([]);
+  const [toolsMap, setToolsMap] = useState<Map<string, BaseResourceSchema>>(
+    new Map()
+  );
+
   useEffect(() => {
     if (!kind) return;
 
@@ -37,12 +48,6 @@ const CreateResourceForm = () => {
       setDependencyList(response.data.dependencies);
     });
   }, [kind]);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isValid },
-  } = useForm<ResourceFormData>({ resolver: zodResolver(resourceFormSchema) });
 
   const onSubmitHandler = (data: ResourceFormData) => {
     console.log(data);
@@ -78,9 +83,13 @@ const CreateResourceForm = () => {
     setShowTableModal(false);
   };
 
+  const onSubmit = () => {
+    console.log("Submitted");
+  };
+
   return (
     <>
-      <form className="form-control">
+      <form className="form-control" onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-3">
           <label className="form-label" htmlFor="name">
             <strong>Name</strong>
@@ -184,8 +193,8 @@ const CreateResourceForm = () => {
             </label>
             <DependencyInput
               onClickChoose={handleClickChoose}
-              dependencyList={dependencyList}
-              dependencyMap={dependencyMap}
+              dependencyList={toolsList}
+              dependencyMap={toolsMap}
             />
             {errors.tools && (
               <p className="text-danger">{errors.tools?.message}</p>
