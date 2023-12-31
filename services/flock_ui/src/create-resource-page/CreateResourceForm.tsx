@@ -15,7 +15,7 @@ import {
 } from "../services/resourceService";
 import DependencyInput from "./DependencyInput";
 import ResourcesTable from "./ResourcesTable";
-import ToolsInput from "./ToolsInput";
+import ToolsInput, { Tool } from "./ToolsInput";
 
 const CreateResourceForm = () => {
   const {
@@ -39,10 +39,7 @@ const CreateResourceForm = () => {
     Map<string, BaseResourceSchema>
   >(new Map());
 
-  const [toolsList, setToolsList] = useState<string[]>([]);
-  const [toolsMap, setToolsMap] = useState<Map<string, BaseResourceSchema>>(
-    new Map()
-  );
+  const [toolsList, setToolsList] = useState<Tool[]>([]);
 
   useEffect(() => {
     if (!kind) return;
@@ -71,9 +68,13 @@ const CreateResourceForm = () => {
     setShowTableModal(false);
   };
 
-  const handleClickChoose = (kind: string) => {
-    setTableFilter({ kind: kind });
+  const handleClickChoose = (filter: ResourceParams) => {
+    setTableFilter(filter);
     setShowTableModal(true);
+  };
+
+  const handleClickAddTool = () => {
+    setToolsList([...toolsList, { name: "", namespace: "", kind: "" }]);
   };
 
   const handleCloseResourceModal = () => {
@@ -187,7 +188,7 @@ const CreateResourceForm = () => {
           <DependencyInput
             register={register}
             onClickChoose={handleClickChoose}
-            dependencyList={dependencyList}
+            dependencyKindList={dependencyList}
             dependencyMap={dependencyMap}
           />
           {errors.dependencies && (
@@ -199,7 +200,11 @@ const CreateResourceForm = () => {
             <label className="form-label" htmlFor="tools">
               <strong>Tools</strong>
             </label>
-            <ToolsInput toolsList={toolsList} toolsMap={toolsMap} />
+            <ToolsInput
+              onClickAdd={() => handleClickAddTool()}
+              toolsList={toolsList}
+              onClickChoose={() => handleClickChoose({ category: "tool" })}
+            />
             {errors.tools && (
               <p className="text-danger">{errors.tools?.message}</p>
             )}
