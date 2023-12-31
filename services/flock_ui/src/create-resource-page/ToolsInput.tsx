@@ -12,7 +12,11 @@ interface Tool {
   id?: string;
 }
 
-const ToolsInput = () => {
+interface Props {
+  register?: any;
+}
+
+const ToolsInput = ({ register }: Props) => {
   const [showTableModal, setShowTableModal] = useState(false);
   const [tableFilter, setTableFilter] = useState<ResourceParams>({});
   const [showResourceModal, setShowResourceModal] = useState(false);

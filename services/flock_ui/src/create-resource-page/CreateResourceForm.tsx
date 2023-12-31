@@ -1,15 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { ResourceFormData, kindValues, resourceFormSchema } from "../schemas";
 import { ResourceSchemaService } from "../services/resourceService";
 import DependencyInput from "./DependencyInput";
-import ToolsInput, { Tool } from "./ToolsInput";
+import ToolsInput from "./ToolsInput";
 
 const CreateResourceForm = () => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isValid },
   } = useForm<ResourceFormData>({ resolver: zodResolver(resourceFormSchema) });
 
@@ -17,7 +18,6 @@ const CreateResourceForm = () => {
   const [kind, setKind] = useState<string>();
   const [vendorList, setVendorList] = useState<string[]>([]);
   const [dependencyList, setDependencyList] = useState<string[]>([]);
-  const [toolsList, setToolsList] = useState<Tool[]>([]);
 
   useEffect(() => {
     if (!kind) return;
@@ -35,10 +35,6 @@ const CreateResourceForm = () => {
   const onSubmitHandler = (data: ResourceFormData) => {
     console.log(data);
     console.log(errors);
-  };
-
-  const handleClickAddTool = () => {
-    setToolsList([...toolsList, { name: "", namespace: "", kind: "" }]);
   };
 
   const onSubmit = () => {
@@ -135,7 +131,13 @@ const CreateResourceForm = () => {
           <label className="form-label" htmlFor="dependencies">
             <strong>Dependencies</strong>
           </label>
-          <DependencyInput dependencyKindList={dependencyList} />
+          <Controller
+            name="dependencies"
+            control={control}
+            render={({ field }) => (
+              <DependencyInput {...field} dependencyKindList={dependencyList} />
+            )}
+          />
           {errors.dependencies && (
             <p className="text-danger">{errors.dependencies.message}</p>
           )}
