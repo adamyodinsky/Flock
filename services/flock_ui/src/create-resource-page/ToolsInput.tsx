@@ -1,28 +1,57 @@
 import yaml from "js-yaml";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  Control,
+  UseFormRegister,
+  UseFormSetValue,
+  useFieldArray,
+} from "react-hook-form";
 import Modal from "../components/Modal";
-import { BaseResourceSchema } from "../schemas";
+import { BaseResourceSchema, ResourceFormData } from "../schemas";
 import { ResourceParams } from "../services/resourceService";
 import ResourcesTable from "./ResourcesTable";
 
 interface Tool {
-  name?: string;
-  namespace?: string;
-  kind?: string;
-  id?: string;
+  name: string;
+  namespace: string;
+  kind: string;
+  id: string;
 }
 
 interface Props {
-  register?: any;
+  register: UseFormRegister<ResourceFormData>;
+  setValue: UseFormSetValue<ResourceFormData>;
+  control: Control<ResourceFormData>;
 }
 
-const ToolsInput = ({ register }: Props) => {
+const ToolsInput = ({ register, setValue }: Props) => {
   const [showTableModal, setShowTableModal] = useState(false);
   const [tableFilter, setTableFilter] = useState<ResourceParams>({});
   const [showResourceModal, setShowResourceModal] = useState(false);
   const [toolsList, setToolsList] = useState<Tool[]>([]);
   const [selectedResource, setSelectedResource] =
     useState<BaseResourceSchema>();
+
+  useEffect(() => {
+    toolsList.forEach((tool, index) => {
+      if (tool) {
+        setValue(`tools.${index}.kind`, tool.kind, {
+          shouldValidate: true,
+        });
+        setValue(`tools.${index}.name`, tool.name, {
+          shouldValidate: true,
+        });
+        setValue(`tools.${index}.namespace`, tool.namespace, {
+          shouldValidate: true,
+        });
+      }
+    });
+  }, [toolsList]);
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "tools",
+  });
 
   const handleCloseTableModal = () => {
     setShowTableModal(false);
@@ -78,6 +107,7 @@ const ToolsInput = ({ register }: Props) => {
           <div key={index} className="form-control">
             <div className="input-group mb-3">
               <input
+                {...register(`tools.${index}.kind`)}
                 type="text"
                 className="form-control"
                 placeholder="Kind"
@@ -86,6 +116,7 @@ const ToolsInput = ({ register }: Props) => {
                 readOnly
               />
               <input
+                {...register(`tools.${index}.name`)}
                 type="text"
                 className="form-control"
                 placeholder="Name"
@@ -94,6 +125,7 @@ const ToolsInput = ({ register }: Props) => {
                 readOnly
               />
               <input
+                {...register(`tools.${index}.namespace`)}
                 type="text"
                 className="form-control"
                 placeholder="Namespace"

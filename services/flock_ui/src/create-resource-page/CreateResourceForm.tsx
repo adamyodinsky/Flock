@@ -9,6 +9,7 @@ import ToolsInput from "./ToolsInput";
 const CreateResourceForm = () => {
   const {
     register,
+    control,
     handleSubmit,
     setValue,
     formState: { errors, isValid },
@@ -149,7 +150,11 @@ const CreateResourceForm = () => {
             <label className="form-label" htmlFor="tools">
               <strong>Tools</strong>
             </label>
-            <ToolsInput />
+            <ToolsInput
+              register={register}
+              setValue={setValue}
+              control={control}
+            />
             {errors.tools && (
               <p className="text-danger">{errors.tools?.message}</p>
             )}
