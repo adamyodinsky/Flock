@@ -9,9 +9,13 @@ import {
   kindValues,
   resourceFormSchema,
 } from "../schemas";
-import { ResourceSchemaService } from "../services/resourceService";
+import {
+  ResourceParams,
+  ResourceSchemaService,
+} from "../services/resourceService";
 import DependencyInput from "./DependencyInput";
 import ResourcesTable from "./ResourcesTable";
+import ToolsInput from "./ToolsInput";
 
 const CreateResourceForm = () => {
   const {
@@ -21,6 +25,7 @@ const CreateResourceForm = () => {
   } = useForm<ResourceFormData>({ resolver: zodResolver(resourceFormSchema) });
 
   const [error, SetError] = useState("");
+  const [tableFilter, setTableFilter] = useState<ResourceParams>({});
   const [kind, setKind] = useState<string>();
   const [vendorList, setVendorList] = useState<string[]>([]);
   const [showTableModal, setShowTableModal] = useState(false);
@@ -29,7 +34,6 @@ const CreateResourceForm = () => {
   const [selectedResource, setSelectedResource] =
     useState<BaseResourceSchema>();
 
-  const [dependencyKind, setDependencyKind] = useState<string>();
   const [dependencyList, setDependencyList] = useState<string[]>([]);
   const [dependencyMap, setDependencyMap] = useState<
     Map<string, BaseResourceSchema>
@@ -67,8 +71,8 @@ const CreateResourceForm = () => {
     setShowTableModal(false);
   };
 
-  const handleClickChoose = (d: string) => {
-    setDependencyKind(d);
+  const handleClickChoose = (kind: string) => {
+    setTableFilter({ kind: kind });
     setShowTableModal(true);
   };
 
@@ -195,11 +199,7 @@ const CreateResourceForm = () => {
             <label className="form-label" htmlFor="tools">
               <strong>Tools</strong>
             </label>
-            <DependencyInput
-              onClickChoose={handleClickChoose}
-              dependencyList={toolsList}
-              dependencyMap={toolsMap}
-            />
+            <ToolsInput toolsList={toolsList} toolsMap={toolsMap} />
             {errors.tools && (
               <p className="text-danger">{errors.tools?.message}</p>
             )}
@@ -218,10 +218,7 @@ const CreateResourceForm = () => {
         showModal={showTableModal}
         onClose={handleCloseTableModal}
       >
-        <ResourcesTable
-          filter={{ kind: dependencyKind }}
-          onRawClick={handleTableRawClick}
-        />
+        <ResourcesTable filter={tableFilter} onRawClick={handleTableRawClick} />
       </Modal>
       <Modal
         title={selectedResource?.metadata.name}

@@ -4,19 +4,20 @@ import { BaseResourceSchema, ResourceFormData } from "../schemas";
 interface Props {
   toolsList: string[];
   toolsMap: Map<string, BaseResourceSchema>;
-  onClickChoose: (d: string) => void;
+  onClickAdd: () => void;
   register?: UseFormRegister<ResourceFormData>;
 }
 
-const ToolsInput = ({ toolsList, toolsMap, onClickChoose }: Props) => {
+const ToolsInput = ({ toolsList, toolsMap, onClickAdd }: Props) => {
   return (
     <>
       <button
         className="btn btn-outline-primary"
         type="button"
-        id="button-add-tool"
+        id="add-tool-button"
+        onClick={() => onClickAdd()}
       >
-        +
+        Add Tool +
       </button>
       {toolsList.map((tool, index) => {
         const resource = toolsMap.get(tool);
@@ -30,14 +31,6 @@ const ToolsInput = ({ toolsList, toolsMap, onClickChoose }: Props) => {
               <strong>{tool}</strong>
             </label>
             <div className="input-group mb-3">
-              <button
-                className="btn btn-outline-primary"
-                type="button"
-                id={`button-addon-${tool}`}
-                onClick={() => onClickChoose(tool)}
-              >
-                Choose
-              </button>
               <input
                 type="text"
                 className="form-control"
