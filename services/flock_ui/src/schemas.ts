@@ -80,6 +80,7 @@ const kindTuple: [string, ...string[]] = kindValues as [string, ...string[]];
 
 export const baseToolDependencySchema = z.object({
   labels: z.record(z.string()).optional(),
+  // id: z.string().optional(),
   name: z.string(),
   kind: z.enum(kindTuple),
   namespace: z.string(),

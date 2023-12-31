@@ -160,7 +160,11 @@ const CreateResourceForm = () => {
             )}
           </div>
         )}
-        <button disabled={!isValid} className="btn btn-primary" type="submit">
+        <button
+          disabled={!isValid}
+          className="btn btn-primary btn-lg"
+          type="submit"
+        >
           Create
         </button>
       </form>

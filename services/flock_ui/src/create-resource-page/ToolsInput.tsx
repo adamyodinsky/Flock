@@ -1,5 +1,5 @@
 import yaml from "js-yaml";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Control,
   UseFormRegister,
@@ -24,29 +24,12 @@ interface Props {
   control: Control<ResourceFormData>;
 }
 
-const ToolsInput = ({ register, setValue }: Props) => {
+const ToolsInput = ({ register, control }: Props) => {
   const [showTableModal, setShowTableModal] = useState(false);
   const [tableFilter, setTableFilter] = useState<ResourceParams>({});
   const [showResourceModal, setShowResourceModal] = useState(false);
-  const [toolsList, setToolsList] = useState<Tool[]>([]);
   const [selectedResource, setSelectedResource] =
     useState<BaseResourceSchema>();
-
-  useEffect(() => {
-    toolsList.forEach((tool, index) => {
-      if (tool) {
-        setValue(`tools.${index}.kind`, tool.kind, {
-          shouldValidate: true,
-        });
-        setValue(`tools.${index}.name`, tool.name, {
-          shouldValidate: true,
-        });
-        setValue(`tools.${index}.namespace`, tool.namespace, {
-          shouldValidate: true,
-        });
-      }
-    });
-  }, [toolsList]);
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -71,17 +54,15 @@ const ToolsInput = ({ register, setValue }: Props) => {
     setShowTableModal(true);
   };
 
-  const handleClickRemove = (tool: Tool) => {
-    setToolsList(toolsList.filter((e) => e.id !== tool.id));
-  };
-
   const handleOnSaveResourceModal = (e: BaseResourceSchema | undefined) => {
     if (!e) return;
 
-    setToolsList([
-      ...toolsList,
-      { name: e.metadata.name, kind: e.kind, namespace: e.namespace, id: e.id },
-    ]);
+    append({
+      name: e.metadata.name,
+      kind: e.kind,
+      namespace: e.namespace,
+    });
+
     setShowResourceModal(false);
     setShowTableModal(false);
   };
@@ -98,10 +79,10 @@ const ToolsInput = ({ register, setValue }: Props) => {
           Add Tool
         </button>
       </div>
-      {toolsList.map((tool, index) => {
-        const name = tool.name || "";
-        const namespace = tool.namespace || "";
-        const kind = tool.kind || "";
+      {fields.map((field, index) => {
+        const name = field.name || "";
+        const namespace = field.namespace || "";
+        const kind = field.kind || "";
 
         return (
           <div key={index} className="form-control">
@@ -137,7 +118,7 @@ const ToolsInput = ({ register, setValue }: Props) => {
                 className="btn btn-outline-danger"
                 type="button"
                 id="add-tool-button"
-                onClick={() => handleClickRemove(tool)}
+                onClick={() => remove(index)}
               >
                 Remove
               </button>
