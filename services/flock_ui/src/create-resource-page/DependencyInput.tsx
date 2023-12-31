@@ -80,7 +80,7 @@ const DependencyInput = ({ dependencyKindList, register, setValue }: Props) => {
             <label className="form-label">
               <strong>{dependencyKind}</strong>
             </label>
-            <div className="input-group mb-3">
+            <div className="input-group m-1">
               <button
                 className="btn btn-outline-primary"
                 type="button"
@@ -91,12 +91,12 @@ const DependencyInput = ({ dependencyKindList, register, setValue }: Props) => {
               </button>
               <input
                 {...register(`dependencies.${index}.kind`)}
-                type="text"
+                type="hidden"
                 className="form-control"
                 placeholder="Kind"
                 aria-label="Kind"
                 defaultValue={kind}
-                // readOnly
+                readOnly
               />
               <input
                 {...register(`dependencies.${index}.name`)}
@@ -105,7 +105,7 @@ const DependencyInput = ({ dependencyKindList, register, setValue }: Props) => {
                 placeholder="Name"
                 aria-label="Name"
                 defaultValue={name}
-                // readOnly
+                readOnly
               />
               <input
                 {...register(`dependencies.${index}.namespace`)}
@@ -114,7 +114,7 @@ const DependencyInput = ({ dependencyKindList, register, setValue }: Props) => {
                 placeholder="Namespace"
                 aria-label="Namespace"
                 defaultValue={namespace}
-                // readOnly
+                readOnly
               />
             </div>
           </div>

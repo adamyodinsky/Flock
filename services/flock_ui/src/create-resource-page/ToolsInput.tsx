@@ -69,7 +69,7 @@ const ToolsInput = ({ register, control }: Props) => {
 
   return (
     <>
-      <div className="mb-3">
+      <div className="m-1">
         <button
           className="btn btn-outline-primary"
           type="button"
@@ -86,10 +86,13 @@ const ToolsInput = ({ register, control }: Props) => {
 
         return (
           <div key={index} className="form-control">
-            <div className="input-group mb-3">
+            <label className="form-label">
+              <strong>{kind}</strong>
+            </label>
+            <div className="input-group m-1">
               <input
                 {...register(`tools.${index}.kind`)}
-                type="text"
+                type="hidden"
                 className="form-control"
                 placeholder="Kind"
                 aria-label="Kind"

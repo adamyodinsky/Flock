@@ -43,112 +43,111 @@ const CreateResourceForm = () => {
     <>
       <p className="text-danger">{error}</p>
       <form className="form-control" onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-3">
-          <label className="form-label" htmlFor="name">
-            <strong>Name</strong>
-          </label>
-          <input
-            {...register("name")}
-            id="name"
-            type="text"
-            className="form-control"
-          ></input>
-          {errors.name && <p className="text-danger">{errors.name.message}</p>}
-        </div>
-        <div className="mb-3">
-          <label htmlFor="description">
-            <strong>Description</strong>
-          </label>
-          <input
-            {...register("description")}
-            id="description"
-            type="text"
-            className="form-control"
-          ></input>
-          {errors.description && (
-            <p className="text-danger">{errors.description.message}</p>
-          )}
-        </div>
-        <div className="mb-3">
-          <label className="form-label" htmlFor="namespace">
-            <strong>Namespace</strong>
-          </label>
-          <select
-            {...register("namespace")}
-            id="namespace"
-            className="form-select"
-          >
-            <option value="default">default</option>
-          </select>
-          {errors.namespace && (
-            <p className="text-danger">{errors.namespace.message}</p>
-          )}
-        </div>
-        <div className="mb-3">
-          <label className="form-label" htmlFor="kind">
-            <strong>Kind</strong>
-          </label>
-          <select
-            {...register("kind")}
-            id="kind"
-            className="form-select"
-            onChange={(event) => setKind(event.target.value)}
-          >
-            <option value="" disabled selected>
-              Select Kind
-            </option>
-
-            {kindValues.map((val) => (
-              <option key={val} value={val}>
-                {val}
-              </option>
-            ))}
-          </select>
-          {errors.kind && <p className="text-danger">{errors.kind.message}</p>}
-        </div>
-        <div className="mb-3">
-          <label className="form-label" htmlFor="vendor">
-            <strong>Vendor</strong>
-          </label>
-          <select {...register("vendor")} id="vendor" className="form-select">
-            <option value="" disabled selected>
-              Select Vendor
-            </option>
-
-            {vendorList.map((val) => (
-              <option key={val} value={val}>
-                {val}
-              </option>
-            ))}
-          </select>
-          {errors.vendor && (
-            <p className="text-danger">{errors.vendor.message}</p>
-          )}
-        </div>
-        <div className="mb-3">
-          <label className="form-label" htmlFor="dependencies">
-            <strong>Dependencies</strong>
-          </label>
-          <DependencyInput
-            register={register}
-            dependencyKindList={dependencyList}
-            setValue={setValue}
-          />
-          {/* <Controller
-            name="dependencies"
-            control={control}
-            render={({ field }) => (
-              <DependencyInput {...field} dependencyKindList={dependencyList} />
+        <div className="form-control m-1">
+          <div className="m-1">
+            <label className="form-label" htmlFor="name">
+              <strong>Name</strong>
+            </label>
+            <input
+              {...register("name")}
+              id="name"
+              type="text"
+              className="form-control"
+            ></input>
+            {errors.name && (
+              <p className="text-danger">{errors.name.message}</p>
             )}
-          /> */}
-          {errors.dependencies && (
-            <p className="text-danger">{errors.dependencies.message}</p>
-          )}
+          </div>
+          <div className="m-1">
+            <label htmlFor="description">
+              <strong>Description</strong>
+            </label>
+            <input
+              {...register("description")}
+              id="description"
+              type="text"
+              className="form-control"
+            ></input>
+            {errors.description && (
+              <p className="text-danger">{errors.description.message}</p>
+            )}
+          </div>
+          <div className="m-1">
+            <label className="form-label" htmlFor="namespace">
+              <strong>Namespace</strong>
+            </label>
+            <select
+              {...register("namespace")}
+              id="namespace"
+              className="form-select"
+            >
+              <option value="default">default</option>
+            </select>
+            {errors.namespace && (
+              <p className="text-danger">{errors.namespace.message}</p>
+            )}
+          </div>
+          <div className="m-1">
+            <label className="form-label" htmlFor="kind">
+              <strong>Kind</strong>
+            </label>
+            <select
+              {...register("kind")}
+              id="kind"
+              className="form-select"
+              onChange={(event) => setKind(event.target.value)}
+            >
+              <option value="" disabled selected>
+                Select Kind
+              </option>
+              {kindValues.map((val) => (
+                <option key={val} value={val}>
+                  {val}
+                </option>
+              ))}
+            </select>
+            {errors.kind && (
+              <p className="text-danger">{errors.kind.message}</p>
+            )}
+          </div>
+          <div className="m-1">
+            <label className="form-label" htmlFor="vendor">
+              <strong>Vendor</strong>
+            </label>
+            <select {...register("vendor")} id="vendor" className="form-select">
+              <option value="" disabled selected>
+                Select Vendor
+              </option>
+              {vendorList.map((val) => (
+                <option key={val} value={val}>
+                  {val}
+                </option>
+              ))}
+            </select>
+            {errors.vendor && (
+              <p className="text-danger">{errors.vendor.message}</p>
+            )}
+          </div>
         </div>
+        {dependencyList.length > 0 && (
+          <div className="m-1 form-control">
+            <label className="form-label" htmlFor="dependencies">
+              <h5>Dependencies</h5>
+            </label>
+            <DependencyInput
+              register={register}
+              dependencyKindList={dependencyList}
+              setValue={setValue}
+            />
+            {errors.dependencies && (
+              <p className="text-danger">{errors.dependencies.message}</p>
+            )}
+          </div>
+        )}
         {kind === "Agent" && (
-          <div className="mb-3">
+          <div className="m-1 form-control">
             <label className="form-label" htmlFor="tools">
-              <strong>Tools</strong>
+              <h5 className="">Tools</h5>
             </label>
             <ToolsInput
               register={register}
