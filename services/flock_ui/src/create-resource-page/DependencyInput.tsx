@@ -7,9 +7,10 @@ import ResourcesTable from "./ResourcesTable";
 
 interface Props {
   dependencyKindList: string[];
+  register: any;
 }
 
-const DependencyInput = ({ dependencyKindList }: Props) => {
+const DependencyInput = ({ dependencyKindList, register }: Props) => {
   const [showTableModal, setShowTableModal] = useState(false);
   const [tableFilter, setTableFilter] = useState<ResourceParams>({});
   const [showResourceModal, setShowResourceModal] = useState(false);
@@ -56,7 +57,11 @@ const DependencyInput = ({ dependencyKindList }: Props) => {
         const kind = resource?.kind || "";
 
         return (
-          <div key={index} className="form-control">
+          <div
+            {...register(`dependencies[${index}]`)}
+            key={index}
+            className="form-control"
+          >
             <label className="form-label" htmlFor="dependencies">
               <strong>{dependencyKind}</strong>
             </label>
@@ -70,6 +75,7 @@ const DependencyInput = ({ dependencyKindList }: Props) => {
                 Choose
               </button>
               <input
+                {...register(`dependencies[${index}].kind`)}
                 type="text"
                 className="form-control"
                 placeholder="Kind"
@@ -78,6 +84,7 @@ const DependencyInput = ({ dependencyKindList }: Props) => {
                 readOnly
               />
               <input
+                {...register(`dependencies[${index}].name`)}
                 type="text"
                 className="form-control"
                 placeholder="Name"
@@ -86,6 +93,7 @@ const DependencyInput = ({ dependencyKindList }: Props) => {
                 readOnly
               />
               <input
+                {...register(`dependencies[${index}].namespace`)}
                 type="text"
                 className="form-control"
                 placeholder="Namespace"

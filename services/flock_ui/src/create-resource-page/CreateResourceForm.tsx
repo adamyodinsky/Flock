@@ -32,13 +32,16 @@ const CreateResourceForm = () => {
       .catch((err) => SetError(err.message));
   }, [kind]);
 
-  const onSubmitHandler = (data: ResourceFormData) => {
+  // Todo: remove this
+  const onSubmitHandlerTest = (data: ResourceFormData) => {
     console.log(data);
     console.log(errors);
   };
 
-  const onSubmit = () => {
+  const onSubmit = (data: ResourceFormData) => {
+    console.log(data);
     console.log("Submitted");
+    console.log(errors);
   };
 
   return (
@@ -131,13 +134,17 @@ const CreateResourceForm = () => {
           <label className="form-label" htmlFor="dependencies">
             <strong>Dependencies</strong>
           </label>
-          <Controller
+          <DependencyInput
+            register={register}
+            dependencyKindList={dependencyList}
+          />
+          {/* <Controller
             name="dependencies"
             control={control}
             render={({ field }) => (
               <DependencyInput {...field} dependencyKindList={dependencyList} />
             )}
-          />
+          /> */}
           {errors.dependencies && (
             <p className="text-danger">{errors.dependencies.message}</p>
           )}
@@ -154,9 +161,10 @@ const CreateResourceForm = () => {
           </div>
         )}
         <button
-          disabled={!isValid}
-          onClick={handleSubmit(onSubmitHandler)}
+          // disabled={!isValid}
+          // onClick={handleSubmit(onSubmitHandlerTest)}
           className="btn btn-primary"
+          type="submit"
         >
           Create
         </button>
