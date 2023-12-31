@@ -1,16 +1,18 @@
 import yaml from "js-yaml";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { UseFormRegister, UseFormSetValue } from "react-hook-form";
 import Modal from "../components/Modal";
-import { BaseResourceSchema } from "../schemas";
+import { BaseResourceSchema, ResourceFormData } from "../schemas";
 import { ResourceParams } from "../services/resourceService";
 import ResourcesTable from "./ResourcesTable";
 
 interface Props {
   dependencyKindList: string[];
-  register: any;
+  register: UseFormRegister<ResourceFormData>;
+  setValue: UseFormSetValue<ResourceFormData>;
 }
 
-const DependencyInput = ({ dependencyKindList, register }: Props) => {
+const DependencyInput = ({ dependencyKindList, register, setValue }: Props) => {
   const [showTableModal, setShowTableModal] = useState(false);
   const [tableFilter, setTableFilter] = useState<ResourceParams>({});
   const [showResourceModal, setShowResourceModal] = useState(false);
@@ -19,6 +21,23 @@ const DependencyInput = ({ dependencyKindList, register }: Props) => {
   const [dependencyMap, setDependencyMap] = useState<
     Map<string, BaseResourceSchema>
   >(new Map());
+
+  useEffect(() => {
+    dependencyKindList.forEach((dependencyKind, index) => {
+      const resource = dependencyMap.get(dependencyKind);
+      if (resource) {
+        setValue(`dependencies.${index}.kind`, resource.kind, {
+          shouldValidate: true,
+        });
+        setValue(`dependencies.${index}.name`, resource.metadata.name, {
+          shouldValidate: true,
+        });
+        setValue(`dependencies.${index}.namespace`, resource.namespace, {
+          shouldValidate: true,
+        });
+      }
+    });
+  }, [dependencyMap]);
 
   const handleCloseTableModal = () => {
     setShowTableModal(false);
@@ -57,12 +76,8 @@ const DependencyInput = ({ dependencyKindList, register }: Props) => {
         const kind = resource?.kind || "";
 
         return (
-          <div
-            {...register(`dependencies[${index}]`)}
-            key={index}
-            className="form-control"
-          >
-            <label className="form-label" htmlFor="dependencies">
+          <div key={index} className="form-control">
+            <label className="form-label">
               <strong>{dependencyKind}</strong>
             </label>
             <div className="input-group mb-3">
@@ -75,31 +90,31 @@ const DependencyInput = ({ dependencyKindList, register }: Props) => {
                 Choose
               </button>
               <input
-                {...register(`dependencies[${index}].kind`)}
+                {...register(`dependencies.${index}.kind`)}
                 type="text"
                 className="form-control"
                 placeholder="Kind"
                 aria-label="Kind"
-                value={kind}
-                readOnly
+                defaultValue={kind}
+                // readOnly
               />
               <input
-                {...register(`dependencies[${index}].name`)}
+                {...register(`dependencies.${index}.name`)}
                 type="text"
                 className="form-control"
                 placeholder="Name"
                 aria-label="Name"
-                value={name}
-                readOnly
+                defaultValue={name}
+                // readOnly
               />
               <input
-                {...register(`dependencies[${index}].namespace`)}
+                {...register(`dependencies.${index}.namespace`)}
                 type="text"
                 className="form-control"
                 placeholder="Namespace"
                 aria-label="Namespace"
-                value={namespace}
-                readOnly
+                defaultValue={namespace}
+                // readOnly
               />
             </div>
           </div>

@@ -88,11 +88,11 @@ export const baseToolDependencySchema = z.object({
 });
 
 export const resourceFormSchema = z.object({
-  name: z.string().max(63),
-  description: z.string().max(255),
-  namespace: z.string().default("default"),
-  kind: string().max(63),
-  vendor: string().max(63).optional(),
+  name: z.string().min(3).max(63),
+  description: z.string().min(3).max(255),
+  namespace: z.string().min(3).max(63).default("default"),
+  kind: string().min(3).max(63),
+  vendor: string().min(3).max(63),
   options: z.array(z.record(z.string())).optional(),
   dependencies: z.array(baseToolDependencySchema).optional(),
   tools: z.array(baseToolDependencySchema).optional(),

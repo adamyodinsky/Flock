@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { ResourceFormData, kindValues, resourceFormSchema } from "../schemas";
 import { ResourceSchemaService } from "../services/resourceService";
 import DependencyInput from "./DependencyInput";
@@ -10,7 +10,7 @@ const CreateResourceForm = () => {
   const {
     register,
     handleSubmit,
-    control,
+    setValue,
     formState: { errors, isValid },
   } = useForm<ResourceFormData>({ resolver: zodResolver(resourceFormSchema) });
 
@@ -31,12 +31,6 @@ const CreateResourceForm = () => {
       })
       .catch((err) => SetError(err.message));
   }, [kind]);
-
-  // Todo: remove this
-  const onSubmitHandlerTest = (data: ResourceFormData) => {
-    console.log(data);
-    console.log(errors);
-  };
 
   const onSubmit = (data: ResourceFormData) => {
     console.log(data);
@@ -137,6 +131,7 @@ const CreateResourceForm = () => {
           <DependencyInput
             register={register}
             dependencyKindList={dependencyList}
+            setValue={setValue}
           />
           {/* <Controller
             name="dependencies"
@@ -160,12 +155,7 @@ const CreateResourceForm = () => {
             )}
           </div>
         )}
-        <button
-          // disabled={!isValid}
-          // onClick={handleSubmit(onSubmitHandlerTest)}
-          className="btn btn-primary"
-          type="submit"
-        >
+        <button disabled={!isValid} className="btn btn-primary" type="submit">
           Create
         </button>
       </form>
