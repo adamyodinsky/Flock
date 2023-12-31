@@ -1,12 +1,10 @@
 import "./App.css";
-import CreateResourcePage from "./create-resource-page/CreateResourcePage";
-// import ResourcesTable from "./create-resource-page/ResourcesTable";
+import CreateResourceForm from "./create-resource-page/CreateResourceForm";
 
 function App() {
   return (
     <>
-      <CreateResourcePage />
-      {/* <ResourcesTable /> */}
+      <CreateResourceForm />
     </>
   );
 }
