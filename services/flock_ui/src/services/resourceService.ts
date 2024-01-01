@@ -1,3 +1,4 @@
+import { BaseResourceSchema } from "../schemas";
 import apiClient from "./apiClient";
 
 export interface ResourceParams {
@@ -42,6 +43,16 @@ export class ResourceService {
   get(params: ResourceParams) {
 
     return apiClient
-      .get(`resource`, { params: params })
+      .get("resource", { params: params })
   }
+
+  post(resource: BaseResourceSchema) {
+    return apiClient.post("resource", resource, {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+  }
+
+
 }
