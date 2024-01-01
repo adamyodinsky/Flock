@@ -213,7 +213,9 @@ const CreateResourceForm = () => {
         )}
         <button
           disabled={!isValid}
-          className="btn btn-primary btn-lg"
+          className="txt- btn btn-primary name() {
+            
+          } btn-lg"
           type="submit"
         >
           Create
