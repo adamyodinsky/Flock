@@ -2,8 +2,8 @@ import { string, z } from "zod";
 
 
 export interface BaseMetaData {
-  annotations: { [key: string]: string };
-  labels: { [key: string]: string };
+  annotations?: { [key: string]: string };
+  labels?: { [key: string]: string };
   name: string;
   description: string;
 }
@@ -40,30 +40,30 @@ export enum Category {
 
 
 export interface BaseToolDependency {
-  labels: { [key: string]: string };
+  labels?: { [key: string]: string };
   name: string;
   kind: Kind;
   namespace: string;
-  options: Record<string, any>;
-  description: string;
+  options?: Record<string, any>;
+  description?: string;
 }
 
 export interface BaseSpec {
-  options: Record<string, any>;
+  options?: Record<string, any>;
   vendor: string;
-  tools: BaseToolDependency[];
-  dependencies: BaseToolDependency[];
+  tools?: BaseToolDependency[];
+  dependencies?: BaseToolDependency[];
 }
 
 export interface BaseResourceSchema {
-  id: string;
-  apiVersion: "flock/v1";
-  kind: Kind;
-  category: Category;
+  id?: string;
+  apiVersion?: "flock/v1";
+  kind: string;
+  category?: Category;
   namespace: string;
   metadata: BaseMetaData;
-  created_at: string;
-  updated_at: string;
+  created_at?: string;
+  updated_at?: string;
   spec: BaseSpec;
 }
 

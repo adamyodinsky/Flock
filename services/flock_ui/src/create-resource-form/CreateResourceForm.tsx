@@ -1,11 +1,27 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { ResourceFormData, kindValues, resourceFormSchema } from "../schemas";
-import { ResourceSchemaService } from "../services/resourceService";
+import {
+  BaseResourceSchema,
+  Kind,
+  ResourceFormData,
+  kindValues,
+  resourceFormSchema,
+} from "../schemas";
+import {
+  ResourceSchemaService,
+  ResourceService,
+} from "../services/resourceService";
 import DependencyInput from "./DependencyInput";
 import OptionsInput from "./OptionsInput";
 import ToolsInput from "./ToolsInput";
+
+function convertToKindEnum(kindString: string): Kind {
+  if (Object.values(Kind).includes(kindString as Kind)) {
+    return kindString as Kind;
+  }
+  return Kind.Embedding;
+}
 
 const CreateResourceForm = () => {
   const {
@@ -20,12 +36,13 @@ const CreateResourceForm = () => {
   const [kind, setKind] = useState<string>();
   const [vendorList, setVendorList] = useState<string[]>([]);
   const [dependencyList, setDependencyList] = useState<string[]>([]);
+  const schemaService = new ResourceSchemaService();
+  const resourceService = new ResourceService();
 
   useEffect(() => {
     if (!kind) return;
 
-    const service = new ResourceSchemaService();
-    service
+    schemaService
       .get(kind)
       .then((response) => {
         setVendorList(response.data.vendor);
@@ -35,9 +52,40 @@ const CreateResourceForm = () => {
   }, [kind]);
 
   const onSubmit = (data: ResourceFormData) => {
-    console.log(data);
     console.log("Submitted");
-    console.log(errors);
+    console.log(data);
+    // console.log(errors);
+
+    const resource: BaseResourceSchema = {
+      kind: data.kind,
+      namespace: data.namespace,
+      metadata: {
+        name: data.name,
+        description: data.description,
+      },
+      spec: {
+        options: data.options,
+        vendor: data.vendor,
+        tools: data.tools
+          ? data.tools.map((tool) => ({
+              name: tool.name,
+              kind: convertToKindEnum(tool.kind),
+              namespace: tool.namespace,
+            }))
+          : [],
+        dependencies: data.dependencies
+          ? data.dependencies.map((dependency) => ({
+              name: dependency.name,
+              kind: convertToKindEnum(dependency.kind),
+              namespace: dependency.namespace,
+            }))
+          : [],
+      },
+    };
+
+    console.log(resource);
+
+    resourceService.post(resource).then((res) => console.log(res));
   };
 
   return (
