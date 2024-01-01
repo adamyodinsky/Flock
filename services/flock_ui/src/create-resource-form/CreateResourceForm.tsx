@@ -16,13 +16,6 @@ import DependencyInput from "./DependencyInput";
 import OptionsInput from "./OptionsInput";
 import ToolsInput from "./ToolsInput";
 
-function convertToKindEnum(kindString: string): Kind {
-  if (Object.values(Kind).includes(kindString as Kind)) {
-    return kindString as Kind;
-  }
-  return Kind.Embedding;
-}
-
 const CreateResourceForm = () => {
   const {
     register,
@@ -69,14 +62,14 @@ const CreateResourceForm = () => {
         tools: data.tools
           ? data.tools.map((tool) => ({
               name: tool.name,
-              kind: convertToKindEnum(tool.kind),
+              kind: tool.kind as Kind,
               namespace: tool.namespace,
             }))
           : [],
         dependencies: data.dependencies
           ? data.dependencies.map((dependency) => ({
               name: dependency.name,
-              kind: convertToKindEnum(dependency.kind),
+              kind: dependency.kind as Kind,
               namespace: dependency.namespace,
             }))
           : [],
