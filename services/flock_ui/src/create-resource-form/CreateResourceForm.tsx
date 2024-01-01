@@ -130,11 +130,16 @@ const CreateResourceForm = () => {
             )}
           </div>
         </div>
-        <OptionsInput
-          register={register}
-          setValue={setValue}
-          control={control}
-        />
+        <div className="m-1 form-control">
+          <label className="form-label" htmlFor="dependencies">
+            <h5>Options</h5>
+          </label>
+          <OptionsInput
+            register={register}
+            setValue={setValue}
+            control={control}
+          />
+        </div>
         {dependencyList.length > 0 && (
           <div className="m-1 form-control">
             <label className="form-label" htmlFor="dependencies">

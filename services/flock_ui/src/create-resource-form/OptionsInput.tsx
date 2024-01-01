@@ -26,8 +26,7 @@ const OptionsInput = ({ register, control }: Props) => {
 
   return (
     <>
-      <label>Options</label>
-      <div className="m-1">
+      <div className="mb-3">
         <button
           className="btn btn-outline-primary"
           type="button"
