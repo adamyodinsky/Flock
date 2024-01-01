@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { ResourceFormData, kindValues, resourceFormSchema } from "../schemas";
 import { ResourceSchemaService } from "../services/resourceService";
 import DependencyInput from "./DependencyInput";
+import OptionsInput from "./OptionsInput";
 import ToolsInput from "./ToolsInput";
 
 const CreateResourceForm = () => {
@@ -129,6 +130,11 @@ const CreateResourceForm = () => {
             )}
           </div>
         </div>
+        <OptionsInput
+          register={register}
+          setValue={setValue}
+          control={control}
+        />
         {dependencyList.length > 0 && (
           <div className="m-1 form-control">
             <label className="form-label" htmlFor="dependencies">
