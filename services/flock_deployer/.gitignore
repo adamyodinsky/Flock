@@ -4,4 +4,5 @@ notes.txt
 .env
 **/__pycache__
 app.log
+.pytest_cache
 ```
