@@ -59,6 +59,9 @@ def upload_reduced_schema(kind_name, schema):
     # Get dependencies list
     dependencies = spec.get("properties", {}).get("dependencies", {}).get("items", [])
     for dependency in dependencies:
+        if not isinstance(dependency, dict):
+            continue
+
         dependency_name = dependency["$ref"].split("/")[-1]
         dependency_name = (
             schema.get("definitions", {})
