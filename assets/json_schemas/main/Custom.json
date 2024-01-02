@@ -230,7 +230,11 @@
         "dependencies": {
           "title": "Dependencies",
           "description": "Dependencies for the object",
-          "default": []
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BaseToolDependency"
+          }
         }
       },
       "additionalProperties": false
