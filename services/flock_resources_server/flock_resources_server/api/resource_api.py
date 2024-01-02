@@ -469,6 +469,10 @@ def get_router(
             "namespace": namespace,
             "metadata": {"name": name, "description": description},
             "spec": {
+                "options": [
+                    {"persist_directory": "/flock-data/vectorstore/books"},
+                    {"collection_name": "books"},
+                ],
                 "vendor": "Chroma",
                 "dependencies": [
                     {
