@@ -5,7 +5,7 @@ from typing import Dict, Literal, Optional, Union
 
 from pydantic import Field
 
-from flock_schemas.base import BaseOptions, BaseResourceSchema, Category
+from flock_schemas.base import BaseSpec, BaseResourceSchema, Category
 from flock_schemas.dependencies import LLMChatDependency, PromptTemplateDependency
 
 
@@ -15,7 +15,7 @@ class LLMToolVendor(str, Enum):
     LLMChain = "LLMChain"
 
 
-class LLMToolSpec(BaseOptions):
+class LLMToolSpec(BaseSpec):
     """LLM tool spec."""
 
     vendor: LLMToolVendor = Field(

@@ -4,10 +4,9 @@
 from enum import Enum
 from typing import Literal
 
-from pydantic import Field
-
 from flock_schemas.base import BaseResourceSchema, BaseSpec, Category
 from flock_schemas.dependencies import VectorStoreDependency
+from pydantic import Field
 
 
 class WebScraperSpec(BaseSpec):

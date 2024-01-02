@@ -3,7 +3,7 @@
 from enum import Enum
 from typing import Dict, Literal, Optional
 
-from flock_schemas.base import BaseOptions, BaseResourceSchema, Category
+from flock_schemas.base import BaseResourceSchema, BaseSpec, Category
 from pydantic import Field
 
 
@@ -13,7 +13,7 @@ class EmbeddingVendor(str, Enum):
     OpenAIEmbeddings = "OpenAIEmbeddings"
 
 
-class EmbeddingSpec(BaseOptions):
+class EmbeddingSpec(BaseSpec):
     """Embedding spec."""
 
     vendor: EmbeddingVendor = Field(..., description="Embedding vendor")

@@ -13,7 +13,7 @@ export class ResourceSchemaService {
   getAll() {
     const controller = new AbortController();
     const request = apiClient
-      .get("schemas", {
+      .get("/schemas", {
         signal: controller.signal,
       })
 
@@ -22,7 +22,7 @@ export class ResourceSchemaService {
 
   get(kind: string) {
     return apiClient
-      .get("schema/" + kind)
+      .get(`/schema/${kind}`)
   }
 }
 
@@ -33,7 +33,7 @@ export class ResourceService {
     const controller = new AbortController();
 
     const request = apiClient
-      .get("resources", {
+      .get("/resources", {
         signal: controller.signal, params: params
       })
 
@@ -43,11 +43,11 @@ export class ResourceService {
   get(params: ResourceParams) {
 
     return apiClient
-      .get("resource", { params: params })
+      .get("/resource", { params: params })
   }
 
   post(resource: BaseResourceSchema) {
-    return apiClient.post("resource", resource, {
+    return apiClient.post("/resource", resource, {
       headers: {
         'Content-Type': 'application/json',
       }

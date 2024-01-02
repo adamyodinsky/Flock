@@ -57,7 +57,7 @@ export interface BaseSpec {
 
 export interface BaseResourceSchema {
   id?: string;
-  apiVersion?: "flock/v1";
+  apiVersion: "flock/v1";
   kind: string;
   category?: Category;
   namespace: string;

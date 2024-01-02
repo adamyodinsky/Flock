@@ -5,7 +5,7 @@ from typing import Literal
 
 from pydantic import Field
 
-from flock_schemas.base import BaseOptions, BaseResourceSchema, Category
+from flock_schemas.base import BaseSpec, BaseResourceSchema, Category
 
 
 class LLMChatVendor(str, Enum):
@@ -15,7 +15,7 @@ class LLMChatVendor(str, Enum):
     OpenAICopyCat = "OpenAICopyCat"
 
 
-class LLMChatSpec(BaseOptions):
+class LLMChatSpec(BaseSpec):
     """LLMChat spec."""
 
     vendor: LLMChatVendor = Field(..., description="LLMChat vendor")

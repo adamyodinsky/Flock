@@ -3,7 +3,7 @@
 from enum import Enum
 from typing import Literal
 
-from flock_schemas.base import BaseOptions, BaseResourceSchema, Category
+from flock_schemas.base import BaseSpec, BaseResourceSchema, Category
 from pydantic import Field
 
 
@@ -14,7 +14,7 @@ class SplitterVendor(str, Enum):
     PythonCodeTextSplitter = "PythonCodeTextSplitter"
 
 
-class SplitterSpec(BaseOptions):
+class SplitterSpec(BaseSpec):
     """Splitter spec."""
 
     vendor: SplitterVendor = Field(

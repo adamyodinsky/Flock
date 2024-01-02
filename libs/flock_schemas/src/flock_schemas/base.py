@@ -128,7 +128,9 @@ class BaseSpec(BaseOptions):
 
     vendor: str = Field(default="", description="The resource class")
     tools: List[BaseToolDependency] = Field([], description="Tools for the object")
-    dependencies: Any = Field([], description="Dependencies for the object")
+    dependencies: List[BaseToolDependency] = Field(
+        [], description="Dependencies for the object"
+    )
 
 
 class BaseResourceSchema(BaseModelConfig):

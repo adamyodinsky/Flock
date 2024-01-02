@@ -5,7 +5,7 @@ from typing import Dict, Literal, Optional, Union
 
 from pydantic import Field
 
-from flock_schemas.base import BaseOptions, BaseResourceSchema, Category
+from flock_schemas.base import BaseSpec, BaseResourceSchema, Category
 from flock_schemas.dependencies import (
     LLMChatDependency,
     LLMDependency,
@@ -20,7 +20,7 @@ class VectorStoreQAToolVendor(str, Enum):
     VectorDBQAWithSourcesChain = "VectorDBQAWithSourcesChain"
 
 
-class VectorStoreQAToolSpec(BaseOptions):
+class VectorStoreQAToolSpec(BaseSpec):
     """VectorStoreQATool spec."""
 
     vendor: VectorStoreQAToolVendor = Field(

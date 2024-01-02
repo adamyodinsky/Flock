@@ -6,7 +6,7 @@ from fastapi import APIRouter, Body, Depends, HTTPException
 from flock_builder import ResourceBuilder
 from flock_resource_store.mongo import ResourceStore
 from flock_schema_store import SchemaStore
-from flock_schemas import BaseResourceSchema, SchemaFactory
+from flock_schemas import SchemaFactory
 from pydantic import ValidationError
 
 from flock_resources_server.schemas.resource_details import ResourceDetails

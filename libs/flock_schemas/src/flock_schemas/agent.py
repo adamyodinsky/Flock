@@ -1,15 +1,15 @@
 """Agent schema."""
 
 from enum import Enum
-from typing import List, Literal, Union
+from typing import List, Literal
 
 from pydantic import Field
 
 from flock_schemas.base import (
-    BaseOptions,
     BaseResourceSchema,
     BaseToolDependency,
     Category,
+    BaseSpec
 )
 from flock_schemas.dependencies import LLMChatDependency, LLMDependency
 
@@ -30,7 +30,7 @@ class AgentVendor(str, Enum):
     OPENAI_MULTI_FUNCTIONS = "openai-multi-functions"
 
 
-class AgentSpec(BaseOptions):
+class AgentSpec(BaseSpec):
     """Agent spec."""
 
     vendor: AgentVendor = Field(..., description="Agent type")

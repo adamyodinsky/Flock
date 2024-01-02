@@ -2,7 +2,7 @@
 from enum import Enum
 from typing import Literal
 
-from flock_schemas.base import BaseOptions, BaseResourceSchema, Category
+from flock_schemas.base import BaseSpec, BaseResourceSchema, Category
 from pydantic import Field
 
 
@@ -12,7 +12,7 @@ class PromptTemplateVendor(str, Enum):
     PromptTemplate = "PromptTemplate"
 
 
-class PromptTemplateSpec(BaseOptions):
+class PromptTemplateSpec(BaseSpec):
     """PromptTemplate spec."""
 
     vendor: PromptTemplateVendor = Field(..., description="PromptTemplate vendor")

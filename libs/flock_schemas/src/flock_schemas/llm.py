@@ -3,7 +3,7 @@
 from enum import Enum
 from typing import Literal
 
-from flock_schemas.base import BaseOptions, BaseResourceSchema, Category
+from flock_schemas.base import BaseSpec, BaseResourceSchema, Category
 from pydantic import Field
 
 
@@ -13,7 +13,7 @@ class LLMVendor(str, Enum):
     GPT4All = "GPT4All"
 
 
-class LLMSpec(BaseOptions):
+class LLMSpec(BaseSpec):
     """LLM spec."""
 
     vendor: LLMVendor = Field(..., description="LLM vendor")

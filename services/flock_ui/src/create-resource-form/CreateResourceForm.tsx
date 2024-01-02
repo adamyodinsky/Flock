@@ -50,6 +50,7 @@ const CreateResourceForm = () => {
     // console.log(errors);
 
     const resource: BaseResourceSchema = {
+      apiVersion: "flock/v1",
       kind: data.kind,
       namespace: data.namespace,
       metadata: {
@@ -78,7 +79,13 @@ const CreateResourceForm = () => {
 
     console.log(resource);
 
-    resourceService.post(resource).then((res) => console.log(res));
+    resourceService
+      .post(resource)
+      .then((res) => console.log(res))
+      .catch((err) => {
+        console.log(err);
+        SetError(err.message);
+      });
   };
 
   return (

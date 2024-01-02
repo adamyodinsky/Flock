@@ -5,7 +5,7 @@ from typing import Literal
 
 from pydantic import Field
 
-from flock_schemas.base import BaseOptions, BaseResourceSchema, Category
+from flock_schemas.base import BaseSpec, BaseResourceSchema, Category
 from flock_schemas.dependencies import EmbeddingDependency
 
 
@@ -15,7 +15,7 @@ class VectorStoreVendor(str, Enum):
     Chroma = "Chroma"
 
 
-class VectorStoreSpec(BaseOptions):
+class VectorStoreSpec(BaseSpec):
     """Vectorstore spec."""
 
     vendor: VectorStoreVendor = Field(
