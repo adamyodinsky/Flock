@@ -11,6 +11,8 @@ from flock_schemas.base import (
 )
 from pydantic import BaseModel, Field
 
+from flock_deployer.schemas.config import DeploymentConfigSchema
+
 
 class ContainerPort(BaseModelConfig):
     """Container port schema."""

@@ -22,6 +22,7 @@ class ConfigStore(metaclass=abc.ABCMeta):
         category: str = "",
         name: str = "",
         kind: str = "",
+        kind_target: str = "",
     ) -> dict:
         """Load a resource from the store."""
 

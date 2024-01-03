@@ -8,6 +8,10 @@ import string
 from typing import Callable, List, Union
 
 from flock_common.secret_store import SecretStore
+from flock_resource_store.base import ResourceStore
+from flock_schemas.base import BaseResourceSchema
+from flock_schemas.factory import SchemaFactory
+
 from flock_deployer.config_store import ConfigStore
 from flock_deployer.schemas.config import DeploymentConfigSchema
 from flock_deployer.schemas.deployment import (
@@ -29,9 +33,6 @@ from flock_deployer.schemas.job import (
     JobSchema,
     JobSpec,
 )
-from flock_resource_store.base import ResourceStore
-from flock_schemas.base import BaseResourceSchema
-from flock_schemas.factory import SchemaFactory
 
 
 class BaseDeployer(metaclass=abc.ABCMeta):
@@ -190,11 +191,13 @@ class BaseDeployers(metaclass=abc.ABCMeta):
                 )
 
         # Merge kind-specific global config
-        kind_global_config = self.config_store.get(name=f"{target_kind}_global".lower())
+        kind_global_config = self.config_store.get(
+            kind="DeploymentKindConfig", kind_target=target_kind
+        )
         merge_envs(kind_global_config)
 
         # Merge global config
-        global_config = self.config_store.get(name="global")
+        global_config = self.config_store.get(kind="DeploymentGlobalConfig")
         merge_envs(global_config)
 
         return config

@@ -62,11 +62,13 @@ class MongoConfigStore(ConfigStore):
         category: str = "",
         name: str = "",
         kind: str = "",
+        kind_target: str = "",
     ):
         query_filter = MongoConfigStore.create_filter(
             category=category,
             name=name,
             kind=kind,
+            kind_target=kind_target,
         )
 
         result = self.table.find_one(
@@ -154,6 +156,7 @@ class MongoConfigStore(ConfigStore):
         category: str = "",
         name: str = "",
         kind: str = "",
+        kind_target: str = "",
     ) -> dict:
         """Create a filter query"""
 
@@ -164,5 +167,7 @@ class MongoConfigStore(ConfigStore):
             filter_query["kind"] = kind
         if name:
             filter_query["metadata.name"] = name
+        if kind_target:
+            filter_query["kind_target"] = kind_target
 
         return filter_query
