@@ -1,9 +1,10 @@
-# yaml-language-server: $schema=../json_schemas/DeploymentConfig.json
+# yaml-language-server: $schema=../../json_schemas/main/DeploymentKindConfig.json
 ---
 apiVersion: flock/v1
-kind: DeploymentConfigSchema
+kind: DeploymentKindConfig
+kind_target: EmbeddingsLoader
 metadata:
-  name: embeddingsloader_global
+  name: embeddingsloader_kind_config
   description: embedding loader default global config
 env:
   - name: SOURCE_DIR

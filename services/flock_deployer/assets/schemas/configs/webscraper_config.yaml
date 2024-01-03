@@ -1,9 +1,10 @@
-# yaml-language-server: $schema=../json_schemas/DeploymentConfig.json
+# yaml-language-server: $schema=../../json_schemas/main/DeploymentKindConfig.json
 ---
 apiVersion: flock/v1
-kind: DeploymentConfigSchema
+kind: DeploymentKindConfig
+kind_target: WebScraper
 metadata:
-  name: webscraper_global
+  name: webscraper_kind_config
   description: webscraper default global config
 env:
   - name: SCRAPER_OUTPUT_DIR

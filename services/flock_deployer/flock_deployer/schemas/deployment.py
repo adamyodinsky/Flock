@@ -1,7 +1,7 @@
 """Deployment schema."""
 
 
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import List, Literal, Optional, Union
 
 from flock_schemas.base import (
     BaseMetaData,
@@ -9,9 +9,7 @@ from flock_schemas.base import (
     BaseToolDependency,
     Category,
 )
-from pydantic import BaseModel, Field
-
-from flock_deployer.schemas.config import DeploymentConfigSchema
+from pydantic import Field
 
 
 class ContainerPort(BaseModelConfig):

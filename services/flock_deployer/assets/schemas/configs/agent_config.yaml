@@ -1,9 +1,10 @@
-# yaml-language-server: $schema=../json_schemas/DeploymentConfig.json
+# yaml-language-server: $schema=../../json_schemas/main/DeploymentKindConfig.json
 ---
 apiVersion: flock/v1
-kind: DeploymentConfigSchema
+kind: DeploymentKindConfig
+kind_target: Agent
 metadata:
-  name: agent_global
+  name: agent_kind_config
   description: agent default global config
 env:
   - name: RESOURCE_STORE_HOST

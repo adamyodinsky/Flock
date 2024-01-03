@@ -176,7 +176,7 @@
           "title": "Kind",
           "description": "Kind of the object",
           "enum": [
-            "DeploymentConfigSchema"
+            "DeploymentConfig"
           ],
           "type": "string"
         },

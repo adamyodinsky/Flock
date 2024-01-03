@@ -15,26 +15,24 @@ class DeploymentConfigSchema(BaseModelConfig):
     apiVersion: Literal["flock/v1"] = Field(
         ..., description="API version of the object"
     )
-    kind: Literal["DeploymentConfigSchema"] = Field(
-        ..., description="Kind of the object"
-    )
+    kind: Literal["DeploymentConfig"] = Field(..., description="Kind of the object")
     metadata: BaseMetaData = Field(..., description="Metadata for the object")
     env: list[Union[EnvVar, EnvFrom]] = []
     image: str = Field("", description="Image to be deployed")
 
 
-class DeploymentGlobalConfigSchema(BaseModelConfig):
-    kind: Literal["DeploymentGlobalConfigSchema"] = Field(
+class DeploymentGlobalConfigSchema(DeploymentConfigSchema):
+    kind: Literal["DeploymentGlobalConfig"] = Field(
         ..., description="Kind of the object"
+    )
+
+
+class DeploymentKindConfigSchema(DeploymentConfigSchema):
+    kind: Literal["DeploymentKindConfig"] = Field(
+        ..., description="This configuration will apply to all objects of this kind"
     )
     kind_target: Kind = Field(
-        ..., description="this configuration will apply to all objects of this kind"
-    )
-
-
-class DeploymentKindConfigSchema(BaseModelConfig):
-    kind: Literal["DeploymentGlobalConfigSchema"] = Field(
-        ..., description="Kind of the object"
+        ..., description="This configuration will apply to all objects globally"
     )
 
 
