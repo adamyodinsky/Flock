@@ -6,6 +6,7 @@ import {
   UseFormSetValue,
   useFieldArray,
 } from "react-hook-form";
+import Button from "../components/Button";
 import Modal from "../components/Modal";
 import { BaseResourceSchema, ResourceFormData } from "../schemas";
 import { ResourceParams } from "../services/services";
@@ -70,14 +71,14 @@ const ToolsInput = ({ register, control }: Props) => {
   return (
     <>
       <div className="m-1">
-        <button
-          className="btn btn-outline-primary"
+        <Button
+          color="outline-primary"
           type="button"
           id="add-tool-button"
           onClick={() => handleClickAdd({ category: "tool" })}
         >
           Add Tool
-        </button>
+        </Button>
       </div>
       {fields.map((field, index) => {
         const name = field.name || "";
@@ -117,14 +118,14 @@ const ToolsInput = ({ register, control }: Props) => {
                 value={namespace}
                 readOnly
               />
-              <button
-                className="btn btn-outline-danger"
+              <Button
+                color="outline-danger"
                 type="button"
                 id="add-tool-button"
                 onClick={() => remove(index)}
               >
                 Remove
-              </button>
+              </Button>
             </div>
           </div>
         );

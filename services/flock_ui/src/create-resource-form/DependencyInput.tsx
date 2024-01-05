@@ -5,6 +5,7 @@ import Modal from "../components/Modal";
 import { BaseResourceSchema, ResourceFormData } from "../schemas";
 import { ResourceParams } from "../services/services";
 import ResourcesTable from "./ResourcesTable";
+import Button from "../components/Button";
 
 interface Props {
   dependencyKindList: string[];
@@ -81,14 +82,14 @@ const DependencyInput = ({ dependencyKindList, register, setValue }: Props) => {
               <strong>{dependencyKind}</strong>
             </label>
             <div className="input-group m-1">
-              <button
-                className="btn btn-outline-primary"
+              <Button
+                color="outline-primary"
                 type="button"
                 id={`button-addon-${dependencyKind}`}
                 onClick={() => handleClickChoose({ kind: dependencyKind })}
               >
                 Choose
-              </button>
+              </Button>
               <input
                 {...register(`dependencies.${index}.kind`)}
                 type="hidden"

@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import Button from "./Button";
 
 interface Props {
   title: string | undefined;
@@ -29,32 +30,22 @@ const Modal = ({
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">{title}</h5>
-            <button
+            <Button
               type="button"
-              className="btn-close"
-              data-bs-dismiss="modal"
+              additionalClasses="btn-close"
               aria-label="Close"
               onClick={onClose}
-            ></button>
+            />
           </div>
           <div className="modal-body">{children}</div>
           <div className="modal-footer">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              data-bs-dismiss="modal"
-              onClick={onClose}
-            >
+            <Button type="button" color="secondary" onClick={onClose}>
               Close
-            </button>
+            </Button>
             {onSave && (
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => onSave()}
-              >
+              <Button type="button" color="primary" onClick={() => onSave()}>
                 {saveButtonText}
-              </button>
+              </Button>
             )}
           </div>
         </div>

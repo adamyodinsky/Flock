@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Alert from "../components/Alert";
+import Button from "../components/Button";
 import {
   BaseResourceSchema,
   Kind,
@@ -85,6 +86,7 @@ const CreateResourceForm = () => {
       })
       .catch((err) => {
         setError(err.response.data.detail);
+        console.log(err.response.data.detail);
       });
   };
 
@@ -222,15 +224,14 @@ const CreateResourceForm = () => {
             )}
           </div>
         )}
-        <button
+        <Button
           disabled={!isValid}
-          className="txt- btn btn-primary name() {
-            
-          } btn-lg"
+          color="primary"
+          additionalClasses="btn-lg"
           type="submit"
         >
           Create
-        </button>
+        </Button>
       </form>
     </>
   );

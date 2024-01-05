@@ -4,6 +4,7 @@ import {
   UseFormSetValue,
   useFieldArray,
 } from "react-hook-form";
+import Button from "../components/Button";
 import { ResourceFormData } from "../schemas";
 
 type KeyValue = Record<string, string>[];
@@ -27,18 +28,16 @@ const OptionsInput = ({ register, control }: Props) => {
   return (
     <>
       <div className="mb-3">
-        <button
-          className="btn btn-outline-primary"
+        <Button
+          color="outline-primary"
           type="button"
           id="add-tool-button"
           onClick={() => handleClickAdd()}
         >
           Add Option
-        </button>
+        </Button>
       </div>
-      {fields.map((field, index) => {
-        const keys = Object.keys(field);
-        const values = Object.values(field);
+      {fields.map((_, index) => {
         return (
           <div key={index} className="form-control">
             <div className="input-group m-1">
@@ -56,14 +55,14 @@ const OptionsInput = ({ register, control }: Props) => {
                 placeholder="value"
                 aria-label="value"
               />
-              <button
-                className="btn btn-outline-danger"
+              <Button
+                color="outline-danger"
                 type="button"
                 id="add-tool-button"
                 onClick={() => remove(index)}
               >
                 Remove
-              </button>
+              </Button>
             </div>
           </div>
         );
