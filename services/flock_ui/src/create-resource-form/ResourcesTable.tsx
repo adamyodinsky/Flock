@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
+import Alert from "../components/Alert";
+import Button from "../components/Button";
 import { BaseResourceSchema } from "../schemas";
 import { ResourceParams, ResourceService } from "../services/services";
-import Alert from "../components/Alert";
 
 interface Props {
   filter: ResourceParams;
-  onRawClick: (e: BaseResourceSchema) => void;
+  onRawClick?: (e: BaseResourceSchema) => void;
+  onDelete?: (e: BaseResourceSchema) => void;
+  onEdit?: (e: BaseResourceSchema) => void;
 }
 
-const ResourcesTable = ({ filter, onRawClick }: Props) => {
+const ResourcesTable = ({ filter, onRawClick, onDelete, onEdit }: Props) => {
   const [resourceList, setResourceList] = useState<BaseResourceSchema[]>([]);
   const [error, setError] = useState([]);
 
@@ -46,10 +49,24 @@ const ResourcesTable = ({ filter, onRawClick }: Props) => {
         </thead>
         <tbody>
           {resourceList.map((e) => (
-            <tr key={e.id} onClick={() => onRawClick(e)}>
+            <tr key={e.id} onClick={() => onRawClick && onRawClick(e)}>
               <td>{e.metadata.name}</td>
               <td>{e.kind}</td>
               <td>{e.metadata.description}</td>
+              {onEdit && (
+                <td>
+                  <Button color="outline-warning" onClick={() => onEdit(e)}>
+                    Edit
+                  </Button>
+                </td>
+              )}
+              {onDelete && (
+                <td>
+                  <Button color="outline-danger" onClick={() => onDelete(e)}>
+                    Delete
+                  </Button>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

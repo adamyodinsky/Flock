@@ -43,7 +43,11 @@ const Modal = ({
               Close
             </Button>
             {onSave && (
-              <Button type="button" color="primary" onClick={() => onSave()}>
+              <Button
+                type="button"
+                color="outline-primary"
+                onClick={() => onSave()}
+              >
                 {saveButtonText}
               </Button>
             )}
