@@ -1,5 +1,5 @@
 import yaml from "js-yaml";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { UseFormRegister, UseFormSetValue } from "react-hook-form";
 import Button from "../general-components/Button";
 import Modal from "../general-components/Modal";
@@ -68,6 +68,20 @@ const DependencyInput = ({ dependencyKindList, register, setValue }: Props) => {
     setShowTableModal(false);
   };
 
+  const getModalFooterButtons = (): ReactNode => {
+    return (
+      <>
+        <Button
+          type="button"
+          color="outline-primary"
+          onClick={() => handleOnSaveResourceModal(selectedResource)}
+        >
+          Save
+        </Button>
+      </>
+    );
+  };
+
   return (
     <>
       {dependencyKindList.map((dependencyKind, index) => {
@@ -133,8 +147,7 @@ const DependencyInput = ({ dependencyKindList, register, setValue }: Props) => {
         title={selectedResource?.metadata.name}
         onClose={handleCloseResourceModal}
         showModal={showResourceModal}
-        onSave={() => handleOnSaveResourceModal(selectedResource)}
-        saveButtonText="Save Choice"
+        footerButtons={getModalFooterButtons()}
       >
         <pre>{yaml.dump(selectedResource)}</pre>
       </Modal>

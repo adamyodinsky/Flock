@@ -5,20 +5,17 @@ interface Props {
   title: string | undefined;
   children: ReactNode;
   showModal: boolean;
-  saveButtonText?: string;
   extraClassNames?: string;
   onClose: () => void;
-  onSave?: () => void;
-  footerButtons?: (typeof Button)[];
+  footerButtons?: ReactNode;
 }
 const Modal = ({
   onClose,
-  onSave,
   showModal,
   title,
   children,
-  saveButtonText,
   extraClassNames,
+  footerButtons,
 }: Props) => {
   if (!showModal) return null;
 
@@ -39,20 +36,7 @@ const Modal = ({
             />
           </div>
           <div className="modal-body">{children}</div>
-          <div className="modal-footer">
-            <Button type="button" color="secondary" onClick={onClose}>
-              Close
-            </Button>
-            {onSave && (
-              <Button
-                type="button"
-                color="outline-primary"
-                onClick={() => onSave()}
-              >
-                {saveButtonText}
-              </Button>
-            )}
-          </div>
+          <div className="modal-footer">{footerButtons}</div>
         </div>
       </div>
     </div>

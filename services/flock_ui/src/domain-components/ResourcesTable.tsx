@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import Alert from "../general-components/Alert";
 import Button from "../general-components/Button";
 import Modal from "../general-components/Modal";
@@ -57,6 +57,16 @@ const ResourcesTable = ({ filter, onRawClick }: Props) => {
     setDeleteResource(undefined);
   };
 
+  const getModalFooterButtons = (): ReactNode => {
+    return (
+      <>
+        <Button color="outline-danger" onClick={() => handleDeleteConfirmed()}>
+          Confirm Deletion
+        </Button>
+      </>
+    );
+  };
+
   return (
     <>
       <Alert>
@@ -93,30 +103,22 @@ const ResourcesTable = ({ filter, onRawClick }: Props) => {
         </tbody>
       </table>
       <Modal
-        title={undefined}
+        title="Delete Resource"
         showModal={showDeleteModal}
         onClose={() => {
           setShowDeleteModal(false);
         }}
+        footerButtons={getModalFooterButtons()}
       >
-        <p>
-          <strong>Are you sure you want to delete this resource?</strong>
-        </p>
         <div>
           <p>
-            "{deleteResource?.metadata.name}" of kind {deleteResource?.kind}{" "}
-            from {deleteResource?.namespace} namespace?
+            {deleteResource?.metadata.name} {deleteResource?.kind} from{" "}
+            {deleteResource?.namespace} namespace will be deleted.
+          </p>
+          <p>
+            <strong>Are you sure you want to delete this resource?</strong>
           </p>
         </div>
-
-        <Button
-          color="outline-danger"
-          onClick={() => {
-            setShowDeleteModal(false);
-          }}
-        >
-          Confirm Deletion
-        </Button>
       </Modal>
     </>
   );

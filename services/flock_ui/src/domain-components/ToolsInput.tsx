@@ -1,5 +1,5 @@
 import yaml from "js-yaml";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import {
   Control,
   UseFormRegister,
@@ -66,6 +66,20 @@ const ToolsInput = ({ register, control }: Props) => {
 
     setShowResourceModal(false);
     setShowTableModal(false);
+  };
+
+  const getModalFooterButtons = (): ReactNode => {
+    return (
+      <>
+        <Button
+          type="button"
+          color="outline-primary"
+          onClick={() => handleOnSaveResourceModal(selectedResource)}
+        >
+          Save
+        </Button>
+      </>
+    );
   };
 
   return (
@@ -142,8 +156,7 @@ const ToolsInput = ({ register, control }: Props) => {
         title={selectedResource?.metadata.name}
         onClose={handleCloseResourceModal}
         showModal={showResourceModal}
-        onSave={() => handleOnSaveResourceModal(selectedResource)}
-        saveButtonText="Save Choice"
+        footerButtons={getModalFooterButtons()}
       >
         <pre>{yaml.dump(selectedResource)}</pre>
       </Modal>
