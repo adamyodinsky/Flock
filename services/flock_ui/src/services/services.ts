@@ -53,21 +53,13 @@ export class ResourceService {
       }
     })
   }
-}
 
-export class DeployService {
-  getAll() {
-    const controller = new AbortController();
-    const request = apiClient
-      .get("/deployer", {
-        signal: controller.signal,
-      })
-
-    return { request, cancel: () => controller.abort() }
+  delete(id: number) {
+    return apiClient.delete(`/resource/${id}`)
   }
 
-  get(kind: string) {
-    return apiClient
-      .get(`/schema/${kind}`)
+  put(resource: BaseResourceSchema) {
+    return apiClient.put(`/resource/${resource.id}`, resource)
   }
 }
+
