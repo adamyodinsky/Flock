@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import Alert from "../components/Alert";
 import {
   BaseResourceSchema,
   Kind,
@@ -8,10 +9,7 @@ import {
   kindValues,
   resourceFormSchema,
 } from "../schemas";
-import {
-  ResourceSchemaService,
-  ResourceService,
-} from "../services/resourceService";
+import { ResourceSchemaService, ResourceService } from "../services/services";
 import DependencyInput from "./DependencyInput";
 import OptionsInput from "./OptionsInput";
 import ToolsInput from "./ToolsInput";
@@ -25,7 +23,7 @@ const CreateResourceForm = () => {
     formState: { errors, isValid },
   } = useForm<ResourceFormData>({ resolver: zodResolver(resourceFormSchema) });
 
-  const [error, SetError] = useState("");
+  const [error, setError] = useState([]);
   const [kind, setKind] = useState<string>();
   const [vendorList, setVendorList] = useState<string[]>([]);
   const [dependencyList, setDependencyList] = useState<string[]>([]);
@@ -41,7 +39,7 @@ const CreateResourceForm = () => {
         setVendorList(response.data.vendor);
         setDependencyList(response.data.dependencies);
       })
-      .catch((err) => SetError(err.message));
+      .catch((err) => setError(err.message));
   }, [kind]);
 
   const onSubmit = (data: ResourceFormData) => {
@@ -81,16 +79,22 @@ const CreateResourceForm = () => {
 
     resourceService
       .post(resource)
-      .then((res) => console.log(res))
+      .then((res) => {
+        console.log(res);
+        setError([]);
+      })
       .catch((err) => {
-        console.log(err);
-        SetError(err.message);
+        setError(err.response.data.detail);
       });
   };
 
   return (
     <>
-      <p className="text-danger">{error}</p>
+      <Alert>
+        {error.map((err) => (
+          <pre>{err}</pre>
+        ))}
+      </Alert>
       <form className="form-control" onSubmit={handleSubmit(onSubmit)}>
         <div className="form-control m-1">
           <div className="m-1">

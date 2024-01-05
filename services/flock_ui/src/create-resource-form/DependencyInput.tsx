@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { UseFormRegister, UseFormSetValue } from "react-hook-form";
 import Modal from "../components/Modal";
 import { BaseResourceSchema, ResourceFormData } from "../schemas";
-import { ResourceParams } from "../services/resourceService";
+import { ResourceParams } from "../services/services";
 import ResourcesTable from "./ResourcesTable";
 
 interface Props {

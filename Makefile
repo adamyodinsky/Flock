@@ -230,6 +230,8 @@ fill-db-with-data: schemas-setup validate-resources
 
 apply-all: apply-secret apply-pvc apply-mongo apply-vault apply-rabbitmq apply-deployer apply-observer apply-resources-server apply-ingress apply-proxy
 
+resources-service-mode: delete-vault delete-rabbitmq delete-deployer delete-observer
+
 delete-apps: delete-deployer delete-observer delete-resources-server
 
 setup-docker: docker-build-all load-images

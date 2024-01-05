@@ -141,10 +141,7 @@ def get_router(
                 status_code=400,
                 detail=[
                     "Failed to get resource",
-                    f"namespace: {namespace}",
-                    f"kind: {kind}",
-                    f"category: {category}",
-                    str(error),
+                    f"namespace: {namespace}\nkind: {kind}\ncategory: {category}\n{str(error)}",
                 ],
             ) from error
 
@@ -174,9 +171,7 @@ def get_router(
                 status_code=422,
                 detail=[
                     "Resource already exists",
-                    f"namespace: {namespace}",
-                    f"kind: {kind}",
-                    f"name: {name}",
+                    f"namespace: {namespace}\nkind: {kind}\nname: {name}",
                 ],
             )
 
@@ -300,8 +295,7 @@ def get_router(
             )
             return [
                 "Resource deleted",
-                f"Parameters: namespace={namespace}, kind={kind}, category={category}, name={name}, id={id}",
-                f"Count: {resource_data.deleted_count}",  # type: ignore
+                f"namespace={namespace}\nkind={kind}\ncategory={category}\nname={name}\nid={id}\nCount: {resource_data.deleted_count}",  # type: ignore
             ]
 
         except Exception as error:  # pylint: disable=broad-except

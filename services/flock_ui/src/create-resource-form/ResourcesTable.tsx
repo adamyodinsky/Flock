@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { BaseResourceSchema } from "../schemas";
-import { ResourceParams, ResourceService } from "../services/resourceService";
+import { ResourceParams, ResourceService } from "../services/services";
+import Alert from "../components/Alert";
 
 interface Props {
   filter: ResourceParams;
@@ -9,7 +10,7 @@ interface Props {
 
 const ResourcesTable = ({ filter, onRawClick }: Props) => {
   const [resourceList, setResourceList] = useState<BaseResourceSchema[]>([]);
-  const [error, setError] = useState("");
+  const [error, setError] = useState([]);
 
   const apiService = new ResourceService();
 
@@ -19,9 +20,10 @@ const ResourcesTable = ({ filter, onRawClick }: Props) => {
     request
       .then((response) => {
         setResourceList(response.data.items);
+        setError([]);
       })
       .catch((err) => {
-        if (err.message !== "canceled") setError(err.message);
+        if (err.message !== "canceled") setError(err.response.data.detail);
       });
 
     return () => cancel();
@@ -29,7 +31,11 @@ const ResourcesTable = ({ filter, onRawClick }: Props) => {
 
   return (
     <>
-      <p className="text-danger">{error}</p>
+      <Alert>
+        {error.map((err) => (
+          <pre>{err}</pre>
+        ))}
+      </Alert>
       <table className="table table-bordered table table-hover">
         <thead>
           <tr>

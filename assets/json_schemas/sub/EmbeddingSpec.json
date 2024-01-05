@@ -15,24 +15,6 @@
           "$ref": "#/definitions/EmbeddingVendor"
         }
       ]
-    },
-    "tools": {
-      "title": "Tools",
-      "description": "Tools for the object",
-      "default": [],
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/BaseToolDependency"
-      }
-    },
-    "dependencies": {
-      "title": "Dependencies",
-      "description": "Dependencies for the object",
-      "default": [],
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/BaseToolDependency"
-      }
     }
   },
   "required": [
@@ -47,80 +29,6 @@
         "OpenAIEmbeddings"
       ],
       "type": "string"
-    },
-    "Kind": {
-      "title": "Kind",
-      "description": "Enum for all kinds of resources.",
-      "enum": [
-        "Embedding",
-        "VectorStore",
-        "VectorStoreQATool",
-        "LLM",
-        "LLMChat",
-        "LoadTool",
-        "Splitter",
-        "Agent",
-        "PromptTemplate",
-        "LLMTool",
-        "EmbeddingsLoader",
-        "WebScraper",
-        "CSVTool",
-        "BrowserTool",
-        "Custom"
-      ],
-      "type": "string"
-    },
-    "BaseToolDependency": {
-      "title": "BaseToolDependency",
-      "description": "Base tool dependency schema.",
-      "type": "object",
-      "properties": {
-        "labels": {
-          "title": "Labels",
-          "description": "Labels are useful for filtering and finding objects",
-          "default": {},
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "name": {
-          "title": "Name",
-          "description": "Name of the dependency",
-          "type": "string"
-        },
-        "kind": {
-          "description": "Kind of the dependency",
-          "allOf": [
-            {
-              "$ref": "#/definitions/Kind"
-            }
-          ]
-        },
-        "namespace": {
-          "title": "Namespace",
-          "description": "The namespace of the object",
-          "default": "default",
-          "maxLength": 63,
-          "type": "string"
-        },
-        "options": {
-          "title": "Options",
-          "description": "Resource options",
-          "default": {},
-          "type": "object"
-        },
-        "description": {
-          "title": "Description",
-          "description": "Tool description",
-          "type": "string"
-        }
-      },
-      "required": [
-        "name",
-        "kind"
-      ],
-      "additionalProperties": false
     }
   }
 }
