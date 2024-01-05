@@ -4,7 +4,7 @@ import Button from "../general-components/Button";
 import Modal from "../general-components/Modal";
 import { BaseResourceSchema } from "../schemas";
 import { ResourceParams, ResourceService } from "../services/services";
-import { set } from "react-hook-form";
+import EditResourceForm from "./EditResourceForm/EditResourceForm";
 
 interface Props {
   filter: ResourceParams;
@@ -142,7 +142,9 @@ const ResourcesTable = ({ filter, onRawClick }: Props) => {
         title="Edit a resource"
         showModal={showEditModal}
         onClose={() => setShowEditModal(false)}
-      ></Modal>
+      >
+        {editResource && <EditResourceForm resourceToEdit={editResource} />}
+      </Modal>
     </>
   );
 };

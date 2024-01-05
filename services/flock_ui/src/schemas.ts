@@ -49,7 +49,7 @@ export interface BaseToolDependency {
 }
 
 export interface BaseSpec {
-  options?: Record<string, any>;
+  options?: Record<string, any>[];
   vendor: string;
   tools?: BaseToolDependency[];
   dependencies?: BaseToolDependency[];

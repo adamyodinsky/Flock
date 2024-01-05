@@ -7,15 +7,14 @@ import {
 import Button from "../general-components/Button";
 import { ResourceFormData } from "../schemas";
 
-type KeyValue = Record<string, string>[];
-
 interface Props {
   register: UseFormRegister<ResourceFormData>;
   setValue: UseFormSetValue<ResourceFormData>;
   control: Control<ResourceFormData>;
+  options?: Record<string, any>;
 }
 
-const OptionsInput = ({ register, control }: Props) => {
+const OptionsInput = ({ register, control, options }: Props) => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: "options",
