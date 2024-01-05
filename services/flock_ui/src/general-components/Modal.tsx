@@ -3,7 +3,7 @@ import Button from "./Button";
 
 interface Props {
   title: string | undefined;
-  children: ReactNode;
+  children?: ReactNode;
   showModal: boolean;
   extraClassNames?: string;
   onClose: () => void;

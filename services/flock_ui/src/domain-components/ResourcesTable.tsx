@@ -4,6 +4,7 @@ import Button from "../general-components/Button";
 import Modal from "../general-components/Modal";
 import { BaseResourceSchema } from "../schemas";
 import { ResourceParams, ResourceService } from "../services/services";
+import { set } from "react-hook-form";
 
 interface Props {
   filter: ResourceParams;
@@ -17,6 +18,8 @@ const ResourcesTable = ({ filter, onRawClick }: Props) => {
   const [error, setError] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteResource, setDeleteResource] = useState<BaseResourceSchema>();
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editResource, setEditResource] = useState<BaseResourceSchema>();
 
   const apiService = new ResourceService();
 
@@ -57,7 +60,7 @@ const ResourcesTable = ({ filter, onRawClick }: Props) => {
     setDeleteResource(undefined);
   };
 
-  const getModalFooterButtons = (): ReactNode => {
+  const getModalDeletionFooterButtons = (): ReactNode => {
     return (
       <>
         <Button color="outline-danger" onClick={() => handleDeleteConfirmed()}>
@@ -65,6 +68,11 @@ const ResourcesTable = ({ filter, onRawClick }: Props) => {
         </Button>
       </>
     );
+  };
+
+  const handleEditClick = (resource: BaseResourceSchema) => {
+    setEditResource(resource);
+    setShowEditModal(true);
   };
 
   return (
@@ -89,14 +97,24 @@ const ResourcesTable = ({ filter, onRawClick }: Props) => {
               <td>{e.kind}</td>
               <td>{e.metadata.description}</td>
               {
-                <td>
-                  <Button
-                    color="outline-danger"
-                    onClick={() => handleDeleteClick(e)}
-                  >
-                    Delete
-                  </Button>
-                </td>
+                <>
+                  <td>
+                    <Button
+                      color="outline-warning"
+                      onClick={() => handleEditClick(e)}
+                    >
+                      Edit
+                    </Button>
+                  </td>
+                  <td>
+                    <Button
+                      color="outline-danger"
+                      onClick={() => handleDeleteClick(e)}
+                    >
+                      Delete
+                    </Button>
+                  </td>
+                </>
               }
             </tr>
           ))}
@@ -108,7 +126,7 @@ const ResourcesTable = ({ filter, onRawClick }: Props) => {
         onClose={() => {
           setShowDeleteModal(false);
         }}
-        footerButtons={getModalFooterButtons()}
+        footerButtons={getModalDeletionFooterButtons()}
       >
         <div>
           <p>
@@ -120,6 +138,11 @@ const ResourcesTable = ({ filter, onRawClick }: Props) => {
           </p>
         </div>
       </Modal>
+      <Modal
+        title="Edit a resource"
+        showModal={showEditModal}
+        onClose={() => setShowEditModal(false)}
+      ></Modal>
     </>
   );
 };
