@@ -54,7 +54,7 @@ export class ResourceService {
     })
   }
 
-  delete(id: number) {
+  delete(id: string) {
     return apiClient.delete(`/resource/${id}`)
   }
 
