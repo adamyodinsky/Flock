@@ -1,6 +1,7 @@
 """LLM Tool schema."""
 
 
+from enum import Enum
 from pathlib import Path
 from typing import Literal, Optional
 
@@ -14,6 +15,12 @@ def home_dir():
 
     h_dir = Path.home()
     return str(h_dir)
+
+
+class EmbeddingsLoaderVendor(str, Enum):
+    """Enum for embedding vendors."""
+
+    v1 = "v1"
 
 
 class EmbeddingsLoaderOptions(BaseModelConfig):
@@ -41,7 +48,7 @@ class EmbeddingsLoaderOptions(BaseModelConfig):
 class EmbeddingsLoaderSpec(BaseSpec):
     """EmbeddingsLoader spec."""
 
-    vendor: Optional[str] = Field(default="v1", description="")
+    vendor: EmbeddingsLoaderVendor = Field(default="v1")
     dependencies: tuple[SplitterDependency, VectorStoreDependency] = Field(
         ..., description="dependencies"
     )

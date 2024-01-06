@@ -9,10 +9,17 @@ from flock_schemas.dependencies import VectorStoreDependency
 from pydantic import Field
 
 
+class WebScraperVendor(str, Enum):
+    """Enum for embedding vendors."""
+
+    v1 = "v1"
+
+
 class WebScraperSpec(BaseSpec):
     """WebScraper spec."""
 
     dependencies: tuple[VectorStoreDependency] = Field(..., description="dependencies")
+    vendor: WebScraperVendor = Field(default="v1")
 
 
 class WebScraperSchema(BaseResourceSchema):

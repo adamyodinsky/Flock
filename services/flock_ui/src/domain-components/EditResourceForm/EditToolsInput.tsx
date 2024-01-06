@@ -1,12 +1,12 @@
 import yaml from "js-yaml";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import {
   Control,
   UseFormRegister,
   UseFormSetValue,
-  set,
   useFieldArray,
 } from "react-hook-form";
+import Alert from "../../general-components/Alert";
 import Button from "../../general-components/Button";
 import Modal from "../../general-components/Modal";
 import {
@@ -24,7 +24,7 @@ interface Props {
   initValue?: BaseToolDependency[];
 }
 
-const EditToolsInput = ({ register, control, initValue, setValue }: Props) => {
+const EditToolsInput = ({ register, control }: Props) => {
   const [resourceTableList, setResourceTableList] = useState<
     BaseResourceSchema[]
   >([]);
@@ -35,12 +35,12 @@ const EditToolsInput = ({ register, control, initValue, setValue }: Props) => {
   const [showTableModal, setShowTableModal] = useState(false);
   const [isTableLoading, setIsTableLoading] = useState(false);
 
-  const apiService = new ResourceService();
-
   const { fields, append, remove } = useFieldArray({
     control,
     name: "tools",
   });
+
+  const apiService = new ResourceService();
 
   const handleCloseTableModal = () => {
     setShowTableModal(false);
@@ -100,6 +100,11 @@ const EditToolsInput = ({ register, control, initValue, setValue }: Props) => {
 
   return (
     <>
+      <Alert>
+        {error.map((err) => (
+          <pre>{err}</pre>
+        ))}
+      </Alert>
       <div className="m-1">
         <Button
           color="outline-primary"

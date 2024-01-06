@@ -49,7 +49,7 @@ export interface BaseToolDependency {
   kind: Kind;
   namespace: string;
   options?: Record<string, any>;
-  description?: string;
+  // description?: string;
 }
 
 export interface OptionsRecord {
@@ -87,12 +87,12 @@ const kindTuple: [string, ...string[]] = kindValues as [string, ...string[]];
 
 export const baseToolDependencySchema = z.object({
   labels: z.record(z.string()).optional(),
-  // id: z.string().optional(),
+  id: z.string().optional(),
   name: z.string(),
   kind: z.enum(kindTuple),
   namespace: z.string(),
-  options: z.record(z.string()).optional(),
-  description: z.string().optional(),
+  options: z.record(z.string(), z.any()).optional(),
+  description: z.string().optional().nullable(),
 });
 
 

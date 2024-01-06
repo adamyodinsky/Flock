@@ -14,6 +14,7 @@ import { ResourceSchemaService, ResourceService } from "../services/services";
 import DependencyInput from "./DependencyInput";
 import OptionsInput from "./OptionsInput";
 import ToolsInput from "./ToolsInput";
+// import { DevTool } from "@hookform/devtools";
 
 interface OptionsRecord {
   [key: string]: any;
@@ -254,6 +255,7 @@ const CreateResourceForm = () => {
           </Button>
         </form>
       </FormProvider>
+      {/* <DevTool control={control} /> */}
     </>
   );
 };

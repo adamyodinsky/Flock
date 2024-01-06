@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Alert from "../../general-components/Alert";
 import Button from "../../general-components/Button";
+// import { DevTool } from "@hookform/devtools";
+
 import {
   BaseResourceSchema,
   Kind,
@@ -24,6 +26,7 @@ interface Props {
 
 const EditResourceForm = ({ resourceToEdit }: Props) => {
   const {
+    watch,
     register,
     control,
     handleSubmit,
@@ -36,6 +39,12 @@ const EditResourceForm = ({ resourceToEdit }: Props) => {
   const [dependencyKindsList, setDependencyKindsList] = useState<string[]>([]);
   const schemaService = new ResourceSchemaService();
   const resourceService = new ResourceService();
+
+  useEffect(() => {
+    console.log("Form Validation Errors", errors);
+    const allFieldValues = watch();
+    console.log("All Form Values", allFieldValues);
+  }, [errors, watch]);
 
   useEffect(() => {
     schemaService
@@ -58,6 +67,7 @@ const EditResourceForm = ({ resourceToEdit }: Props) => {
 
   const onSubmit = (data: ResourceFormData) => {
     console.log(data);
+    console.log("Form Errors", errors);
 
     const transformedOptions = data.options?.reduce<OptionsRecord>(
       (acc, { key, value }) => {
@@ -236,6 +246,7 @@ const EditResourceForm = ({ resourceToEdit }: Props) => {
           Update
         </Button>
       </form>
+      {/* <DevTool control={control} /> */}
     </>
   );
 };
