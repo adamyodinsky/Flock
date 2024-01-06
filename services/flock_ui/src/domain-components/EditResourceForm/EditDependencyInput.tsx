@@ -35,7 +35,8 @@ const EditDependencyInput = ({
   >(new Map());
   const [error, setError] = useState([]);
   const [resourceList, setResourceList] = useState<BaseResourceSchema[]>([]);
-  const [modalState, setModalState] = useState({ show: false, filter: {} });
+  const [showTableModal, setShowTableModal] = useState(false);
+  const [isTableLoading, setIsTableLoading] = useState(false);
 
   useEffect(() => {
     const updatedDependencyMap = initValue?.reduce(
@@ -63,22 +64,11 @@ const EditDependencyInput = ({
   }, [dependencyMap]);
 
   useEffect(() => {
-    const { request, cancel } = apiService.getAll(modalState.filter);
-
-    request
-      .then((response) => {
-        setResourceList(response.data.items);
-        setError([]);
-      })
-      .catch((err) => {
-        if (err.message !== "canceled") setError(err.response.data.detail);
-      });
-
-    return () => cancel();
-  }, [modalState]);
+    if (showTableModal) setIsTableLoading(false);
+  }, [showTableModal]);
 
   const handleCloseTableModal = () => {
-    setModalState({ show: false, filter: modalState.filter });
+    setShowTableModal(false);
   };
 
   const handleTableRawClick = (resource: BaseResourceSchema) => {
@@ -91,7 +81,18 @@ const EditDependencyInput = ({
   };
 
   const handleClickChoose = (filter: ResourceParams) => {
-    setModalState({ show: true, filter });
+    setIsTableLoading(true);
+    const { request } = apiService.getAll(filter);
+
+    request
+      .then((response) => {
+        setResourceList(response.data.items);
+        setError([]);
+        setShowTableModal(true);
+      })
+      .catch((err) => {
+        if (err.message !== "canceled") setError(err.response.data.detail);
+      });
   };
 
   const handleOnSaveResourceModal = (e: BaseResourceSchema | undefined) => {
@@ -106,7 +107,7 @@ const EditDependencyInput = ({
     updatedDependencyMap.set(e.kind, dependency);
     setDependencyMap(updatedDependencyMap);
     setShowResourceModal(false);
-    setModalState({ show: false, filter: modalState.filter });
+    setShowTableModal(false);
   };
 
   const getModalFooterButtons = (): ReactNode => {
@@ -143,6 +144,12 @@ const EditDependencyInput = ({
                 id={`button-addon-${dependencyKind}`}
                 onClick={() => handleClickChoose({ kind: dependencyKind })}
               >
+                {isTableLoading && (
+                  <span
+                    className="spinner-border spinner-border-sm me-2"
+                    aria-hidden="true"
+                  />
+                )}
                 Choose
               </Button>
               <input
@@ -178,12 +185,13 @@ const EditDependencyInput = ({
       })}
       <Modal
         title="Resources"
-        showModal={modalState.show}
+        showModal={showTableModal}
         onClose={handleCloseTableModal}
         extraClassNames="modal-xl"
       >
         <ResourcesTable
-          onRawClick={handleTableRawClick}
+          onDetails={handleTableRawClick}
+          onDetailsText="Choose"
           resourceList={resourceList}
         />
       </Modal>

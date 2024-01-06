@@ -7,6 +7,9 @@ interface Props {
   onDelete?: (e: BaseResourceSchema) => void;
   onEdit?: (e: BaseResourceSchema) => void;
   resourceList: BaseResourceSchema[];
+  onDetailsText?: string;
+  onEditText?: string;
+  onDeleteText?: string;
 }
 
 const ResourcesTable = ({
@@ -15,6 +18,9 @@ const ResourcesTable = ({
   onDelete,
   onEdit,
   resourceList,
+  onDetailsText = "Details",
+  onEditText = "Edit",
+  onDeleteText = "Delete",
 }: Props) => {
   return (
     <>
@@ -40,14 +46,14 @@ const ResourcesTable = ({
                         color="outline-primary"
                         onClick={() => onDetails(e)}
                       >
-                        Details
+                        {onDetailsText}
                       </Button>
                     </td>
                   )}
                   {onEdit && (
                     <td>
                       <Button color="outline-warning" onClick={() => onEdit(e)}>
-                        Edit
+                        {onEditText}
                       </Button>
                     </td>
                   )}
@@ -57,7 +63,7 @@ const ResourcesTable = ({
                         color="outline-danger"
                         onClick={() => onDelete(e)}
                       >
-                        Delete
+                        {onDeleteText}
                       </Button>
                     </td>
                   )}

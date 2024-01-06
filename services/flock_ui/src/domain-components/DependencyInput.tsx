@@ -16,8 +16,7 @@ interface Props {
 const apiService = new ResourceService();
 
 const DependencyInput = ({ dependencyKindList, register, setValue }: Props) => {
-  const [showTableModal, setShowTableModal] = useState(false);
-  const [tableFilter, setTableFilter] = useState<ResourceParams>({});
+  const [modalState, setModalState] = useState({ show: false, filter: {} });
   const [showResourceModal, setShowResourceModal] = useState(false);
   const [selectedResource, setSelectedResource] =
     useState<BaseResourceSchema>();
@@ -45,7 +44,7 @@ const DependencyInput = ({ dependencyKindList, register, setValue }: Props) => {
   }, [dependencyMap]);
 
   useEffect(() => {
-    const { request, cancel } = apiService.getAll(tableFilter);
+    const { request, cancel } = apiService.getAll(modalState.filter);
 
     request
       .then((response) => {
@@ -57,10 +56,10 @@ const DependencyInput = ({ dependencyKindList, register, setValue }: Props) => {
       });
 
     return () => cancel();
-  }, [tableFilter]);
+  }, [modalState.filter]);
 
   const handleCloseTableModal = () => {
-    setShowTableModal(false);
+    setModalState({ show: false, filter: modalState.filter });
   };
 
   const handleTableRawClick = (resource: BaseResourceSchema) => {
@@ -73,8 +72,7 @@ const DependencyInput = ({ dependencyKindList, register, setValue }: Props) => {
   };
 
   const handleClickChoose = (filter: ResourceParams) => {
-    setTableFilter(filter);
-    setShowTableModal(true);
+    setModalState({ show: true, filter });
   };
 
   const handleOnSaveResourceModal = (e: BaseResourceSchema | undefined) => {
@@ -84,7 +82,7 @@ const DependencyInput = ({ dependencyKindList, register, setValue }: Props) => {
     updatedDependencyMap.set(e.kind, e);
     setDependencyMap(updatedDependencyMap);
     setShowResourceModal(false);
-    setShowTableModal(false);
+    setModalState({ show: false, filter: modalState.filter });
   };
 
   const getModalFooterButtons = (): ReactNode => {
@@ -156,7 +154,7 @@ const DependencyInput = ({ dependencyKindList, register, setValue }: Props) => {
       })}
       <Modal
         title="Resources"
-        showModal={showTableModal}
+        showModal={modalState.show}
         onClose={handleCloseTableModal}
         extraClassNames="modal-xl"
       >
