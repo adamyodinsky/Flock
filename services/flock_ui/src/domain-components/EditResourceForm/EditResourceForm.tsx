@@ -16,6 +16,7 @@ import {
 import DependencyInput from "../DependencyInput";
 import ToolsInput from "../ToolsInput";
 import EditOptionsInput from "./EditOptionsInput";
+import EditDependencyInput from "./EditDependencyInput";
 
 interface Props {
   resourceToEdit: BaseResourceSchema;
@@ -32,7 +33,7 @@ const EditResourceForm = ({ resourceToEdit }: Props) => {
 
   const [error, setError] = useState([]);
   const [vendorList, setVendorList] = useState<string[]>([]);
-  const [dependencyList, setDependencyList] = useState<string[]>([]);
+  const [dependencyKindsList, setDependencyKindsList] = useState<string[]>([]);
   const schemaService = new ResourceSchemaService();
   const resourceService = new ResourceService();
 
@@ -41,7 +42,7 @@ const EditResourceForm = ({ resourceToEdit }: Props) => {
       .get(resourceToEdit.kind)
       .then((response) => {
         setVendorList(response.data.vendor);
-        setDependencyList(response.data.dependencies);
+        setDependencyKindsList(response.data.dependencies);
       })
       .catch((err) => setError(err.message));
   }, []);
@@ -175,15 +176,16 @@ const EditResourceForm = ({ resourceToEdit }: Props) => {
             initialOptions={resourceToEdit.spec.options}
           />
         </div>
-        {dependencyList.length > 0 && (
+        {dependencyKindsList.length > 0 && (
           <div className="m-1 form-control">
             <label className="form-label" htmlFor="dependencies">
               <h5>Dependencies</h5>
             </label>
-            <DependencyInput
+            <EditDependencyInput
               register={register}
-              dependencyKindList={dependencyList}
+              dependencyKindList={dependencyKindsList}
               setValue={setValue}
+              initValue={resourceToEdit.spec.dependencies}
             />
             {errors.dependencies && (
               <p className="text-danger">{errors.dependencies.message}</p>
