@@ -6,6 +6,7 @@ import Button from "../../general-components/Button";
 import {
   BaseResourceSchema,
   Kind,
+  OptionsRecord,
   ResourceFormData,
   resourceFormSchema,
 } from "../../schemas";
@@ -13,10 +14,9 @@ import {
   ResourceSchemaService,
   ResourceService,
 } from "../../services/services";
-import DependencyInput from "../DependencyInput";
-import ToolsInput from "../ToolsInput";
-import EditOptionsInput from "./EditOptionsInput";
 import EditDependencyInput from "./EditDependencyInput";
+import EditOptionsInput from "./EditOptionsInput";
+import EditToolsInput from "./EditToolsInput";
 
 interface Props {
   resourceToEdit: BaseResourceSchema;
@@ -47,7 +47,25 @@ const EditResourceForm = ({ resourceToEdit }: Props) => {
       .catch((err) => setError(err.message));
   }, []);
 
+  useEffect(() => {
+    setValue("name", resourceToEdit.metadata.name);
+    setValue("namespace", resourceToEdit.namespace);
+    setValue("kind", resourceToEdit.kind);
+    setValue("description", resourceToEdit.metadata.description);
+    setValue("vendor", resourceToEdit.spec.vendor);
+  }, []);
+
   const onSubmit = (data: ResourceFormData) => {
+    console.log(data);
+
+    const transformedOptions = data.options?.reduce<OptionsRecord>(
+      (acc, { key, value }) => {
+        acc[key] = value;
+        return acc;
+      },
+      {}
+    );
+
     const resource: BaseResourceSchema = {
       apiVersion: "flock/v1",
       kind: resourceToEdit.kind,
@@ -58,7 +76,7 @@ const EditResourceForm = ({ resourceToEdit }: Props) => {
         description: data.description,
       },
       spec: {
-        options: data.options,
+        options: transformedOptions,
         vendor: data.vendor,
         tools: data.tools
           ? data.tools.map((tool) => ({
@@ -80,7 +98,7 @@ const EditResourceForm = ({ resourceToEdit }: Props) => {
     console.log(resource);
 
     resourceService
-      .post(resource)
+      .put(resource)
       .then((res) => {
         console.log(res);
         setError([]);
@@ -197,10 +215,11 @@ const EditResourceForm = ({ resourceToEdit }: Props) => {
             <label className="form-label" htmlFor="tools">
               <h5 className="">Tools</h5>
             </label>
-            <ToolsInput
+            <EditToolsInput
               register={register}
               setValue={setValue}
               control={control}
+              initValue={resourceToEdit.spec.tools}
             />
             {errors.tools && (
               <p className="text-danger">{errors.tools?.message}</p>

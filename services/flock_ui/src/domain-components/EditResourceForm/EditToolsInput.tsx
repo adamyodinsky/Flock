@@ -23,36 +23,27 @@ interface Props {
   initValue?: BaseToolDependency[];
 }
 
-const EditToolsInput = ({ register, control }: Props) => {
-  const [showTableModal, setShowTableModal] = useState(false);
-  const [tableFilter, setTableFilter] = useState<ResourceParams>({});
-  const [showResourceModal, setShowResourceModal] = useState(false);
-  const [resourceList, setResourceList] = useState<BaseResourceSchema[]>([]);
+const EditToolsInput = ({ register, control, initValue, setValue }: Props) => {
+  const [resourceTableList, setResourceTableList] = useState<
+    BaseResourceSchema[]
+  >([]);
   const [error, setError] = useState([]);
   const [selectedResource, setSelectedResource] =
     useState<BaseResourceSchema>();
+  const [showResourceModal, setShowResourceModal] = useState(false);
+  const [showTableModal, setShowTableModal] = useState(false);
+  const [isTableLoading, setIsTableLoading] = useState(false);
 
   const apiService = new ResourceService();
-
-  useEffect(() => {
-    const { request, cancel } = apiService.getAll(modalState.filter);
-
-    request
-      .then((response) => {
-        setResourceList(response.data.items);
-        setError([]);
-      })
-      .catch((err) => {
-        if (err.message !== "canceled") setError(err.response.data.detail);
-      });
-
-    return () => cancel();
-  }, [modalState.filter]);
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: "tools",
   });
+
+  useEffect(() => {
+    setValue("tools", initValue);
+  }, []);
 
   const handleCloseTableModal = () => {
     setShowTableModal(false);
@@ -68,8 +59,19 @@ const EditToolsInput = ({ register, control }: Props) => {
   };
 
   const handleClickAdd = (filter: ResourceParams) => {
-    setTableFilter(filter);
-    setShowTableModal(true);
+    setIsTableLoading(true);
+    const { request } = apiService.getAll(filter);
+
+    request
+      .then((response) => {
+        setResourceTableList(response.data.items);
+        setError([]);
+        setShowTableModal(true);
+        setIsTableLoading(false);
+      })
+      .catch((err) => {
+        if (err.message !== "canceled") setError(err.response.data.detail);
+      });
   };
 
   const handleOnSaveResourceModal = (e: BaseResourceSchema | undefined) => {
@@ -108,6 +110,12 @@ const EditToolsInput = ({ register, control }: Props) => {
           id="add-tool-button"
           onClick={() => handleClickAdd({ category: "tool" })}
         >
+          {isTableLoading && (
+            <span
+              className="spinner-border spinner-border-sm me-2"
+              aria-hidden="true"
+            />
+          )}
           Add Tool
         </Button>
       </div>
@@ -167,7 +175,10 @@ const EditToolsInput = ({ register, control }: Props) => {
         onClose={handleCloseTableModal}
         extraClassNames="modal-xl"
       >
-        <ResourcesTable onRawClick={handleTableRawClick} resourceList={[]} />
+        <ResourcesTable
+          onRawClick={handleTableRawClick}
+          resourceList={resourceTableList}
+        />
       </Modal>
       <Modal
         title={selectedResource?.metadata.name}

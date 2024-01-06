@@ -52,6 +52,10 @@ export interface BaseToolDependency {
   description?: string;
 }
 
+export interface OptionsRecord {
+  [key: string]: any;
+}
+
 export interface BaseSpec {
   options?: Record<string, any>;
   vendor: string;
