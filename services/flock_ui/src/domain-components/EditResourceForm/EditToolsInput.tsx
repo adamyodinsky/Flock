@@ -4,6 +4,7 @@ import {
   Control,
   UseFormRegister,
   UseFormSetValue,
+  set,
   useFieldArray,
 } from "react-hook-form";
 import Button from "../../general-components/Button";
@@ -40,10 +41,6 @@ const EditToolsInput = ({ register, control, initValue, setValue }: Props) => {
     control,
     name: "tools",
   });
-
-  useEffect(() => {
-    setValue("tools", initValue);
-  }, []);
 
   const handleCloseTableModal = () => {
     setShowTableModal(false);
@@ -136,7 +133,7 @@ const EditToolsInput = ({ register, control, initValue, setValue }: Props) => {
                 className="form-control"
                 placeholder="Kind"
                 aria-label="Kind"
-                value={kind}
+                defaultValue={kind}
                 readOnly
               />
               <input
@@ -145,7 +142,7 @@ const EditToolsInput = ({ register, control, initValue, setValue }: Props) => {
                 className="form-control"
                 placeholder="Name"
                 aria-label="Name"
-                value={name}
+                defaultValue={name}
                 readOnly
               />
               <input
@@ -154,7 +151,7 @@ const EditToolsInput = ({ register, control, initValue, setValue }: Props) => {
                 className="form-control"
                 placeholder="Namespace"
                 aria-label="Namespace"
-                value={namespace}
+                defaultValue={namespace}
                 readOnly
               />
               <Button

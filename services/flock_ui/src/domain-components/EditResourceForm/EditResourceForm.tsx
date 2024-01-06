@@ -53,6 +53,7 @@ const EditResourceForm = ({ resourceToEdit }: Props) => {
     setValue("kind", resourceToEdit.kind);
     setValue("description", resourceToEdit.metadata.description);
     setValue("vendor", resourceToEdit.spec.vendor);
+    setValue("tools", resourceToEdit.spec.tools);
   }, []);
 
   const onSubmit = (data: ResourceFormData) => {
