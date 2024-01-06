@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   Control,
   UseFormRegister,
@@ -6,17 +7,16 @@ import {
 } from "react-hook-form";
 import Button from "../../general-components/Button";
 import { ResourceFormData } from "../../schemas";
-import { useEffect } from "react";
 
 interface Props {
   register: UseFormRegister<ResourceFormData>;
   setValue: UseFormSetValue<ResourceFormData>;
   control: Control<ResourceFormData>;
-  options?: Record<string, any>[];
+  options?: Record<string, any>;
 }
 
 const EditOptionsInput = ({ register, control, options }: Props) => {
-  const { fields, append, remove } = useFieldArray({
+  const { append, remove } = useFieldArray({
     control,
     name: "options",
   });
@@ -42,38 +42,44 @@ const EditOptionsInput = ({ register, control, options }: Props) => {
           Add Option
         </Button>
       </div>
-      {options?.map((_, index) => {
-        return (
-          <div key={index} className="form-control">
-            <div className="input-group m-1">
-              <input
-                {...register(`options.${index}.key`)}
-                type="text"
-                className="form-control"
-                placeholder="key"
-                aria-label="key"
-                defaultValue={options[index].key}
-              />
-              <input
-                {...register(`options.${index}.value`)}
-                type="text"
-                className="form-control"
-                placeholder="value"
-                aria-label="value"
-                defaultValue={options[index].value}
-              />
-              <Button
-                color="outline-danger"
-                type="button"
-                id="add-tool-button"
-                onClick={() => remove(index)}
-              >
-                Remove
-              </Button>
+      {options &&
+        Object.entries(options).map(([key, value], index) => {
+          console.log("key");
+          console.log(key);
+          console.log("value");
+          console.log(value);
+
+          return (
+            <div key={index} className="form-control">
+              <div className="input-group m-1">
+                <input
+                  {...register(`options.${index}.key`)}
+                  type="text"
+                  className="form-control"
+                  placeholder="key"
+                  aria-label="key"
+                  defaultValue={key}
+                />
+                <input
+                  {...register(`options.${index}.value`)}
+                  type="text"
+                  className="form-control"
+                  placeholder="value"
+                  aria-label="value"
+                  defaultValue={value}
+                />
+                <Button
+                  color="outline-danger"
+                  type="button"
+                  id="add-tool-button"
+                  onClick={() => remove(index)}
+                >
+                  Remove
+                </Button>
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
     </>
   );
 };

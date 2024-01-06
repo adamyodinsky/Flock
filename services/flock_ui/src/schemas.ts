@@ -49,7 +49,7 @@ export interface BaseToolDependency {
 }
 
 export interface BaseSpec {
-  options?: Record<string, any>[];
+  options?: Record<string, any>;
   vendor: string;
   tools?: BaseToolDependency[];
   dependencies?: BaseToolDependency[];
@@ -88,13 +88,18 @@ export const baseToolDependencySchema = z.object({
   description: z.string().optional(),
 });
 
+export const KeyValueSchema = z.object({
+  key: z.string(),
+  value: z.any(),
+});
+
 export const resourceFormSchema = z.object({
   name: z.string().min(3).max(63),
   description: z.string().min(3).max(255),
   namespace: z.string().min(3).max(63).default("default"),
   kind: string().min(3).max(63),
   vendor: string().min(3).max(63),
-  options: z.array(z.record(z.string())).optional(),
+  options: z.array(KeyValueSchema).optional(),
   dependencies: z.array(baseToolDependencySchema).optional(),
   tools: z.array(baseToolDependencySchema).optional(),
 });

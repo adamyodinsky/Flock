@@ -1,87 +1,23 @@
-import { ReactNode, useEffect, useState } from "react";
-import Alert from "../general-components/Alert";
 import Button from "../general-components/Button";
-import Modal from "../general-components/Modal";
 import { BaseResourceSchema } from "../schemas";
-import { ResourceParams, ResourceService } from "../services/services";
-import EditResourceForm from "./EditResourceForm/EditResourceForm";
 
 interface Props {
-  filter: ResourceParams;
   onRawClick?: (e: BaseResourceSchema) => void;
+  onDetails?: (e: BaseResourceSchema) => void;
   onDelete?: (e: BaseResourceSchema) => void;
   onEdit?: (e: BaseResourceSchema) => void;
+  resourceList: BaseResourceSchema[];
 }
 
-const ResourcesTable = ({ filter, onRawClick }: Props) => {
-  const [resourceList, setResourceList] = useState<BaseResourceSchema[]>([]);
-  const [error, setError] = useState([]);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteResource, setDeleteResource] = useState<BaseResourceSchema>();
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [editResource, setEditResource] = useState<BaseResourceSchema>();
-
-  const apiService = new ResourceService();
-
-  useEffect(() => {
-    const { request, cancel } = apiService.getAll(filter);
-
-    request
-      .then((response) => {
-        setResourceList(response.data.items);
-        setError([]);
-      })
-      .catch((err) => {
-        if (err.message !== "canceled") setError(err.response.data.detail);
-      });
-
-    return () => cancel();
-  }, []);
-
-  const handleDeleteClick = (resource: BaseResourceSchema) => {
-    setDeleteResource(resource);
-    setShowDeleteModal(true);
-  };
-
-  const handleDeleteConfirmed = () => {
-    const id = deleteResource?.id || "";
-
-    apiService
-      .delete(id)
-      .then(() => {
-        setResourceList(resourceList.filter((e) => e.id !== id));
-        setError([]);
-      })
-      .catch((err) => {
-        setError(err.response.data.detail);
-      });
-
-    setShowDeleteModal(false);
-    setDeleteResource(undefined);
-  };
-
-  const getModalDeletionFooterButtons = (): ReactNode => {
-    return (
-      <>
-        <Button color="outline-danger" onClick={() => handleDeleteConfirmed()}>
-          Confirm Deletion
-        </Button>
-      </>
-    );
-  };
-
-  const handleEditClick = (resource: BaseResourceSchema) => {
-    setEditResource(resource);
-    setShowEditModal(true);
-  };
-
+const ResourcesTable = ({
+  onRawClick,
+  onDetails,
+  onDelete,
+  onEdit,
+  resourceList,
+}: Props) => {
   return (
     <>
-      <Alert>
-        {error.map((err) => (
-          <pre>{err}</pre>
-        ))}
-      </Alert>
       <table className="table table-bordered table table-hover">
         <thead>
           <tr>
@@ -98,53 +34,39 @@ const ResourcesTable = ({ filter, onRawClick }: Props) => {
               <td>{e.metadata.description}</td>
               {
                 <>
-                  <td>
-                    <Button
-                      color="outline-warning"
-                      onClick={() => handleEditClick(e)}
-                    >
-                      Edit
-                    </Button>
-                  </td>
-                  <td>
-                    <Button
-                      color="outline-danger"
-                      onClick={() => handleDeleteClick(e)}
-                    >
-                      Delete
-                    </Button>
-                  </td>
+                  {onDetails && (
+                    <td>
+                      <Button
+                        color="outline-primary"
+                        onClick={() => onDetails(e)}
+                      >
+                        Details
+                      </Button>
+                    </td>
+                  )}
+                  {onEdit && (
+                    <td>
+                      <Button color="outline-warning" onClick={() => onEdit(e)}>
+                        Edit
+                      </Button>
+                    </td>
+                  )}
+                  {onDelete && (
+                    <td>
+                      <Button
+                        color="outline-danger"
+                        onClick={() => onDelete(e)}
+                      >
+                        Delete
+                      </Button>
+                    </td>
+                  )}
                 </>
               }
             </tr>
           ))}
         </tbody>
       </table>
-      <Modal
-        title="Delete Resource"
-        showModal={showDeleteModal}
-        onClose={() => {
-          setShowDeleteModal(false);
-        }}
-        footerButtons={getModalDeletionFooterButtons()}
-      >
-        <div>
-          <p>
-            {deleteResource?.metadata.name} {deleteResource?.kind} from{" "}
-            {deleteResource?.namespace} namespace will be deleted.
-          </p>
-          <p>
-            <strong>Are you sure you want to delete this resource?</strong>
-          </p>
-        </div>
-      </Modal>
-      <Modal
-        title="Edit a resource"
-        showModal={showEditModal}
-        onClose={() => setShowEditModal(false)}
-      >
-        {editResource && <EditResourceForm resourceToEdit={editResource} />}
-      </Modal>
     </>
   );
 };

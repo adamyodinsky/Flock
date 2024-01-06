@@ -4,7 +4,7 @@ import { UseFormRegister, UseFormSetValue } from "react-hook-form";
 import Button from "../general-components/Button";
 import Modal from "../general-components/Modal";
 import { BaseResourceSchema, ResourceFormData } from "../schemas";
-import { ResourceParams } from "../services/services";
+import { ResourceParams, ResourceService } from "../services/services";
 import ResourcesTable from "./ResourcesTable";
 
 interface Props {
@@ -12,6 +12,8 @@ interface Props {
   register: UseFormRegister<ResourceFormData>;
   setValue: UseFormSetValue<ResourceFormData>;
 }
+
+const apiService = new ResourceService();
 
 const DependencyInput = ({ dependencyKindList, register, setValue }: Props) => {
   const [showTableModal, setShowTableModal] = useState(false);
@@ -22,6 +24,8 @@ const DependencyInput = ({ dependencyKindList, register, setValue }: Props) => {
   const [dependencyMap, setDependencyMap] = useState<
     Map<string, BaseResourceSchema>
   >(new Map());
+  const [error, setError] = useState([]);
+  const [resourceList, setResourceList] = useState<BaseResourceSchema[]>([]);
 
   useEffect(() => {
     dependencyKindList.forEach((dependencyKind, index) => {
@@ -39,6 +43,21 @@ const DependencyInput = ({ dependencyKindList, register, setValue }: Props) => {
       }
     });
   }, [dependencyMap]);
+
+  useEffect(() => {
+    const { request, cancel } = apiService.getAll(tableFilter);
+
+    request
+      .then((response) => {
+        setResourceList(response.data.items);
+        setError([]);
+      })
+      .catch((err) => {
+        if (err.message !== "canceled") setError(err.response.data.detail);
+      });
+
+    return () => cancel();
+  }, [tableFilter]);
 
   const handleCloseTableModal = () => {
     setShowTableModal(false);
@@ -141,7 +160,10 @@ const DependencyInput = ({ dependencyKindList, register, setValue }: Props) => {
         onClose={handleCloseTableModal}
         extraClassNames="modal-xl"
       >
-        <ResourcesTable filter={tableFilter} onRawClick={handleTableRawClick} />
+        <ResourcesTable
+          onRawClick={handleTableRawClick}
+          resourceList={resourceList}
+        />
       </Modal>
       <Modal
         title={selectedResource?.metadata.name}

@@ -1,71 +1,86 @@
-import {
-  Control,
-  UseFormRegister,
-  UseFormSetValue,
-  useFieldArray,
-} from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import Button from "../general-components/Button";
 import { ResourceFormData } from "../schemas";
 
-interface Props {
-  register: UseFormRegister<ResourceFormData>;
-  setValue: UseFormSetValue<ResourceFormData>;
-  control: Control<ResourceFormData>;
-  options?: Record<string, any>;
+interface OptionEntry {
+  key: string;
+  value: string;
 }
 
-const OptionsInput = ({ register, control, options }: Props) => {
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "options",
-  });
+interface OptionsRecord {
+  [key: string]: string;
+}
 
-  const handleClickAdd = () => {
-    append({ key: "", value: "" });
+const OptionsInput = ({ register }: { register: any }) => {
+  const { setValue, getValues } = useFormContext<ResourceFormData>();
+  const initialOptions = Object.entries(getValues("options") || {}).map(
+    ([key, value]) => ({ key, value })
+  );
+  const [optionsEntries, setOptionsEntries] =
+    useState<OptionEntry[]>(initialOptions);
+
+  useEffect(() => {
+    const optionsRecord = optionsEntries.reduce<OptionsRecord>(
+      (acc, { key, value }) => {
+        if (key) acc[key] = value;
+        return acc;
+      },
+      {} as OptionsRecord
+    ); // Explicitly type the initial value
+    setValue("options", optionsRecord);
+  }, [optionsEntries, setValue]);
+
+  const handleAddOption = () => {
+    setOptionsEntries([...optionsEntries, { key: "", value: "" }]);
+  };
+
+  const handleRemoveOption = (index: number) => {
+    const updatedOptions = optionsEntries.filter((_, i) => i !== index);
+    setOptionsEntries(updatedOptions);
+  };
+
+  const handleOptionChange = (index: number, key: string, value: string) => {
+    const updatedOptions = [...optionsEntries];
+    updatedOptions[index] = { key, value };
+    setOptionsEntries(updatedOptions);
   };
 
   return (
     <>
       <div className="mb-3">
-        <Button
-          color="outline-primary"
-          type="button"
-          id="add-tool-button"
-          onClick={() => handleClickAdd()}
-        >
+        <Button color="outline-primary" type="button" onClick={handleAddOption}>
           Add Option
         </Button>
       </div>
-      {fields.map((_, index) => {
-        return (
-          <div key={index} className="form-control">
-            <div className="input-group m-1">
-              <input
-                {...register(`options.${index}.key`)}
-                type="text"
-                className="form-control"
-                placeholder="key"
-                aria-label="key"
-              />
-              <input
-                {...register(`options.${index}.value`)}
-                type="text"
-                className="form-control"
-                placeholder="value"
-                aria-label="value"
-              />
-              <Button
-                color="outline-danger"
-                type="button"
-                id="add-tool-button"
-                onClick={() => remove(index)}
-              >
-                Remove
-              </Button>
-            </div>
+      {optionsEntries.map(({ key, value }, index) => (
+        <div key={index} className="form-control">
+          <div className="input-group m-1">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Key"
+              value={key}
+              onChange={(e) => handleOptionChange(index, e.target.value, value)}
+            />
+            <input
+              {...register(`options.${key}`)}
+              type="text"
+              className="form-control"
+              placeholder="Value"
+              value={value}
+              onChange={(e) => handleOptionChange(index, key, e.target.value)}
+            />
+            <Button
+              color="outline-danger"
+              type="button"
+              onClick={() => handleRemoveOption(index)}
+            >
+              Remove
+            </Button>
           </div>
-        );
-      })}
+        </div>
+      ))}
     </>
   );
 };

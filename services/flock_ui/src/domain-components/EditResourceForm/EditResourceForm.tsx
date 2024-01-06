@@ -100,6 +100,35 @@ const EditResourceForm = ({ resourceToEdit }: Props) => {
       <form className="form-control" onSubmit={handleSubmit(onSubmit)}>
         <div className="form-control m-1">
           <div className="m-1">
+            <div>
+              <input
+                {...register("name")}
+                id="name"
+                type="text"
+                className="form-control"
+                hidden
+                readOnly
+                defaultValue={resourceToEdit.metadata.name}
+              />
+              <input
+                {...register("namespace")}
+                id="namespace"
+                type="text"
+                className="form-control"
+                hidden
+                readOnly
+                defaultValue={resourceToEdit.namespace}
+              />
+            </div>
+            <input
+              {...register("kind")}
+              id="kind"
+              type="text"
+              className="form-control"
+              hidden
+              readOnly
+              defaultValue={resourceToEdit.kind}
+            />
             <label htmlFor="description">
               <strong>Description</strong>
             </label>

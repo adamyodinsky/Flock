@@ -19,7 +19,7 @@ interface Props {
     | "outline-info"
     | "outline-light"
     | "outline-dark";
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   type?: "submit" | "button" | "reset";
   disabled?: boolean;
   additionalClasses?: string;
