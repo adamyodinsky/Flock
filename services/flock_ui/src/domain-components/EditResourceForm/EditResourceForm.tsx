@@ -172,7 +172,7 @@ const EditResourceForm = ({ resourceToEdit }: Props) => {
             register={register}
             setValue={setValue}
             control={control}
-            options={resourceToEdit.spec.options}
+            initialOptions={resourceToEdit.spec.options}
           />
         </div>
         {dependencyList.length > 0 && (

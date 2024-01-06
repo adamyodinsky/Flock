@@ -12,18 +12,25 @@ interface Props {
   register: UseFormRegister<ResourceFormData>;
   setValue: UseFormSetValue<ResourceFormData>;
   control: Control<ResourceFormData>;
-  options?: Record<string, any>;
+  initialOptions?: Record<string, any>;
 }
 
-const EditOptionsInput = ({ register, control, options }: Props) => {
-  const { append, remove } = useFieldArray({
+const EditOptionsInput = ({
+  register,
+  control,
+  initialOptions,
+  setValue,
+}: Props) => {
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "options",
   });
 
   useEffect(() => {
-    console.log("options");
-    console.log(options);
+    const transformedOptions = Object.entries(initialOptions || {}).map(
+      ([key, value]) => ({ key, value })
+    );
+    setValue("options", transformedOptions);
   }, []);
 
   const handleClickAdd = () => {
@@ -42,44 +49,38 @@ const EditOptionsInput = ({ register, control, options }: Props) => {
           Add Option
         </Button>
       </div>
-      {options &&
-        Object.entries(options).map(([key, value], index) => {
-          console.log("key");
-          console.log(key);
-          console.log("value");
-          console.log(value);
-
-          return (
-            <div key={index} className="form-control">
-              <div className="input-group m-1">
-                <input
-                  {...register(`options.${index}.key`)}
-                  type="text"
-                  className="form-control"
-                  placeholder="key"
-                  aria-label="key"
-                  defaultValue={key}
-                />
-                <input
-                  {...register(`options.${index}.value`)}
-                  type="text"
-                  className="form-control"
-                  placeholder="value"
-                  aria-label="value"
-                  defaultValue={value}
-                />
-                <Button
-                  color="outline-danger"
-                  type="button"
-                  id="add-tool-button"
-                  onClick={() => remove(index)}
-                >
-                  Remove
-                </Button>
-              </div>
+      {fields.map((field, index) => {
+        return (
+          <div key={field.id} className="form-control">
+            <div className="input-group m-1">
+              <input
+                {...register(`options.${index}.key`)}
+                type="text"
+                className="form-control"
+                placeholder="key"
+                aria-label="key"
+                defaultValue={field.key}
+              />
+              <input
+                {...register(`options.${index}.value`)}
+                type="text"
+                className="form-control"
+                placeholder="value"
+                aria-label="value"
+                defaultValue={field.value}
+              />
+              <Button
+                color="outline-danger"
+                type="button"
+                id="add-tool-button"
+                onClick={() => remove(index)}
+              >
+                Remove
+              </Button>
             </div>
-          );
-        })}
+          </div>
+        );
+      })}
     </>
   );
 };

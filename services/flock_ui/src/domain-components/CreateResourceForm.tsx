@@ -15,6 +15,10 @@ import DependencyInput from "./DependencyInput";
 import OptionsInput from "./OptionsInput";
 import ToolsInput from "./ToolsInput";
 
+interface OptionsRecord {
+  [key: string]: any;
+}
+
 const CreateResourceForm = () => {
   const methods = useForm<ResourceFormData>({
     resolver: zodResolver(resourceFormSchema),
@@ -22,11 +26,9 @@ const CreateResourceForm = () => {
 
   const {
     register,
-    unregister,
     control,
     handleSubmit,
     setValue,
-    getValues,
     formState: { errors, isValid },
   } = methods;
 
@@ -34,7 +36,6 @@ const CreateResourceForm = () => {
   const [kind, setKind] = useState<string>();
   const [vendorList, setVendorList] = useState<string[]>([]);
   const [dependencyList, setDependencyList] = useState<string[]>([]);
-  const [options, setOptions] = useState<Record<string, any>>({});
 
   const schemaService = new ResourceSchemaService();
   const resourceService = new ResourceService();
@@ -55,6 +56,14 @@ const CreateResourceForm = () => {
     console.log("Submitted");
     console.log(data);
 
+    const transformedOptions = data.options?.reduce<OptionsRecord>(
+      (acc, { key, value }) => {
+        acc[key] = value;
+        return acc;
+      },
+      {}
+    );
+
     const resource: BaseResourceSchema = {
       apiVersion: "flock/v1",
       kind: data.kind,
@@ -64,7 +73,7 @@ const CreateResourceForm = () => {
         description: data.description,
       },
       spec: {
-        options: data.options,
+        options: transformedOptions,
         vendor: data.vendor,
         tools: data.tools
           ? data.tools.map((tool) => ({
@@ -87,7 +96,7 @@ const CreateResourceForm = () => {
 
     resourceService
       .post(resource)
-      .then((res) => {
+      .then((_) => {
         setError([]);
       })
       .catch((err) => {
@@ -202,10 +211,7 @@ const CreateResourceForm = () => {
             <OptionsInput
               register={register}
               setValue={setValue}
-              getValues={getValues}
-              register={register}
-              unregister={unregister}
-              options={options}
+              control={control}
             />
           </div>
           {dependencyList.length > 0 && (

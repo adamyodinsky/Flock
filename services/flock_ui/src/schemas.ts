@@ -38,6 +38,10 @@ export enum Category {
   StatefulSet = "statefulset",
 }
 
+export const keyValueSchema = z.object({
+  key: z.string(),
+  value: z.any(),
+});
 
 export interface BaseToolDependency {
   labels?: { [key: string]: string };
@@ -73,7 +77,6 @@ export interface ResourceInfoSchema {
   vendor: string[];
 }
 
-
 export const kindValues: ReadonlyArray<string> = Object.values(Kind).map((val) => val as string);
 const kindTuple: [string, ...string[]] = kindValues as [string, ...string[]];
 
@@ -88,10 +91,6 @@ export const baseToolDependencySchema = z.object({
   description: z.string().optional(),
 });
 
-export const KeyValueSchema = z.object({
-  key: z.string(),
-  value: z.any(),
-});
 
 export const resourceFormSchema = z.object({
   name: z.string().min(3).max(63),
@@ -99,7 +98,7 @@ export const resourceFormSchema = z.object({
   namespace: z.string().min(3).max(63).default("default"),
   kind: string().min(3).max(63),
   vendor: string().min(3).max(63),
-  options: z.array(KeyValueSchema).optional(),
+  options: z.array(keyValueSchema).optional(),
   dependencies: z.array(baseToolDependencySchema).optional(),
   tools: z.array(baseToolDependencySchema).optional(),
 });
@@ -107,4 +106,6 @@ export const resourceFormSchema = z.object({
 export const fieldNames = Object.keys(resourceFormSchema.shape);
 
 export type ResourceFormData = z.infer<typeof resourceFormSchema>;
+
+export type KeyValueData = z.infer<typeof keyValueSchema>;
 
