@@ -6,11 +6,11 @@ import {
   UseFormSetValue,
   useFieldArray,
 } from "react-hook-form";
-import Button from "../general-components/Button";
-import Modal from "../general-components/Modal";
-import { BaseResourceSchema, ResourceFormData } from "../schemas";
-import { ResourceParams } from "../services/services";
-import ResourcesTable from "./ResourcesTable";
+import Button from "../../general-components/Button";
+import Modal from "../../general-components/Modal";
+import { BaseResourceSchema, ResourceFormData } from "../../schemas";
+import { ResourceParams } from "../../services/services";
+import ResourcesTable from "../ResourcesTable";
 
 interface Tool {
   name: string;

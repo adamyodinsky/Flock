@@ -1,16 +1,19 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import Alert from "../general-components/Alert";
-import Button from "../general-components/Button";
+import Alert from "../../general-components/Alert";
+import Button from "../../general-components/Button";
 import {
   BaseResourceSchema,
   Kind,
   ResourceFormData,
   kindValues,
   resourceFormSchema,
-} from "../schemas";
-import { ResourceSchemaService, ResourceService } from "../services/services";
+} from "../../schemas";
+import {
+  ResourceSchemaService,
+  ResourceService,
+} from "../../services/services";
 import DependencyInput from "./DependencyInput";
 import OptionsInput from "./OptionsInput";
 import ToolsInput from "./ToolsInput";
