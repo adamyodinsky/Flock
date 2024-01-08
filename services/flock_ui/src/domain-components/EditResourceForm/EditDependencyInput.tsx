@@ -9,7 +9,7 @@ import {
   Kind,
   ResourceFormData,
 } from "../../schemas";
-import { ResourceParams, ResourceService } from "../../services/services";
+import { ResourceParams, ResourceService } from "../../services/resources_api";
 import ResourcesTable from "../ResourcesTable";
 
 interface Props {

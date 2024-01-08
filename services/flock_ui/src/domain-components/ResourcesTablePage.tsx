@@ -4,7 +4,7 @@ import Alert from "../general-components/Alert";
 import Button from "../general-components/Button";
 import Modal from "../general-components/Modal";
 import { BaseResourceSchema } from "../schemas";
-import { ResourceService } from "../services/services";
+import { ResourceService } from "../services/resources_api";
 import EditResourceForm from "./EditResourceForm/EditResourceForm";
 import ResourcesTable from "./ResourcesTable";
 

@@ -15,7 +15,7 @@ import {
 import {
   ResourceSchemaService,
   ResourceService,
-} from "../../services/services";
+} from "../../services/resources_api";
 import EditOptionsInput from "../OptionsInput";
 import EditToolsInput from "../ToolsInput";
 import EditDependencyInput from "./EditDependencyInput";

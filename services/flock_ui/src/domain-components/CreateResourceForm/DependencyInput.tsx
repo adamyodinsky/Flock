@@ -4,7 +4,7 @@ import { UseFormRegister, UseFormSetValue } from "react-hook-form";
 import Button from "../../general-components/Button";
 import Modal from "../../general-components/Modal";
 import { BaseResourceSchema, ResourceFormData } from "../../schemas";
-import { ResourceParams, ResourceService } from "../../services/services";
+import { ResourceParams, ResourceService } from "../../services/resources_api";
 import ResourcesTable from "../ResourcesTable";
 
 interface Props {
