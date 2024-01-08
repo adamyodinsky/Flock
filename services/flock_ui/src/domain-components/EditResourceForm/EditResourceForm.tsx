@@ -16,9 +16,9 @@ import {
   ResourceSchemaService,
   ResourceService,
 } from "../../services/services";
+import EditOptionsInput from "../OptionsInput";
+import EditToolsInput from "../ToolsInput";
 import EditDependencyInput from "./EditDependencyInput";
-import EditOptionsInput from "./EditOptionsInput";
-import EditToolsInput from "./EditToolsInput";
 
 interface Props {
   resourceToEdit: BaseResourceSchema;
@@ -63,6 +63,12 @@ const EditResourceForm = ({ resourceToEdit }: Props) => {
     setValue("description", resourceToEdit.metadata.description);
     setValue("vendor", resourceToEdit.spec.vendor);
     setValue("tools", resourceToEdit.spec.tools);
+
+    const transformedOptions = Object.entries(
+      resourceToEdit.spec.options || {}
+    ).map(([key, value]) => ({ key, value }));
+
+    setValue("options", transformedOptions);
   }, []);
 
   const onSubmit = (data: ResourceFormData) => {

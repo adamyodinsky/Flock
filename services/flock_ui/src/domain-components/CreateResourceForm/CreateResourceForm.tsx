@@ -14,9 +14,9 @@ import {
   ResourceSchemaService,
   ResourceService,
 } from "../../services/services";
+import EditOptionsInput from "../OptionsInput";
+import EditToolsInput from "../ToolsInput";
 import DependencyInput from "./DependencyInput";
-import OptionsInput from "./OptionsInput";
-import ToolsInput from "./ToolsInput";
 // import { DevTool } from "@hookform/devtools";
 
 interface OptionsRecord {
@@ -212,7 +212,7 @@ const CreateResourceForm = () => {
             <label className="form-label" htmlFor="dependencies">
               <h5>Options</h5>
             </label>
-            <OptionsInput
+            <EditOptionsInput
               register={register}
               setValue={setValue}
               control={control}
@@ -238,7 +238,7 @@ const CreateResourceForm = () => {
               <label className="form-label" htmlFor="tools">
                 <h5 className="">Tools</h5>
               </label>
-              <ToolsInput
+              <EditToolsInput
                 register={register}
                 setValue={setValue}
                 control={control}
