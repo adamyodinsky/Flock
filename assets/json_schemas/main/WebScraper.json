@@ -125,6 +125,14 @@
       ],
       "additionalProperties": false
     },
+    "WebScraperVendor": {
+      "title": "WebScraperVendor",
+      "description": "Enum for embedding vendors.",
+      "enum": [
+        "v1"
+      ],
+      "type": "string"
+    },
     "Kind": {
       "title": "Kind",
       "description": "Enum for all kinds of resources.",
@@ -255,10 +263,12 @@
           "type": "object"
         },
         "vendor": {
-          "title": "Vendor",
-          "description": "The resource class",
-          "default": "default",
-          "type": "string"
+          "default": "v1",
+          "allOf": [
+            {
+              "$ref": "#/definitions/WebScraperVendor"
+            }
+          ]
         },
         "tools": {
           "title": "Tools",

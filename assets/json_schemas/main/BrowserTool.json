@@ -267,7 +267,7 @@
         "vendor": {
           "title": "Vendor",
           "description": "The resource class",
-          "default": "default",
+          "default": "",
           "type": "string"
         },
         "tools": {

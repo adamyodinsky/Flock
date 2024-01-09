@@ -9,7 +9,7 @@ metadata:
   labels:
     app: my_app
 spec:
-  vendor: WebScraper
+  vendor: v1
   dependencies:
     - kind: VectorStore
       name: books

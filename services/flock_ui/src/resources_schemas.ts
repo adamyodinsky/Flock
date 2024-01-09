@@ -24,8 +24,8 @@ export interface OptionsRecord {
 }
 
 export interface BaseSpec {
-  options?: Record<string, any>;
   vendor: string;
+  options?: Record<string, any>;
   tools?: BaseToolDependency[];
   dependencies?: BaseToolDependency[];
 }

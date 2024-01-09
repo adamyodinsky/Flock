@@ -13,9 +13,12 @@
       ]
     },
     "vendor": {
-      "title": "Vendor",
       "default": "v1",
-      "type": "string"
+      "allOf": [
+        {
+          "$ref": "#/definitions/EmbeddingsLoaderVendor"
+        }
+      ]
     },
     "tools": {
       "title": "Tools",
@@ -84,6 +87,14 @@
         }
       },
       "additionalProperties": false
+    },
+    "EmbeddingsLoaderVendor": {
+      "title": "EmbeddingsLoaderVendor",
+      "description": "Enum for embedding vendors.",
+      "enum": [
+        "v1"
+      ],
+      "type": "string"
     },
     "Kind": {
       "title": "Kind",

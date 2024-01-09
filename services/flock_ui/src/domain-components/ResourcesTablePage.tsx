@@ -37,6 +37,9 @@ const ResourcesTablePage = () => {
   }, [filter]);
 
   const handleEditClick = (resource: BaseResourceSchema) => {
+    console.log("Clicked on Edit");
+    console.log(resource);
+    console.log(resourceList);
     setEditResource(resource);
     setShowEditModal(true);
   };
