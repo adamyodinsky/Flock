@@ -1,5 +1,6 @@
 import yaml from "js-yaml";
 import { ReactNode, useState } from "react";
+import Alert from "../../general-components/Alert";
 import Button from "../../general-components/Button";
 import Modal from "../../general-components/Modal";
 import { BaseResourceSchema } from "../../resources_schemas";
@@ -28,8 +29,8 @@ const TargetResourceInput = () => {
       .then((response) => {
         setResourceTableList(response.data.items);
         setError([]);
-        setShowTableModal(true);
         setIsTableLoading(false);
+        setShowTableModal(true);
       })
       .catch((err) => {
         if (err.message !== "canceled") setError(err.response.data.detail);
@@ -65,10 +66,23 @@ const TargetResourceInput = () => {
 
   return (
     <>
+      <Alert>
+        {error.map((err) => (
+          <pre>{err}</pre>
+        ))}
+      </Alert>
       <div className="form-control m-1">
         <div className="input-group m-1">
           <div className="m-2">
-            <Button onClick={handleClickOnChoose}>Find & Choose</Button>
+            <Button onClick={handleClickOnChoose}>
+              {isTableLoading && (
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  aria-hidden="true"
+                />
+              )}
+              Find & Choose
+            </Button>
           </div>
           <select
             id="target-resource"
