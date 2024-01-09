@@ -80,3 +80,5 @@ export type ResourceFormData = z.infer<typeof resourceFormSchema>;
 
 
 
+export { Kind };
+

@@ -24,7 +24,7 @@ interface Props {
   initValue?: BaseToolDependency[];
 }
 
-const EditToolsInput = ({ register, control }: Props) => {
+const ToolsInput = ({ register, control }: Props) => {
   const [resourceTableList, setResourceTableList] = useState<
     BaseResourceSchema[]
   >([]);
@@ -194,4 +194,4 @@ const EditToolsInput = ({ register, control }: Props) => {
   );
 };
 
-export default EditToolsInput;
+export default ToolsInput;

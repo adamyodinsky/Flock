@@ -15,7 +15,7 @@ interface Props {
   initialOptions?: Record<string, any>;
 }
 
-const EditOptionsInput = ({
+const OptionsInput = ({
   register,
   control,
   initialOptions,
@@ -85,4 +85,4 @@ const EditOptionsInput = ({
   );
 };
 
-export default EditOptionsInput;
+export default OptionsInput;

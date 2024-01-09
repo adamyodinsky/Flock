@@ -14,8 +14,8 @@ import {
   ResourceSchemaService,
   ResourceService,
 } from "../../services/resources_api";
-import EditOptionsInput from "../OptionsInput";
-import EditToolsInput from "../ToolsInput";
+import OptionsInput from "../OptionsInput";
+import ToolsInput from "../ToolsInput";
 import DependencyInput from "./DependencyInput";
 // import { DevTool } from "@hookform/devtools";
 
@@ -134,7 +134,7 @@ const CreateResourceForm = () => {
               )}
             </div>
             <div className="m-1">
-              <label htmlFor="description">
+              <label className="form-label" htmlFor="description">
                 <strong>Description</strong>
               </label>
               <input
@@ -212,7 +212,7 @@ const CreateResourceForm = () => {
             <label className="form-label" htmlFor="dependencies">
               <h5>Options</h5>
             </label>
-            <EditOptionsInput
+            <OptionsInput
               register={register}
               setValue={setValue}
               control={control}
@@ -238,7 +238,7 @@ const CreateResourceForm = () => {
               <label className="form-label" htmlFor="tools">
                 <h5 className="">Tools</h5>
               </label>
-              <EditToolsInput
+              <ToolsInput
                 register={register}
                 setValue={setValue}
                 control={control}
