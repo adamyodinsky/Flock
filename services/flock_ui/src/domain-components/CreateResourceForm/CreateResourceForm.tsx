@@ -85,14 +85,14 @@ const CreateResourceForm = () => {
               kind: tool.kind as Kind,
               namespace: tool.namespace,
             }))
-          : [],
+          : undefined,
         dependencies: data.dependencies
           ? data.dependencies.map((dependency) => ({
               name: dependency.name,
               kind: dependency.kind as Kind,
               namespace: dependency.namespace,
             }))
-          : [],
+          : undefined,
       },
     };
 
