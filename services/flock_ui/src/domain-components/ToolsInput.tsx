@@ -13,7 +13,7 @@ import {
   BaseResourceSchema,
   BaseToolDependency,
   ResourceFormData,
-} from "../schemas";
+} from "../resources_schemas";
 import { ResourceParams, ResourceService } from "../services/resources_api";
 import ResourcesTable from "./ResourcesTable";
 

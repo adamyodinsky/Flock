@@ -6,7 +6,7 @@ import {
   useFieldArray,
 } from "react-hook-form";
 import Button from "../general-components/Button";
-import { ResourceFormData } from "../schemas";
+import { ResourceFormData } from "../resources_schemas";
 
 interface Props {
   register: UseFormRegister<ResourceFormData>;

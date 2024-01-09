@@ -1,5 +1,5 @@
 import Button from "../general-components/Button";
-import { BaseResourceSchema } from "../schemas";
+import { BaseResourceSchema } from "../resources_schemas";
 
 interface Props {
   onRawClick?: (e: BaseResourceSchema) => void;

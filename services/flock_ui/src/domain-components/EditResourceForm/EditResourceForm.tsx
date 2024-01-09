@@ -11,7 +11,7 @@ import {
   OptionsRecord,
   ResourceFormData,
   resourceFormSchema,
-} from "../../schemas";
+} from "../../resources_schemas";
 import {
   ResourceSchemaService,
   ResourceService,

@@ -1,4 +1,5 @@
 import { string, z } from "zod";
+import { Category, Kind, keyValueSchema } from "./general_schemas";
 
 
 export interface BaseMetaData {
@@ -8,40 +9,6 @@ export interface BaseMetaData {
   description: string;
 }
 
-export enum Kind {
-  Embedding = "Embedding",
-  VectorStore = "VectorStore",
-  VectorStoreQATool = "VectorStoreQATool",
-  LLM = "LLM",
-  LLMChat = "LLMChat",
-  LoadTool = "LoadTool",
-  Splitter = "Splitter",
-  Agent = "Agent",
-  PromptTemplate = "PromptTemplate",
-  LLMTool = "LLMTool",
-  EmbeddingsLoader = "EmbeddingsLoader",
-  WebScraper = "WebScraper",
-  CSVTool = "CSVTool",
-  BrowserTool = "BrowserTool",
-  Custom = "Custom",
-}
-
-export enum Category {
-  Other = "other",
-  Tool = "tool",
-  Scraper = "scraper",
-  Model = "model",
-  Agent = "agent",
-  Deployment = "deployment",
-  Job = "job",
-  CronJob = "cronjob",
-  StatefulSet = "statefulset",
-}
-
-export const keyValueSchema = z.object({
-  key: z.string(),
-  value: z.any(),
-});
 
 export interface BaseToolDependency {
   labels?: { [key: string]: string };
@@ -111,5 +78,5 @@ export const fieldNames = Object.keys(resourceFormSchema.shape);
 
 export type ResourceFormData = z.infer<typeof resourceFormSchema>;
 
-export type KeyValueData = z.infer<typeof keyValueSchema>;
+
 

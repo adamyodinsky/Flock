@@ -3,7 +3,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { UseFormRegister, UseFormSetValue } from "react-hook-form";
 import Button from "../../general-components/Button";
 import Modal from "../../general-components/Modal";
-import { BaseResourceSchema, ResourceFormData } from "../../schemas";
+import { BaseResourceSchema, ResourceFormData } from "../../resources_schemas";
 import { ResourceParams, ResourceService } from "../../services/resources_api";
 import ResourcesTable from "../ResourcesTable";
 

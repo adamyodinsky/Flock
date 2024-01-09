@@ -9,7 +9,7 @@ import {
   ResourceFormData,
   kindValues,
   resourceFormSchema,
-} from "../../schemas";
+} from "../../resources_schemas";
 import {
   ResourceSchemaService,
   ResourceService,

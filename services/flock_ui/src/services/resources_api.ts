@@ -1,5 +1,5 @@
-import { BaseResourceSchema } from "../schemas";
 import axios, { CanceledError } from "axios";
+import { BaseResourceSchema } from "../resources_schemas";
 
 const HOST = process.env.RESOURCES_SERVER_HOST || "localhost";
 const PORT = process.env.RESOURCES_SERVER_PORT || 8000;
