@@ -43,8 +43,10 @@ const DeployerForm = () => {
               className="form-select"
               {...register("deployment_kind", { required: true })}
             >
-              {deploymentKindValues.map((kind) => (
-                <option value={kind}>{kind}</option>
+              {deploymentKindValues.map((kind, index) => (
+                <option key={index} value={kind}>
+                  {kind}
+                </option>
               ))}
             </select>
             {errors.deployment_kind && <span>This field is required</span>}

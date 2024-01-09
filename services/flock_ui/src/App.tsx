@@ -6,9 +6,9 @@ import ResourcesTablePage from "./domain-components/ResourcesTablePage";
 function App() {
   return (
     <>
-      <CreateResourceForm />
-      <ResourcesTablePage />
-      {/* <DeployerForm /> */}
+      {/* <CreateResourceForm /> */}
+      {/* <ResourcesTablePage /> */}
+      <DeployerForm />
     </>
   );
 }

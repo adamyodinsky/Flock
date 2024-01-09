@@ -1,10 +1,11 @@
 import yaml from "js-yaml";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import Button from "../../general-components/Button";
 import Modal from "../../general-components/Modal";
 import { BaseResourceSchema } from "../../resources_schemas";
+import { ResourceService } from "../../services/resources_api";
 import ResourcesTable from "../ResourcesTable";
-import { set } from "react-hook-form";
+const apiService = new ResourceService();
 
 const TargetResourceInput = () => {
   const [targetKind, setTargetKind] = useState("Agent");
@@ -12,9 +13,54 @@ const TargetResourceInput = () => {
   const [showResourceModal, setShowResourceModal] = useState(false);
   const [selectedResource, setSelectedResource] =
     useState<BaseResourceSchema>();
+  const [resourceTableList, setResourceTableList] = useState<
+    BaseResourceSchema[]
+  >([]);
+  const [error, setError] = useState([]);
+  const [isTableLoading, setIsTableLoading] = useState(false);
+  const [targetResource, setTargetResource] = useState<BaseResourceSchema>();
 
   const handleClickOnChoose = () => {
-    console.log("Clicked on Choose");
+    setIsTableLoading(true);
+    const { request } = apiService.getAll({ kind: targetKind });
+
+    request
+      .then((response) => {
+        setResourceTableList(response.data.items);
+        setError([]);
+        setShowTableModal(true);
+        setIsTableLoading(false);
+      })
+      .catch((err) => {
+        if (err.message !== "canceled") setError(err.response.data.detail);
+      });
+  };
+
+  const handleClickTableRaw = (resource: BaseResourceSchema) => {
+    setSelectedResource(resource);
+    setShowResourceModal(true);
+  };
+
+  const handleOnSaveResourceModal = (e: BaseResourceSchema | undefined) => {
+    if (!e) return;
+
+    setTargetResource(e);
+    setShowResourceModal(false);
+    setShowTableModal(false);
+  };
+
+  const getModalFooterButtons = (): ReactNode => {
+    return (
+      <>
+        <Button
+          type="button"
+          color="outline-primary"
+          onClick={() => handleOnSaveResourceModal(selectedResource)}
+        >
+          Save
+        </Button>
+      </>
+    );
   };
 
   return (
@@ -40,6 +86,7 @@ const TargetResourceInput = () => {
             id="target_name"
             placeholder="Name"
             aria-label="target name"
+            defaultValue={targetResource?.metadata.name}
             readOnly
           />
           <input
@@ -48,6 +95,7 @@ const TargetResourceInput = () => {
             id="target_name"
             placeholder="Namespace"
             aria-label="target namespace"
+            defaultValue={targetResource?.namespace}
             readOnly
           />
         </div>
@@ -59,15 +107,15 @@ const TargetResourceInput = () => {
         extraClassNames="modal-xl"
       >
         <ResourcesTable
-          onRawClick={() => console.log("clicked raw!")}
-          resourceList={[]}
+          onRawClick={handleClickTableRaw}
+          resourceList={resourceTableList}
         />
       </Modal>
       <Modal
         title={selectedResource?.metadata.name}
         onClose={() => setShowResourceModal(false)}
         showModal={showResourceModal}
-        // footerButtons={getModalFooterButtons()}
+        footerButtons={getModalFooterButtons()}
       >
         <pre>{yaml.dump(selectedResource)}</pre>
       </Modal>
