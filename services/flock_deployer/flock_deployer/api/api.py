@@ -288,7 +288,7 @@ def get_router(deployers: BaseDeployers, api_prefix: str) -> APIRouter:
 
     @router.get("/config")
     async def get_config(
-        name: str,
+        name: str = "",
         kind: str = "",
         kind_target: str = "",
         id: str = "",
@@ -308,7 +308,6 @@ def get_router(deployers: BaseDeployers, api_prefix: str) -> APIRouter:
             Config: Config
         """
 
-        logging.info("Getting config %s", name)
         try:
             config = deployers.config_store.get(
                 name=name, kind=kind, kind_target=kind_target, id=id
@@ -316,7 +315,7 @@ def get_router(deployers: BaseDeployers, api_prefix: str) -> APIRouter:
             config = DeploymentConfigSchema.validate(config)
             return config
         except Exception as error:
-            logging.error("Failed to get config %s", name)
+            logging.error("Failed to get config", error)
             raise HTTPException(
                 status_code=500,
                 detail=[

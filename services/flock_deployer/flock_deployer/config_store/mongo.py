@@ -70,13 +70,13 @@ class MongoConfigStore(ConfigStore):
             name=name,
             kind=kind,
             kind_target=kind_target,
+            id=id,
         )
 
         result = self.table.find_one(
             filter=query_filter,
             projection={
                 "_id": False,
-                "id": True,
             },
         )
         return result

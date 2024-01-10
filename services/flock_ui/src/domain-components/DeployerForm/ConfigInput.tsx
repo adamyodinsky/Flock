@@ -27,14 +27,11 @@ const ConfigInput = () => {
     useState<DeploymentConfigData>();
 
   useEffect(() => {
-    console.log("selectedShallowResource");
-    console.log(selectedShallowResource);
     if (!selectedShallowResource) return;
     apiConfigService
       .get(selectedShallowResource.id)
       .then((response) => {
         setSelectedResource(response.data);
-        console.log(response.data);
         setError([]);
       })
       .catch((err) => {
@@ -51,14 +48,13 @@ const ConfigInput = () => {
 
     request
       .then((response) => {
-        console.log(response);
         setConfigTableList(response.data.items);
         setError([]);
         setIsTableLoading(false);
         setShowTableModal(true);
       })
       .catch((err) => {
-        if (err.message !== "canceled") setError(err.response?.data.detail);
+        if (err.message !== "canceled") setError(err.response.data.detail);
       });
 
     return () => cancel();
