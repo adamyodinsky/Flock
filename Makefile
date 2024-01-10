@@ -226,7 +226,11 @@ schemas-setup:
 	cd libs/flock_schemas; make write-json-schemas
 	cd libs/flock_schemas; make upload-json-schemas-to-db
 
-fill-db-with-data: schemas-setup validate-resources
+config-upload:
+	cd services/flock_deployer; make write-json-schemas
+	cd services/flock_deployer; make load-configs
+
+fill-db-with-data: schemas-setup validate-resources config-upload
 
 apply-all: apply-secret apply-pvc apply-mongo apply-vault apply-rabbitmq apply-deployer apply-observer apply-resources-server apply-ingress apply-proxy
 
