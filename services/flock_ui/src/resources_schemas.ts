@@ -49,7 +49,7 @@ export interface ResourceInfoSchema {
 }
 
 export const kindValues: ReadonlyArray<string> = Object.values(Kind).map((val) => val as string);
-const kindTuple: [string, ...string[]] = kindValues as [string, ...string[]];
+export const kindTuple: [string, ...string[]] = kindValues as [string, ...string[]];
 
 
 export const baseToolDependencySchema = z.object({

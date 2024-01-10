@@ -1,12 +1,54 @@
 import { z } from "zod";
-import { keyValueSchema } from "./general_schemas";
+import { kindTuple } from "./resources_schemas";
+
+// CONFIG SCHEMAS //
+
+export const SecretKeyRefValueZodSchema = z.object({
+  name: z.string(),
+  key: z.string(),
+});
+
+export const SecretKeyRefZodSchema = z.object({
+  secretKeyRef: SecretKeyRefValueZodSchema,
+});
+
+export const EnvFromZodSchema = z.object({
+  name: z.string(),
+  valueFrom: SecretKeyRefZodSchema,
+});
+
+export const EnvVarZodSchema = z.object({
+  name: z.string(),
+  value: z.string(),
+});
+
+export const EnvZodSchema = z.union([EnvVarZodSchema, EnvFromZodSchema]);
+export type EnvData = z.infer<typeof EnvZodSchema>;
+
+export const DeploymentConfigZodSchema = z.object({
+  kind: z.literal("DeploymentConfig"),
+  env: z.array(EnvZodSchema),
+  image: z.string(),
+});
+export type DeploymentConfigData = z.infer<typeof DeploymentConfigZodSchema>;
+
+export const DeploymentGlobalConfigZodSchema = DeploymentConfigZodSchema.extend({
+  kind: z.literal("DeploymentGlobalConfig"),
+});
+
+export const DeploymentKindConfigZodSchema = DeploymentConfigZodSchema.extend({
+  kind: z.literal("DeploymentKindConfig"),
+  kind_target: z.enum(kindTuple),
+});
+
+
+// DEPLOYMENT SCHEMAS //
 
 export enum DeploymentKind {
   FlockJob = "FlockJob",
   FlockCronJob = "FlockCronJob",
   FlockDeployment = "FlockDeployment"
 }
-
 export const deploymentKindValues: ReadonlyArray<string> = Object.values(DeploymentKind).map((val) => val as string);
 const deploymentKindTuple: [string, ...string[]] = deploymentKindValues as [string, ...string[]];
 
@@ -18,7 +60,7 @@ export const deploymentForm = z.object({
   resource_namespace: z.string().default("default"),
   resource_kind: z.enum(["Agent", "WebScraper"]),
   schedule: z.string(),
-  config: z.array(keyValueSchema),
+  config: DeploymentConfigZodSchema,
   dry_run: z.boolean(),
 });
 
