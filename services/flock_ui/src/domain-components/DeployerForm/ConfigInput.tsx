@@ -1,5 +1,11 @@
-import { useState } from "react";
-import { ConfigKind, ConfigResponseObj } from "../../deployments_schemas";
+import yaml from "js-yaml";
+import { ReactNode, useEffect, useState } from "react";
+import {
+  ConfigKind,
+  ConfigResponseObj,
+  DeploymentConfigData,
+} from "../../deployments_schemas";
+import Alert from "../../general-components/Alert";
 import Button from "../../general-components/Button";
 import Modal from "../../general-components/Modal";
 import { ConfigService } from "../../services/deployments_api";
@@ -15,7 +21,27 @@ const ConfigInput = () => {
   const [configTableList, setConfigTableList] = useState<ConfigResponseObj[]>(
     []
   );
-  const [selectedResource, setSelectedResource] = useState<ConfigResponseObj>();
+  const [selectedShallowResource, setSelectedShallowResource] =
+    useState<ConfigResponseObj>();
+  const [selectedResource, setSelectedResource] =
+    useState<DeploymentConfigData>();
+
+  useEffect(() => {
+    console.log("selectedShallowResource");
+    console.log(selectedShallowResource);
+    if (!selectedShallowResource) return;
+    apiConfigService
+      .get(selectedShallowResource.id)
+      .then((response) => {
+        setSelectedResource(response.data);
+        console.log(response.data);
+        setError([]);
+      })
+      .catch((err) => {
+        console.log(err);
+        setError(err.response?.data.detail);
+      });
+  }, [selectedShallowResource]);
 
   const handleClickOnChoose = () => {
     setIsTableLoading(true);
@@ -26,7 +52,7 @@ const ConfigInput = () => {
     request
       .then((response) => {
         console.log(response);
-        // setConfigTableList(response.data);
+        setConfigTableList(response.data.items);
         setError([]);
         setIsTableLoading(false);
         setShowTableModal(true);
@@ -39,17 +65,39 @@ const ConfigInput = () => {
   };
 
   const handleTableRawClick = (resource: ConfigResponseObj) => {
-    setSelectedResource(resource);
+    setSelectedShallowResource(resource);
     setShowResourceModal(true);
+  };
+
+  const handleOnSaveResourceModal = (e: ConfigResponseObj | undefined) => {
+    if (!e) return;
+
+    setSelectedShallowResource(e);
+    setShowResourceModal(false);
+    setShowTableModal(false);
+  };
+
+  const getModalFooterButtons = (): ReactNode => {
+    return (
+      <>
+        <Button
+          type="button"
+          color="outline-primary"
+          onClick={() => handleOnSaveResourceModal(selectedShallowResource)}
+        >
+          Save
+        </Button>
+      </>
+    );
   };
 
   return (
     <>
-      {/* <Alert>
+      <Alert>
         {error.map((err) => (
           <pre>{err}</pre>
         ))}
-      </Alert> */}
+      </Alert>
       <div className="form-control m-1">
         <div className="input-group m-1">
           <div className="m-2">
@@ -64,23 +112,24 @@ const ConfigInput = () => {
             </Button>
           </div>
         </div>
-
-        <div className="m-2 input-group">
-          <input
-            className="form-control"
-            type="text"
-            id="config_key"
-            placeholder="key"
-            aria-label="key"
-          />
-          <input
-            className="form-control"
-            type="text"
-            id="config_value"
-            placeholder="value"
-            aria-label="value"
-          />
-        </div>
+        {/* {selectedResource?.env.map((env) => (
+          // <div className="m-2 input-group">
+          //   <input
+          //     className="form-control"
+          //     type="text"
+          //     id="config_key"
+          //     placeholder="key"
+          //     aria-label="key"
+          //   />
+          //   <input
+          //     className="form-control"
+          //     type="text"
+          //     id="config_value"
+          //     placeholder="value"
+          //     aria-label="value"
+          //   />
+          // </div>
+        ))} */}
       </div>
       <Modal
         title="Resources"
@@ -93,14 +142,14 @@ const ConfigInput = () => {
           configList={configTableList}
         />
       </Modal>
-      {/* <Modal
-        title={selectedResource?.metadata.name}
+      <Modal
+        title={selectedShallowResource?.name}
         onClose={() => setShowResourceModal(false)}
         showModal={showResourceModal}
         footerButtons={getModalFooterButtons()}
       >
-        <pre>{yaml.dump(selectedResource)}</pre>
-      </Modal> */}
+        <pre>{yaml.dump(selectedShallowResource)}</pre>
+      </Modal>
     </>
   );
 };

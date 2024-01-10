@@ -291,6 +291,7 @@ def get_router(deployers: BaseDeployers, api_prefix: str) -> APIRouter:
         name: str,
         kind: str = "",
         kind_target: str = "",
+        id: str = "",
         deployers: BaseDeployers = Depends(lambda: deployers),
     ) -> DeploymentConfigSchema:
         """
@@ -310,7 +311,7 @@ def get_router(deployers: BaseDeployers, api_prefix: str) -> APIRouter:
         logging.info("Getting config %s", name)
         try:
             config = deployers.config_store.get(
-                name=name, kind=kind, kind_target=kind_target
+                name=name, kind=kind, kind_target=kind_target, id=id
             )
             config = DeploymentConfigSchema.validate(config)
             return config

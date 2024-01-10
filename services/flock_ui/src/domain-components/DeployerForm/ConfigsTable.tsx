@@ -35,13 +35,13 @@ const ConfigsTable = ({
         <tbody>
           {configList.map((e) => (
             <tr key={e.id} onClick={() => onRawClick && onRawClick(e)}>
-              <td>{e.name}</td>
-              <td>{e.kind}</td>
-              <td>{e.description}</td>
+              <td key="1">{e.name}</td>
+              <td key="2">{e.kind}</td>
+              <td key="3">{e.description}</td>
               {
                 <>
                   {onDetails && (
-                    <td>
+                    <td key="button">
                       <Button
                         color="outline-primary"
                         onClick={() => onDetails(e)}
@@ -51,14 +51,14 @@ const ConfigsTable = ({
                     </td>
                   )}
                   {onEdit && (
-                    <td>
+                    <td key="edit">
                       <Button color="outline-warning" onClick={() => onEdit(e)}>
                         {onEditText}
                       </Button>
                     </td>
                   )}
                   {onDelete && (
-                    <td>
+                    <td key="delete">
                       <Button
                         color="outline-danger"
                         onClick={() => onDelete(e)}

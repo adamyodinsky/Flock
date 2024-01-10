@@ -23,9 +23,9 @@ export class ConfigService {
     return { request, cancel: () => controller.abort() }
   }
 
-  get(kind: string) {
+  get(id: string) {
     return apiClient
-      .get(`/schema/${kind}`)
+      .get(`/config`, { params: { id: id } })
   }
 }
 

@@ -6,7 +6,7 @@ export interface ConfigResponseObj {
   name: string
   description: string
   kind: string
-  category: string
+  target_kind?: string
 }
 
 export const SecretKeyRefValueZodSchema = z.object({
@@ -48,7 +48,6 @@ export const DeploymentKindConfigZodSchema = DeploymentConfigZodSchema.extend({
 });
 
 export enum ConfigKind {
-  // null = "null",
   None = "",
   DeploymentConfig = "DeploymentConfig",
   DeploymentGlobalConfig = "DeploymentGlobalConfig",

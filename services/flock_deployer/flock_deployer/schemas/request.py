@@ -34,7 +34,6 @@ class ConfigResponseObj(BaseModel):
     name: str
     description: str
     kind: str
-    category: str
 
 
 class ConfigResponse(BaseModel):

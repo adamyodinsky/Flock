@@ -63,6 +63,7 @@ class MongoConfigStore(ConfigStore):
         name: str = "",
         kind: str = "",
         kind_target: str = "",
+        id: str = "",
     ):
         query_filter = MongoConfigStore.create_filter(
             category=category,
@@ -75,6 +76,7 @@ class MongoConfigStore(ConfigStore):
             filter=query_filter,
             projection={
                 "_id": False,
+                "id": True,
             },
         )
         return result
@@ -105,7 +107,9 @@ class MongoConfigStore(ConfigStore):
                     "name": "$metadata.name",
                     "description": "$metadata.description",
                     "kind": True,
-                    "category": True,
+                    "id": True,
+                    "kind_target": True,
+                    "_id": False,
                 },
             )
             .skip(skip_count)
@@ -157,6 +161,7 @@ class MongoConfigStore(ConfigStore):
         name: str = "",
         kind: str = "",
         kind_target: str = "",
+        id: str = "",
     ) -> dict:
         """Create a filter query"""
 
@@ -169,5 +174,7 @@ class MongoConfigStore(ConfigStore):
             filter_query["metadata.name"] = name
         if kind_target:
             filter_query["kind_target"] = kind_target
+        if id:
+            filter_query["id"] = id
 
         return filter_query
