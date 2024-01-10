@@ -30,11 +30,15 @@ class DeleteRequest(BaseModel):
     dry_run: bool = False
 
 
-class ConfigResponse(BaseModel):
+class ConfigResponseObj(BaseModel):
     name: str
     description: str
     kind: str
     category: str
+
+
+class ConfigResponse(BaseModel):
+    items: list[ConfigResponseObj]
 
 
 DeploymentRequest.update_forward_refs()

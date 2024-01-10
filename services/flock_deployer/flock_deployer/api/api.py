@@ -9,6 +9,7 @@ from flock_deployer.schemas import DeploymentConfigSchema, DeploymentSchema
 from flock_deployer.schemas.request import (
     ConfigRequest,
     ConfigResponse,
+    ConfigResponseObj,
     DeleteRequest,
     DeploymentRequest,
 )
@@ -255,7 +256,7 @@ def get_router(deployers: BaseDeployers, api_prefix: str) -> APIRouter:
     async def get_configs(
         kind: str = "",
         deployers: BaseDeployers = Depends(lambda: deployers),
-    ) -> List[ConfigResponse]:
+    ) -> ConfigResponse:
         """
         Get config
 
@@ -273,8 +274,8 @@ def get_router(deployers: BaseDeployers, api_prefix: str) -> APIRouter:
         logging.info("Getting configs for kind=%s", kind)
         try:
             config_list = deployers.config_store.get_many(kind=kind) or []
-            config_list = [ConfigResponse.validate(config) for config in config_list]
-            return config_list
+            config_list = [ConfigResponseObj.validate(config) for config in config_list]
+            return ConfigResponse(items=config_list)
         except Exception as error:
             logging.error("Failed to get configs kind=%s", kind)
             raise HTTPException(

@@ -25,8 +25,8 @@ build:
 write-json-schemas:
 	poetry run python scripts/write_json_schemas.py
 
-load-global-config:
-	poetry run python scripts/load_global_configs.py
+load-configs:
+	poetry run python scripts/load_configs.py
 
 test:
 	poetry run pytest tests

@@ -3,19 +3,16 @@
   "description": "Base model config.",
   "type": "object",
   "properties": {
+    "id": {
+      "title": "Id",
+      "description": "String UUID of the object",
+      "type": "string"
+    },
     "apiVersion": {
       "title": "Apiversion",
       "description": "API version of the object",
       "enum": [
         "flock/v1"
-      ],
-      "type": "string"
-    },
-    "kind": {
-      "title": "Kind",
-      "description": "This configuration will apply to all objects of this kind",
-      "enum": [
-        "DeploymentKindConfig"
       ],
       "type": "string"
     },
@@ -49,6 +46,14 @@
       "default": "",
       "type": "string"
     },
+    "kind": {
+      "title": "Kind",
+      "description": "This configuration will apply to all objects of this kind",
+      "enum": [
+        "DeploymentKindConfig"
+      ],
+      "type": "string"
+    },
     "kind_target": {
       "description": "This configuration will apply to all objects globally",
       "allOf": [
@@ -60,8 +65,8 @@
   },
   "required": [
     "apiVersion",
-    "kind",
     "metadata",
+    "kind",
     "kind_target"
   ],
   "additionalProperties": false,

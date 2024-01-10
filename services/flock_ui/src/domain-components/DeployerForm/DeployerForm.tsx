@@ -7,6 +7,7 @@ import {
   deploymentKindValues,
 } from "../../deployments_schemas";
 import TargetResourceInput from "./TargetResourceInput";
+import ConfigInput from "./ConfigInput";
 
 const DeployerForm = () => {
   const methods = useForm<DeploymentFormData>({
@@ -54,6 +55,10 @@ const DeployerForm = () => {
           <div>
             <label htmlFor="target-resource">Target Resource</label>
             <TargetResourceInput />
+          </div>
+          <div>
+            <label htmlFor="configuration">Configuration</label>
+            <ConfigInput />
           </div>
         </form>
       </FormProvider>

@@ -1,5 +1,5 @@
 import axios, { CanceledError } from "axios";
-import { BaseResourceSchema } from "../resources_schemas";
+import { ConfigKind } from "../deployments_schemas";
 
 const HOST = process.env.DEPLOYER_SERVER_HOST || "localhost";
 const PORT = process.env.DEPLOYER_SERVER_PORT || 9900;
@@ -11,20 +11,13 @@ const apiClient = axios.create({
 export { CanceledError };
 
 
-export interface ResourceParams {
-  category?: string;
-  kind?: string;
-  name?: string;
-  namespace?: string;
-  id?: number;
-}
-
-export class ResourceSchemaService {
-  getAll() {
+export class ConfigService {
+  getAll(kind: ConfigKind = ConfigKind.None) {
     const controller = new AbortController();
     const request = apiClient
-      .get("/schemas", {
+      .get("/configs", {
         signal: controller.signal,
+        params: { kind: kind }
       })
 
     return { request, cancel: () => controller.abort() }
@@ -33,43 +26,6 @@ export class ResourceSchemaService {
   get(kind: string) {
     return apiClient
       .get(`/schema/${kind}`)
-  }
-}
-
-
-export class ResourceService {
-
-  getAll(params: ResourceParams) {
-    const controller = new AbortController();
-
-    const request = apiClient
-      .get("/resources", {
-        signal: controller.signal, params: params
-      })
-
-    return { request, cancel: () => controller.abort() }
-  }
-
-  get(params: ResourceParams) {
-
-    return apiClient
-      .get("/resource", { params: params })
-  }
-
-  post(resource: BaseResourceSchema) {
-    return apiClient.post("/resource", resource, {
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
-  }
-
-  delete(id: string) {
-    return apiClient.delete(`/resource/${id}`)
-  }
-
-  put(resource: BaseResourceSchema) {
-    return apiClient.put(`/resource/${resource.id}`, resource)
   }
 }
 

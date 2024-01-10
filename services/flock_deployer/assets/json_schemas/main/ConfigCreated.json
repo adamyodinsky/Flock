@@ -164,19 +164,16 @@
       "description": "Base model config.",
       "type": "object",
       "properties": {
+        "id": {
+          "title": "Id",
+          "description": "String UUID of the object",
+          "type": "string"
+        },
         "apiVersion": {
           "title": "Apiversion",
           "description": "API version of the object",
           "enum": [
             "flock/v1"
-          ],
-          "type": "string"
-        },
-        "kind": {
-          "title": "Kind",
-          "description": "Kind of the object",
-          "enum": [
-            "DeploymentConfig"
           ],
           "type": "string"
         },
@@ -209,12 +206,20 @@
           "description": "Image to be deployed",
           "default": "",
           "type": "string"
+        },
+        "kind": {
+          "title": "Kind",
+          "description": "Kind of the object",
+          "enum": [
+            "DeploymentConfig"
+          ],
+          "type": "string"
         }
       },
       "required": [
         "apiVersion",
-        "kind",
-        "metadata"
+        "metadata",
+        "kind"
       ],
       "additionalProperties": false
     }

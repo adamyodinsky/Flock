@@ -1,6 +1,5 @@
 {
   "title": "DeleteRequest",
-  "description": "Resource created successfully",
   "type": "object",
   "properties": {
     "deployment_name": {

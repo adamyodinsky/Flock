@@ -1,7 +1,13 @@
 import { z } from "zod";
 import { kindTuple } from "./resources_schemas";
 
-// CONFIG SCHEMAS //
+export interface ConfigResponseObj {
+  id: string
+  name: string
+  description: string
+  kind: string
+  category: string
+}
 
 export const SecretKeyRefValueZodSchema = z.object({
   name: z.string(),
@@ -40,6 +46,14 @@ export const DeploymentKindConfigZodSchema = DeploymentConfigZodSchema.extend({
   kind: z.literal("DeploymentKindConfig"),
   kind_target: z.enum(kindTuple),
 });
+
+export enum ConfigKind {
+  // null = "null",
+  None = "",
+  DeploymentConfig = "DeploymentConfig",
+  DeploymentGlobalConfig = "DeploymentGlobalConfig",
+  DeploymentKindConfig = "DeploymentKindConfig",
+}
 
 
 // DEPLOYMENT SCHEMAS //
