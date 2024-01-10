@@ -1,4 +1,5 @@
 import logging
+from typing import List
 
 from fastapi import APIRouter, Body, Depends, HTTPException
 from pydantic import ValidationError
@@ -7,6 +8,7 @@ from flock_deployer.deployer.base import BaseDeployers
 from flock_deployer.schemas import DeploymentConfigSchema, DeploymentSchema
 from flock_deployer.schemas.request import (
     ConfigRequest,
+    ConfigResponse,
     DeleteRequest,
     DeploymentRequest,
 )
@@ -249,9 +251,45 @@ def get_router(deployers: BaseDeployers, api_prefix: str) -> APIRouter:
 
         return ConfigCreated(data=data.config)
 
+    @router.get("/configs")
+    async def get_configs(
+        kind: str = "",
+        deployers: BaseDeployers = Depends(lambda: deployers),
+    ) -> List[ConfigResponse]:
+        """
+        Get config
+
+        Args:
+            name (str): Config name
+            deployers (BaseDeployers): Deployers
+
+        Raises:
+            HTTPException: Failed to get config
+
+        Returns:
+            Config: Config
+        """
+
+        logging.info("Getting configs for kind=%s", kind)
+        try:
+            config_list = deployers.config_store.get_many(kind=kind) or []
+            config_list = [ConfigResponse.validate(config) for config in config_list]
+            return config_list
+        except Exception as error:
+            logging.error("Failed to get configs kind=%s", kind)
+            raise HTTPException(
+                status_code=500,
+                detail=[
+                    "Failed to get configuration list",
+                    str(error),
+                ],
+            ) from error
+
     @router.get("/config")
     async def get_config(
         name: str,
+        kind: str = "",
+        kind_target: str = "",
         deployers: BaseDeployers = Depends(lambda: deployers),
     ) -> DeploymentConfigSchema:
         """
@@ -270,7 +308,9 @@ def get_router(deployers: BaseDeployers, api_prefix: str) -> APIRouter:
 
         logging.info("Getting config %s", name)
         try:
-            config = deployers.config_store.get(name=name)
+            config = deployers.config_store.get(
+                name=name, kind=kind, kind_target=kind_target
+            )
             config = DeploymentConfigSchema.validate(config)
             return config
         except Exception as error:

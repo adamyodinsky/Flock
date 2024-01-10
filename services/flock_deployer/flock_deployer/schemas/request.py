@@ -8,8 +8,6 @@ from flock_deployer.schemas.config import DeploymentConfigSchema
 
 
 class DeploymentRequest(BaseModel):
-    """Resource created successfully"""
-
     deployment_name: str
     deployment_namespace: str
     deployment_kind: str
@@ -22,18 +20,21 @@ class DeploymentRequest(BaseModel):
 
 
 class ConfigRequest(BaseModel):
-    """Resource created successfully"""
-
     config: DeploymentConfigSchema
 
 
 class DeleteRequest(BaseModel):
-    """Resource created successfully"""
-
     deployment_name: str
     deployment_namespace: str
     deployment_kind: str = ""
     dry_run: bool = False
+
+
+class ConfigResponse(BaseModel):
+    name: str
+    description: str
+    kind: str
+    category: str
 
 
 DeploymentRequest.update_forward_refs()
