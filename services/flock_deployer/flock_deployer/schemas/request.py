@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Optional
+
 from pydantic import BaseModel
 
 from flock_deployer.schemas.config import DeploymentConfigSchema
@@ -34,6 +36,8 @@ class ConfigResponseObj(BaseModel):
     name: str
     description: str
     kind: str
+    id: str
+    target_kind: Optional[str]
 
 
 class ConfigResponse(BaseModel):
