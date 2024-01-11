@@ -3,14 +3,16 @@ import CreateResourceForm from "./domain-components/CreateResourceForm/CreateRes
 import DeployerForm from "./domain-components/DeployerForm/DeployerForm";
 import ResourcesTablePage from "./domain-components/ResourcesTablePage";
 import Footer from "./general-components/Fotter";
-import Header from "./general-components/Header";
+// import Header from "./general-components/Header";
 
 function App() {
   return (
     <>
       <>
-        <h1 className="m-3">Flock</h1>
-        <p className="m-3">Empower Your Intelligence, Scale Your Vision</p>
+        <div className="m-4">
+          <h1 className="m-1">Flock</h1>
+          <p className="m-1">Empower Your Intelligence, Scale Your Vision.</p>
+        </div>
         <br />
         {/* <Header /> */}
         <main role="main" className="container mt-4">
