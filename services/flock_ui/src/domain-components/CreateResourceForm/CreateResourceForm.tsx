@@ -250,7 +250,7 @@ const CreateResourceForm = () => {
           )}
           <Button
             disabled={!isValid}
-            color="outline-primary"
+            color="success"
             additionalClasses="btn-lg"
             type="submit"
           >

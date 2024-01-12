@@ -6,8 +6,9 @@ import {
   deploymentForm,
   deploymentKindValues,
 } from "../../deployments_schemas";
-import TargetResourceInput from "./TargetResourceInput";
 import ConfigInput from "./ConfigInput";
+import TargetResourceInput from "./TargetResourceInput";
+import Button from "../../general-components/Button";
 
 const DeployerForm = () => {
   const methods = useForm<DeploymentFormData>({
@@ -24,10 +25,15 @@ const DeployerForm = () => {
 
   const [error, setError] = useState([]);
 
+  const onSubmit = (data: DeploymentFormData) => {
+    console.log("Submitted");
+    console.log(data);
+  };
+
   return (
     <>
       <FormProvider {...methods}>
-        <form className="form-control m-2">
+        <form className="form-control m-2" onSubmit={handleSubmit(onSubmit)}>
           <div>
             <label className="form-label">Deployment Name</label>
             <input
@@ -58,7 +64,17 @@ const DeployerForm = () => {
           </div>
           <div>
             <label htmlFor="configuration">Configuration</label>
-            <ConfigInput />
+            <ConfigInput register={register} />
+          </div>
+          <div className="m-3">
+            <Button
+              color="success"
+              additionalClasses="btn-lg"
+              disabled={!isValid}
+              type="submit"
+            >
+              Deploy
+            </Button>
           </div>
         </form>
       </FormProvider>

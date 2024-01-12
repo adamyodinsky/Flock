@@ -35,9 +35,9 @@ export const EnvZodSchema = z.union([EnvVarZodSchema, EnvFromZodSchema]);
 export type EnvData = z.infer<typeof EnvZodSchema>;
 
 export const DeploymentConfigZodSchema = z.object({
-  kind: z.literal("DeploymentConfig"),
+  kind: z.literal("DeploymentConfig").optional(),
   env: z.array(EnvZodSchema),
-  image: z.string(),
+  image: z.string().optional(),
 });
 export type DeploymentConfigData = z.infer<typeof DeploymentConfigZodSchema>;
 

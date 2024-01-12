@@ -1,9 +1,11 @@
 import yaml from "js-yaml";
 import { ReactNode, useEffect, useState } from "react";
+import { UseFormRegister } from "react-hook-form";
 import {
   ConfigKind,
   ConfigResponseObj,
   DeploymentConfigData,
+  DeploymentFormData,
   EnvData,
 } from "../../deployments_schemas";
 import Alert from "../../general-components/Alert";
@@ -11,11 +13,12 @@ import Button from "../../general-components/Button";
 import Modal from "../../general-components/Modal";
 import { ConfigService } from "../../services/deployments_api";
 import ConfigsTable from "./ConfigsTable";
-import { set } from "react-hook-form";
 
 const apiConfigService = new ConfigService();
-
-const ConfigInput = () => {
+interface Props {
+  register: UseFormRegister<DeploymentFormData>;
+}
+const ConfigInput = ({ register }: Props) => {
   const [idCounter, setIdCounter] = useState(0);
   const [showTableModal, setShowTableModal] = useState(false);
   const [showResourceModal, setShowResourceModal] = useState(false);
@@ -31,6 +34,11 @@ const ConfigInput = () => {
     useState<DeploymentConfigData>();
   const [savedResource, setSavedResource] = useState<DeploymentConfigData>();
   const [envList, SetEnvList] = useState<EnvData[]>([]);
+
+  // const { fields, append, remove } = useFieldArray({
+  //   control,
+  //   name: "config.env",
+  // });
 
   useEffect(() => {
     if (!savedResource) return;
@@ -129,7 +137,7 @@ const ConfigInput = () => {
       <div className="form-control m-1">
         <div className="input-group m-1">
           <div className="m-2">
-            <Button color="outline-primary" onClick={handleClickOnChoose}>
+            <Button color="primary" onClick={handleClickOnChoose}>
               {isTableLoading && (
                 <span
                   className="spinner-border spinner-border-sm me-2"
@@ -143,7 +151,7 @@ const ConfigInput = () => {
                 color="outline-primary"
                 onClick={() => handleClickOnAdd(false)}
               >
-                Add Config Value
+                Add Config
               </Button>
             </span>
             <span>
@@ -165,6 +173,7 @@ const ConfigInput = () => {
               placeholder="Name"
               aria-label="key"
               defaultValue={env.name}
+              // {...register(config.env[index].name)}
             />
             {"value" in env ? (
               <>
