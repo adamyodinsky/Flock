@@ -30,7 +30,10 @@ const TargetResourceInput = () => {
         setResourceTableList(response.data.items);
         setError([]);
         setIsTableLoading(false);
-        setShowTableModal(true);
+
+        setTimeout(() => {
+          setShowTableModal(true);
+        }, 100);
       })
       .catch((err) => {
         if (err.message !== "canceled") setError(err.response.data.detail);

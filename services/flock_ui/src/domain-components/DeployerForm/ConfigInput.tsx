@@ -31,6 +31,7 @@ const ConfigInput = () => {
     apiConfigService
       .get(selectedShallowResource.id)
       .then((response) => {
+        console.log(response.data);
         setSelectedResource(response.data);
         setError([]);
       })
@@ -51,13 +52,20 @@ const ConfigInput = () => {
         setConfigTableList(response.data.items);
         setError([]);
         setIsTableLoading(false);
-        setShowTableModal(true);
+
+        setTimeout(() => {
+          setShowTableModal(true);
+        }, 100);
       })
       .catch((err) => {
         if (err.message !== "canceled") setError(err.response.data.detail);
       });
 
     return () => cancel();
+  };
+
+  const handleClickOnAdd = () => {
+    console.log("clicked Add!");
   };
 
   const handleTableRawClick = (resource: ConfigResponseObj) => {
@@ -106,26 +114,52 @@ const ConfigInput = () => {
               )}
               Find & Choose
             </Button>
+            <Button onClick={handleClickOnAdd}>Add</Button>
           </div>
         </div>
-        {/* {selectedResource?.env.map((env) => (
-          // <div className="m-2 input-group">
-          //   <input
-          //     className="form-control"
-          //     type="text"
-          //     id="config_key"
-          //     placeholder="key"
-          //     aria-label="key"
-          //   />
-          //   <input
-          //     className="form-control"
-          //     type="text"
-          //     id="config_value"
-          //     placeholder="value"
-          //     aria-label="value"
-          //   />
-          // </div>
-        ))} */}
+        {selectedResource?.env.map((env) => (
+          <div className="m-2 input-group">
+            <input
+              className="form-control"
+              type="text"
+              id="config_key"
+              placeholder="Name"
+              aria-label="key"
+              defaultValue={env.name}
+            />
+            {"value" in env ? (
+              <>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="config_value"
+                  aria-label="config_value"
+                  placeholder="Value"
+                  defaultValue={env.value}
+                />
+              </>
+            ) : (
+              <>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="secret_name"
+                  placeholder="Secret Name"
+                  aria-label="secret_name"
+                  defaultValue={env.valueFrom.secretKeyRef.name}
+                />
+                <input
+                  className="form-control"
+                  type="text"
+                  id="secret_key"
+                  placeholder="Secret Key"
+                  aria-label="secret_key"
+                  defaultValue={env.valueFrom.secretKeyRef.key}
+                />
+              </>
+            )}
+          </div>
+        ))}
       </div>
       <Modal
         title="Resources"

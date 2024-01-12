@@ -2,7 +2,7 @@ import axios, { CanceledError } from "axios";
 import { ConfigKind } from "../deployments_schemas";
 
 const HOST = process.env.DEPLOYER_SERVER_HOST || "localhost";
-const PORT = process.env.DEPLOYER_SERVER_PORT || 9900;
+const PORT = process.env.DEPLOYER_SERVER_PORT || 80;
 
 const apiClient = axios.create({
   baseURL: `http://${HOST}:${PORT}`,

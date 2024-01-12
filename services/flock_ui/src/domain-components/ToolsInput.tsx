@@ -63,8 +63,11 @@ const ToolsInput = ({ register, control }: Props) => {
       .then((response) => {
         setResourceTableList(response.data.items);
         setError([]);
-        setShowTableModal(true);
         setIsTableLoading(false);
+
+        setTimeout(() => {
+          setShowTableModal(true);
+        }, 100);
       })
       .catch((err) => {
         if (err.message !== "canceled") setError(err.response.data.detail);

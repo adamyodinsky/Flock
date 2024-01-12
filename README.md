@@ -5,8 +5,7 @@
 - Minikube
 - Docker
 - Python
-- Ngrok
-- Okteto
+- Ngrok (Optional)
 
 ## Setup
 
@@ -14,17 +13,9 @@
 
 ```sh
 make minikube-start
-make setup-all
-```
-
-### Run validate resources script
-
-For uploading initial resources to the system.
-
-Under `libs/flock_resources`, run the `resources_validation.py` script
-
-```sh
-make validate-resources
+make setup-start-all
+make fill-db-with-data
+make start-ui
 ```
 
 ### Expose the local machine with ngrok
@@ -39,7 +30,7 @@ make ngrok
 - For accessing the ngrok endpoint via the browser, just enter the username and password.
 - For accessing the ngrok endpoint via an http request, add an "Authorization" header, the value should be a base64 converted string of `<username>:<password>`.
 
-#### Env Variables needed
+#### Env Variables required
 
 - OPENAI_API_KEY
 - SERPAPI_API_KEY
@@ -66,7 +57,3 @@ source: <https://github.com/docker/for-mac/issues/6677#issuecomment-1593787335>
 
 https://www.softwaretestinghelp.com/ngrok-alternatives/
 https://github.com/anderspitman/awesome-tunneling
-
-- ngrok has an issue with cors i could not solve
-- local tunnel - "lt --port 80" need to try it
-- servo

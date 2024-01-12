@@ -2,7 +2,7 @@ import axios, { CanceledError } from "axios";
 import { BaseResourceSchema } from "../resources_schemas";
 
 const HOST = process.env.RESOURCES_SERVER_HOST || "localhost";
-const PORT = process.env.RESOURCES_SERVER_PORT || 8000;
+const PORT = process.env.RESOURCES_SERVER_PORT || 80;
 
 const apiClient = axios.create({
   baseURL: `http://${HOST}:${PORT}`,

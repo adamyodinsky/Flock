@@ -34,6 +34,7 @@ def get_app():
         allow_origins=[
             "http://localhost:3000",
             "http://localhost:5500",
+            "http://localhost:80",
         ],  # Allow any origin
         allow_credentials=True,
         allow_methods=["*"],  # Allow any method

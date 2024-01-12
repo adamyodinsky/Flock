@@ -221,6 +221,11 @@ validate-resources:
 write-schemas:
 	cd libs/flock_schemas; make write-json-schemas
 
+setup-virtual-envs:
+	cd libs/flock_resources; poetry install
+	cd libs/flock_schemas; poetry install
+	cd services/flock_deployer; poetry install
+
 schemas-setup:
 	cd libs/flock_schemas; make validate-schemas
 	cd libs/flock_schemas; make write-json-schemas
@@ -230,9 +235,12 @@ config-upload:
 	cd services/flock_deployer; make write-json-schemas
 	cd services/flock_deployer; make load-configs
 
-fill-db-with-data: schemas-setup validate-resources config-upload
+fill-db-with-data: setup-virtual-envs schemas-setup validate-resources config-upload
 
 apply-all: apply-secret apply-pvc apply-mongo apply-vault apply-rabbitmq apply-deployer apply-observer apply-resources-server apply-ingress apply-proxy
+
+start-ui:
+	cd services/flock_ui; npm run dev
 
 resources-service-mode: delete-vault delete-rabbitmq delete-deployer delete-observer
 

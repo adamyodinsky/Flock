@@ -72,7 +72,10 @@ def run_observer(host, port):
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:3000"],  # Allow any origin
+        allow_origins=[
+            "http://localhost:3000",
+            "http://localhost:5500",
+        ],  # Allow any origin
         allow_credentials=True,
         allow_methods=["*"],  # Allow any method
         allow_headers=["*"],  # Allow any header

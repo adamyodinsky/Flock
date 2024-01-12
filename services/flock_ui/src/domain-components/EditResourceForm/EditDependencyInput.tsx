@@ -88,7 +88,10 @@ const EditDependencyInput = ({
       .then((response) => {
         setResourceList(response.data.items);
         setError([]);
-        setShowTableModal(true);
+
+        setTimeout(() => {
+          setShowTableModal(true);
+        }, 100);
       })
       .catch((err) => {
         if (err.message !== "canceled") setError(err.response.data.detail);
