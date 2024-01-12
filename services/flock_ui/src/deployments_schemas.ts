@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { kindTuple } from "./resources_schemas";
+import { generateKey } from "crypto";
 
 export interface ConfigResponseObj {
   id: string
@@ -19,11 +20,13 @@ export const SecretKeyRefZodSchema = z.object({
 });
 
 export const EnvFromZodSchema = z.object({
+  id: z.number().optional(),
   name: z.string(),
   valueFrom: SecretKeyRefZodSchema,
 });
 
 export const EnvVarZodSchema = z.object({
+  id: z.number().optional(),
   name: z.string(),
   value: z.string(),
 });

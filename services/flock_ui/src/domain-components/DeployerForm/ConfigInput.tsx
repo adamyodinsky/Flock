@@ -4,16 +4,19 @@ import {
   ConfigKind,
   ConfigResponseObj,
   DeploymentConfigData,
+  EnvData,
 } from "../../deployments_schemas";
 import Alert from "../../general-components/Alert";
 import Button from "../../general-components/Button";
 import Modal from "../../general-components/Modal";
 import { ConfigService } from "../../services/deployments_api";
 import ConfigsTable from "./ConfigsTable";
+import { set } from "react-hook-form";
 
 const apiConfigService = new ConfigService();
 
 const ConfigInput = () => {
+  const [idCounter, setIdCounter] = useState(0);
   const [showTableModal, setShowTableModal] = useState(false);
   const [showResourceModal, setShowResourceModal] = useState(false);
   const [error, setError] = useState([]);
@@ -21,10 +24,18 @@ const ConfigInput = () => {
   const [configTableList, setConfigTableList] = useState<ConfigResponseObj[]>(
     []
   );
+  useState<ConfigResponseObj>();
   const [selectedShallowResource, setSelectedShallowResource] =
     useState<ConfigResponseObj>();
   const [selectedResource, setSelectedResource] =
     useState<DeploymentConfigData>();
+  const [savedResource, setSavedResource] = useState<DeploymentConfigData>();
+  const [envList, SetEnvList] = useState<EnvData[]>([]);
+
+  useEffect(() => {
+    if (!savedResource) return;
+    SetEnvList([...savedResource.env]);
+  }, [savedResource]);
 
   useEffect(() => {
     if (!selectedShallowResource) return;
@@ -64,8 +75,23 @@ const ConfigInput = () => {
     return () => cancel();
   };
 
-  const handleClickOnAdd = () => {
+  const handleClickOnAdd = (isSecret: boolean) => {
     console.log("clicked Add!");
+
+    if (isSecret) {
+      SetEnvList([
+        ...envList,
+        { name: "", valueFrom: { secretKeyRef: { name: "", key: "" } } },
+      ]);
+    } else {
+      SetEnvList([...envList, { name: "", value: "" }]);
+    }
+  };
+
+  const handleClickOnRemove = (indexToRemove: number) => {
+    SetEnvList((currentEnvList) =>
+      currentEnvList.filter((_, index) => index !== indexToRemove)
+    );
   };
 
   const handleTableRawClick = (resource: ConfigResponseObj) => {
@@ -73,10 +99,8 @@ const ConfigInput = () => {
     setShowResourceModal(true);
   };
 
-  const handleOnSaveResourceModal = (e: ConfigResponseObj | undefined) => {
-    if (!e) return;
-
-    setSelectedShallowResource(e);
+  const handleOnSaveResourceModal = () => {
+    setSavedResource(selectedResource);
     setShowResourceModal(false);
     setShowTableModal(false);
   };
@@ -87,7 +111,7 @@ const ConfigInput = () => {
         <Button
           type="button"
           color="outline-primary"
-          onClick={() => handleOnSaveResourceModal(selectedShallowResource)}
+          onClick={handleOnSaveResourceModal}
         >
           Save
         </Button>
@@ -105,7 +129,7 @@ const ConfigInput = () => {
       <div className="form-control m-1">
         <div className="input-group m-1">
           <div className="m-2">
-            <Button onClick={handleClickOnChoose}>
+            <Button color="outline-primary" onClick={handleClickOnChoose}>
               {isTableLoading && (
                 <span
                   className="spinner-border spinner-border-sm me-2"
@@ -114,10 +138,25 @@ const ConfigInput = () => {
               )}
               Find & Choose
             </Button>
-            <Button onClick={handleClickOnAdd}>Add</Button>
+            <span className="m-3">
+              <Button
+                color="outline-primary"
+                onClick={() => handleClickOnAdd(false)}
+              >
+                Add Config Value
+              </Button>
+            </span>
+            <span>
+              <Button
+                color="outline-primary"
+                onClick={() => handleClickOnAdd(true)}
+              >
+                Add Secret
+              </Button>
+            </span>
           </div>
         </div>
-        {selectedResource?.env.map((env) => (
+        {envList.map((env, index) => (
           <div className="m-2 input-group">
             <input
               className="form-control"
@@ -158,6 +197,13 @@ const ConfigInput = () => {
                 />
               </>
             )}
+            <Button
+              type="button"
+              color="danger"
+              onClick={() => handleClickOnRemove(index)}
+            >
+              Remove
+            </Button>
           </div>
         ))}
       </div>
